@@ -1,0 +1,17 @@
+{
+  "id": "breakout",
+  "name": "疯狂打砖块",
+  "emoji": "🧱",
+  "categories": ["arcade", "action"],
+  "tags": ["单人", "HTML5", "街机"],
+  "summary": "弹球撞碎整面砖墙，接住反弹别丢球，通关后砖墙加固再来一波！",
+  "description": "经典打砖块复刻。移动挡板接住弹球，撞碎所有砖块即过关；球速会随关卡逐渐加快，三条命用完游戏结束。角度由击中挡板的位置决定，可以打出刁钻弧线。支持鼠标 / 触屏 / 键盘操作。",
+  "howToPlay": "移动鼠标或左右方向键控制挡板；空格 / 点击发射弹球；手机端拖动屏幕。",
+  "entry": "breakout/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-19",
+  "featured": false,
+  "plays": 0
+}

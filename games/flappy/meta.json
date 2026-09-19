@@ -1,0 +1,17 @@
+{
+  "id": "flappy",
+  "name": "像素小鸟",
+  "emoji": "🐤",
+  "categories": ["arcade", "casual"],
+  "tags": ["单人", "HTML5", "虐手"],
+  "summary": "点一下飞一下，穿过一根根绿色管道的缝隙，能飞多远全看手稳不稳！",
+  "description": "经典 Flappy Bird 玩法复刻。小鸟受重力不断下坠，点击 / 按空格扇翅上飞，穿过管道缝隙得 1 分；碰到管道或落地即结束。速度会随分数缓慢提升，考验节奏感与心态，最高分本地保存。",
+  "howToPlay": "空格 / 鼠标点击 / 触屏点按让小鸟向上飞，保持节奏穿过缝隙。",
+  "entry": "flappy/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-19",
+  "featured": false,
+  "plays": 0
+}

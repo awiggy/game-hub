@@ -1,0 +1,136 @@
+/* 设计系统：像素街机 × 现代扁平（参考创游社视觉） */
+:root {
+  --blue: #2f55e4;
+  --blue-deep: #2443c4;
+  --blue-ink: #1b2f8a;
+  --yellow: #ffd23f;
+  --yellow-deep: #f5b800;
+  --ink: #14161f;
+  --muted: #5c6474;
+  --paper: #eef1f6;
+  --grid: #dfe4ee;
+  --card: #ffffff;
+  --danger: #ff4d5e;
+  --ok: #22b573;
+  --border: 2px solid var(--ink);
+  --shadow: 4px 4px 0 rgba(20, 22, 31, 0.9);
+  --shadow-sm: 3px 3px 0 rgba(20, 22, 31, 0.9);
+  --radius: 8px;
+  --font: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* 按钮：硬阴影按压反馈 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  user-select: none;
+}
+
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(20, 22, 31, 0.9);
+}
+
+.btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(20, 22, 31, 0.9);
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+}
+
+.btn-yellow {
+  background: var(--yellow);
+}
+
+.card {
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chip-blue {
+  background: var(--blue);
+  color: #fff;
+}
+
+.chip-yellow {
+  background: var(--yellow);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.section-title::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  flex: none;
+}
+
+.muted {
+  color: var(--muted);
+}

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>极速避让</title>
+  <style>
+    :root { --blue: #2f55e4; --yellow: #ffd23f; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: #0f1118; color: #eef1f6;
+      font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      touch-action: manipulation; overflow: hidden;
+    }
+    #wrap { position: relative; }
+    #hud {
+      position: absolute; top: -34px; left: 4px; right: 4px;
+      display: flex; justify-content: space-between;
+      font-size: 12px; font-weight: 700; color: #8b93a7; letter-spacing: 1px;
+    }
+    #hud b { color: var(--yellow); font-size: 16px; margin-left: 4px; }
+    canvas {
+      display: block; border: 3px solid #2a2e3d; border-radius: 10px;
+      background: #14161f; max-width: 92vw; max-height: 74vh;
+    }
+    #overlay {
+      position: absolute; inset: 0; border-radius: 10px;
+      background: rgba(15, 17, 24, 0.88);
+      display: flex; flex-direction: column; gap: 16px;
+      align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
+    #overlay.hidden { display: none; }
+    #overlay h1 { font-size: 26px; letter-spacing: 4px; text-shadow: 3px 3px 0 var(--blue); }
+    #overlay p { color: #8b93a7; font-size: 13px; line-height: 1.9; }
+    #overlay button {
+      background: var(--blue); color: #fff; font-family: inherit;
+      border: 2px solid #fff; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+      font-size: 16px; font-weight: 700; padding: 10px 32px; border-radius: 8px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>距离<b id="score">0m</b></span>
+      <span>BEST<b id="best">0m</b></span>
+    </div>
+    <canvas id="cv" width="360" height="600"></canvas>
+    <div id="overlay">
+      <h1>极速避让</h1>
+      <p>← → / A D 变道 · 手机点按左右半屏<br />躲开红色车辆，距离就是分数</p>
+      <button id="ov-btn">开始游戏</button>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const CW = 52, CH = 84
+      const laneX = [60, 180, 300]
+      let lane, enemies, dist, speed, running, over, offset, lastLane, frame
+      let best = Number(localStorage.getItem('racedodge-best') || 0)
+      bestEl.textContent = best + 'm'
+
+      function drawCar(x, y, color, roof) {
+        ctx.fillStyle = color
+        ctx.beginPath()
+        ctx.roundRect(x - CW / 2, y - CH / 2, CW, CH, 10)
+        ctx.fill()
+        ctx.fillStyle = roof
+        ctx.beginPath()
+        ctx.roundRect(x - CW / 2 + 8, y - CH / 2 + 16, CW - 16, 22, 5)
+        ctx.fill()
+        ctx.beginPath()
+        ctx.roundRect(x - CW / 2 + 8, y + CH / 2 - 26, CW - 16, 14, 5)
+        ctx.fill()
+      }
+
+      function startGame() {
+        lane = 1; enemies = []; dist = 0; speed = 4.4
+        running = true; over = false; offset = 0; lastLane = -1; frame = 0
+        scoreEl.textContent = '0m'
+        overlay.classList.add('hidden')
+      }
+
+      function gameOver() {
+        running = false; over = true
+        const m = dist | 0
+        if (m > best) { best = m; bestEl.textContent = best + 'm'; localStorage.setItem('racedodge-best', best) }
+        overlay.querySelector('h1').textContent = '💥 撞车了'
+        overlay.querySelector('p').innerHTML =
+          '本次行驶 <b style="color:#ffd23f">' + m + 'm</b> · 最远 ' + best + 'm'
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function shift(d) {
+        if (!running || over) return
+        lane = Math.max(0, Math.min(2, lane + d))
+      }
+
+      function step() {
+        frame++
+        speed = 4.4 + Math.min(5, dist / 900)
+        dist += speed * 0.12
+        offset = (offset + speed) % 80
+        scoreEl.textContent = (dist | 0) + 'm'
+
+        const interval = Math.max(26, 62 - (dist / 60) | 0)
+        if (frame % interval === 0) {
+          let l = (Math.random() * 3) | 0
+          if (l === lastLane) l = (l + 1 + ((Math.random() * 2) | 0)) % 3
+          lastLane = l
+          enemies.push({ lane: l, y: -70 })
+        }
+
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          enemies[i].y += speed
+          if (enemies[i].y > H + 80) { enemies.splice(i, 1); continue }
+          if (enemies[i].lane === lane && Math.abs(enemies[i].y - (H - 110)) < CH - 8) return gameOver()
+        }
+      }
+
+      function draw() {
+        // 公路
+        ctx.fillStyle = '#1a1d29'
+        ctx.fillRect(0, 0, W, H)
+        ctx.fillStyle = '#2a2e3d'
+        ctx.fillRect(0, 0, 4, H)
+        ctx.fillRect(W - 4, 0, 4, H)
+        ctx.fillStyle = '#3a4152'
+        for (const lx of [120, 240])
+          for (let y = -80 + offset; y < H; y += 80)
+            ctx.fillRect(lx - 3, y, 6, 40)
+        // 敌车
+        for (const e of enemies) drawCar(laneX[e.lane], e.y, '#ff4d5e', '#c22739')
+        // 玩家
+        if (running && !over) drawCar(laneX[lane], H - 110, '#5d84ff', '#ffd23f')
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') { e.preventDefault(); shift(-1) }
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') { e.preventDefault(); shift(1) }
+        if (e.code === 'Space' && !running && !overlay.classList.contains('hidden')) {
+          e.preventDefault(); startGame()
+        }
+      })
+      cv.addEventListener('pointerdown', (e) => {
+        const r = cv.getBoundingClientRect()
+        shift((e.clientX - r.left) < r.width / 2 ? -1 : 1)
+      })
+      ovBtn.addEventListener('click', startGame)
+
+      window.__hub = {
+        get score() { return dist | 0 },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      lane = 1; enemies = []; dist = 0; speed = 4.4
+      running = false; over = false; offset = 0; lastLane = -1; frame = 0
+      loop()
+    })()
+  </script>
+</body>
+</html>

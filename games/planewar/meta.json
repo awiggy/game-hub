@@ -1,0 +1,17 @@
+{
+  "id": "planewar",
+  "name": "雷霆打飞机",
+  "emoji": "✈️",
+  "categories": ["shooter", "action"],
+  "tags": ["单人", "HTML5", "射击"],
+  "summary": "指尖操控战机自动开火，躲开敌机弹幕，看你能击落多少架！",
+  "description": "竖版飞行射击游戏。战机跟随指针自动开火，敌机从上方源源不断扑来，越到后面越密集；被撞掉一条命后有短暂无敌闪烁，三条命耗尽即结束。支持鼠标 / 触屏拖动 / 键盘操作。",
+  "howToPlay": "鼠标移动或拖动屏幕控制战机位置，← → 也可以移动；火力全自动，专心走位。",
+  "entry": "planewar/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-19",
+  "featured": true,
+  "plays": 0
+}

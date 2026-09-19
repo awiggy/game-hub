@@ -1,0 +1,17 @@
+{
+  "id": "memory",
+  "name": "记忆翻牌",
+  "emoji": "🧠",
+  "categories": ["casual", "puzzle"],
+  "tags": ["单人", "HTML5", "益智"],
+  "summary": "16 张牌盖着 8 对图案，凭记忆两两配对，用最少步数全翻开的时刻最爽！",
+  "description": "经典记忆配对游戏。4×4 牌阵盖着 8 对 emoji 图案，每次翻开两张，一致即配对成功保留明面；全部配对即获胜，步数越少越强，最少步数纪录本地保存。",
+  "howToPlay": "点击卡片翻开，一次翻两张；配对成功保持明面，失败自动盖回。",
+  "entry": "memory/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-19",
+  "featured": false,
+  "plays": 0
+}

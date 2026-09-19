@@ -1,0 +1,17 @@
+{
+  "id": "gobang",
+  "name": "五子棋",
+  "emoji": "⚫",
+  "categories": ["card", "strategy"],
+  "tags": ["人机", "双人", "棋牌"],
+  "summary": "连成五子即获胜！内置启发式 AI 可随时开战，也能和朋友同屏对弈。",
+  "description": "经典五子棋。默认人机对战（你执黑先行，AI 会进攻也会防守），也可切换双人同屏轮流落子。先在横、竖、斜任意方向连成五子者胜。15×15 标准棋盘，落子即判断胜负。",
+  "howToPlay": "点击棋盘交叉点落子；人机模式你执黑，AI 执白；可随时切换模式或重开。",
+  "entry": "gobang/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-19",
+  "featured": false,
+  "plays": 0
+}

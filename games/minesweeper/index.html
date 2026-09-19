@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>经典扫雷</title>
+  <style>
+    :root { --blue: #2f55e4; --yellow: #ffd23f; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: #0f1118; color: #eef1f6;
+      font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; touch-action: manipulation; overflow: hidden;
+    }
+    #bar {
+      width: min(92vw, 342px);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; font-weight: 700; color: #8b93a7; letter-spacing: 1px;
+    }
+    #bar b { color: var(--yellow); font-size: 16px; margin-left: 4px; }
+    #bar .btns { display: flex; gap: 6px; }
+    #bar button {
+      font-family: inherit; font-size: 12px; font-weight: 700;
+      color: #eef1f6; background: #1a1d29; border: 2px solid #2a2e3d;
+      border-radius: 8px; padding: 6px 10px; cursor: pointer;
+    }
+    #bar button.on { background: var(--blue); border-color: #fff; }
+    #board {
+      display: grid; grid-template-columns: repeat(9, 1fr); gap: 3px;
+      width: min(92vw, 342px); aspect-ratio: 1;
+      background: #1a1d29; border: 3px solid #2a2e3d; border-radius: 12px; padding: 8px;
+    }
+    .cell {
+      display: grid; place-items: center;
+      background: #2a3350; border: 0; border-radius: 6px;
+      font-family: inherit; font-size: 15px; font-weight: 900; cursor: pointer;
+    }
+    .cell:active { background: #3a4a7a; }
+    .cell.revealed { background: #14161f; cursor: default; }
+    .cell.flagged { background: #2a3350; }
+    .cell.mine { background: #ff4d5e; }
+    #overlay {
+      position: fixed; inset: 0; background: rgba(15, 17, 24, 0.88);
+      display: flex; flex-direction: column; gap: 16px;
+      align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
+    #overlay.hidden { display: none; }
+    #overlay h1 { font-size: 26px; letter-spacing: 4px; text-shadow: 3px 3px 0 var(--blue); }
+    #overlay p { color: #8b93a7; font-size: 13px; line-height: 1.9; }
+    #overlay button {
+      background: var(--blue); color: #fff; font-family: inherit;
+      border: 2px solid #fff; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+      font-size: 16px; font-weight: 700; padding: 10px 32px; border-radius: 8px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="bar">
+    <span>💣<b id="mines">10</b></span>
+    <span>TIME<b id="time">0s</b></span>
+    <span class="btns">
+      <button id="flag-btn">🚩 旗标</button>
+      <button id="new-btn">重开</button>
+    </span>
+  </div>
+  <div id="board"></div>
+  <div id="overlay">
+    <h1>经典扫雷</h1>
+    <p>9×9 雷区 · 10 颗雷 · 首次点击必安全<br />左键翻开 · 右键/旗标模式插旗</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+
+  <script>
+    (() => {
+      const N = 9, MINES = 10
+      const boardEl = document.getElementById('board')
+      const minesEl = document.getElementById('mines')
+      const timeEl = document.getElementById('time')
+      const flagBtn = document.getElementById('flag-btn')
+      const newBtn = document.getElementById('new-btn')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const NUM_COLORS = ['#c9d4f5', '#5d84ff', '#22b573', '#ff4d5e', '#8a5cf6', '#f5a623', '#00b8a9', '#eef1f6', '#8b93a7']
+
+      let mines, revealed, flagged, started, over, flagMode, timer, seconds
+      let best = Number(localStorage.getItem('minesweeper-best') || 0)
+
+      const neighbors = (i) => {
+        const r = (i / N) | 0, c = i % N, out = []
+        for (let dr = -1; dr <= 1; dr++)
+          for (let dc = -1; dc <= 1; dc++) {
+            if (!dr && !dc) continue
+            const nr = r + dr, nc = c + dc
+            if (nr >= 0 && nr < N && nc >= 0 && nc < N) out.push(nr * N + nc)
+          }
+        return out
+      }
+
+      function startGame() {
+        mines = new Set(); revealed = new Set(); flagged = new Set()
+        started = false; over = false; seconds = 0
+        clearInterval(timer)
+        timeEl.textContent = '0s'
+        minesEl.textContent = MINES
+        overlay.classList.add('hidden')
+        render()
+      }
+
+      function placeMines(safe) {
+        const banned = new Set([safe, ...neighbors(safe)])
+        while (mines.size < MINES) {
+          const i = (Math.random() * N * N) | 0
+          if (!banned.has(i)) mines.add(i)
+        }
+      }
+
+      function countAdj(i) {
+        let n = 0
+        for (const j of neighbors(i)) if (mines.has(j)) n++
+        return n
+      }
+
+      function reveal(i) {
+        if (over || flagged.has(i) || revealed.has(i)) return
+        if (!started) {
+          started = true
+          placeMines(i)
+          timer = setInterval(() => { seconds++; timeEl.textContent = seconds + 's' }, 1000)
+        }
+        if (mines.has(i)) return lose(i)
+        const stack = [i]
+        while (stack.length) {
+          const cur = stack.pop()
+          if (revealed.has(cur) || flagged.has(cur)) continue
+          revealed.add(cur)
+          if (countAdj(cur) === 0 && !mines.has(cur))
+            for (const j of neighbors(cur)) if (!revealed.has(j)) stack.push(j)
+        }
+        checkWin()
+        render()
+      }
+
+      function toggleFlag(i) {
+        if (over || revealed.has(i)) return
+        if (flagged.has(i)) flagged.delete(i)
+        else flagged.add(i)
+        minesEl.textContent = MINES - flagged.size
+        render()
+      }
+
+      function lose(hit) {
+        over = true
+        clearInterval(timer)
+        for (const m of mines) revealed.add(m)
+        hitCell = hit
+        render()
+        showOverlay('💥 踩雷了', '用时 ' + seconds + ' 秒，再接再厉')
+      }
+
+      function checkWin() {
+        if (revealed.size === N * N - MINES) {
+          over = true
+          clearInterval(timer)
+          if (!best || seconds < best) {
+            best = seconds
+            localStorage.setItem('minesweeper-best', best)
+          }
+          showOverlay('🏆 排雷成功', '用时 ' + seconds + ' 秒（最佳 ' + best + ' 秒）')
+        }
+      }
+
+      function showOverlay(title, text) {
+        overlay.querySelector('h1').textContent = title
+        overlay.querySelector('p').textContent = text
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      let hitCell = -1
+
+      function render() {
+        boardEl.innerHTML = ''
+        for (let i = 0; i < N * N; i++) {
+          const el = document.createElement('button')
+          el.className = 'cell'
+          if (revealed.has(i)) {
+            el.classList.add('revealed')
+            if (mines.has(i)) {
+              el.classList.add('mine')
+              el.textContent = i === hitCell ? '💥' : '💣'
+            } else {
+              const n = countAdj(i)
+              if (n) {
+                el.textContent = n
+                el.style.color = NUM_COLORS[n]
+              }
+            }
+          } else if (flagged.has(i)) {
+            el.classList.add('flagged')
+            el.textContent = '🚩'
+          }
+          el.addEventListener('click', () => (flagMode ? toggleFlag(i) : reveal(i)))
+          el.addEventListener('contextmenu', (e) => { e.preventDefault(); toggleFlag(i) })
+          boardEl.appendChild(el)
+        }
+      }
+
+      flagBtn.addEventListener('click', () => {
+        flagMode = !flagMode
+        flagBtn.classList.toggle('on', flagMode)
+      })
+      newBtn.addEventListener('click', startGame)
+      ovBtn.addEventListener('click', startGame)
+
+      window.__hub = {
+        get score() { return seconds },
+        get over() { return over },
+        get started() { return started },
+      }
+
+      startGame()
+    })()
+  </script>
+</body>
+</html>

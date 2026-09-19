@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>俄罗斯方块</title>
+  <style>
+    :root { --blue: #2f55e4; --blue-light: #5d84ff; --yellow: #ffd23f; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: #0f1118; color: #eef1f6;
+      font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; touch-action: manipulation; overflow: hidden;
+    }
+    #hud {
+      width: min(92vw, 300px);
+      display: flex; justify-content: space-between;
+      font-size: 12px; font-weight: 700; color: #8b93a7; letter-spacing: 1px;
+    }
+    #hud b { color: var(--yellow); font-size: 16px; margin-left: 4px; }
+    canvas {
+      display: block; border: 3px solid #2a2e3d; border-radius: 10px;
+      background: #14161f; max-height: 62vh; max-width: 92vw;
+    }
+    #pads { display: flex; gap: 8px; }
+    #pads button {
+      width: 56px; height: 44px; font-size: 18px; font-weight: 900;
+      font-family: inherit; color: #eef1f6; background: #1a1d29;
+      border: 2px solid #2a2e3d; border-radius: 10px; cursor: pointer;
+    }
+    #pads button:active { background: var(--blue); border-color: #fff; }
+    #overlay {
+      position: fixed; inset: 0; background: rgba(15, 17, 24, 0.88);
+      display: flex; flex-direction: column; gap: 16px;
+      align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
+    #overlay.hidden { display: none; }
+    #overlay h1 { font-size: 26px; letter-spacing: 4px; text-shadow: 3px 3px 0 var(--blue); }
+    #overlay p { color: #8b93a7; font-size: 13px; line-height: 1.9; }
+    #overlay button {
+      background: var(--blue); color: #fff; font-family: inherit;
+      border: 2px solid #fff; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+      font-size: 16px; font-weight: 700; padding: 10px 32px; border-radius: 8px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="hud">
+    <span>SCORE<b id="score">0</b></span>
+    <span>行<b id="lines">0</b></span>
+    <span>级<b id="level">1</b></span>
+    <span>BEST<b id="best">0</b></span>
+  </div>
+  <canvas id="cv" width="300" height="600"></canvas>
+  <div id="pads">
+    <button data-a="left">←</button>
+    <button data-a="rot">⟳</button>
+    <button data-a="right">→</button>
+    <button data-a="down">↓</button>
+    <button data-a="drop">⤓</button>
+  </div>
+  <div id="overlay">
+    <h1>俄罗斯方块</h1>
+    <p>← → 移动 · ↑ 旋转 · ↓ 软降 · 空格硬降<br />拼满一行即消除，每 10 行升一级</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const COLS = 10, ROWS = 20, S = 30
+      const scoreEl = document.getElementById('score')
+      const linesEl = document.getElementById('lines')
+      const levelEl = document.getElementById('level')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const SHAPES = {
+        I: { m: [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], c: '#5d84ff' },
+        J: { m: [[1,0,0],[1,1,1],[0,0,0]], c: '#4a90ff' },
+        L: { m: [[0,0,1],[1,1,1],[0,0,0]], c: '#f5a623' },
+        O: { m: [[1,1],[1,1]], c: '#ffd23f' },
+        S: { m: [[0,1,1],[1,1,0],[0,0,0]], c: '#22b573' },
+        T: { m: [[0,1,0],[1,1,1],[0,0,0]], c: '#8a5cf6' },
+        Z: { m: [[1,1,0],[0,1,1],[0,0,0]], c: '#ff4d5e' },
+      }
+      const KEYS = Object.keys(SHAPES)
+
+      let board, piece, score, lines, level, over, running
+      let best = Number(localStorage.getItem('tetris-best') || 0)
+      let acc = 0, last = 0
+      bestEl.textContent = best
+
+      function rotateM(m) {
+        return m[0].map((_, i) => m.map((row) => row[i]).reverse())
+      }
+
+      function collide(m, x, y) {
+        for (let r = 0; r < m.length; r++)
+          for (let c = 0; c < m[r].length; c++) {
+            if (!m[r][c]) continue
+            const nx = x + c, ny = y + r
+            if (nx < 0 || nx >= COLS || ny >= ROWS) return true
+            if (ny >= 0 && board[ny][nx]) return true
+          }
+        return false
+      }
+
+      function spawn() {
+        const k = KEYS[(Math.random() * KEYS.length) | 0]
+        const m = SHAPES[k].m.map((row) => [...row])
+        piece = { m, c: SHAPES[k].c, x: ((COLS - m[0].length) / 2) | 0, y: 0 }
+        if (collide(m, piece.x, piece.y)) gameOver()
+      }
+
+      function lock() {
+        for (let r = 0; r < piece.m.length; r++)
+          for (let c = 0; c < piece.m[r].length; c++) {
+            if (!piece.m[r][c]) continue
+            const ny = piece.y + r
+            if (ny < 0) return gameOver()
+            board[ny][piece.x + c] = piece.c
+          }
+        const full = board.filter((row) => row.every((cell) => cell))
+        if (full.length) {
+          board = board.filter((row) => !row.every((cell) => cell))
+          while (board.length < ROWS) board.unshift(Array(COLS).fill(null))
+          lines += full.length
+          score += [0, 100, 300, 500, 800][full.length] * level
+          level = 1 + ((lines / 10) | 0)
+          if (score > best) {
+            best = score
+            bestEl.textContent = best
+            localStorage.setItem('tetris-best', best)
+          }
+          linesEl.textContent = lines
+          levelEl.textContent = level
+          scoreEl.textContent = score
+        }
+        spawn()
+      }
+
+      function step() {
+        if (!collide(piece.m, piece.x, piece.y + 1)) piece.y++
+        else lock()
+      }
+
+      function hardDrop() {
+        while (!collide(piece.m, piece.x, piece.y + 1)) { piece.y++; score += 2 }
+        scoreEl.textContent = score
+        lock()
+      }
+
+      function act(a) {
+        if (!running || over) return
+        if (a === 'left' && !collide(piece.m, piece.x - 1, piece.y)) piece.x--
+        else if (a === 'right' && !collide(piece.m, piece.x + 1, piece.y)) piece.x++
+        else if (a === 'down') { if (!collide(piece.m, piece.x, piece.y + 1)) { piece.y++; score++; scoreEl.textContent = score } }
+        else if (a === 'drop') hardDrop()
+        else if (a === 'rot') {
+          const rm = rotateM(piece.m)
+          if (!collide(rm, piece.x, piece.y)) piece.m = rm
+          else if (!collide(rm, piece.x - 1, piece.y)) { piece.m = rm; piece.x-- }
+          else if (!collide(rm, piece.x + 1, piece.y)) { piece.m = rm; piece.x++ }
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, cv.width, cv.height)
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)'
+        for (let i = 1; i < COLS; i++) { ctx.beginPath(); ctx.moveTo(i*S,0); ctx.lineTo(i*S,cv.height); ctx.stroke() }
+        for (let i = 1; i < ROWS; i++) { ctx.beginPath(); ctx.moveTo(0,i*S); ctx.lineTo(cv.width,i*S); ctx.stroke() }
+        const cell = (x, y, color) => {
+          ctx.fillStyle = color
+          ctx.beginPath()
+          ctx.roundRect(x*S+1.5, y*S+1.5, S-3, S-3, 4)
+          ctx.fill()
+        }
+        for (let r = 0; r < ROWS; r++)
+          for (let c = 0; c < COLS; c++)
+            if (board[r][c]) cell(c, r, board[r][c])
+        if (running && !over)
+          for (let r = 0; r < piece.m.length; r++)
+            for (let c = 0; c < piece.m[r].length; c++)
+              if (piece.m[r][c] && piece.y + r >= 0) cell(piece.x + c, piece.y + r, piece.c)
+      }
+
+      function loop(t) {
+        requestAnimationFrame(loop)
+        if (!last) last = t
+        const dt = t - last
+        last = t
+        if (running && !over) {
+          acc += dt
+          if (acc >= Math.max(120, 820 - (level - 1) * 70)) { acc = 0; step() }
+        }
+        draw()
+      }
+
+      function startGame() {
+        board = Array.from({ length: ROWS }, () => Array(COLS).fill(null))
+        score = 0; lines = 0; level = 1; over = false
+        scoreEl.textContent = 0; linesEl.textContent = 0; levelEl.textContent = 1
+        spawn()
+        overlay.classList.add('hidden')
+        running = true
+      }
+
+      function gameOver() {
+        over = true
+        running = false
+        ovBtn.textContent = '再来一局'
+        overlay.querySelector('h1').textContent = '游戏结束'
+        overlay.querySelector('p').innerHTML =
+          '本局 <b style="color:#ffd23f">' + score + '</b> 分 · 消除 ' + lines + ' 行 · 最高分 ' + best
+        overlay.classList.remove('hidden')
+      }
+
+      ovBtn.addEventListener('click', startGame)
+      document.querySelectorAll('#pads button').forEach((b) =>
+        b.addEventListener('pointerdown', (e) => { e.preventDefault(); act(b.dataset.a) }),
+      )
+
+      const keyMap = {
+        ArrowLeft: 'left', KeyA: 'left',
+        ArrowRight: 'right', KeyD: 'right',
+        ArrowDown: 'down', KeyS: 'down',
+        ArrowUp: 'rot', KeyW: 'rot',
+        Space: 'drop',
+      }
+      window.addEventListener('keydown', (e) => {
+        const a = keyMap[e.code]
+        if (a) { e.preventDefault(); act(a) }
+        if (e.code === 'Space' && !running && !overlay.classList.contains('hidden')) {
+          e.preventDefault(); startGame()
+        }
+      })
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      board = Array.from({ length: ROWS }, () => Array(COLS).fill(null))
+      score = 0; lines = 0; level = 1; over = false; running = false
+      requestAnimationFrame(loop)
+    })()
+  </script>
+</body>
+</html>

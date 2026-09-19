@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>像素贪吃蛇</title>
+  <style>
+    :root { --blue: #2f55e4; --blue-light: #5d84ff; --yellow: #ffd23f; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: #0f1118; color: #eef1f6;
+      font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      touch-action: none; overflow: hidden;
+    }
+    #wrap { position: relative; }
+    #hud {
+      position: absolute; top: -36px; left: 0; right: 0;
+      display: flex; justify-content: space-between;
+      font-size: 13px; font-weight: 700; color: #8b93a7; letter-spacing: 1px;
+    }
+    #hud b { color: var(--yellow); font-size: 18px; margin-left: 6px; }
+    canvas {
+      display: block; border: 3px solid #2a2e3d; border-radius: 10px;
+      background: #14161f; max-width: 92vw; max-height: 80vh;
+    }
+    #overlay {
+      position: absolute; inset: 0; border-radius: 10px;
+      background: rgba(15, 17, 24, 0.85);
+      display: flex; flex-direction: column; gap: 16px;
+      align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
+    #overlay.hidden { display: none; }
+    #overlay h1 { font-size: 26px; letter-spacing: 4px; text-shadow: 3px 3px 0 var(--blue); }
+    #overlay p { color: #8b93a7; font-size: 13px; line-height: 1.9; }
+    #overlay button {
+      background: var(--blue); color: #fff; font-family: inherit;
+      border: 2px solid #fff; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+      font-size: 16px; font-weight: 700; padding: 10px 32px; border-radius: 8px; cursor: pointer;
+    }
+    #overlay button:active { transform: translate(2px, 2px); box-shadow: none; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>SCORE<b id="score">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="480" height="480"></canvas>
+    <div id="overlay">
+      <h1 id="ov-title">像素贪吃蛇</h1>
+      <p id="ov-text">方向键 / WASD 转向 · 空格暂停<br />手机端滑动屏幕转向</p>
+      <button id="ov-btn">开始游戏</button>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const N = 24
+      const CELL = cv.width / N
+      const scoreEl = document.getElementById('score')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovTitle = document.getElementById('ov-title')
+      const ovText = document.getElementById('ov-text')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let snake, dir, pendingDir, food, score, speed, dead, paused
+      let best = Number(localStorage.getItem('snake-best') || 0)
+      let acc = 0, last = 0
+      bestEl.textContent = best
+
+      function reset() {
+        snake = [{ x: 12, y: 12 }, { x: 11, y: 12 }, { x: 10, y: 12 }]
+        dir = { x: 1, y: 0 }
+        pendingDir = null
+        score = 0
+        speed = 140
+        dead = false
+        paused = false
+        scoreEl.textContent = 0
+        placeFood()
+      }
+
+      function placeFood() {
+        do {
+          food = { x: (Math.random() * N) | 0, y: (Math.random() * N) | 0 }
+        } while (snake.some((s) => s.x === food.x && s.y === food.y))
+      }
+
+      function step() {
+        if (pendingDir) {
+          const nd = pendingDir
+          if (nd.x !== -dir.x || nd.y !== -dir.y) dir = nd
+          pendingDir = null
+        }
+        const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y }
+
+        if (head.x < 0 || head.x >= N || head.y < 0 || head.y >= N ||
+            snake.some((s) => s.x === head.x && s.y === head.y)) {
+          return gameOver()
+        }
+
+        snake.unshift(head)
+        if (head.x === food.x && head.y === food.y) {
+          score += 10
+          scoreEl.textContent = score
+          if (score > best) {
+            best = score
+            bestEl.textContent = best
+            localStorage.setItem('snake-best', best)
+          }
+          speed = Math.max(70, speed - 3)
+          placeFood()
+        } else {
+          snake.pop()
+        }
+      }
+
+      function gameOver() {
+        dead = true
+        ovTitle.textContent = '游戏结束'
+        ovText.innerHTML = '本局得分 <b style="color:#ffd23f">' + score + '</b> · 最高分 ' + best + '<br />按 空格 或点击按钮重新开始'
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, cv.width, cv.height)
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)'
+        ctx.lineWidth = 1
+        for (let i = 1; i < N; i++) {
+          ctx.beginPath(); ctx.moveTo(i * CELL, 0); ctx.lineTo(i * CELL, cv.height); ctx.stroke()
+          ctx.beginPath(); ctx.moveTo(0, i * CELL); ctx.lineTo(cv.width, i * CELL); ctx.stroke()
+        }
+
+        // 食物：金色发光圆
+        ctx.save()
+        ctx.shadowColor = '#ffd23f'
+        ctx.shadowBlur = 14
+        ctx.fillStyle = '#ffd23f'
+        ctx.beginPath()
+        ctx.arc((food.x + 0.5) * CELL, (food.y + 0.5) * CELL, CELL * 0.34, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.restore()
+
+        // 蛇：头亮尾深
+        for (let i = snake.length - 1; i >= 0; i--) {
+          const s = snake[i]
+          ctx.fillStyle = i === 0 ? '#5d84ff' : '#2f55e4'
+          const pad = i === 0 ? 1.5 : 2.5
+          ctx.beginPath()
+          ctx.roundRect(s.x * CELL + pad, s.y * CELL + pad, CELL - pad * 2, CELL - pad * 2, 4)
+          ctx.fill()
+        }
+
+        // 蛇眼睛
+        const h = snake[0]
+        ctx.fillStyle = '#fff'
+        const ex = (h.x + 0.5) * CELL + dir.x * CELL * 0.18
+        const ey = (h.y + 0.5) * CELL + dir.y * CELL * 0.18
+        const off = CELL * 0.16
+        ctx.beginPath(); ctx.arc(ex - (dir.y ? off : 0), ey - (dir.x ? off : 0), 2, 0, Math.PI * 2); ctx.fill()
+        ctx.beginPath(); ctx.arc(ex + (dir.y ? off : 0), ey + (dir.x ? off : 0), 2, 0, Math.PI * 2); ctx.fill()
+      }
+
+      function loop(t) {
+        requestAnimationFrame(loop)
+        if (!last) last = t
+        const dt = t - last
+        last = t
+        if (dead || paused) { draw(); return }
+        acc += dt
+        if (acc >= speed) {
+          acc = 0
+          step()
+        }
+        draw()
+      }
+
+      function startGame() {
+        reset()
+        overlay.classList.add('hidden')
+      }
+
+      ovBtn.addEventListener('click', startGame)
+
+      function queueDir(x, y) {
+        pendingDir = { x, y }
+      }
+
+      const keyMap = {
+        ArrowUp: [0, -1], KeyW: [0, -1],
+        ArrowDown: [0, 1], KeyS: [0, 1],
+        ArrowLeft: [-1, 0], KeyA: [-1, 0],
+        ArrowRight: [1, 0], KeyD: [1, 0],
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault()
+          if (dead) { startGame(); return }
+          if (!overlay.classList.contains('hidden')) { startGame(); return }
+          paused = !paused
+          return
+        }
+        const d = keyMap[e.code]
+        if (d) {
+          e.preventDefault()
+          queueDir(d[0], d[1])
+        }
+      })
+
+      // 触屏滑动
+      let tx = 0, ty = 0
+      window.addEventListener('touchstart', (e) => {
+        tx = e.touches[0].clientX; ty = e.touches[0].clientY
+      }, { passive: true })
+      window.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - tx
+        const dy = e.changedTouches[0].clientY - ty
+        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return
+        if (Math.abs(dx) > Math.abs(dy)) queueDir(dx > 0 ? 1 : -1, 0)
+        else queueDir(0, dy > 0 ? 1 : -1)
+      }, { passive: true })
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return dead },
+        get started() { return overlay.classList.contains('hidden') },
+      }
+
+      reset()
+      requestAnimationFrame(loop)
+    })()
+  </script>
+</body>
+</html>

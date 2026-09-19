@@ -1,0 +1,242 @@
+[
+  {
+    "id": "2048",
+    "name": "数字合合乐 2048",
+    "emoji": "🔢",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "单人",
+      "HTML5",
+      "益智"
+    ],
+    "summary": "滑动数字方块，相同数字碰撞翻倍，一路合并到 2048！简单上手、根本停不下来。",
+    "description": "经典 2048 玩法复刻。4×4 棋盘上滑动方块，相同数字碰撞即合并翻倍，目标是合成 2048。每次滑动会随机生成新方块，棋盘填满且无法移动时游戏结束。支持键盘与触屏滑动。",
+    "howToPlay": "方向键 / WASD 滑动；手机端上下左右滑动屏幕。",
+    "entry": "2048/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": true,
+    "plays": 0
+  },
+  {
+    "id": "breakout",
+    "name": "疯狂打砖块",
+    "emoji": "🧱",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "tags": [
+      "单人",
+      "HTML5",
+      "街机"
+    ],
+    "summary": "弹球撞碎整面砖墙，接住反弹别丢球，通关后砖墙加固再来一波！",
+    "description": "经典打砖块复刻。移动挡板接住弹球，撞碎所有砖块即过关；球速会随关卡逐渐加快，三条命用完游戏结束。角度由击中挡板的位置决定，可以打出刁钻弧线。支持鼠标 / 触屏 / 键盘操作。",
+    "howToPlay": "移动鼠标或左右方向键控制挡板；空格 / 点击发射弹球；手机端拖动屏幕。",
+    "entry": "breakout/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "flappy",
+    "name": "像素小鸟",
+    "emoji": "🐤",
+    "categories": [
+      "arcade",
+      "casual"
+    ],
+    "tags": [
+      "单人",
+      "HTML5",
+      "虐手"
+    ],
+    "summary": "点一下飞一下，穿过一根根绿色管道的缝隙，能飞多远全看手稳不稳！",
+    "description": "经典 Flappy Bird 玩法复刻。小鸟受重力不断下坠，点击 / 按空格扇翅上飞，穿过管道缝隙得 1 分；碰到管道或落地即结束。速度会随分数缓慢提升，考验节奏感与心态，最高分本地保存。",
+    "howToPlay": "空格 / 鼠标点击 / 触屏点按让小鸟向上飞，保持节奏穿过缝隙。",
+    "entry": "flappy/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "gobang",
+    "name": "五子棋",
+    "emoji": "⚫",
+    "categories": [
+      "card",
+      "strategy"
+    ],
+    "tags": [
+      "人机",
+      "双人",
+      "棋牌"
+    ],
+    "summary": "连成五子即获胜！内置启发式 AI 可随时开战，也能和朋友同屏对弈。",
+    "description": "经典五子棋。默认人机对战（你执黑先行，AI 会进攻也会防守），也可切换双人同屏轮流落子。先在横、竖、斜任意方向连成五子者胜。15×15 标准棋盘，落子即判断胜负。",
+    "howToPlay": "点击棋盘交叉点落子；人机模式你执黑，AI 执白；可随时切换模式或重开。",
+    "entry": "gobang/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "memory",
+    "name": "记忆翻牌",
+    "emoji": "🧠",
+    "categories": [
+      "casual",
+      "puzzle"
+    ],
+    "tags": [
+      "单人",
+      "HTML5",
+      "益智"
+    ],
+    "summary": "16 张牌盖着 8 对图案，凭记忆两两配对，用最少步数全翻开的时刻最爽！",
+    "description": "经典记忆配对游戏。4×4 牌阵盖着 8 对 emoji 图案，每次翻开两张，一致即配对成功保留明面；全部配对即获胜，步数越少越强，最少步数纪录本地保存。",
+    "howToPlay": "点击卡片翻开，一次翻两张；配对成功保持明面，失败自动盖回。",
+    "entry": "memory/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "minesweeper",
+    "name": "经典扫雷",
+    "emoji": "💣",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "单人",
+      "HTML5",
+      "益智"
+    ],
+    "summary": "9×9 雷区藏着 10 颗地雷，用数字推理排雷插旗，全靠逻辑一次通关！",
+    "description": "Windows 经典扫雷复刻。9×9 雷区 10 颗雷，首次点击保证安全；数字表示周围雷数，推理出所有安全格即获胜，也可以插旗标记疑雷。计时挑战，最好成绩本地保存。",
+    "howToPlay": "左键 / 点击翻开格子；右键或开启🚩模式后点击插旗；翻开所有安全格即胜利。",
+    "entry": "minesweeper/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "planewar",
+    "name": "雷霆打飞机",
+    "emoji": "✈️",
+    "categories": [
+      "shooter",
+      "action"
+    ],
+    "tags": [
+      "单人",
+      "HTML5",
+      "射击"
+    ],
+    "summary": "指尖操控战机自动开火，躲开敌机弹幕，看你能击落多少架！",
+    "description": "竖版飞行射击游戏。战机跟随指针自动开火，敌机从上方源源不断扑来，越到后面越密集；被撞掉一条命后有短暂无敌闪烁，三条命耗尽即结束。支持鼠标 / 触屏拖动 / 键盘操作。",
+    "howToPlay": "鼠标移动或拖动屏幕控制战机位置，← → 也可以移动；火力全自动，专心走位。",
+    "entry": "planewar/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": true,
+    "plays": 0
+  },
+  {
+    "id": "racedodge",
+    "name": "极速避让",
+    "emoji": "🏎️",
+    "categories": [
+      "racing",
+      "casual"
+    ],
+    "tags": [
+      "单人",
+      "HTML5",
+      "竞速"
+    ],
+    "summary": "三车道公路上车流飞驰，左右变道躲开红色车辆，看你能飙出多远！",
+    "description": "竖版公路竞速躲避游戏。你的蓝色赛车在三车道公路上飞驰，红色车辆迎面而来且越来越快、越来越密；左右变道躲避，碰撞即结束。距离就是分数，最远纪录本地保存。",
+    "howToPlay": "← → 或 A D 变道；手机端点击屏幕左 / 右半边变道。",
+    "entry": "racedodge/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "snake",
+    "name": "像素贪吃蛇",
+    "emoji": "🐍",
+    "categories": [
+      "arcade",
+      "casual"
+    ],
+    "tags": [
+      "单人",
+      "HTML5",
+      "像素风"
+    ],
+    "summary": "经典街机重生：操控像素小蛇吃下金色果实，越吃越长、越跑越快，别咬到自己！",
+    "description": "贪吃蛇的像素风复刻版。吃到果实得分并变长，节奏会随分数逐渐加快；撞墙或咬到自己即结束。支持键盘与触屏滑动操作，最高分本地保存。",
+    "howToPlay": "方向键 / WASD 转向；空格暂停；手机端滑动屏幕转向。",
+    "entry": "snake/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": true,
+    "plays": 0
+  },
+  {
+    "id": "tetris",
+    "name": "俄罗斯方块",
+    "emoji": "🧊",
+    "categories": [
+      "puzzle",
+      "arcade"
+    ],
+    "tags": [
+      "单人",
+      "HTML5",
+      "经典"
+    ],
+    "summary": "七种方块轮番落下，拼满一整行即可消除得分，看看你能撑到第几关！",
+    "description": "经典俄罗斯方块复刻。方块自动下落，移到合适位置拼满一整行即可消除；每消 10 行升一级、下落速度加快。硬降可以直接落底抢时间，支持键盘与触屏按钮操作，最高分本地保存。",
+    "howToPlay": "← → 移动，↑ 旋转，↓ 软降，空格硬降；手机端使用画面下方按钮。",
+    "entry": "tetris/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-19",
+    "featured": true,
+    "plays": 0
+  }
+]

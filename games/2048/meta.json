@@ -1,0 +1,17 @@
+{
+  "id": "2048",
+  "name": "数字合合乐 2048",
+  "emoji": "🔢",
+  "categories": ["puzzle", "casual"],
+  "tags": ["单人", "HTML5", "益智"],
+  "summary": "滑动数字方块，相同数字碰撞翻倍，一路合并到 2048！简单上手、根本停不下来。",
+  "description": "经典 2048 玩法复刻。4×4 棋盘上滑动方块，相同数字碰撞即合并翻倍，目标是合成 2048。每次滑动会随机生成新方块，棋盘填满且无法移动时游戏结束。支持键盘与触屏滑动。",
+  "howToPlay": "方向键 / WASD 滑动；手机端上下左右滑动屏幕。",
+  "entry": "2048/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-19",
+  "featured": true,
+  "plays": 0
+}

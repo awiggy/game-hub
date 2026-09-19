@@ -1,0 +1,17 @@
+{
+  "id": "racedodge",
+  "name": "极速避让",
+  "emoji": "🏎️",
+  "categories": ["racing", "casual"],
+  "tags": ["单人", "HTML5", "竞速"],
+  "summary": "三车道公路上车流飞驰，左右变道躲开红色车辆，看你能飙出多远！",
+  "description": "竖版公路竞速躲避游戏。你的蓝色赛车在三车道公路上飞驰，红色车辆迎面而来且越来越快、越来越密；左右变道躲避，碰撞即结束。距离就是分数，最远纪录本地保存。",
+  "howToPlay": "← → 或 A D 变道；手机端点击屏幕左 / 右半边变道。",
+  "entry": "racedodge/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-19",
+  "featured": false,
+  "plays": 0
+}

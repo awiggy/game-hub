@@ -1,0 +1,17 @@
+{
+  "id": "snake",
+  "name": "像素贪吃蛇",
+  "emoji": "🐍",
+  "categories": ["arcade", "casual"],
+  "tags": ["单人", "HTML5", "像素风"],
+  "summary": "经典街机重生：操控像素小蛇吃下金色果实，越吃越长、越跑越快，别咬到自己！",
+  "description": "贪吃蛇的像素风复刻版。吃到果实得分并变长，节奏会随分数逐渐加快；撞墙或咬到自己即结束。支持键盘与触屏滑动操作，最高分本地保存。",
+  "howToPlay": "方向键 / WASD 转向；空格暂停；手机端滑动屏幕转向。",
+  "entry": "snake/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-19",
+  "featured": true,
+  "plays": 0
+}

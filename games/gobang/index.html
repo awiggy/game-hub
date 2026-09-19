@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>五子棋</title>
+  <style>
+    :root { --blue: #2f55e4; --yellow: #ffd23f; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: #0f1118; color: #eef1f6;
+      font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; touch-action: manipulation; overflow: hidden;
+    }
+    #bar {
+      width: min(92vw, 460px);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px; font-weight: 700; color: #8b93a7;
+    }
+    #bar b { color: var(--yellow); }
+    #bar .btns { display: flex; gap: 6px; }
+    #bar button {
+      font-family: inherit; font-size: 12px; font-weight: 700;
+      color: #eef1f6; background: #1a1d29; border: 2px solid #2a2e3d;
+      border-radius: 8px; padding: 6px 10px; cursor: pointer;
+    }
+    #bar button.on { background: var(--blue); border-color: #fff; }
+    canvas {
+      display: block; border: 3px solid #2a2e3d; border-radius: 10px;
+      background: #1a1d29; width: min(92vw, 460px); max-height: 70vh;
+    }
+    #overlay {
+      position: fixed; inset: 0; background: rgba(15, 17, 24, 0.88);
+      display: flex; flex-direction: column; gap: 16px;
+      align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
+    #overlay.hidden { display: none; }
+    #overlay h1 { font-size: 26px; letter-spacing: 4px; text-shadow: 3px 3px 0 var(--blue); }
+    #overlay p { color: #8b93a7; font-size: 13px; line-height: 1.9; }
+    #overlay button {
+      background: var(--blue); color: #fff; font-family: inherit;
+      border: 2px solid #fff; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+      font-size: 16px; font-weight: 700; padding: 10px 32px; border-radius: 8px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="bar">
+    <span id="turn">● 黑方回合</span>
+    <span class="btns">
+      <button id="mode-btn" class="on">🤖 人机</button>
+      <button id="new-btn">重开</button>
+    </span>
+  </div>
+  <canvas id="cv" width="480" height="480"></canvas>
+  <div id="overlay">
+    <h1>五子棋</h1>
+    <p>点击交叉点落子，先连成五子者胜<br />人机模式你执黑先行，AI 有攻有守</p>
+    <button id="ov-btn">开始对局</button>
+  </div>
+
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const N = 15
+      const PAD = 24
+      const CELL = (cv.width - PAD * 2) / (N - 1)
+      const turnEl = document.getElementById('turn')
+      const modeBtn = document.getElementById('mode-btn')
+      const newBtn = document.getElementById('new-btn')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let board, turn, over, aiMode, lastMove, thinking
+      // 1=黑 2=白；人机模式人类执黑(1)，AI 执白(2)
+      const DIRS = [[1, 0], [0, 1], [1, 1], [1, -1]]
+
+      function startGame() {
+        board = new Int8Array(N * N)
+        turn = 1
+        over = false
+        lastMove = -1
+        thinking = false
+        updateTurn()
+        overlay.classList.add('hidden')
+        draw()
+      }
+
+      function updateTurn() {
+        if (over) return
+        turnEl.innerHTML = turn === 1 ? '● 黑方回合' : '○ 白方回合'
+      }
+
+      function idx(r, c) { return r * N + c }
+
+      function winAt(i, p) {
+        const r = (i / N) | 0, c = i % N
+        for (const [dr, dc] of DIRS) {
+          let count = 1
+          for (const s of [1, -1]) {
+            let nr = r + dr * s, nc = c + dc * s
+            while (nr >= 0 && nr < N && nc >= 0 && nc < N && board[idx(nr, nc)] === p) {
+              count++
+              nr += dr * s
+              nc += dc * s
+            }
+          }
+          if (count >= 5) return true
+        }
+        return false
+      }
+
+      function place(i, p) {
+        board[i] = p
+        lastMove = i
+        draw()
+        if (winAt(i, p)) {
+          over = true
+          const isHumanWin = aiMode ? p === 1 : true
+          showOverlay(
+            aiMode ? (isHumanWin ? '🏆 你赢了' : '🤖 AI 获胜') : (p === 1 ? '🏆 黑方胜' : '🏆 白方胜'),
+            aiMode ? (isHumanWin ? '漂亮的五连！' : '再想想，防守和进攻要兼顾') : '再来一局？',
+          )
+          return true
+        }
+        return false
+      }
+
+      function humanMove(i) {
+        if (over || thinking || board[i]) return
+        if (place(i, turn)) return
+        if (aiMode && turn === 1) {
+          turn = 2
+          thinking = true
+          turnEl.textContent = '🤖 AI 思考中…'
+          setTimeout(aiMove, 260)
+        } else {
+          turn = turn === 1 ? 2 : 1
+          updateTurn()
+        }
+      }
+
+      // 启发式 AI：评估每个候选点的进攻/防守价值
+      function patternScore(count, open) {
+        if (count >= 5) return 1e7
+        if (count === 4) return open >= 2 ? 1e6 : open === 1 ? 1e5 : 0
+        if (count === 3) return open >= 2 ? 2e4 : open === 1 ? 2000 : 0
+        if (count === 2) return open >= 2 ? 400 : open === 1 ? 50 : 0
+        return 10
+      }
+
+      function lineScore(i, p) {
+        const r = (i / N) | 0, c = i % N
+        let total = 0
+        for (const [dr, dc] of DIRS) {
+          let count = 1, open = 0
+          for (const s of [1, -1]) {
+            let nr = r + dr * s, nc = c + dc * s
+            while (nr >= 0 && nr < N && nc >= 0 && nc < N && board[idx(nr, nc)] === p) {
+              count++
+              nr += dr * s
+              nc += dc * s
+            }
+            if (nr >= 0 && nr < N && nc >= 0 && nc < N && board[idx(nr, nc)] === 0) open++
+          }
+          total += patternScore(count, open)
+        }
+        return total
+      }
+
+      function aiMove() {
+        thinking = false
+        if (over) return
+        const empties = []
+        let hasStone = false
+        for (let i = 0; i < N * N; i++) {
+          if (board[i]) { hasStone = true; continue }
+          let near = false
+          const r = (i / N) | 0, c = i % N
+          for (let dr = -2; dr <= 2 && !near; dr++)
+            for (let dc = -2; dc <= 2; dc++) {
+              const nr = r + dr, nc = c + dc
+              if (nr >= 0 && nr < N && nc >= 0 && nc < N && board[idx(nr, nc)]) { near = true; break }
+            }
+          if (near) empties.push(i)
+        }
+        if (!hasStone) { place(idx(7, 7), 2); turn = 1; updateTurn(); return }
+        if (!empties.length) { turn = 1; updateTurn(); return }
+
+        let bestV = -1, bestI = empties[0]
+        for (const i of empties) {
+          const v = lineScore(i, 2) + lineScore(i, 1) * 0.9 + Math.random() * 8
+          if (v > bestV) { bestV = v; bestI = i }
+        }
+        if (place(bestI, 2)) return
+        turn = 1
+        updateTurn()
+      }
+
+      function draw() {
+        ctx.fillStyle = '#1a1d29'
+        ctx.fillRect(0, 0, cv.width, cv.height)
+        ctx.strokeStyle = '#3a4152'
+        ctx.lineWidth = 1
+        for (let i = 0; i < N; i++) {
+          ctx.beginPath(); ctx.moveTo(PAD, PAD + i * CELL); ctx.lineTo(cv.width - PAD, PAD + i * CELL); ctx.stroke()
+          ctx.beginPath(); ctx.moveTo(PAD + i * CELL, PAD); ctx.lineTo(PAD + i * CELL, cv.height - PAD); ctx.stroke()
+        }
+        // 星位
+        ctx.fillStyle = '#3a4152'
+        for (const [r, c] of [[3,3],[3,11],[7,7],[11,3],[11,11]]) {
+          ctx.beginPath()
+          ctx.arc(PAD + c * CELL, PAD + r * CELL, 3, 0, Math.PI * 2)
+          ctx.fill()
+        }
+        for (let i = 0; i < N * N; i++) {
+          if (!board[i]) continue
+          const x = PAD + (i % N) * CELL, y = PAD + ((i / N) | 0) * CELL
+          ctx.beginPath()
+          ctx.arc(x, y, CELL * 0.42, 0, Math.PI * 2)
+          if (board[i] === 1) {
+            ctx.fillStyle = '#14161f'
+            ctx.fill()
+            ctx.strokeStyle = '#3a4152'
+            ctx.stroke()
+          } else {
+            ctx.fillStyle = '#eef1f6'
+            ctx.fill()
+          }
+          if (i === lastMove) {
+            ctx.fillStyle = board[i] === 1 ? '#ffd23f' : '#ff4d5e'
+            ctx.beginPath()
+            ctx.arc(x, y, 3, 0, Math.PI * 2)
+            ctx.fill()
+          }
+        }
+      }
+
+      function showOverlay(title, text) {
+        overlay.querySelector('h1').textContent = title
+        overlay.querySelector('p').textContent = text
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function toBoard(e) {
+        const rect = cv.getBoundingClientRect()
+        const x = (e.clientX - rect.left) * (cv.width / rect.width)
+        const y = (e.clientY - rect.top) * (cv.height / rect.height)
+        const c = Math.round((x - PAD) / CELL)
+        const r = Math.round((y - PAD) / CELL)
+        if (r < 0 || r >= N || c < 0 || c >= N) return -1
+        const px = PAD + c * CELL, py = PAD + r * CELL
+        if (Math.hypot(x - px, y - py) > CELL * 0.48) return -1
+        return idx(r, c)
+      }
+
+      cv.addEventListener('pointerdown', (e) => {
+        const i = toBoard(e)
+        if (i >= 0) humanMove(i)
+      })
+      modeBtn.addEventListener('click', () => {
+        aiMode = !aiMode
+        modeBtn.classList.toggle('on', aiMode)
+        modeBtn.textContent = aiMode ? '🤖 人机' : '👥 双人'
+        startGame()
+      })
+      newBtn.addEventListener('click', startGame)
+      ovBtn.addEventListener('click', startGame)
+
+      window.__hub = {
+        get score() { return board.reduce((s, v) => s + (v ? 1 : 0), 0) },
+        get over() { return over },
+        get started() { return board.some((v) => v) },
+      }
+
+      board = new Int8Array(N * N)
+      turn = 1; over = false; aiMode = true; lastMove = -1; thinking = false
+      draw()
+    })()
+  </script>
+</body>
+</html>

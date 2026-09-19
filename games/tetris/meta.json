@@ -1,0 +1,17 @@
+{
+  "id": "tetris",
+  "name": "俄罗斯方块",
+  "emoji": "🧊",
+  "categories": ["puzzle", "arcade"],
+  "tags": ["单人", "HTML5", "经典"],
+  "summary": "七种方块轮番落下，拼满一整行即可消除得分，看看你能撑到第几关！",
+  "description": "经典俄罗斯方块复刻。方块自动下落，移到合适位置拼满一整行即可消除；每消 10 行升一级、下落速度加快。硬降可以直接落底抢时间，支持键盘与触屏按钮操作，最高分本地保存。",
+  "howToPlay": "← → 移动，↑ 旋转，↓ 软降，空格硬降；手机端使用画面下方按钮。",
+  "entry": "tetris/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-19",
+  "featured": true,
+  "plays": 0
+}
