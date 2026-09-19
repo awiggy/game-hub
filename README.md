@@ -2,6 +2,10 @@
 
 AI 时代的开源小游戏平台：按分类浏览小游戏，点开即玩。视觉风格参考像素街机 × 现代扁平（蓝黄配色 / 硬边框 / 硬阴影）。
 
+- **线上地址**：https://awiggy.github.io/game-hub/
+- **仓库**：https://github.com/awiggy/game-hub
+- **部署**：push 到 main 即自动构建发布（GitHub Actions → GitHub Pages）
+
 ## 开发
 
 ```bash
