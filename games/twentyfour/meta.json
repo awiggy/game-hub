@@ -1,0 +1,17 @@
+{
+  "id": "twentyfour",
+  "name": "速算24点",
+  "emoji": "🧮",
+  "categories": ["card", "puzzle"],
+  "tags": ["棋牌", "心算", "益智"],
+  "summary": "四张牌加减乘除凑 24，30 秒一题，越算越上头！",
+  "description": "经典 24 点。每题发 4 张牌（保证有解），点选两张牌与一个运算符合成新牌，逐步算到只剩一张且等于 24 即得分。每题限时 30 秒，3 次失败（超时或换题累计）结束。",
+  "howToPlay": "点两张牌 + 运算符合成；目标是合成 24；卡住可换题（扣分）。",
+  "entry": "twentyfour/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

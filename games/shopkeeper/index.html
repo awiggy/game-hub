@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>街角小店</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body {
+      background:#0f1118; color:#eef1f6;
+      font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center;
+      touch-action:manipulation; overflow:hidden;
+    }
+    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:10px; }
+    #hud { display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    .card { background:#1a1d29; border:2px solid #2a2e3d; border-radius:12px; }
+    #goods { display:flex; flex-direction:column; gap:8px; padding:12px; }
+    .good { display:flex; align-items:center; gap:10px; }
+    .good .ico { font-size:28px; width:36px; text-align:center; }
+    .good .info { flex:1; }
+    .good .info b { font-size:14px; }
+    .good .info span { display:block; font-size:11px; color:#8b93a7; font-weight:700; }
+    .good .have { font-size:12px; color:var(--yellow); font-weight:900; width:44px; text-align:right; }
+    .good button {
+      width:34px; height:34px; font-size:18px; font-weight:900; font-family:inherit;
+      color:#eef1f6; background:#2a3350; border:0; border-radius:8px; cursor:pointer;
+    }
+    .good button:disabled { opacity:.35; }
+    .good button:not(:disabled):active { background:var(--blue); }
+    #sell { width:100%; font-family:inherit; font-weight:900; font-size:15px; padding:12px;
+      background:var(--blue); color:#fff; border:2px solid #fff; border-radius:10px; cursor:pointer; }
+    #sell:active { opacity:.85; }
+    #log { padding:10px 12px; font-size:11px; line-height:1.8; color:#8b93a7; font-weight:700;
+      max-height:110px; overflow:auto; }
+    #overlay {
+      position:fixed; inset:0; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px;
+    }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button {
+      background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700;
+      padding:10px 32px; border-radius:8px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>第<b id="day">1</b>/10天</span>
+      <span>资产<b id="cash">100</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="goods" class="card"></div>
+    <button id="sell">🌞 开张营业（结算次日售价）</button>
+    <div id="log" class="card"></div>
+  </div>
+  <div id="overlay">
+    <h1>🏪 街角小店</h1>
+    <p>每天三种商品随机报价，点 ＋ 进货<br/>「开张营业」后按波动售价售罄库存<br/>低买高卖，10 天结算总资产</p>
+    <button id="ov-btn">开始经营</button>
+  </div>
+  <script>
+    (() => {
+      const POOL = [
+        { e: '🍎', n: '苹果', base: 3 },
+        { e: '🍞', n: '面包', base: 5 },
+        { e: '🥛', n: '牛奶', base: 4 },
+        { e: '☕', n: '咖啡', base: 8 },
+        { e: '🍰', n: '蛋糕', base: 12 },
+      ]
+      const dayEl = document.getElementById('day')
+      const cashEl = document.getElementById('cash')
+      const bestEl = document.getElementById('best')
+      const goodsEl = document.getElementById('goods')
+      const sellBtn = document.getElementById('sell')
+      const logEl = document.getElementById('log')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let day, cash, offers, stock, running, over
+      let best = Number(localStorage.getItem('shopkeeper-best') || 0)
+      bestEl.textContent = best
+
+      function newDay() {
+        const pool = [...POOL].sort(() => Math.random() - 0.5).slice(0, 3)
+        offers = pool.map((p) => ({ ...p, cost: Math.max(1, Math.round(p.base * (0.8 + Math.random() * 0.4))) }))
+      }
+
+      function start() {
+        day = 1; cash = 100; stock = {}; running = true; over = false
+        logEl.innerHTML = ''
+        newDay()
+        overlay.classList.add('hidden')
+        render()
+      }
+
+      function buy(i) {
+        const o = offers[i]
+        if (cash < o.cost) return
+        cash -= o.cost
+        stock[o.n] = (stock[o.n] || 0) + 1
+        render()
+      }
+
+      function openShop() {
+        if (!running || over) return
+        let total = 0, lines = []
+        for (const o of offers) {
+          const qty = stock[o.n] || 0
+          if (!qty) continue
+          const price = Math.max(1, Math.round(o.cost * (0.7 + Math.random() * 0.9)))
+          total += qty * price
+          lines.push(o.e + o.n + ' ×' + qty + ' → ' + price + '/个')
+          delete stock[o.n]
+        }
+        cash += total
+        const profit = total > 0 ? lines.join('，') : '今日无库存售出'
+        logEl.innerHTML = '第 ' + day + ' 天：' + profit + '（收入 ' + total + '）<br/>' + logEl.innerHTML
+        day++
+        if (day > 10) return end('⏰ 10 天经营结束', '最终资产 ' + Math.floor(cash))
+        newDay()
+        const stockLeft = Object.values(stock).reduce((s, v) => s + v, 0)
+        if (cash < 1 && stockLeft === 0) return end('💔 破产了', '第 ' + day + ' 天资金链断裂，最终资产 ' + Math.floor(cash))
+        render()
+      }
+
+      function end(t, p) {
+        running = false; over = true
+        const s = Math.floor(cash)
+        if (s > best) { best = s; bestEl.textContent = best; localStorage.setItem('shopkeeper-best', best) }
+        overlay.querySelector('h1').textContent = t
+        overlay.querySelector('p').innerHTML = p + ' · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function render() {
+        dayEl.textContent = Math.min(day, 10)
+        cashEl.textContent = Math.floor(cash)
+        goodsEl.innerHTML = ''
+        offers.forEach((o, i) => {
+          const row = document.createElement('div')
+          row.className = 'good'
+          row.innerHTML =
+            '<span class="ico">' + o.e + '</span>' +
+            '<span class="info"><b>' + o.n + '</b><span>成本 ' + o.cost + ' 金币</span></span>' +
+            '<span class="have">库存 ' + (stock[o.n] || 0) + '</span>'
+          const minus = document.createElement('button')
+          const plus = document.createElement('button')
+          plus.textContent = '＋'
+          plus.disabled = cash < o.cost
+          plus.onclick = () => buy(i)
+          row.appendChild(plus)
+          goodsEl.appendChild(row)
+        })
+        sellBtn.disabled = false
+      }
+
+      sellBtn.addEventListener('click', openShop)
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return Math.floor(cash) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      day = 1; cash = 100; offers = []; stock = {}; running = false; over = false
+      newDay()
+      render()
+    })()
+  </script>
+</body>
+</html>

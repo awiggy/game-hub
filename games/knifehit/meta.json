@@ -1,0 +1,17 @@
+{
+  "id": "knifehit",
+  "name": "飞刀挑战",
+  "emoji": "🔪",
+  "categories": ["action", "casual"],
+  "tags": ["飞刀", "反应", "手速"],
+  "summary": "旋转圆盘上见缝插刀，插满把数过关，转速越来越快！",
+  "description": "圆盘不停旋转，转速逐关提升还会周期性换向。点击或按空格把飞刀掷向圆盘，插在空白处得分并留在盘上随盘转动，一旦与已有的刀角度太近就会相撞出局。每关插满 6+关卡数 把刀即可进入下一关。",
+  "howToPlay": "空格或点击发刀；每关插满 6+关卡数 把过关；与已插的刀相撞即结束。",
+  "entry": "knifehit/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

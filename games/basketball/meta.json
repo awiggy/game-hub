@@ -1,0 +1,17 @@
+{
+  "id": "basketball",
+  "name": "街头投篮",
+  "emoji": "🏀",
+  "categories": ["sports", "arcade"],
+  "tags": ["体育", "投篮", "街机"],
+  "summary": "蓄力投篮：掌握力度与距离，45 秒内疯狂得分，空心球有额外奖励！",
+  "description": "篮筐每轮随机出现在不同距离，按住蓄力（力度条来回摆动）松开出手，篮球沿抛物线飞行。进球 +2，不碰筐的空心入网 +3，打铁不中不得分。45 秒限时挑战。",
+  "howToPlay": "按住空格或屏幕蓄力，松开投篮；力度决定飞行远近。",
+  "entry": "basketball/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

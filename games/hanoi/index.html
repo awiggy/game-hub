@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>汉诺塔</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; --red:#ff4d5e; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { position:relative; width:min(92vw,74vh,400px); aspect-ratio:5/4; background:#14161f;
+      border:3px solid #2a2e3d; border-radius:10px; touch-action:none; cursor:pointer; }
+    .rod { position:absolute; width:2.6%; bottom:4%; height:62%; background:#2a2e3d; border-radius:4px 4px 0 0; }
+    .rod.flash { background:var(--yellow); }
+    #base { position:absolute; left:4%; right:4%; bottom:2%; height:3%; background:#2a2e3d; border-radius:6px; }
+    .disk { position:absolute; height:9%; border-radius:8px; border:2px solid rgba(255,255,255,.22);
+      box-shadow:0 3px 0 rgba(0,0,0,.4); pointer-events:none;
+      transition:left .2s ease, bottom .2s ease; display:flex; align-items:center; justify-content:center;
+      font-weight:800; font-size:clamp(10px,3vmin,16px); color:rgba(255,255,255,.85); }
+    .disk.held { border-color:var(--yellow); box-shadow:0 0 14px rgba(255,210,63,.75); z-index:10; }
+    .disk.shake { animation:shake .32s ease; }
+    @keyframes shake { 0%,100% { transform:translateX(0) } 25% { transform:translateX(-8px) }
+      50% { transform:translateX(8px) } 75% { transform:translateX(-5px) } }
+    .peglabel { position:absolute; bottom:-26px; width:33.3%; text-align:center; color:#8b93a7; font-size:11px; font-weight:700; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; z-index:20; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>步数<b id="moves">0</b></span>
+      <span>最少<b>31</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <div id="board">
+      <div class="rod" style="left:15.4%"></div>
+      <div class="rod" style="left:48.7%"></div>
+      <div class="rod" style="left:82%"></div>
+      <div id="base"></div>
+      <div class="peglabel" style="left:0">柱 1</div>
+      <div class="peglabel" style="left:33.3%">柱 2</div>
+      <div class="peglabel" style="left:66.6%">柱 3 🎯</div>
+      <div id="overlay">
+        <h1>🗼 汉诺塔</h1>
+        <p>点击柱子：空手拿起顶盘，持盘再点柱放置<br/>大盘不能压小盘 · 按 1/2/3 选柱<br/>把 5 个盘全部移到第三柱，步数越少分越高</p>
+        <button id="ov-btn">开始游戏</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const board = document.getElementById('board')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+      const movesEl = document.getElementById('moves')
+      const bestEl = document.getElementById('best')
+      const rods = board.querySelectorAll('.rod')
+
+      const COLORS = { 5: '#ff4d5e', 4: '#ff9f43', 3: '#ffd23f', 2: '#2ed573', 1: '#2f55e4' }
+      let pegs = [[], [], []], diskEls = {}
+      let held = null, heldFrom = -1, animLock = false
+      let moves = 0, score = 0, running = false, over = false
+      let best = Number(localStorage.getItem('hanoi-best') || 0)
+      if (best) bestEl.textContent = best
+
+      const width = (s) => 10 + s * 4.4
+      const cx = (p) => 16.66 + p * 33.34
+
+      function layout() {
+        for (let p = 0; p < 3; p++) {
+          for (let k = 0; k < pegs[p].length; k++) {
+            const s = pegs[p][k], el = diskEls[s]
+            el.classList.remove('held')
+            el.style.zIndex = 1
+            el.style.left = (cx(p) - width(s) / 2) + '%'
+            el.style.bottom = (5 + k * 10) + '%'
+          }
+        }
+        if (held) {
+          const el = diskEls[held]
+          el.classList.add('held')
+          el.style.zIndex = 10
+          el.style.left = (cx(heldFrom) - width(held) / 2) + '%'
+          el.style.bottom = '80%'
+        }
+      }
+
+      function floatAt(p) {
+        const el = diskEls[held]
+        el.style.left = (cx(p) - width(held) / 2) + '%'
+      }
+
+      function flashRod(p) {
+        const r = rods[p]
+        r.classList.add('flash')
+        setTimeout(() => r.classList.remove('flash'), 220)
+      }
+
+      function clickPeg(p) {
+        if (!running || over || animLock) return
+        if (held === null) {
+          if (!pegs[p].length) { flashRod(p); return }
+          held = pegs[p].pop()
+          heldFrom = p
+          layout()
+          return
+        }
+        if (p === heldFrom) { held = null; heldFrom = -1; layout(); return }
+        const top = pegs[p][pegs[p].length - 1]
+        if (top && top < held) {
+          animLock = true
+          floatAt(p)
+          const el = diskEls[held]
+          el.classList.add('shake')
+          setTimeout(() => {
+            el.classList.remove('shake')
+            floatAt(heldFrom)
+            setTimeout(() => { animLock = false }, 220)
+          }, 340)
+          return
+        }
+        pegs[p].push(held)
+        held = null; heldFrom = -1
+        moves++; movesEl.textContent = moves
+        layout()
+        if (pegs[2].length === 5) win()
+      }
+
+      function start() {
+        pegs = [[5, 4, 3, 2, 1], [], []]
+        held = null; heldFrom = -1; animLock = false
+        moves = 0; movesEl.textContent = 0
+        score = 0; over = false; running = true
+        layout()
+        overlay.classList.add('hidden')
+      }
+
+      function win() {
+        running = false; over = true
+        score = Math.max(50, 500 - (moves - 31) * 10)
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('hanoi-best', best) }
+        overlay.querySelector('h1').textContent = '🎉 挑战成功'
+        overlay.querySelector('p').innerHTML =
+          '步数 <b style="color:#ffd23f">' + moves + '</b>（最少 31 步）<br/>得分 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      board.addEventListener('pointerdown', (e) => {
+        const r = board.getBoundingClientRect()
+        const p = Math.max(0, Math.min(2, (((e.clientX - r.left) / r.width) * 3) | 0))
+        clickPeg(p)
+      })
+
+      window.addEventListener('keydown', (e) => {
+        if (!running || over) {
+          if (e.code === 'Space' && !overlay.classList.contains('hidden')) start()
+          return
+        }
+        if (e.code === 'Digit1' || e.code === 'Numpad1') clickPeg(0)
+        if (e.code === 'Digit2' || e.code === 'Numpad2') clickPeg(1)
+        if (e.code === 'Digit3' || e.code === 'Numpad3') clickPeg(2)
+      })
+      ovBtn.addEventListener('click', start)
+
+      for (let s = 5; s >= 1; s--) {
+        const d = document.createElement('div')
+        d.className = 'disk'
+        d.textContent = s
+        d.style.width = width(s) + '%'
+        d.style.background = COLORS[s]
+        board.insertBefore(d, overlay)
+        diskEls[s] = d
+      }
+      pegs = [[5, 4, 3, 2, 1], [], []]
+      layout()
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+    })()
+  </script>
+</body>
+</html>

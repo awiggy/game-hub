@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>高山滑雪</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>距离<b id="score">0m</b></span>
+      <span>速度<b id="spd">1.0x</b></span>
+      <span>BEST<b id="best">0m</b></span>
+    </div>
+    <canvas id="cv" width="380" height="600"></canvas>
+    <div id="overlay">
+      <h1>🎿 高山滑雪</h1>
+      <p>← → / A D 左右闪避<br/>手机点按左右半屏<br/>速度越来越快，距离就是分数</p>
+      <button id="ov-btn">开始速降</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const spdEl = document.getElementById('spd')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let px, obstacles, dist, speed, running, over, snow
+      let best = Number(localStorage.getItem('skiing-best') || 0)
+      bestEl.textContent = best + 'm'
+
+      function start() {
+        px = W / 2; obstacles = []; dist = 0; speed = 4
+        running = true; over = false
+        snow = Array.from({ length: 30 }, () => ({ x: Math.random() * W, y: Math.random() * H, s: Math.random() * 2 + 1 }))
+        scoreEl.textContent = '0m'
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        const m = dist | 0
+        if (m > best) { best = m; bestEl.textContent = best + 'm'; localStorage.setItem('skiing-best', best) }
+        overlay.querySelector('h1').textContent = '💥 摔倒了'
+        overlay.querySelector('p').innerHTML = '滑行 <b style="color:#ffd23f">' + m + 'm</b> · 最远 ' + best + 'm'
+        ovBtn.textContent = '再滑一次'
+        overlay.classList.remove('hidden')
+      }
+
+      let frame = 0
+      function step() {
+        frame++
+        speed = 4 + Math.min(6, dist / 600)
+        dist += speed * 0.12
+        scoreEl.textContent = (dist | 0) + 'm'
+        spdEl.textContent = (speed / 4).toFixed(1) + 'x'
+        if (frame % Math.max(18, 42 - (speed | 0)) === 0) {
+          const kinds = ['🌲', '🌲', '🌲', '🪨']
+          obstacles.push({ x: 30 + Math.random() * (W - 60), y: -30, e: kinds[(Math.random() * kinds.length) | 0] })
+        }
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+          obstacles[i].y += speed
+          if (obstacles[i].y > H + 30) { obstacles.splice(i, 1); continue }
+          if (Math.abs(obstacles[i].x - px) < 26 && Math.abs(obstacles[i].y - (H - 110)) < 34) return end()
+        }
+        for (const s of snow) {
+          s.y += speed * s.s * 0.4
+          if (s.y > H) { s.y = -2; s.x = Math.random() * W }
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        // 雪道边界
+        ctx.fillStyle = '#1a1d29'
+        ctx.fillRect(0, 0, 26, H)
+        ctx.fillRect(W - 26, 0, 26, H)
+        ctx.fillStyle = '#2a2e3d'
+        for (let y = (frame * 2) % 40 - 40; y < H; y += 40) {
+          ctx.fillRect(22, y, 4, 20)
+          ctx.fillRect(W - 26, y, 4, 20)
+        }
+        ctx.fillStyle = 'rgba(255,255,255,0.35)'
+        for (const s of snow) ctx.fillRect(s.x, s.y, s.s, s.s)
+        ctx.font = '24px sans-serif'
+        for (const o of obstacles) ctx.fillText(o.e, o.x - 12, o.y + 8)
+        if (running && !over) {
+          ctx.font = '26px sans-serif'
+          ctx.fillText('🎿', px - 13, H - 92)
+        }
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (!running || over) {
+          if (e.code === 'Space' && !overlay.classList.contains('hidden')) start()
+          return
+        }
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') px = Math.max(40, px - 30)
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') px = Math.min(W - 40, px + 30)
+        if (e.code === 'Space') e.preventDefault()
+      })
+      cv.addEventListener('pointerdown', (e) => {
+        const r = cv.getBoundingClientRect()
+        const x = (e.clientX - r.left) * (W / r.width)
+        if (!running || over) return
+        px = x < px + 40 ? Math.max(40, px - 44) : Math.min(W - 40, px + 44)
+      })
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return dist | 0 },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      px = W / 2; obstacles = []; dist = 0; speed = 4; running = false; over = false; snow = []
+      loop()
+    })()
+  </script>
+</body>
+</html>

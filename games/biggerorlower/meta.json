@@ -1,0 +1,17 @@
+{
+  "id": "biggerorlower",
+  "name": "大小对决",
+  "emoji": "🔀",
+  "categories": ["card", "casual"],
+  "tags": ["棋牌", "运气", "休闲"],
+  "summary": "下一张牌更大还是更小？连对越多分越高，一把定输赢！",
+  "description": "翻开一张牌，押注下一张比它更大或更小（A 最小 K 最大，相等算输）。押对继续翻牌累计连对，连对三次之后每次得双倍分，押错即结束。",
+  "howToPlay": "点「更大」或「更小」按钮押注；对了继续，错了结算。",
+  "entry": "biggerorlower/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

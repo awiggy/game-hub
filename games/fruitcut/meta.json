@@ -1,0 +1,17 @@
+{
+  "id": "fruitcut",
+  "name": "切水果",
+  "emoji": "🍉",
+  "categories": ["action", "arcade"],
+  "tags": ["切割", "连击", "反应"],
+  "summary": "按住滑动切开抛起的水果，连切有加成，千万别碰到炸弹！",
+  "description": "水果从屏幕底部被抛起，按住并滑动即可挥刀切割，一次滑动切开多个水果还能获得连击加成。混在其中的炸弹碰不得，水果落地漏掉 3 个也会结束，看看你能切多少个。",
+  "howToPlay": "按住鼠标或手指滑动切水果；切开 +1，连击有加成；切到炸弹或漏 3 个水果即结束。",
+  "entry": "fruitcut/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

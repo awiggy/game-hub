@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "registry": "node scripts/build-registry.js",
+    "check": "node scripts/check-games.js",
     "predev": "npm run registry",
     "dev": "vite",
-    "prebuild": "npm run registry",
+    "prebuild": "npm run check && npm run registry",
     "build": "vite build",
     "preview": "vite preview"
   },

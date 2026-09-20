@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>速算24点</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:12px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #cards { display:flex; gap:10px; min-height:96px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    .card {
+      width:72px; height:96px; border-radius:10px; background:#1a1d29; border:3px solid #2a3350;
+      display:grid; place-items:center; font-size:30px; font-weight:900; cursor:pointer; user-select:none;
+    }
+    .card.sel { border-color:var(--yellow); background:#241f10; }
+    .card.small { font-size:20px; }
+    #ops { display:flex; gap:10px; }
+    #ops button {
+      width:52px; height:52px; font-family:inherit; font-size:24px; font-weight:900;
+      color:#eef1f6; background:#1a1d29; border:2px solid #2a2e3d; border-radius:10px; cursor:pointer;
+    }
+    #ops button:not(:disabled):active { background:var(--blue); }
+    #ops button:disabled { opacity:.3; }
+    #msg { font-size:15px; font-weight:900; min-height:22px; }
+    #acts { display:flex; gap:10px; }
+    .act { font-family:inherit; font-weight:700; font-size:13px; color:#eef1f6; background:#1a1d29;
+      border:2px solid #2a2e3d; border-radius:10px; padding:10px 18px; cursor:pointer; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.88); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>得分<b id="score">0</b></span>
+      <span>剩余<b id="time">30s</b></span>
+      <span>机会<b id="lives">♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="cards"></div>
+    <div id="ops">
+      <button data-op="+">＋</button><button data-op="-">－</button>
+      <button data-op="×">×</button><button data-op="÷">÷</button>
+    </div>
+    <div id="msg">点两张牌再点运算符</div>
+    <div id="acts">
+      <button class="act" id="undo">↩ 撤销</button>
+      <button class="act" id="skip">换一题（-30）</button>
+    </div>
+  </div>
+  <div id="overlay">
+    <h1>🧮 速算24点</h1>
+    <p>点两张牌 + 运算符，合成一张新牌<br/>4→3→2→1 张，最后一张等于 24 得分<br/>每题 30 秒 · 3 次失败结束</p>
+    <button id="ov-btn">开始挑战</button>
+  </div>
+  <script>
+    (() => {
+      const cardsEl = document.getElementById('cards')
+      const scoreEl = document.getElementById('score')
+      const timeEl = document.getElementById('time')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const msgEl = document.getElementById('msg')
+      const undoBtn = document.getElementById('undo')
+      const skipBtn = document.getElementById('skip')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let cards, sel, history, score, lives, timeLeft, timer, running, over
+      let best = Number(localStorage.getItem('twentyfour-best') || 0)
+      bestEl.textContent = best
+
+      function solvable(nums) {
+        if (nums.length === 1) return Math.abs(nums[0] - 24) < 1e-6
+        for (let i = 0; i < nums.length; i++)
+          for (let j = 0; j < nums.length; j++) {
+            if (i === j) continue
+            const rest = nums.filter((_, k) => k !== i && k !== j)
+            const a = nums[i], b = nums[j]
+            const outs = [a + b, a - b, a * b]
+            if (Math.abs(b) > 1e-6) outs.push(a / b)
+            for (const v of outs)
+              if (solvable([...rest, v])) return true
+          }
+        return false
+      }
+
+      function newPuzzle() {
+        do {
+          cards = Array.from({ length: 4 }, () => 1 + ((Math.random() * 10) | 0))
+        } while (!solvable([...cards]))
+        history = []
+        sel = []
+        timeLeft = 30
+        timeEl.textContent = '30s'
+        msgEl.textContent = '点两张牌再点运算符'
+        render()
+      }
+
+      function start() {
+        score = 0; lives = 3
+        running = true; over = false
+        scoreEl.textContent = 0; livesEl.textContent = '♥♥♥'
+        overlay.classList.add('hidden')
+        newPuzzle()
+        clearInterval(timer)
+        timer = setInterval(() => {
+          if (!running || over) return
+          timeLeft--
+          timeEl.textContent = timeLeft + 's'
+          if (timeLeft <= 0) fail('⏰ 超时')
+        }, 1000)
+      }
+
+      function end() {
+        running = false; over = true
+        clearInterval(timer)
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('twentyfour-best', best) }
+        overlay.querySelector('h1').textContent = '🏁 挑战结束'
+        overlay.querySelector('p').innerHTML = '得分 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function fail(reason) {
+        lives--
+        livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+        msgEl.textContent = reason + '，换新题'
+        if (lives <= 0) return end()
+        newPuzzle()
+      }
+
+      function applyOp(op) {
+        if (sel.length !== 2) return
+        const [a, b] = sel.map((i) => cards[i])
+        let v
+        if (op === '+') v = a + b
+        else if (op === '-') v = a - b
+        else if (op === '×') v = a * b
+        else { if (b === 0) { msgEl.textContent = '不能除以 0'; return }; v = a / b }
+        history.push([...cards])
+        const rest = cards.filter((_, k) => !sel.includes(k))
+        cards = [...rest, v]
+        sel = []
+        msgEl.textContent = ''
+        render()
+        if (cards.length === 1) {
+          if (Math.abs(cards[0] - 24) < 1e-6) {
+            const gain = 100 + timeLeft * 5
+            score += gain
+            scoreEl.textContent = score
+            msgEl.textContent = '✓ 24！+' + gain
+            setTimeout(newPuzzle, 800)
+          } else {
+            fail('✗ 结果是 ' + Math.round(cards[0] * 10) / 10)
+          }
+        }
+      }
+
+      function undo() {
+        if (!history.length) return
+        cards = history.pop()
+        sel = []
+        render()
+      }
+
+      function render() {
+        cardsEl.innerHTML = ''
+        cards.forEach((v, i) => {
+          const el = document.createElement('div')
+          const txt = Math.abs(v - Math.round(v)) < 1e-6 ? String(Math.round(v)) : v.toFixed(1)
+          el.className = 'card' + (sel.includes(i) ? ' sel' : '') + (txt.length > 2 ? ' small' : '')
+          el.textContent = txt
+          el.onclick = () => {
+            if (!running || over) return
+            const at = sel.indexOf(i)
+            if (at >= 0) sel.splice(at, 1)
+            else if (sel.length < 2) sel.push(i)
+            render()
+          }
+          cardsEl.appendChild(el)
+        })
+      }
+
+      document.querySelectorAll('#ops button').forEach((b) => {
+        b.onclick = () => applyOp(b.dataset.op)
+      })
+      undoBtn.onclick = undo
+      skipBtn.onclick = () => {
+        if (!running || over) return
+        score = Math.max(0, score - 30)
+        scoreEl.textContent = score
+        fail('主动换题')
+      }
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      cards = [2, 2, 2, 2]; sel = []; history = []
+      score = 0; lives = 3; timeLeft = 30; running = false; over = false
+      render()
+    })()
+  </script>
+</body>
+</html>

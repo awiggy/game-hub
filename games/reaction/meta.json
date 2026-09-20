@@ -1,0 +1,17 @@
+{
+  "id": "reaction",
+  "name": "极速反应",
+  "emoji": "⚡",
+  "categories": ["arcade", "casual"],
+  "tags": ["反应", "竞技", "手速"],
+  "summary": "红转绿的一瞬间点下去！20 回合测出你的真实反应速度，犯规 3 次出局。",
+  "description": "反应速度测试器。区域先变红进入等待，随机 0.5~2.5 秒后变绿——立刻点击！提前点击算犯规扣 1 次，犯规 3 次出局。完成 20 回合后按平均反应毫秒换算得分。",
+  "howToPlay": "红色时等待，变绿的瞬间点击整块区域；共 20 回合。",
+  "entry": "reaction/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

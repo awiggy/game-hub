@@ -1,0 +1,17 @@
+{
+  "id": "farmclicker",
+  "name": "摸鱼农场",
+  "emoji": "🌾",
+  "categories": ["simulation", "casual"],
+  "tags": ["模拟", "经营", "点击"],
+  "summary": "种菜收菜赚金币，升级农场的快乐点击经营，目标赚到 500 金币！",
+  "description": "点击空地种下作物，等待几秒成熟后点击收获卖出。金币可以升级生长速度或提高售价，不断滚雪球，目标累计赚取 500 金币。",
+  "howToPlay": "点击空地种菜（花 1 金币），成熟后点击收获；金币够了就点升级按钮。",
+  "entry": "farmclicker/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>迷宫探险</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>关卡<b id="lv">1/3</b></span>
+      <span>步数<b id="steps">0</b></span>
+      <span>用时<b id="time">0s</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <canvas id="cv" width="560" height="560"></canvas>
+    <div id="overlay">
+      <h1>🌀 迷宫探险</h1>
+      <p>方向键 / WASD / 滑动移动<br/>从左上 ⭐ 走到右下 🚪<br/>三关越来越大，越少步数分越高</p>
+      <button id="ov-btn">开始探险</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const S = cv.width
+      const lvEl = document.getElementById('lv')
+      const stepsEl = document.getElementById('steps')
+      const timeEl = document.getElementById('time')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const SIZES = [11, 15, 19]
+      let n, walls, px, py, level, steps, seconds, timer, running, over
+      let best = Number(localStorage.getItem('maze-best') || 0)
+      if (best) bestEl.textContent = best
+
+      // 递归回溯生成：walls[r][c] = {t,r,b,l}
+      function gen(size) {
+        n = size
+        walls = Array.from({ length: n }, () => Array.from({ length: n }, () => ({ t: 1, r: 1, b: 1, l: 1 })))
+        const seen = Array.from({ length: n }, () => Array(n).fill(false))
+        const stack = [[0, 0]]
+        seen[0][0] = true
+        while (stack.length) {
+          const [r, c] = stack[stack.length - 1]
+          const opts = []
+          if (r > 0 && !seen[r - 1][c]) opts.push(['t', r - 1, c])
+          if (r < n - 1 && !seen[r + 1][c]) opts.push(['b', r + 1, c])
+          if (c > 0 && !seen[r][c - 1]) opts.push(['l', r, c - 1])
+          if (c < n - 1 && !seen[r][c + 1]) opts.push(['r', r, c + 1])
+          if (!opts.length) { stack.pop(); continue }
+          const [d, nr, nc] = opts[(Math.random() * opts.length) | 0]
+          walls[r][c][d] = 0
+            walls[nr][nc][d === 't' ? 'b' : d === 'b' ? 't' : d === 'l' ? 'r' : 'l'] = 0
+          seen[nr][nc] = true
+          stack.push([nr, nc])
+        }
+      }
+
+      function start() {
+        level = 0; steps = 0; seconds = 0
+        running = true; over = false
+        clearInterval(timer)
+        timer = setInterval(() => { if (running && !over) { seconds++; timeEl.textContent = seconds + 's' } }, 1000)
+        overlay.classList.add('hidden')
+        nextLevel()
+      }
+
+      function nextLevel() {
+        gen(SIZES[level])
+        px = 0; py = 0
+        lvEl.textContent = (level + 1) + '/3'
+        stepsEl.textContent = steps
+        draw()
+      }
+
+      function win() {
+        running = false; over = true
+        clearInterval(timer)
+        const score = Math.max(100, 3000 - steps - seconds * 5)
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('maze-best', best) }
+        overlay.querySelector('h1').textContent = '🏆 三关通关'
+        overlay.querySelector('p').innerHTML = steps + ' 步 · ' + seconds + ' 秒 · 得分 <b style="color:#ffd23f">' + score + '</b>'
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function move(dr, dc) {
+        if (!running || over) return
+        const w = walls[py][px]
+        if (dr === -1 && w.t) return
+        if (dr === 1 && w.b) return
+        if (dc === -1 && w.l) return
+        if (dc === 1 && w.r) return
+        py += dr; px += dc
+        steps++
+        stepsEl.textContent = steps
+        if (px === n - 1 && py === n - 1) {
+          if (level === 2) { draw(); return win() }
+          level++
+          nextLevel()
+          return
+        }
+        draw()
+      }
+
+      function draw() {
+        const cell = S / n
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, S, S)
+        ctx.fillStyle = '#1d3512'
+        ctx.fillRect((n - 1) * cell, (n - 1) * cell, cell, cell)
+        ctx.strokeStyle = '#3a4152'
+        ctx.lineWidth = 2
+        for (let r = 0; r < n; r++) {
+          for (let c = 0; c < n; c++) {
+            const x = c * cell, y = r * cell
+            const w = walls[r][c]
+            if (w.t) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + cell, y); ctx.stroke() }
+            if (w.l) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + cell); ctx.stroke() }
+          }
+        }
+        ctx.beginPath(); ctx.moveTo(0, S); ctx.lineTo(S, S); ctx.stroke()
+        ctx.beginPath(); ctx.moveTo(S, 0); ctx.lineTo(S, S); ctx.stroke()
+        ctx.font = (cell * 0.6) + 'px sans-serif'
+        ctx.fillText('⭐', cell * 0.2, cell * 0.75)
+        ctx.fillText('🚪', (n - 1) * cell + cell * 0.2, (n - 1) * cell + cell * 0.75)
+        if (running && !over) ctx.fillText('🏃', px * cell + cell * 0.2, py * cell + cell * 0.75)
+      }
+
+      const keys = { ArrowUp: [-1,0], KeyW: [-1,0], ArrowDown: [1,0], KeyS: [1,0], ArrowLeft: [0,-1], KeyA: [0,-1], ArrowRight: [0,1], KeyD: [0,1] }
+      window.addEventListener('keydown', (e) => {
+        if (keys[e.code]) { e.preventDefault(); move(...keys[e.code]) }
+      })
+      let tx = 0, ty = 0
+      window.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY }, { passive: true })
+      window.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty
+        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return
+        if (Math.abs(dx) > Math.abs(dy)) move(0, dx > 0 ? 1 : -1)
+        else move(dy > 0 ? 1 : -1, 0)
+      }, { passive: true })
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return Math.max(100, 3000 - steps - seconds * 5) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      gen(SIZES[0]); px = 0; py = 0; level = 0; steps = 0; seconds = 0; running = false; over = false
+      draw()
+    })()
+  </script>
+</body>
+</html>

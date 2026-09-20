@@ -1,0 +1,17 @@
+{
+  "id": "towerdef",
+  "name": "像素塔防",
+  "emoji": "🗼",
+  "categories": ["strategy", "action"],
+  "tags": ["策略", "塔防", "防守"],
+  "summary": "沿途布塔阻击一波波魔物，击杀赚金币，能守到第几波？",
+  "description": "轻量塔防。敌人沿 S 形路径行进，血量逐波增长；点击路径旁空地建炮塔（50 金币，自动索敌开火），击杀得金币。敌人走到终点扣命，10 命耗尽结束。",
+  "howToPlay": "点击空地建炮塔（50 金币）；点按钮召唤下一波。",
+  "entry": "towerdef/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

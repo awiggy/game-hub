@@ -1,0 +1,17 @@
+{
+  "id": "asteroids",
+  "name": "星际小行星",
+  "emoji": "🪨",
+  "categories": ["shooter", "action"],
+  "tags": ["射击", "太空", "经典"],
+  "summary": "惯性飞行 + 屏幕环绕的太空清场：大陨石劈三段，看你飞得过几波！",
+  "description": "街机经典小行星。飞船带惯性推进与屏幕环绕，射击击碎陨石：大劈中、中劈小、小消失。清空一波后下一波更密集，被撞掉命（重生短暂无敌），3 命耗尽结束。",
+  "howToPlay": "← → 旋转，↑ 推进，空格射击；屏幕会环绕。",
+  "entry": "asteroids/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

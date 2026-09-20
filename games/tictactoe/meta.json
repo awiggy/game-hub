@@ -1,0 +1,17 @@
+{
+  "id": "tictactoe",
+  "name": "井字棋",
+  "emoji": "⭕",
+  "categories": ["card", "strategy"],
+  "tags": ["棋牌", "对战", "经典"],
+  "summary": "三子连珠对弈完美 AI：它不会输，你能逼出多少连平？",
+  "description": "经典井字棋。你执 X 先手，AI 执 O 且使用 minimax 算法——理论上不可战胜，你的目标是每局都逼平。连胜次数（平局不断、输局清零）就是你的战绩。",
+  "howToPlay": "点击空格落子，三子连线即胜；连胜越多分越高。",
+  "entry": "tictactoe/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

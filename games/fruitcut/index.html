@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>切水果</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>切果<b id="score">0</b></span>
+      <span>剩余<b id="miss">♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="400" height="560"></canvas>
+    <div id="overlay">
+      <h1>🍉 切水果</h1>
+      <p>按住鼠标 / 手指 滑动挥刀切开水果<br/>一次滑动切多个有连击加成<br/>切到炸弹 💣 或漏掉 3 个水果即结束</p>
+      <button id="ov-btn">开始游戏</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const missEl = document.getElementById('miss')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const COLORS = { '🍉': '#ff5a6e', '🍊': '#ffa53f', '🍋': '#ffe24a', '🍎': '#ff4d5e', '🍇': '#a56cf5', '🍑': '#ffb1a3', '🍓': '#ff4d6d' }
+      const FRUITS = Object.keys(COLORS)
+
+      let fruits, parts, pops, trail, score, missed, frame, spawnT, running, over
+      let stroking, lastX, lastY, chain
+      let best = Number(localStorage.getItem('fruitcut-best') || 0)
+      bestEl.textContent = best
+
+      function start() {
+        fruits = []; parts = []; pops = []; trail = []
+        score = 0; missed = 0; frame = 0; spawnT = 20; chain = 0; stroking = false
+        running = true; over = false
+        scoreEl.textContent = '0'
+        missEl.textContent = '♥♥♥'
+        overlay.classList.add('hidden')
+      }
+
+      function end(reason) {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('fruitcut-best', best) }
+        overlay.querySelector('h1').textContent = '💥 游戏结束'
+        overlay.querySelector('p').innerHTML = (reason || '') + '切果 <b style="color:#ffd23f">' + score + '</b> 个 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function spawnWave() {
+        let n = 1
+        if (Math.random() < 0.4) n++
+        if (Math.random() < 0.15) n++
+        let bombUsed = false
+        for (let i = 0; i < n; i++) {
+          const x = 50 + Math.random() * (W - 100)
+          const bomb = !bombUsed && Math.random() < 0.16
+          if (bomb) bombUsed = true
+          const vx = (W / 2 - x) * 0.006 + (Math.random() - 0.5) * 2.2
+          const vy = -(11 + Math.random() * 3 + Math.min(3, frame * 0.0012))
+          fruits.push({ x: x, y: H + 24, vx: vx, vy: vy, e: bomb ? '💣' : FRUITS[(Math.random() * FRUITS.length) | 0], bomb: bomb, r: 24 })
+        }
+      }
+
+      function segHit(x1, y1, x2, y2, cx, cy, r) {
+        const dx = x2 - x1, dy = y2 - y1
+        const l2 = dx * dx + dy * dy
+        let t = l2 === 0 ? 0 : ((cx - x1) * dx + (cy - y1) * dy) / l2
+        t = Math.max(0, Math.min(1, t))
+        const px = x1 + t * dx, py = y1 + t * dy
+        const ddx = px - cx, ddy = py - cy
+        return ddx * ddx + ddy * ddy <= r * r
+      }
+
+      function boom(x, y) {
+        for (let k = 0; k < 24; k++) {
+          const a = Math.random() * Math.PI * 2
+          const sp = 2 + Math.random() * 4
+          parts.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 30, color: '#ff8a2a', r: 3 + Math.random() * 3 })
+        }
+      }
+
+      function slash(x1, y1, x2, y2) {
+        for (let i = fruits.length - 1; i >= 0; i--) {
+          const f = fruits[i]
+          if (!segHit(x1, y1, x2, y2, f.x, f.y, f.r)) continue
+          fruits.splice(i, 1)
+          if (f.bomb) { boom(f.x, f.y); end('碰到炸弹！'); return }
+          chain++
+          const pts = 1 + Math.min(chain - 1, 3)
+          score += pts
+          scoreEl.textContent = String(score)
+          pops.push({ x: f.x, y: f.y - 20, text: '+' + pts + (chain > 1 ? ' x' + chain : ''), life: 40 })
+          const col = COLORS[f.e] || '#ffd23f'
+          for (let k = 0; k < 10; k++) {
+            const a = Math.random() * Math.PI * 2
+            const sp = 1 + Math.random() * 3
+            parts.push({ x: f.x, y: f.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 1.5, life: 24 + Math.random() * 14, color: col, r: 2 + Math.random() * 3 })
+          }
+        }
+      }
+
+      function step() {
+        frame++
+        spawnT--
+        if (spawnT <= 0) {
+          spawnWave()
+          spawnT = Math.max(30, 74 - frame * 0.018)
+        }
+        for (let i = fruits.length - 1; i >= 0; i--) {
+          const f = fruits[i]
+          f.vy += 0.28
+          f.x += f.vx; f.y += f.vy
+          if (f.y > H + 50 && f.vy > 0) {
+            fruits.splice(i, 1)
+            if (!f.bomb) {
+              missed++
+              missEl.textContent = '♥'.repeat(3 - missed) + '♡'.repeat(missed)
+              if (missed >= 3) return end('漏掉 3 个水果！')
+            }
+          }
+        }
+        for (let i = parts.length - 1; i >= 0; i--) {
+          const p = parts[i]
+          p.x += p.vx; p.y += p.vy; p.vy += 0.18; p.life--
+          if (p.life <= 0) parts.splice(i, 1)
+        }
+        for (let i = pops.length - 1; i >= 0; i--) {
+          const p = pops[i]
+          p.y -= 0.8; p.life--
+          if (p.life <= 0) pops.splice(i, 1)
+        }
+        for (let i = trail.length - 1; i >= 0; i--) {
+          trail[i].life--
+          if (trail[i].life <= 0) trail.splice(i, 1)
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        if (trail.length > 1) {
+          ctx.lineCap = 'round'
+          for (let i = 1; i < trail.length; i++) {
+            const a = trail[i].life / 14
+            ctx.strokeStyle = 'rgba(223,227,236,' + a.toFixed(2) + ')'
+            ctx.lineWidth = 1 + a * 4
+            ctx.beginPath()
+            ctx.moveTo(trail[i - 1].x, trail[i - 1].y)
+            ctx.lineTo(trail[i].x, trail[i].y)
+            ctx.stroke()
+          }
+        }
+        ctx.textAlign = 'center'
+        ctx.font = '40px sans-serif'
+        for (const f of fruits) ctx.fillText(f.e, f.x, f.y + 14)
+        for (const p of parts) {
+          ctx.globalAlpha = Math.min(1, p.life / 20)
+          ctx.fillStyle = p.color
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill()
+        }
+        ctx.globalAlpha = 1
+        ctx.font = 'bold 18px sans-serif'
+        ctx.fillStyle = '#ffd23f'
+        for (const p of pops) {
+          ctx.globalAlpha = Math.min(1, p.life / 24)
+          ctx.fillText(p.text, p.x, p.y)
+        }
+        ctx.globalAlpha = 1
+        ctx.textAlign = 'left'
+      }
+
+      function pos(e) {
+        const r = cv.getBoundingClientRect()
+        return { x: (e.clientX - r.left) * (W / r.width), y: (e.clientY - r.top) * (H / r.height) }
+      }
+      cv.addEventListener('pointerdown', (e) => {
+        if (!running || over) return
+        cv.setPointerCapture(e.pointerId)
+        stroking = true; chain = 0
+        const p = pos(e)
+        lastX = p.x; lastY = p.y
+        trail.push({ x: p.x, y: p.y, life: 14 })
+      })
+      cv.addEventListener('pointermove', (e) => {
+        if (!stroking || !running || over) return
+        const p = pos(e)
+        trail.push({ x: p.x, y: p.y, life: 14 })
+        slash(lastX, lastY, p.x, p.y)
+        lastX = p.x; lastY = p.y
+      })
+      window.addEventListener('pointerup', () => { stroking = false; chain = 0 })
+      ovBtn.addEventListener('click', start)
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      fruits = []; parts = []; pops = []; trail = []
+      score = 0; missed = 0; frame = 0; spawnT = 0; stroking = false; chain = 0
+      running = false; over = false
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+      loop()
+    })()
+  </script>
+</body>
+</html>

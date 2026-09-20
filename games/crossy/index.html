@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>横穿车流</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>前进<b id="score">0</b>行</span>
+      <span>难度<b id="lv">Lv1</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="400" height="560"></canvas>
+    <div id="overlay">
+      <h1>🐔 横穿车流</h1>
+      <p>↑↓←→ 或滑动屏幕 逐格移动小鸡<br/>穿过车流前进 1 行 +1 分，各车道快慢不同<br/>被车撞上即结束，看看能前进多少行！</p>
+      <button id="ov-btn">开始游戏</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const CELL = 40, COLS = 10
+      const scoreEl = document.getElementById('score')
+      const lvEl = document.getElementById('lv')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+      const CARS = ['🚗', '🚙', '🚕', '🚌', '🚚']
+
+      let rows, roadRun, prow, pcol, hopT, maxRow, camY, frame, running, over
+      let best = Number(localStorage.getItem('crossy-best') || 0)
+      bestEl.textContent = best
+
+      function genRow(r) {
+        if (r < 1) return { type: 'grass', trees: [] }
+        let road
+        if (roadRun > 0) { road = true; roadRun-- }
+        else {
+          road = Math.random() < Math.min(0.72, 0.42 + r * 0.004)
+          if (road) roadRun = (Math.random() * 2) | 0
+        }
+        if (!road) {
+          const trees = []
+          if (r > 2 && Math.random() < 0.5) {
+            const n = 1 + ((Math.random() * 3) | 0)
+            for (let i = 0; i < n; i++) trees.push((Math.random() * COLS) | 0)
+          }
+          return { type: 'grass', trees: trees }
+        }
+        const dir = Math.random() < 0.5 ? 1 : -1
+        const speed = Math.min(3.4, (1.1 + Math.random() * 1.2) * (1 + r * 0.008))
+        const spacing = 150 + Math.random() * 170
+        const n = Math.ceil((W + 200) / spacing)
+        const w = n * spacing
+        const off = Math.random() * spacing
+        const cars = []
+        for (let i = 0; i < n; i++) {
+          cars.push({ x: -100 + off + i * spacing, len: Math.random() < 0.35 ? 78 : 48, e: CARS[(Math.random() * CARS.length) | 0] })
+        }
+        return { type: 'road', dir: dir, speed: speed, cars: cars, w: w }
+      }
+
+      function getRow(r) {
+        if (!rows[r]) rows[r] = genRow(r)
+        return rows[r]
+      }
+
+      function start() {
+        rows = []; roadRun = 0
+        prow = 0; pcol = 4; hopT = 0; maxRow = 0; camY = 0; frame = 0
+        running = true; over = false
+        scoreEl.textContent = '0'
+        lvEl.textContent = 'Lv1'
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (maxRow > best) { best = maxRow; bestEl.textContent = best; localStorage.setItem('crossy-best', best) }
+        overlay.querySelector('h1').textContent = '💥 游戏结束'
+        overlay.querySelector('p').innerHTML = '小鸡前进了 <b style="color:#ffd23f">' + maxRow + '</b> 行 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function tryMove(dr, dc) {
+        if (!running || over) return
+        const nr = prow + dr, nc = pcol + dc
+        if (nc < 0 || nc >= COLS) return
+        if (nr < maxRow - 9) return
+        const row = getRow(nr)
+        if (row.trees && row.trees.indexOf(nc) >= 0) return
+        prow = nr; pcol = nc; hopT = 10
+        if (prow > maxRow) {
+          maxRow = prow
+          scoreEl.textContent = String(maxRow)
+          lvEl.textContent = 'Lv' + (1 + ((maxRow / 12) | 0))
+        }
+      }
+
+      function rowRange() {
+        const rLo = Math.ceil((380 - camY - H - CELL) / CELL)
+        const rHi = Math.floor((380 - camY + CELL) / CELL)
+        return [rLo, rHi]
+      }
+
+      function step() {
+        frame++
+        if (hopT > 0) hopT--
+        const target = -prow * CELL
+        camY += (target - camY) * 0.12
+        const range = rowRange()
+        for (let r = range[0]; r <= range[1]; r++) {
+          const row = getRow(r)
+          if (row.type !== 'road') continue
+          for (const c of row.cars) {
+            c.x += row.dir * row.speed
+            if (c.x > row.w - 100) c.x -= row.w
+            if (c.x < -100) c.x += row.w
+          }
+          if (r === prow && !over) {
+            const pxl = pcol * CELL + 6, pxr = pcol * CELL + 34
+            for (const c of row.cars) {
+              if (c.x + 6 < pxr && c.x + c.len - 6 > pxl) return end()
+            }
+          }
+        }
+      }
+
+      function sy(r) { return -r * CELL - camY + 380 }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        const range = rowRange()
+        ctx.textAlign = 'center'
+        for (let r = range[0]; r <= range[1]; r++) {
+          const row = getRow(r)
+          const y = sy(r)
+          if (row.type === 'grass') {
+            ctx.fillStyle = r % 2 === 0 ? '#17301f' : '#1a3524'
+            ctx.fillRect(0, y, W, CELL)
+            for (const t of row.trees) {
+              ctx.font = '30px sans-serif'
+              ctx.fillText(t % 2 ? '🌳' : '🌲', t * CELL + 20, y + 28)
+            }
+          } else {
+            ctx.fillStyle = '#23262f'
+            ctx.fillRect(0, y, W, CELL)
+            ctx.strokeStyle = '#2e323d'
+            ctx.beginPath(); ctx.moveTo(0, y + 0.5); ctx.lineTo(W, y + 0.5); ctx.stroke()
+            ctx.fillStyle = '#3a3f4d'
+            for (let x = 6; x < W; x += 46) ctx.fillRect(x, y + 19, 22, 3)
+            for (const c of row.cars) {
+              if (c.x > W || c.x + c.len < 0) continue
+              ctx.save()
+              ctx.translate(c.x + c.len / 2, y + 20)
+              if (row.dir < 0) ctx.scale(-1, 1)
+              ctx.font = '30px sans-serif'
+              ctx.fillText(c.e, 0, 10)
+              ctx.restore()
+            }
+          }
+        }
+        const px = pcol * CELL + 20
+        const py = sy(prow)
+        ctx.fillStyle = 'rgba(0,0,0,.35)'
+        ctx.beginPath(); ctx.ellipse(px, py + 30, 12, 4, 0, 0, Math.PI * 2); ctx.fill()
+        const hop = hopT > 0 ? Math.sin(((10 - hopT) / 10) * Math.PI) * 8 : 0
+        ctx.font = '30px sans-serif'
+        ctx.fillText('🐔', px, py - hop + 10)
+        ctx.textAlign = 'left'
+      }
+
+      function pos(e) {
+        const r = cv.getBoundingClientRect()
+        return { x: (e.clientX - r.left) * (W / r.width), y: (e.clientY - r.top) * (H / r.height) }
+      }
+      let sx0, syP, swiping
+      cv.addEventListener('pointerdown', (e) => {
+        if (!running || over) return
+        cv.setPointerCapture(e.pointerId)
+        const p = pos(e)
+        sx0 = p.x; syP = p.y; swiping = true
+      })
+      cv.addEventListener('pointerup', (e) => {
+        if (!swiping) return
+        swiping = false
+        const p = pos(e)
+        const dx = p.x - sx0, dy = p.y - syP
+        if (Math.abs(dx) < 14 && Math.abs(dy) < 14) { tryMove(1, 0); return }
+        if (Math.abs(dy) > Math.abs(dx)) {
+          if (dy < 0) tryMove(1, 0); else tryMove(-1, 0)
+        } else {
+          if (dx < 0) tryMove(0, -1); else tryMove(0, 1)
+        }
+      })
+      window.addEventListener('keydown', (e) => {
+        if (!running || over) {
+          if ((e.code === 'Space' || e.code === 'Enter') && !overlay.classList.contains('hidden')) start()
+          return
+        }
+        if (e.code === 'ArrowUp' || e.code === 'KeyW') { e.preventDefault(); tryMove(1, 0) }
+        if (e.code === 'ArrowDown' || e.code === 'KeyS') { e.preventDefault(); tryMove(-1, 0) }
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') tryMove(0, -1)
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') tryMove(0, 1)
+      })
+      ovBtn.addEventListener('click', start)
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+      loop()
+
+      rows = []; roadRun = 0
+      prow = 0; pcol = 4; hopT = 0; maxRow = 0; camY = 0; frame = 0
+      running = false; over = false
+
+      window.__hub = {
+        get score() { return maxRow },
+        get over() { return over },
+        get started() { return running },
+      }
+    })()
+  </script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>街头投篮</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body {
+      background:#0f1118; color:#eef1f6;
+      font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center;
+      touch-action:none; overflow:hidden;
+    }
+    #wrap { position:relative; }
+    #hud {
+      position:absolute; top:-34px; left:4px; right:4px;
+      display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; letter-spacing:1px;
+    }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay {
+      position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px;
+    }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button {
+      background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700;
+      padding:10px 32px; border-radius:8px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>得分<b id="score">0</b></span>
+      <span>时间<b id="time">45s</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="480" height="600"></canvas>
+    <div id="overlay">
+      <h1>🏀 街头投篮</h1>
+      <p>按住空格 / 屏幕蓄力，松开出手<br/>力度条来回摆动，卡准时机<br/>进球 +2 · 空心 +3 · 45 秒</p>
+      <button id="ov-btn">开始投篮</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const G = 0.35
+      const scoreEl = document.getElementById('score')
+      const timeEl = document.getElementById('time')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let score, timeLeft, hoop, ball, power, powerDir, charging, running, over, roundWait
+      let best = Number(localStorage.getItem('basketball-best') || 0)
+      bestEl.textContent = best
+
+      function newHoop() {
+        hoop = { x: 250 + Math.random() * 120, y: 150 + Math.random() * 60, w: 62 }
+      }
+
+      function start() {
+        score = 0; timeLeft = 45; roundWait = 0
+        power = 0; powerDir = 1; charging = false
+        running = true; over = false
+        scoreEl.textContent = 0
+        newHoop()
+        ball = { x: 70, y: H - 110, vx: 0, vy: 0, fly: false, rim: false }
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('basketball-best', best) }
+        overlay.querySelector('h1').textContent = '⏰ 时间到'
+        overlay.querySelector('p').innerHTML = '得分 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function shoot() {
+        const p = 0.5 + power / 100
+        ball.vx = 7.5 * p
+        ball.vy = -(9 + 3.5 * p)
+        ball.fly = true
+        ball.rim = false
+      }
+
+      function step() {
+        if (charging) {
+          power += powerDir * 2.6
+          if (power >= 100) { power = 100; powerDir = -1 }
+          if (power <= 0) { power = 0; powerDir = 1 }
+        }
+        if (roundWait > 0) {
+          roundWait -= 1
+          if (roundWait === 0) { newHoop(); ball.fly = false; ball.x = 70; ball.y = H - 110 }
+          return
+        }
+        if (!ball.fly) return
+        ball.vy += G
+        ball.x += ball.vx
+        ball.y += ball.vy
+        // 篮板
+        const bx = hoop.x + hoop.w + 10
+        if (ball.x + 9 > bx && ball.x + 9 < bx + 10 && ball.y > hoop.y - 60 && ball.y < hoop.y + 10) {
+          ball.vx = -Math.abs(ball.vx) * 0.5
+          ball.rim = true
+        }
+        // 筐沿两点
+        const lx = hoop.x, rx = hoop.x + hoop.w
+        for (const rxp of [lx, rx]) {
+          if (Math.hypot(ball.x - rxp, ball.y - hoop.y) < 11) {
+            ball.vy = Math.abs(ball.vy) * 0.4
+            ball.vx = ball.x < rxp ? -Math.abs(ball.vx || 2) : Math.abs(ball.vx || 2)
+            ball.rim = true
+          }
+        }
+        // 进筐判定：球心穿过筐口线
+        if (ball.vy > 0 && ball.y - 9 < hoop.y && ball.y + 9 > hoop.y && ball.x > lx + 4 && ball.x < rx - 4) {
+          const pts = ball.rim ? 2 : 3
+          score += pts
+          scoreEl.textContent = score
+          roundWait = 70
+          return
+        }
+        if (ball.y > H + 20 || ball.x > W + 20) {
+          roundWait = 70
+          ball.fly = false
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        // 地板
+        ctx.fillStyle = '#1a1d29'
+        ctx.fillRect(0, H - 40, W, 40)
+        // 篮板+筐
+        ctx.fillStyle = '#3a4152'
+        ctx.fillRect(hoop.x + hoop.w + 10, hoop.y - 60, 10, 74)
+        ctx.strokeStyle = '#ff4d5e'
+        ctx.lineWidth = 5
+        ctx.beginPath()
+        ctx.moveTo(hoop.x, hoop.y)
+        ctx.lineTo(hoop.x + hoop.w, hoop.y)
+        ctx.stroke()
+        ctx.strokeStyle = 'rgba(255,255,255,0.25)'
+        ctx.lineWidth = 1
+        for (let i = 1; i < 6; i++) {
+          ctx.beginPath()
+          ctx.moveTo(hoop.x + i * hoop.w / 6, hoop.y)
+          ctx.lineTo(hoop.x + i * hoop.w / 6 - 4, hoop.y + 26)
+          ctx.stroke()
+        }
+        // 玩家
+        ctx.font = '34px sans-serif'
+        ctx.fillText('🧍', 52, H - 66)
+        // 力度条
+        if (charging) {
+          ctx.fillStyle = '#2a2e3d'
+          ctx.fillRect(40, H - 52, 90, 12)
+          ctx.fillStyle = power > 78 ? '#ff4d5e' : '#ffd23f'
+          ctx.fillRect(40, H - 52, 90 * power / 100, 12)
+        }
+        // 球
+        ctx.font = '20px sans-serif'
+        ctx.fillText('🏀', ball.x - 10, ball.y + 8)
+        // 轨迹预览（未出手时）
+        if (!ball.fly && running && !over) {
+          const p = 0.5 + power / 100
+          let px = 70, py = H - 110
+          let vx = 7.5 * p, vy = -(9 + 3.5 * p)
+          ctx.fillStyle = 'rgba(255,210,63,0.35)'
+          for (let i = 0; i < 26; i++) {
+            vy += G; px += vx; py += vy
+            if (i % 2 === 0) ctx.fillRect(px, py, 3, 3)
+          }
+        }
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) {
+          timeLeft -= 1 / 60
+          timeEl.textContent = Math.ceil(timeLeft) + 's'
+          if (timeLeft <= 0) { timeLeft = 0; end() }
+          step()
+        }
+        draw()
+      }
+
+      function press() {
+        if (!running || over || ball.fly || roundWait > 0) return
+        charging = true; power = 0; powerDir = 1
+      }
+      function release() {
+        if (!running || over || !charging) return
+        charging = false
+        shoot()
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') { e.preventDefault(); if (!running && !overlay.classList.contains('hidden')) start(); else press() }
+      })
+      window.addEventListener('keyup', (e) => { if (e.code === 'Space') release() })
+      cv.addEventListener('pointerdown', (e) => { e.preventDefault(); press() })
+      window.addEventListener('pointerup', release)
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      score = 0; timeLeft = 45; roundWait = 0; power = 0; powerDir = 1; charging = false
+      running = false; over = false
+      newHoop()
+      ball = { x: 70, y: H - 110, vx: 0, vy: 0, fly: false, rim: false }
+      loop()
+    })()
+  </script>
+</body>
+</html>

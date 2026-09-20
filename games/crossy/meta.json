@@ -1,0 +1,17 @@
+{
+  "id": "crossy",
+  "name": "横穿车流",
+  "emoji": "🐔",
+  "categories": ["action", "racing"],
+  "tags": ["过马路", "躲避", "小鸡"],
+  "summary": "带小鸡逐格跳跃横穿车流，视野随行滚动，能走多远？",
+  "description": "俯视网格上，小鸡要一步步跳过一条条车流不息的马路。每条车道方向、车速和车距各不相同，前进 1 行得 1 分，被车撞上即结束。镜头跟随小鸡滚动，越往前车道越快，考验胆识和时机。",
+  "howToPlay": "↑↓←→ 或滑动屏幕逐格移动小鸡；前进 1 行 +1 分，被车撞到即结束。",
+  "entry": "crossy/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

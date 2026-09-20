@@ -1,0 +1,17 @@
+{
+  "id": "slidetile",
+  "name": "数字华容道",
+  "emoji": "🔢",
+  "categories": ["puzzle", "casual"],
+  "tags": ["华容道", "滑块", "排序"],
+  "summary": "4x4 滑块复原 1~15，步数越少分越高，考验你的规划力！",
+  "description": "经典的 15 数字滑块益智游戏，开局从复原态随机打乱 120 步保证必定可解。点击与空格相邻的数字块将其滑入空格，也可用方向键操作，把 1~15 复原成顺序即获胜。",
+  "howToPlay": "点击空格旁的数字块滑动，或用方向键；将 1~15 按顺序复原即过关。",
+  "entry": "slidetile/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

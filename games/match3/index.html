@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>甜蜜三消</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:min(88vw,420px); display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board {
+      width:min(88vw,420px); aspect-ratio:1;
+      display:grid; grid-template-columns:repeat(8,1fr); gap:3px;
+      background:#1a1d29; border:3px solid #2a2e3d; border-radius:12px; padding:6px;
+    }
+    .cell { display:grid; place-items:center; font-size:min(5.4vw,26px); border-radius:8px; cursor:pointer; user-select:none;
+      background:#14161f; transition:transform .12s; }
+    .cell.sel { background:#2a3350; transform:scale(1.12); outline:2px solid var(--yellow); }
+    .cell.clearing { animation:pop .2s ease; }
+    @keyframes pop { 50% { transform:scale(.5); } }
+    #combo { position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:26px; font-weight:900;
+      color:var(--yellow); text-shadow:3px 3px 0 #14161f; opacity:0; pointer-events:none; transition:opacity .2s; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.88); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>得分<b id="score">0</b></span>
+      <span>时间<b id="time">90s</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="board"></div>
+    <div id="combo"></div>
+  </div>
+  <div id="overlay">
+    <h1>🍬 甜蜜三消</h1>
+    <p>点击两颗相邻糖果交换<br/>三连及以上消除，连锁分数翻倍<br/>90 秒限时冲分</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+  <script>
+    (() => {
+      const N = 8
+      const EMO = ['🍎','🍋','🍇','🍉','🍓','🫐']
+      const boardEl = document.getElementById('board')
+      const scoreEl = document.getElementById('score')
+      const timeEl = document.getElementById('time')
+      const bestEl = document.getElementById('best')
+      const comboEl = document.getElementById('combo')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let grid, sel, score, timeLeft, running, over, busy, timer
+      let best = Number(localStorage.getItem('match3-best') || 0)
+      bestEl.textContent = best
+
+      const rc = (i) => [(i / N) | 0, i % N]
+
+      function fill() {
+        grid = Array.from({ length: N }, () => Array(N).fill(0).map(() => (Math.random() * 6) | 0))
+      }
+
+      function findMatches() {
+        const set = new Set()
+        for (let r = 0; r < N; r++) {
+          let run = 1
+          for (let c = 1; c <= N; c++) {
+            if (c < N && grid[r][c] === grid[r][c - 1]) run++
+            else { if (run >= 3) for (let k = c - run; k < c; k++) set.add(r * N + k); run = 1 }
+          }
+        }
+        for (let c = 0; c < N; c++) {
+          let run = 1
+          for (let r = 1; r <= N; r++) {
+            if (r < N && grid[r][c] === grid[r - 1][c]) run++
+            else { if (run >= 3) for (let k = r - run; k < r; k++) set.add(k * N + c); run = 1 }
+          }
+        }
+        return set
+      }
+
+      function hasMove() {
+        for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+          for (const [dr, dc] of [[0,1],[1,0]]) {
+            const nr = r + dr, nc = c + dc
+            if (nr >= N || nc >= N) continue
+            const t = grid[r][c]; grid[r][c] = grid[nr][nc]; grid[nr][nc] = t
+            const ok = findMatches().size > 0
+            grid[nr][nc] = grid[r][c]; grid[r][c] = t
+            if (ok) return true
+          }
+        }
+        return false
+      }
+
+      function newBoard() {
+        fill()
+        while (findMatches().size) resolveSilent()
+        while (!hasMove()) fill()
+      }
+
+      function resolveSilent() {
+        const m = findMatches()
+        for (const k of m) { const [r, c] = rc(k); grid[r][c] = -1 }
+        for (let c = 0; c < N; c++) {
+          const col = []
+      for (let r = 0; r < N; r++) if (grid[r][c] >= 0) col.push(grid[r][c])
+      while (col.length < N) col.unshift((Math.random() * 6) | 0)
+      for (let r = 0; r < N; r++) grid[r][c] = col[r]
+    }
+      }
+
+      function start() {
+        score = 0; timeLeft = 90; sel = -1; busy = false
+        running = true; over = false
+        scoreEl.textContent = 0; timeEl.textContent = '90s'
+        newBoard()
+        overlay.classList.add('hidden')
+        clearInterval(timer)
+        timer = setInterval(() => {
+          if (!running || over) return
+          timeLeft--
+          timeEl.textContent = timeLeft + 's'
+          if (timeLeft <= 0) end()
+        }, 1000)
+        render()
+      }
+
+      function end() {
+        running = false; over = true
+        clearInterval(timer)
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('match3-best', best) }
+        overlay.querySelector('h1').textContent = '⏰ 时间到'
+        overlay.querySelector('p').innerHTML = '得分 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function render(matches) {
+        boardEl.innerHTML = ''
+        for (let i = 0; i < N * N; i++) {
+          const [r, c] = rc(i)
+          const el = document.createElement('div')
+          el.className = 'cell' + (i === sel ? ' sel' : '') + (matches && matches.has(i) ? ' clearing' : '')
+          el.textContent = grid[r][c] >= 0 ? EMO[grid[r][c]] : '✨'
+          el.onclick = () => click(i)
+          boardEl.appendChild(el)
+        }
+      }
+
+      function click(i) {
+        if (!running || over || busy) return
+        if (sel === -1) { sel = i; render(); return }
+        if (sel === i) { sel = -1; render(); return }
+        const [r1, c1] = rc(sel), [r2, c2] = rc(i)
+        if (Math.abs(r1 - r2) + Math.abs(c1 - c2) !== 1) { sel = i; render(); return }
+        busy = true
+        const t = grid[r1][c1]; grid[r1][c1] = grid[r2][c2]; grid[r2][c2] = t
+        sel = -1
+        if (findMatches().size) {
+          resolve(1)
+        } else {
+          const t2 = grid[r1][c1]; grid[r1][c1] = grid[r2][c2]; grid[r2][c2] = t2
+          render()
+          setTimeout(() => { busy = false }, 180)
+        }
+      }
+
+      function resolve(mult) {
+        const m = findMatches()
+        if (!m.size) {
+          if (!hasMove()) { fill(); while (findMatches().size) resolveSilent(); combo('🔀 自动洗牌') }
+          render()
+          busy = false
+          return
+        }
+        score += m.size * 10 * mult
+        scoreEl.textContent = score
+        if (mult >= 2) combo('COMBO ×' + mult + '！')
+        render(m)
+        setTimeout(() => {
+          for (const k of m) { const [r, c] = rc(k); grid[r][c] = -1 }
+          for (let c = 0; c < N; c++) {
+            const col = []
+            for (let r = 0; r < N; r++) if (grid[r][c] >= 0) col.push(grid[r][c])
+            while (col.length < N) col.unshift((Math.random() * 6) | 0)
+            for (let r = 0; r < N; r++) grid[r][c] = col[r]
+          }
+          resolve(mult + 1)
+        }, 220)
+      }
+
+      function combo(txt) {
+        comboEl.textContent = txt
+        comboEl.style.opacity = 1
+        setTimeout(() => { comboEl.style.opacity = 0 }, 700)
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      fill(); score = 0; timeLeft = 90; sel = -1; running = false; over = false; busy = false
+      render()
+    })()
+  </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>黑白棋</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:13px; font-weight:900; }
+    #hud .black b, #hud .white b { color:var(--yellow); margin-left:4px; }
+    #board { width:min(88vw,440px); aspect-ratio:1; display:grid; grid-template-columns:repeat(8,1fr);
+      grid-template-rows:repeat(8,1fr); gap:3px; background:#1a1d29; border:3px solid #2a2e3d; border-radius:12px; padding:5px; }
+    .cell { border-radius:6px; background:#22432e; display:grid; place-items:center; cursor:pointer; }
+    .cell .d { width:78%; aspect-ratio:1; border-radius:50%; }
+    .cell .d.b { background:#14161f; border:2px solid #3a4152; }
+    .cell .d.w { background:#eef1f6; }
+    .cell.legal::after { content:''; width:26%; aspect-ratio:1; border-radius:50%; background:rgba(255,210,63,.55); }
+    #msg { font-size:15px; font-weight:900; min-height:22px; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.88); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span class="black">⚫ 黑（你）<b id="b">2</b></span>
+      <span class="white">⚪ 白（AI）<b id="w">2</b></span>
+    </div>
+    <div id="board"></div>
+    <div id="msg">点击高亮格落子</div>
+  </div>
+  <div id="overlay">
+    <h1>⚫ 黑白棋</h1>
+    <p>落子必须夹住白子并翻面<br/>合法点高亮 · AI 占角优先<br/>双方无法落子时终局结算</p>
+    <button id="ov-btn">开始对局</button>
+  </div>
+  <script>
+    (() => {
+      const N = 8
+      const boardEl = document.getElementById('board')
+      const bEl = document.getElementById('b')
+      const wEl = document.getElementById('w')
+      const msgEl = document.getElementById('msg')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const DIRS = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]]
+      // 位置权重：角最值钱，角旁是坑
+      const W = [
+        [120,-20,20,5,5,20,-20,120],[-20,-40,-5,-5,-5,-5,-40,-20],
+        [20,-5,15,3,3,15,-5,20],[5,-5,3,3,3,3,-5,5],
+        [5,-5,3,3,3,3,-5,5],[20,-5,15,3,3,15,-5,20],
+        [-20,-40,-5,-5,-5,-5,-40,-20],[120,-20,20,5,5,20,-20,120],
+      ]
+
+      let board, turn, running, over
+      // 0 空 1 黑 2 白
+
+      function flips(bd, r, c, p) {
+        if (bd[r][c]) return []
+        const out = []
+        for (const [dr, dc] of DIRS) {
+          const line = []
+          let nr = r + dr, nc = c + dc
+          while (nr >= 0 && nr < N && nc >= 0 && nc < N && bd[nr][nc] === 3 - p) {
+            line.push([nr, nc])
+            nr += dr; nc += dc
+          }
+          if (line.length && nr >= 0 && nr < N && nc >= 0 && nc < N && bd[nr][nc] === p) out.push(...line)
+        }
+        return out
+      }
+
+      function legalMoves(bd, p) {
+        const moves = []
+        for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+          if (flips(bd, r, c, p).length) moves.push([r, c])
+        }
+        return moves
+      }
+
+      function place(r, c, p) {
+        const f = flips(board, r, c, p)
+        if (!f.length) return false
+        board[r][c] = p
+        for (const [fr, fc] of f) board[fr][fc] = p
+        return true
+      }
+
+      function counts() {
+        let b = 0, w = 0
+        for (const row of board) for (const v of row) { if (v === 1) b++; else if (v === 2) w++ }
+        return [b, w]
+      }
+
+      function start() {
+        board = Array.from({ length: N }, () => Array(N).fill(0))
+        board[3][3] = 2; board[3][4] = 1; board[4][3] = 1; board[4][4] = 2
+        turn = 1
+        running = true; over = false
+        overlay.classList.add('hidden')
+        render()
+      }
+
+      function end() {
+        running = false; over = true
+        const [b, w] = counts()
+        const title = b > w ? '🏆 黑方获胜' : b < w ? '🤖 AI 获胜' : '🤝 平局'
+        overlay.querySelector('h1').textContent = title
+        overlay.querySelector('p').innerHTML = '终局 <b style="color:#ffd23f">' + b + '</b> : ' + w + ' · 你的得分 ' + b
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function afterMove() {
+        const [b, w] = counts()
+        bEl.textContent = b; wEl.textContent = w
+        if (!board.flat().includes(0)) return end()
+        const humanMoves = legalMoves(board, 1)
+        const aiMoves = legalMoves(board, 2)
+        if (!humanMoves.length && !aiMoves.length) return end()
+        if (turn === 1 && !humanMoves.length) {
+          msgEl.textContent = '你无处可落，跳过'
+          turn = 2
+          setTimeout(aiTurn, 900)
+          render()
+          return
+        }
+        if (turn === 2 && !aiMoves.length) {
+          msgEl.textContent = 'AI 无处可落，跳过'
+          turn = 1
+          render()
+          return
+        }
+        if (turn === 2) setTimeout(aiTurn, 550)
+        else msgEl.textContent = '轮到你，点击高亮格'
+        render()
+      }
+
+      function aiTurn() {
+        if (!running || over) return
+        const moves = legalMoves(board, 2)
+        if (!moves.length) { turn = 1; render(); return }
+        let bestV = -1e9, bestM = moves[0]
+        for (const [r, c] of moves) {
+          const f = flips(board, r, c)
+          let v = W[r][c] + f.length * 3
+          // 角必占
+          if ((r === 0 || r === 7) && (c === 0 || c === 7)) v += 100
+          if (v > bestV) { bestV = v; bestM = [r, c] }
+        }
+        place(bestM[0], bestM[1], 2)
+        turn = 1
+        afterMove()
+      }
+
+      function render() {
+        const moves = turn === 1 && running && !over ? legalMoves(board, 1) : []
+        const legalSet = new Set(moves.map(([r, c]) => r * N + c))
+        boardEl.innerHTML = ''
+        for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+          const el = document.createElement('div')
+          el.className = 'cell' + (legalSet.has(r * N + c) ? ' legal' : '')
+          if (board[r][c]) {
+            const d = document.createElement('div')
+            d.className = 'd ' + (board[r][c] === 1 ? 'b' : 'w')
+            el.appendChild(d)
+          }
+          el.onclick = () => {
+            if (!running || over || turn !== 1) return
+            if (place(r, c, 1)) { turn = 2; afterMove() }
+          }
+          boardEl.appendChild(el)
+        }
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return counts()[0] },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      board = Array.from({ length: N }, () => Array(N).fill(0))
+      board[3][3] = 2; board[3][4] = 1; board[4][3] = 1; board[4][4] = 2
+      turn = 1; running = false; over = false
+      render()
+    })()
+  </script>
+</body>
+</html>

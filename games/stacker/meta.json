@@ -1,0 +1,17 @@
+{
+  "id": "stacker",
+  "name": "叠叠乐",
+  "emoji": "📦",
+  "categories": ["arcade", "puzzle"],
+  "tags": ["街机", "时机", "经典"],
+  "summary": "横条左右移动，掐准时机落下堆塔，偏一点塔身就削窄一分！",
+  "description": "街机厅经典叠方块。横条在塔顶往返移动，点击落下：与下层重叠的部分保留，悬空部分被切除，塔身越来越窄。完全错位即失败，每 5 层提速一次。",
+  "howToPlay": "点击 / 空格放下移动中的横条；重叠越多塔越稳。",
+  "entry": "stacker/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

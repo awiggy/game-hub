@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>蚂蚁帝国</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body {
+      background:#0f1118; color:#eef1f6;
+      font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:10px; touch-action:manipulation; overflow:hidden;
+    }
+    #hud { width:min(92vw,460px); display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:64vh; }
+    #ups { display:flex; gap:8px; width:min(92vw,460px); }
+    .up {
+      flex:1; font-family:inherit; font-weight:700; font-size:12px; color:#eef1f6;
+      background:#1a1d29; border:2px solid #2a2e3d; border-radius:10px; padding:8px 4px; cursor:pointer; line-height:1.6;
+    }
+    .up:disabled { opacity:.4; cursor:not-allowed; }
+    .up:not(:disabled):active { background:var(--blue); }
+    #overlay {
+      position:fixed; inset:0; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px;
+    }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button {
+      background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700;
+      padding:10px 32px; border-radius:8px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="hud">
+    <span>食物<b id="food">0</b></span>
+    <span>蚁群<b id="ants">0/5</b></span>
+    <span>时间<b id="time">180s</b></span>
+    <span>BEST<b id="best">0</b></span>
+  </div>
+  <canvas id="cv" width="460" height="460"></canvas>
+  <div id="ups">
+    <button class="up" id="up-cap">蚁群+1<br/><small></small></button>
+    <button class="up" id="up-spd">移速+25%<br/><small></small></button>
+    <button class="up" id="up-auto">巢自产+0.5/s<br/><small></small></button>
+  </div>
+  <div id="overlay">
+    <h1>🐜 蚂蚁帝国</h1>
+    <p>点击草地派出蚂蚁采集食物运回巢<br/>食物升级蚁群上限 / 移速 / 巢自产<br/>180 秒内尽可能多地囤粮</p>
+    <button id="ov-btn">开始采集</button>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const NEST = { x: 40, y: H - 40 }
+      const foodEl = document.getElementById('food')
+      const antsEl = document.getElementById('ants')
+      const timeEl = document.getElementById('time')
+      const bestEl = document.getElementById('best')
+      const upCap = document.getElementById('up-cap')
+      const upSpd = document.getElementById('up-spd')
+      const upAuto = document.getElementById('up-auto')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let ants, food, cap, spdLv, autoLv, timeLeft, running, over, totalFood
+      let best = Number(localStorage.getItem('antcolony-best') || 0)
+      bestEl.textContent = best
+
+      const price = (base, lv, step) => base + lv * step
+      const speed = () => 1.1 * Math.pow(1.25, spdLv)
+      const autoRate = () => autoLv * 0.5
+
+      function start() {
+        ants = []; food = 0; totalFood = 0
+        cap = 5; spdLv = 0; autoLv = 0
+        timeLeft = 180; running = true; over = false
+        overlay.classList.add('hidden')
+        renderHud()
+      }
+
+      function end() {
+        running = false; over = true
+        if (totalFood > best) { best = Math.floor(totalFood); bestEl.textContent = best; localStorage.setItem('antcolony-best', best) }
+        overlay.querySelector('h1').textContent = '⏰ 采集结束'
+        overlay.querySelector('p').innerHTML = '共采集 <b style="color:#ffd23f">' + Math.floor(totalFood) + '</b> 食物 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function renderHud() {
+        foodEl.textContent = Math.floor(food)
+        antsEl.textContent = ants.length + '/' + cap
+        timeEl.textContent = Math.ceil(timeLeft) + 's'
+        const c1 = price(10, cap - 5, 5), c2 = price(15, spdLv, 8), c3 = price(20, autoLv, 10)
+        upCap.querySelector('small').textContent = c1 + ' 食物'
+        upSpd.querySelector('small').textContent = c2 + ' 食物'
+        upAuto.querySelector('small').textContent = c3 + ' 食物'
+        upCap.disabled = food < c1
+        upSpd.disabled = food < c2
+        upAuto.disabled = food < c3
+      }
+
+      function toGame(e) {
+        const r = cv.getBoundingClientRect()
+        return { x: (e.clientX - r.left) * (W / r.width), y: (e.clientY - r.top) * (H / r.height) }
+      }
+
+      cv.addEventListener('pointerdown', (e) => {
+        if (!running || over) return
+        if (ants.length >= cap) return
+        const p = toGame(e)
+        if (p.x < 8 || p.x > W - 8 || p.y < 8 || p.y > H - 8) return
+        ants.push({ x: NEST.x, y: NEST.y, tx: p.x, ty: p.y, phase: 'go' })
+        renderHud()
+      })
+
+      upCap.onclick = () => { const c = price(10, cap - 5, 5); if (food >= c) { food -= c; cap++; renderHud() } }
+      upSpd.onclick = () => { const c = price(15, spdLv, 8); if (food >= c) { food -= c; spdLv++; renderHud() } }
+      upAuto.onclick = () => { const c = price(20, autoLv, 10); if (food >= c) { food -= c; autoLv++; renderHud() } }
+
+      let lastT = 0
+      function loop(t) {
+        requestAnimationFrame(loop)
+        if (!lastT) lastT = t
+        const dt = Math.min(50, t - lastT)
+        lastT = t
+        if (running && !over) {
+          timeLeft -= dt / 1000
+          if (timeLeft <= 0) { timeLeft = 0; end() }
+          const gain = autoRate() * dt / 1000
+          food += gain; totalFood += gain
+          const v = speed() * dt / 1000
+          for (const a of ants) {
+            const dx = (a.phase === 'go' ? a.tx : NEST.x) - a.x
+            const dy = (a.phase === 'go' ? a.ty : NEST.y) - a.y
+            const d = Math.hypot(dx, dy)
+            if (d < 4) {
+              if (a.phase === 'go') a.phase = 'back'
+              else { a.phase = 'idle'; food += 1; totalFood += 1 }
+            } else {
+              a.x += dx / d * v
+              a.y += dy / d * v
+            }
+          }
+          for (let i = ants.length - 1; i >= 0; i--) if (ants[i].phase === 'idle') ants.splice(i, 1)
+          renderHud()
+        }
+        draw()
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)'
+        for (let i = 1; i < 8; i++) {
+          ctx.beginPath(); ctx.moveTo(i * W / 8, 0); ctx.lineTo(i * W / 8, H); ctx.stroke()
+          ctx.beginPath(); ctx.moveTo(0, i * H / 8); ctx.lineTo(W, i * H / 8); ctx.stroke()
+        }
+        // 巢
+        ctx.font = '28px sans-serif'
+        ctx.fillText('🏠', NEST.x - 14, NEST.y + 10)
+        // 蚂蚁
+        ctx.fillStyle = '#eef1f6'
+        ctx.font = '14px sans-serif'
+        for (const a of ants) {
+          ctx.fillText(a.phase === 'back' ? '🐜·🌾' : '🐜', a.x - 7, a.y + 5)
+        }
+      }
+
+      ovBtn.addEventListener('click', start)
+      requestAnimationFrame(loop)
+
+      window.__hub = {
+        get score() { return Math.floor(totalFood) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      ants = []; food = 0; totalFood = 0; cap = 5; spdLv = 0; autoLv = 0
+      timeLeft = 180; running = false; over = false
+    })()
+  </script>
+</body>
+</html>

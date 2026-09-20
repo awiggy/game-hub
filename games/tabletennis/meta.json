@@ -1,0 +1,17 @@
+{
+  "id": "tabletennis",
+  "name": "乒乓快打",
+  "emoji": "🏓",
+  "categories": ["sports", "arcade"],
+  "tags": ["体育", "对战", "反应"],
+  "summary": "横版乒乓对决：跟随来球上下移动球拍，AI 越打越快，3 命定生死！",
+  "description": "你控制左侧球拍，AI 控制右侧。球速每回合提升 3%，AI 的反应会逐渐变快但永远有极限——抓住空当得分。你漏球扣 1 命，3 命耗尽结束，得分是你赢下的回合数。",
+  "howToPlay": "移动鼠标 / ↑↓ 键 / 上下滑动控制球拍上下；接住球并打回对方半场。",
+  "entry": "tabletennis/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

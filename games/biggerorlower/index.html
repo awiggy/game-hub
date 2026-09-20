@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>大小对决</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,400px); position:relative; display:flex; flex-direction:column; gap:14px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #card {
+      width:130px; height:180px; border-radius:14px; background:#1a1d29; border:3px solid #2a3350;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+      font-size:40px; font-weight:900; transition:transform .18s;
+    }
+    #card .suit { font-size:30px; }
+    #card.red { color:#ff6b7a; }
+    #card.flip { transform:rotateY(90deg); }
+    #msg { font-size:15px; font-weight:900; min-height:22px; }
+    #acts { display:flex; gap:12px; }
+    .act {
+      font-family:inherit; font-weight:900; font-size:16px; color:#eef1f6; background:var(--blue);
+      border:2px solid #fff; border-radius:10px; padding:14px 30px; cursor:pointer; min-width:120px;
+    }
+    .act:disabled { opacity:.4; cursor:not-allowed; }
+    .act:not(:disabled):active { transform:translateY(2px); }
+    #acts .up { background:#22b573; }
+    #acts .down { background:#ff4d5e; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.88); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>连胜<b id="streak">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="card"><span id="rank">?</span><span class="suit" id="suit">🂠</span></div>
+    <div id="msg">下一张牌会更大还是更小？</div>
+    <div id="acts">
+      <button class="act up" id="hi">⬆️ 更大</button>
+      <button class="act down" id="lo">⬇️ 更小</button>
+    </div>
+  </div>
+  <div id="overlay">
+    <h1>🔀 大小对决</h1>
+    <p>当前牌已翻开，押下一张更大或更小<br/>A 最小 K 最大，相等算输<br/>连对 3 次后得分翻倍</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+  <script>
+    (() => {
+      const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
+      const SUITS = [['♠',''],['♥','red'],['♦','red'],['♣','']]
+      const cardEl = document.getElementById('card')
+      const rankEl = document.getElementById('rank')
+      const suitEl = document.getElementById('suit')
+      const streakEl = document.getElementById('streak')
+      const bestEl = document.getElementById('best')
+      const msgEl = document.getElementById('msg')
+      const hiBtn = document.getElementById('hi')
+      const loBtn = document.getElementById('lo')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let cur, streak, running, over, busy
+      let best = Number(localStorage.getItem('biggerorlower-best') || 0)
+      bestEl.textContent = best
+
+      function draw() {
+        const r = (Math.random() * 13) | 0
+        const s = SUITS[(Math.random() * 4) | 0]
+        return { v: r + 1, r: RANKS[r], s }
+      }
+
+      function show(c) {
+        cardEl.classList.add('flip')
+        setTimeout(() => {
+          rankEl.textContent = c.r
+          suitEl.textContent = c.s[0]
+          cardEl.classList.toggle('red', !!c.s[1])
+          cardEl.classList.remove('flip')
+        }, 160)
+      }
+
+      function start() {
+        streak = 0
+        running = true; over = false; busy = false
+        streakEl.textContent = 0
+        hiBtn.disabled = loBtn.disabled = false
+        overlay.classList.add('hidden')
+        cur = draw()
+        show(cur)
+        msgEl.textContent = '下一张牌会更大还是更小？'
+      }
+
+      function end() {
+        running = false; over = true
+        if (streak > best) { best = streak; bestEl.textContent = best; localStorage.setItem('biggerorlower-best', best) }
+        overlay.querySelector('h1').textContent = '😵 押错了'
+        overlay.querySelector('p').innerHTML = '连胜 <b style="color:#ffd23f">' + streak + '</b> 次 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function guess(higher) {
+        if (!running || over || busy) return
+        busy = true
+        hiBtn.disabled = loBtn.disabled = true
+        const next = draw()
+        show(next)
+        setTimeout(() => {
+          if (next.v === cur.v || (next.v > cur.v) !== higher) {
+            cur = next
+            return end()
+          }
+          streak++
+          streakEl.textContent = streak
+          const bonus = streak >= 3 ? ' ×2!' : ''
+          msgEl.textContent = '✓ 连对 ' + streak + ' 次' + bonus
+          cur = next
+          busy = false
+          hiBtn.disabled = loBtn.disabled = false
+        }, 400)
+      }
+
+      hiBtn.addEventListener('click', () => guess(true))
+      loBtn.addEventListener('click', () => guess(false))
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return streak },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      cur = draw(); streak = 0; running = false; over = false; busy = false
+      show(cur)
+    })()
+  </script>
+</body>
+</html>

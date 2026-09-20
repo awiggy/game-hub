@@ -1,0 +1,17 @@
+{
+  "id": "shopkeeper",
+  "name": "街角小店",
+  "emoji": "🏪",
+  "categories": ["simulation", "strategy"],
+  "tags": ["模拟", "经营", "策略"],
+  "summary": "10 天经营挑战：低价进货高价卖出，看你能把 100 金币滚到多少！",
+  "description": "每天三种随机商品报价，用资产进货；次日按随机波动的售价自动售罄，低买高卖赚差价。初始 100 金币，经营 10 天结算总资产，破产则提前结束。",
+  "howToPlay": "点 ＋ 进货，点「开张营业」结算次日售价并卖出全部库存，共 10 天。",
+  "entry": "shopkeeper/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

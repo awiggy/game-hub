@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>护盾守卫</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>挡弹<b id="score">0</b></span>
+      <span>命<b id="lives">♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="420" height="560"></canvas>
+    <div id="overlay">
+      <h1>🛡️ 护盾守卫</h1>
+      <p>← → 调整护盾转速 / 按住拖动跟随角度<br/>挡住射向核心的子弹 +1，漏弹 -1 命<br/>弹幕越来越密，共 3 命，守住核心！</p>
+      <button id="ov-btn">开始游戏</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+      const CX = W / 2, CY = H / 2 + 10
+      const CORE = 26, SH_R = 62, HALF = 35 * Math.PI / 180
+      const TAU = Math.PI * 2
+
+      let ang, vel, bullets, sparks, lives, score, frame, inv, spawnT, dragging, pointerAng, running, over
+      let best = Number(localStorage.getItem('shielddef-best') || 0)
+      bestEl.textContent = best
+
+      function norm(a) { a %= TAU; if (a < 0) a += TAU; return a }
+      function angDiff(a, b) {
+        const d = Math.abs(norm(a) - norm(b))
+        return Math.min(d, TAU - d)
+      }
+
+      function start() {
+        ang = -Math.PI / 2; vel = 0.02
+        bullets = []; sparks = []
+        lives = 3; score = 0; frame = 0; inv = 0; spawnT = 40; dragging = false
+        running = true; over = false
+        scoreEl.textContent = '0'
+        livesEl.textContent = '♥♥♥'
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('shielddef-best', best) }
+        overlay.querySelector('h1').textContent = '💥 核心失守'
+        overlay.querySelector('p').innerHTML = '挡下 <b style="color:#ffd23f">' + score + '</b> 发子弹 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function spawnBullet() {
+        const side = (Math.random() * 4) | 0
+        let x, y
+        if (side === 0) { x = Math.random() * W; y = -20 }
+        else if (side === 1) { x = Math.random() * W; y = H + 20 }
+        else if (side === 2) { x = -20; y = Math.random() * H }
+        else { x = W + 20; y = Math.random() * H }
+        const base = Math.atan2(CY - y, CX - x)
+        const jit = (Math.random() - 0.5) * 0.24
+        const spd = Math.min(4.4, 1.7 + frame * 0.0022 + Math.random() * 0.6)
+        bullets.push({ x: x, y: y, vx: Math.cos(base + jit) * spd, vy: Math.sin(base + jit) * spd })
+      }
+
+      function sparkAt(x, y, color) {
+        for (let k = 0; k < 6; k++) {
+          sparks.push({ x: x, y: y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4, life: 16, color: color })
+        }
+      }
+
+      function step() {
+        frame++
+        if (inv > 0) inv--
+        spawnT--
+        if (spawnT <= 0) { spawnBullet(); spawnT = Math.max(20, 58 - frame * 0.012) }
+        if (dragging) {
+          let d = norm(pointerAng - ang)
+          if (d > Math.PI) d -= TAU
+          ang += d * 0.35
+        } else {
+          ang += vel
+        }
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const b = bullets[i]
+          const pd = Math.hypot(b.x - CX, b.y - CY)
+          b.x += b.vx; b.y += b.vy
+          const nd = Math.hypot(b.x - CX, b.y - CY)
+          if (pd > SH_R && nd <= SH_R) {
+            const ba = Math.atan2(b.y - CY, b.x - CX)
+            if (angDiff(ba, ang) <= HALF) {
+              bullets.splice(i, 1)
+              score++
+              scoreEl.textContent = String(score)
+              sparkAt(b.x, b.y, '#ffd23f')
+              continue
+            }
+          }
+          if (nd <= CORE + 5) {
+            bullets.splice(i, 1)
+            sparkAt(b.x, b.y, '#ff4d5e')
+            if (inv <= 0) {
+              lives--
+              livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+              inv = 90
+              if (lives <= 0) return end()
+            }
+            continue
+          }
+          if (b.x < -40 || b.x > W + 40 || b.y < -40 || b.y > H + 40) bullets.splice(i, 1)
+        }
+        for (let i = sparks.length - 1; i >= 0; i--) {
+          const s = sparks[i]
+          s.x += s.vx; s.y += s.vy; s.life--
+          if (s.life <= 0) sparks.splice(i, 1)
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        ctx.strokeStyle = '#1d2130'
+        ctx.lineWidth = 1
+        for (const rr of [110, 170, 230]) {
+          ctx.beginPath(); ctx.arc(CX, CY, rr, 0, TAU); ctx.stroke()
+        }
+        ctx.strokeStyle = '#ffd23f'
+        ctx.lineWidth = 8
+        ctx.lineCap = 'round'
+        ctx.beginPath(); ctx.arc(CX, CY, SH_R, ang - HALF, ang + HALF); ctx.stroke()
+        const blink = inv > 0 && (frame % 10 < 5)
+        ctx.globalAlpha = blink ? 0.3 : 1
+        ctx.fillStyle = '#2f55e4'
+        ctx.beginPath(); ctx.arc(CX, CY, CORE, 0, TAU); ctx.fill()
+        ctx.fillStyle = '#eef1f6'
+        ctx.beginPath(); ctx.arc(CX, CY, CORE - 10 + Math.sin(frame * 0.1) * 2, 0, TAU); ctx.fill()
+        ctx.globalAlpha = 1
+        for (const b of bullets) {
+          ctx.fillStyle = '#ff4d5e'
+          ctx.beginPath(); ctx.arc(b.x, b.y, 5, 0, TAU); ctx.fill()
+          ctx.strokeStyle = 'rgba(255,77,94,.4)'
+          ctx.lineWidth = 2
+          ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(b.x - b.vx * 4, b.y - b.vy * 4); ctx.stroke()
+        }
+        for (const s of sparks) {
+          ctx.globalAlpha = s.life / 16
+          ctx.fillStyle = s.color
+          ctx.fillRect(s.x - 1.5, s.y - 1.5, 3, 3)
+        }
+        ctx.globalAlpha = 1
+      }
+
+      function pos(e) {
+        const r = cv.getBoundingClientRect()
+        return { x: (e.clientX - r.left) * (W / r.width), y: (e.clientY - r.top) * (H / r.height) }
+      }
+      cv.addEventListener('pointerdown', (e) => {
+        if (!running || over) return
+        cv.setPointerCapture(e.pointerId)
+        dragging = true
+        const p = pos(e)
+        pointerAng = Math.atan2(p.y - CY, p.x - CX)
+      })
+      cv.addEventListener('pointermove', (e) => {
+        if (!dragging) return
+        const p = pos(e)
+        pointerAng = Math.atan2(p.y - CY, p.x - CX)
+      })
+      window.addEventListener('pointerup', () => { dragging = false })
+      window.addEventListener('keydown', (e) => {
+        if (!running || over) {
+          if ((e.code === 'Space' || e.code === 'Enter') && !overlay.classList.contains('hidden')) start()
+          return
+        }
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') vel = Math.max(-0.14, vel - 0.006)
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') vel = Math.min(0.14, vel + 0.006)
+      })
+      ovBtn.addEventListener('click', start)
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      ang = -Math.PI / 2; vel = 0.02; bullets = []; sparks = []
+      lives = 3; score = 0; frame = 0; inv = 0; spawnT = 0; dragging = false; pointerAng = 0
+      running = false; over = false
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+      loop()
+    })()
+  </script>
+</body>
+</html>

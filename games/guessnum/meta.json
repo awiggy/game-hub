@@ -1,0 +1,17 @@
+{
+  "id": "guessnum",
+  "name": "猜数字 1A2B",
+  "emoji": "🔍",
+  "categories": ["puzzle", "casual"],
+  "tags": ["益智", "推理", "经典"],
+  "summary": "4 位数字密码，xAyB 反馈推理，10 次之内猜中它！",
+  "description": "经典猜数字游戏。系统随机生成 4 位不重复数字，每次猜测返回 xAyB 反馈（A 表示数字与位置都对，B 表示数字对位置错），通过逻辑推理在 10 次内破解，用得越少得分越高。",
+  "howToPlay": "点数字键组装 4 位猜测，点确认；根据 xAyB 反馈推理出答案。",
+  "entry": "guessnum/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

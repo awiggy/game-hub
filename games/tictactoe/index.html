@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>井字棋</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,400px); position:relative; display:flex; flex-direction:column; gap:12px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { width:min(80vw,340px); aspect-ratio:1; display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
+      background:#1a1d29; border:3px solid #2a2e3d; border-radius:14px; padding:8px; }
+    .cell { display:grid; place-items:center; font-size:52px; font-weight:900; background:#14161f;
+      border-radius:10px; cursor:pointer; user-select:none; }
+    .cell.x { color:var(--blue); }
+    .cell.o { color:var(--yellow); }
+    #msg { font-size:16px; font-weight:900; min-height:24px; }
+    #again { font-family:inherit; font-weight:900; font-size:14px; color:#eef1f6; background:var(--blue);
+      border:2px solid #fff; border-radius:10px; padding:10px 28px; cursor:pointer; visibility:hidden; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.88); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>连胜<b id="streak">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="board"></div>
+    <div id="msg">你执 X 先手，三子连线即胜</div>
+    <button id="again">再来一局</button>
+  </div>
+  <div id="overlay">
+    <h1>⭕ 井字棋</h1>
+    <p>你执 X 先手，AI 用 minimax 完美防守<br/>理论上它不会输——逼平就是胜利<br/>连胜（平不断、输清零）是战绩</p>
+    <button id="ov-btn">开始对局</button>
+  </div>
+  <script>
+    (() => {
+      const boardEl = document.getElementById('board')
+      const streakEl = document.getElementById('streak')
+      const bestEl = document.getElementById('best')
+      const msgEl = document.getElementById('msg')
+      const againBtn = document.getElementById('again')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let board, turn, over, streak, running
+      let best = Number(localStorage.getItem('tictactoe-best') || 0)
+      bestEl.textContent = best
+
+      const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+
+      function winner(b, p) {
+        return LINES.some((l) => l.every((i) => b[i] === p))
+      }
+
+      function minimax(b, isAI) {
+        if (winner(b, 'O')) return { s: 1 }
+        if (winner(b, 'X')) return { s: -1 }
+        if (b.every(Boolean)) return { s: 0 }
+        let bestMove = null
+        let bestScore = isAI ? -2 : 2
+        for (let i = 0; i < 9; i++) {
+          if (b[i]) continue
+          b[i] = isAI ? 'O' : 'X'
+          const { s } = minimax(b, !isAI)
+          b[i] = ''
+          if (isAI ? s > bestScore : s < bestScore) { bestScore = s; bestMove = i }
+        }
+        return { s: bestScore, i: bestMove }
+      }
+
+      function newGame() {
+        board = Array(9).fill('')
+        turn = 'X'; over = false; running = true
+        msgEl.textContent = '你执 X 先手，三子连线即胜'
+        againBtn.style.visibility = 'hidden'
+        render()
+      }
+
+      function start() {
+        streak = 0
+        streakEl.textContent = 0
+        overlay.classList.add('hidden')
+        newGame()
+      }
+
+      function finish(result) {
+        running = false; over = true
+        if (result === 'win') {
+          streak++
+          msgEl.textContent = '🎉 你赢了（居然赢了？！）'
+        } else if (result === 'draw') {
+          msgEl.textContent = '🤝 平局，防守成功！'
+        } else {
+          streak = 0
+          msgEl.textContent = '😵 AI 获胜'
+        }
+        streakEl.textContent = streak
+        if (streak > best) { best = streak; bestEl.textContent = best; localStorage.setItem('tictactoe-best', best) }
+        againBtn.style.visibility = 'visible'
+      }
+
+      function clickCell(i) {
+        if (!running || over || board[i] || turn !== 'X') return
+        board[i] = 'X'
+        render()
+        if (winner(board, 'X')) return finish('win')
+        if (board.every(Boolean)) return finish('draw')
+        turn = 'O'
+        setTimeout(() => {
+          const { i: m } = minimax(board, true)
+          board[m] = 'O'
+          render()
+          if (winner(board, 'O')) return finish('lose')
+          if (board.every(Boolean)) return finish('draw')
+          turn = 'X'
+        }, 350)
+      }
+
+      function render() {
+        boardEl.innerHTML = ''
+        board.forEach((v, i) => {
+          const el = document.createElement('div')
+          el.className = 'cell' + (v === 'X' ? ' x' : v === 'O' ? ' o' : '')
+          el.textContent = v
+          el.onclick = () => clickCell(i)
+          boardEl.appendChild(el)
+        })
+      }
+
+      againBtn.addEventListener('click', newGame)
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return streak },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      board = Array(9).fill(''); turn = 'X'; over = false; streak = 0; running = false
+      render()
+    })()
+  </script>
+</body>
+</html>

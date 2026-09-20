@@ -1,0 +1,17 @@
+{
+  "id": "hanoi",
+  "name": "汉诺塔",
+  "emoji": "🗼",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["汉诺塔", "递归", "策略"],
+  "summary": "经典汉诺塔 5 盘挑战，大盘不压小盘，最少 31 步通关。",
+  "description": "古老的递归智力游戏：把左柱上 5 个大小不一的圆盘全部移到右柱，移动中大盘永远不能压在小盘上。点柱拿起或放下圆盘，非法操作会抖动提示，步数越少得分越高。",
+  "howToPlay": "点击柱子拿起顶盘，再点另一柱放下；大盘不能压小盘；全部移到第三柱即过关。",
+  "entry": "hanoi/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

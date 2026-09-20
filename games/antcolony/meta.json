@@ -1,0 +1,17 @@
+{
+  "id": "antcolony",
+  "name": "蚂蚁帝国",
+  "emoji": "🐜",
+  "categories": ["simulation", "strategy"],
+  "tags": ["模拟", "策略", "采集"],
+  "summary": "点击草地派出蚂蚁采集食物，升级蚁群，3 分钟内疯狂囤粮！",
+  "description": "点击画布任意位置派出蚂蚁前往采集并运回巢穴，食物可以升级蚁群上限、移速与巢穴自产。180 秒倒计时结束时统计采集总量。",
+  "howToPlay": "点击草地放蚂蚁；食物够了点下方升级按钮；倒计时结束结算。",
+  "entry": "antcolony/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

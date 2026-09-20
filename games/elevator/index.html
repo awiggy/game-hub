@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>电梯调度员</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body {
+      background:#0f1118; color:#eef1f6;
+      font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center;
+      touch-action:manipulation; overflow:hidden;
+    }
+    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:10px; }
+    #hud { display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { display:flex; gap:10px; background:#1a1d29; border:3px solid #2a2e3d; border-radius:12px; padding:10px; }
+    #floors { flex:1; display:flex; flex-direction:column-reverse; gap:3px; }
+    .floor { flex:1; display:flex; align-items:center; gap:6px; background:#14161f; border-radius:6px; padding:0 8px; font-size:15px; min-height:28px; }
+    .floor .no { font-size:10px; color:#5c6474; font-weight:900; width:20px; }
+    .floor .wait { position:relative; }
+    .floor .wait small { position:absolute; top:-8px; right:-6px; font-size:9px; color:var(--yellow); font-weight:900; }
+    #lift { width:34px; background:#2a3350; border-radius:6px; position:relative; border:2px solid #3a4a7a; }
+    #lift-box { position:absolute; left:2px; right:2px; height:calc((100% - 27px)/10 + 8px); background:var(--blue); border-radius:5px; transition:bottom .3s linear; display:grid; place-items:center; font-size:16px; }
+    #pads { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+    #pads button {
+      font-family:inherit; font-weight:900; font-size:13px; padding:8px 0;
+      color:#eef1f6; background:#1a1d29; border:2px solid #2a2e3d; border-radius:8px; cursor:pointer;
+    }
+    #pads button.here { background:var(--blue); border-color:#fff; }
+    #overlay {
+      position:fixed; inset:0; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px;
+    }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button {
+      background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700;
+      padding:10px 32px; border-radius:8px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>送达<b id="score">0</b></span>
+      <span>耐心<b id="lives">♥♥♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="board">
+      <div id="floors"></div>
+      <div id="lift"><div id="lift-box">🛗</div></div>
+    </div>
+    <div id="pads"></div>
+  </div>
+  <div id="overlay">
+    <h1>🛗 电梯调度员</h1>
+    <p>点击楼层按钮指挥电梯<br/>停靠自动接送乘客，送达 +10<br/>乘客等超 12 秒流失扣 1 心</p>
+    <button id="ov-btn">开始上班</button>
+  </div>
+  <script>
+    (() => {
+      const N = 10
+      const scoreEl = document.getElementById('score')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const floorsEl = document.getElementById('floors')
+      const liftBox = document.getElementById('lift-box')
+      const padsEl = document.getElementById('pads')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let waiting, riding, liftAt, liftTarget, score, lives, running, over
+      let best = Number(localStorage.getItem('elevator-best') || 0)
+      bestEl.textContent = best
+
+      const floorEls = [], padEls = []
+      for (let i = 0; i < N; i++) {
+        const f = document.createElement('div')
+        f.className = 'floor'
+        f.innerHTML = '<span class="no">' + (i + 1) + 'F</span><span class="ppl"></span>'
+        floorsEl.insertBefore(f, floorsEl.firstChild)
+        floorEls[i] = f.querySelector('.ppl')
+        const b = document.createElement('button')
+        b.textContent = (i + 1)
+        b.onclick = () => move(i)
+        padsEl.insertBefore(b, padsEl.firstChild)
+        padEls[i] = b
+      }
+
+      function start() {
+        waiting = Array.from({ length: N }, () => [])
+        riding = []
+        liftAt = 0; liftTarget = 0
+        score = 0; lives = 5
+        running = true; over = false
+        scoreEl.textContent = 0; livesEl.textContent = '♥♥♥♥♥'
+        overlay.classList.add('hidden')
+        spawn()
+        render()
+      }
+
+      function end(t) {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('elevator-best', best) }
+        overlay.querySelector('h1').textContent = t
+        overlay.querySelector('p').innerHTML = '共送达 <b style="color:#ffd23f">' + score + '</b> 位 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function spawn() {
+        if (!running || over) return
+        const at = (Math.random() * N) | 0
+        let to = (Math.random() * N) | 0
+        if (to === at) to = (at + 1 + ((Math.random() * (N - 1)) | 0)) % N
+        waiting[at].push({ to, wait: 0 })
+        setTimeout(spawn, Math.max(1200, 3400 - score * 40))
+      }
+
+      function move(i) {
+        if (!running || over) return
+        liftTarget = i
+      }
+
+      let lastT = 0, acc = 0
+      function loop(t) {
+        requestAnimationFrame(loop)
+        if (!lastT) lastT = t
+        const dt = Math.min(60, t - lastT)
+        lastT = t
+        if (running && !over) {
+          if (liftAt !== liftTarget) {
+            acc += dt
+            if (acc >= 350) {
+              acc = 0
+              liftAt += liftTarget > liftAt ? 1 : -1
+              arrive()
+            }
+          }
+          for (const fl of waiting) for (let i = fl.length - 1; i >= 0; i--) {
+            fl[i].wait += dt / 1000
+            if (fl[i].wait > 12) {
+              fl.splice(i, 1)
+              lives--
+              livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+              if (lives <= 0) return end('💔 乘客流失太多')
+            }
+          }
+          if (Math.floor(t / 400) % 2 === 0) render()
+        }
+      }
+
+      function arrive() {
+        // 下客
+        for (let i = riding.length - 1; i >= 0; i--) {
+          if (riding[i].to === liftAt) {
+            riding.splice(i, 1)
+            score += 10
+            scoreEl.textContent = score
+          }
+        }
+        // 上客（容量 4）
+        const fl = waiting[liftAt]
+        while (fl.length && riding.length < 4) riding.push(fl.shift())
+        render()
+      }
+
+      function render() {
+        liftBox.style.bottom = 'calc(' + liftAt + ' * ((100% - 27px)/10 + 3px) + 2px)'
+        for (let i = 0; i < N; i++) {
+          const w = waiting[i]
+          floorEls[i].innerHTML = w.map((p) =>
+            '<span class="wait">' + (p.to > i ? '🧍⬆️' : '🧍⬇️') + '<small>' + Math.max(0, 12 - p.wait | 0) + '</small></span>'
+          ).join(' ') + (i === liftAt && riding.length ? '<span>🛗' + riding.length + '</span>' : '')
+          padEls[i].classList.toggle('here', i === liftAt)
+        }
+      }
+
+      ovBtn.addEventListener('click', start)
+      requestAnimationFrame(loop)
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      waiting = Array.from({ length: N }, () => [])
+      riding = []; liftAt = 0; liftTarget = 0
+      score = 0; lives = 5; running = false; over = false
+    })()
+  </script>
+</body>
+</html>

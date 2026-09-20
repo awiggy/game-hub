@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>接鸡蛋</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>接蛋<b id="score">0</b></span>
+      <span>命<b id="lives">♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="400" height="560"></canvas>
+    <div id="overlay">
+      <h1>🥚 接鸡蛋</h1>
+      <p>← → / A D / 拖动 移动篮子<br/>接蛋 +1，炸弹 💣 或漏蛋 -1 命<br/>共 3 命，下蛋越来越快</p>
+      <button id="ov-btn">开始游戏</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let px, eggs, hens, score, lives, running, over, frame
+      let best = Number(localStorage.getItem('catcheggs-best') || 0)
+      bestEl.textContent = best
+
+      function start() {
+        px = W / 2; eggs = []; score = 0; lives = 3; frame = 0
+        hens = [0, 1, 2].map((i) => ({ x: 60 + i * 140, dir: Math.random() < .5 ? 1 : -1 }))
+        running = true; over = false
+        scoreEl.textContent = 0; livesEl.textContent = '♥♥♥'
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('catcheggs-best', best) }
+        overlay.querySelector('h1').textContent = '🐣 游戏结束'
+        overlay.querySelector('p').innerHTML = '接到 <b style="color:#ffd23f">' + score + '</b> 个蛋 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function step() {
+        frame++
+        const rate = Math.max(22, 60 - frame / 60 | 0)
+        if (frame % rate === 0) {
+          const hen = hens[(Math.random() * 3) | 0]
+          eggs.push({ x: hen.x, y: 60, v: 2.4 + frame / 900, bomb: Math.random() < 0.1 })
+        }
+        for (const h of hens) {
+          h.x += h.dir * 1.1
+          if (h.x < 40 || h.x > W - 40) h.dir *= -1
+        }
+        for (let i = eggs.length - 1; i >= 0; i--) {
+          const e = eggs[i]
+          e.y += e.v
+          if (e.y > H - 70 && e.y < H - 40 && Math.abs(e.x - px) < 42) {
+            eggs.splice(i, 1)
+            if (e.bomb) {
+              lives--
+              livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+              if (lives <= 0) return end()
+            } else {
+              score++
+              scoreEl.textContent = score
+            }
+            continue
+          }
+          if (e.y > H + 10) {
+            eggs.splice(i, 1)
+            if (!e.bomb) {
+              lives--
+              livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+              if (lives <= 0) return end()
+            }
+          }
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        ctx.fillStyle = '#1a1d29'
+        ctx.fillRect(0, 0, W, 44)
+        ctx.font = '26px sans-serif'
+        for (const h of hens) ctx.fillText('🐔', h.x - 13, 34)
+        ctx.font = '20px sans-serif'
+        for (const e of eggs) ctx.fillText(e.bomb ? '💣' : '🥚', e.x - 10, e.y + 8)
+        if (running && !over) ctx.fillText('🧺', px - 21, H - 26)
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      function toX(clientX) {
+        const r = cv.getBoundingClientRect()
+        return (clientX - r.left) * (W / r.width)
+      }
+      cv.addEventListener('pointermove', (e) => { px = Math.max(30, Math.min(W - 30, toX(e.clientX))) })
+      window.addEventListener('keydown', (e) => {
+        if (!running || over) {
+          if (e.code === 'Space' && !overlay.classList.contains('hidden')) start()
+          return
+        }
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') px = Math.max(30, px - 34)
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') px = Math.min(W - 30, px + 34)
+      })
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      px = W / 2; eggs = []; score = 0; lives = 3; frame = 0; running = false; over = false
+      hens = [0, 1, 2].map((i) => ({ x: 60 + i * 140, dir: 1 }))
+      loop()
+    })()
+  </script>
+</body>
+</html>

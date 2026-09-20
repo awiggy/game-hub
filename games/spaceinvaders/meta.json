@@ -1,0 +1,17 @@
+{
+  "id": "spaceinvaders",
+  "name": "太空侵略者",
+  "emoji": "👾",
+  "categories": ["shooter", "arcade"],
+  "tags": ["射击", "街机", "经典"],
+  "summary": "外星阵列步步逼近，最后一道防线就交给你了，一波更比一波快！",
+  "description": "街机殿堂级经典。4×8 敌人阵列整体左右移动、触边下压，随机开火；你在底部移动射击（同屏一发）。敌人被清光进入下一波且移速提升，敌人触底或命尽即结束。",
+  "howToPlay": "← → 移动，空格射击；别让敌人降到底线。",
+  "entry": "spaceinvaders/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

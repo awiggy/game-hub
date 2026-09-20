@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>猜数字 1A2B</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,400px); position:relative; display:flex; flex-direction:column; gap:10px; }
+    #hud { display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #guess { display:flex; gap:8px; justify-content:center; }
+    #guess span {
+      width:52px; height:60px; display:grid; place-items:center; font-size:26px; font-weight:900;
+      background:#1a1d29; border:2px solid #2a2e3d; border-radius:10px;
+    }
+    #keys { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+    #keys button {
+      height:46px; font-family:inherit; font-size:18px; font-weight:900;
+      color:#eef1f6; background:#1a1d29; border:2px solid #2a2e3d; border-radius:10px; cursor:pointer;
+    }
+    #keys button:disabled { opacity:.3; }
+    #keys button:not(:disabled):active { background:var(--blue); }
+    #keys button.fn { font-size:13px; color:var(--yellow); }
+    #hist { flex:1; min-height:120px; max-height:30vh; overflow:auto; background:#1a1d29;
+      border:2px solid #2a2e3d; border-radius:10px; padding:8px 12px; font-size:13px; font-weight:700; line-height:2; }
+    #hist .a { color:#22b573; }
+    #hist .b { color:var(--yellow); }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.88); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>已猜<b id="tries">0</b>/10 次</span>
+      <span>BEST<b id="best">—</b>分</span>
+    </div>
+    <div id="guess"><span></span><span></span><span></span><span></span></div>
+    <div id="keys"></div>
+    <div id="hist">历史记录将显示在这里…</div>
+  </div>
+  <div id="overlay">
+    <h1>🔍 猜数字 1A2B</h1>
+    <p>猜一个 4 位不重复数字<br/>A = 数字对位置也对，B = 数字对位置错<br/>10 次机会，越少猜中得分越高</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+  <script>
+    (() => {
+      const slots = [...document.querySelectorAll('#guess span')]
+      const keysEl = document.getElementById('keys')
+      const histEl = document.getElementById('hist')
+      const triesEl = document.getElementById('tries')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let answer, input, tries, running, over
+      let best = Number(localStorage.getItem('guessnum-best') || 0)
+      if (best) bestEl.textContent = best
+
+      for (const k of ['0','1','2','3','4','⌫','5','6','7','8','9','✓']) {
+        const b = document.createElement('button')
+        b.textContent = k
+        if (k === '⌫' || k === '✓') b.className = 'fn'
+        b.onclick = () => key(k)
+        keysEl.appendChild(b)
+      }
+
+      function start() {
+        const pool = '0123456789'.split('').sort(() => Math.random() - 0.5)
+        answer = pool.slice(0, 4)
+        input = []
+        tries = 0
+        running = true; over = false
+        triesEl.textContent = 0
+        histEl.innerHTML = ''
+        overlay.classList.add('hidden')
+        render()
+      }
+
+      function end(win) {
+        running = false; over = true
+        if (win) {
+          won = true
+          finalScore = (11 - tries) * 100
+          if (finalScore > best) { best = finalScore; bestEl.textContent = best; localStorage.setItem('guessnum-best', best) }
+        } else finalScore = 0
+        overlay.querySelector('h1').textContent = win ? '🎉 破解成功' : '😵 机会用完'
+        overlay.querySelector('p').innerHTML = win
+          ? '答案 <b style="color:#ffd23f">' + answer.join('') + '</b> · 用了 ' + tries + ' 次 · 得分 ' + finalScore
+          : '答案是 <b style="color:#ffd23f">' + answer.join('') + '</b>，再想想逻辑'
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function key(k) {
+        if (!running || over) return
+        if (k === '⌫') input.pop()
+        else if (k === '✓') submit()
+        else if (input.length < 4 && !input.includes(k)) input.push(k)
+        render()
+      }
+
+      function submit() {
+        if (input.length !== 4) return
+        tries++
+        triesEl.textContent = tries
+        let a = 0, b = 0
+        input.forEach((d, i) => {
+          if (answer[i] === d) a++
+          else if (answer.includes(d)) b++
+        })
+        histEl.innerHTML = '<div>' + input.join('') + ' → <span class="a">' + a + 'A</span><span class="b">' + b + 'B</span></div>' + histEl.innerHTML
+        if (a === 4) return end(true)
+        if (tries >= 10) return end(false)
+        input = []
+        render()
+      }
+
+      function render() {
+        slots.forEach((s, i) => { s.textContent = input[i] || '' })
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return finalScore || 0 },
+        get over() { return over },
+        get started() { return running },
+      }
+      let won = false, finalScore = 0
+
+      answer = []; input = []; tries = 0; running = false; over = false
+    })()
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "id": "elevator",
+  "name": "电梯调度员",
+  "emoji": "🛗",
+  "categories": ["simulation", "puzzle"],
+  "tags": ["模拟", "调度", "策略"],
+  "summary": "点击楼层指挥电梯接送乘客，别让任何人在大堂等太久，看你能送多少位！",
+  "description": "10 层大楼里乘客不断出现并等待上下楼。点击楼层按钮指挥电梯移动，停靠时自动接送：送达一位 +10 分。乘客等待超过 12 秒会流失并扣 1 心，5 心耗尽游戏结束。",
+  "howToPlay": "点击楼层按钮让电梯移动；停靠自动接送乘客；别让乘客等太久。",
+  "entry": "elevator/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

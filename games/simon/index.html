@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>记忆色序</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,420px); position:relative; display:flex; flex-direction:column; gap:12px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #grid { width:100%; aspect-ratio:1; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .btn { border-radius:16px; border:3px solid #2a2e3d; cursor:pointer; transition:filter .1s, transform .1s; filter:brightness(.45); }
+    .btn.lit { filter:brightness(1.3); transform:scale(1.03); }
+    #b0 { background:#2f55e4; }
+    #b1 { background:#ffd23f; }
+    #b2 { background:#ff4d5e; }
+    #b3 { background:#22b573; }
+    #msg { font-size:15px; font-weight:900; min-height:22px; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.88); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>轮数<b id="round">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="grid">
+      <div class="btn" id="b0"></div><div class="btn" id="b1"></div>
+      <div class="btn" id="b2"></div><div class="btn" id="b3"></div>
+    </div>
+    <div id="msg">点击开始后记住闪烁顺序</div>
+  </div>
+  <div id="overlay">
+    <h1>🎵 记忆色序</h1>
+    <p>记住色块点亮的顺序<br/>按相同顺序点击，每轮加一位<br/>点错即结束，轮数就是成绩</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+  <script>
+    (() => {
+      const btns = [0, 1, 2, 3].map((i) => document.getElementById('b' + i))
+      const roundEl = document.getElementById('round')
+      const bestEl = document.getElementById('best')
+      const msgEl = document.getElementById('msg')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let seq, pos, round, phase, running, over, timers
+      let best = Number(localStorage.getItem('simon-best') || 0)
+      bestEl.textContent = best
+
+      function clearTimers() { (timers || []).forEach(clearTimeout); timers = [] }
+      const later = (fn, ms) => timers.push(setTimeout(fn, ms))
+
+      function start() {
+        seq = []; pos = 0; round = 0
+        running = true; over = false; phase = 'idle'
+        roundEl.textContent = 0
+        overlay.classList.add('hidden')
+        nextRound()
+      }
+
+      function nextRound() {
+        seq.push((Math.random() * 4) | 0)
+        pos = 0
+        round++
+        roundEl.textContent = round
+        msgEl.textContent = '看好了…'
+        phase = 'show'
+        const step = Math.max(260, 520 - round * 18)
+        seq.forEach((b, i) => {
+          later(() => lit(b), 600 + i * step)
+          later(() => unlit(b), 600 + i * step + step * 0.55)
+        })
+        later(() => { phase = 'input'; msgEl.textContent = '轮到你了（' + seq.length + ' 步）' }, 600 + seq.length * step)
+      }
+
+      function lit(i) { btns[i].classList.add('lit') }
+      function unlit(i) { btns[i].classList.remove('lit') }
+
+      function end() {
+        running = false; over = true
+        clearTimers()
+        if (round - 1 > best) { best = round - 1; bestEl.textContent = best; localStorage.setItem('simon-best', best) }
+        overlay.querySelector('h1').textContent = '🧠 记忆断线'
+        overlay.querySelector('p').innerHTML = '坚持到第 <b style="color:#ffd23f">' + (round - 1) + '</b> 轮 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      btns.forEach((b, i) => {
+        b.addEventListener('pointerdown', () => {
+          if (!running || over || phase !== 'input') return
+          lit(i)
+          setTimeout(() => unlit(i), 180)
+          if (seq[pos] === i) {
+            pos++
+            if (pos === seq.length) {
+              phase = 'idle'
+              msgEl.textContent = '✓ 正确！'
+              later(nextRound, 800)
+            }
+          } else {
+            end()
+          }
+        })
+      })
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return round ? round - 1 : 0 },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      seq = []; pos = 0; round = 0; phase = 'idle'; running = false; over = false; timers = []
+    })()
+  </script>
+</body>
+</html>

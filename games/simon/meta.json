@@ -1,0 +1,17 @@
+{
+  "id": "simon",
+  "name": "记忆色序",
+  "emoji": "🎵",
+  "categories": ["puzzle", "casual"],
+  "tags": ["记忆", "反应", "休闲"],
+  "summary": "记住不断加长的颜色序列并复述，你的短期记忆能撑到第几轮？",
+  "description": "经典西蒙记忆游戏。四个色块按序列点亮，看完后按同样顺序点击。每答对一轮序列加长一位，点错即结束。轮数就是你的成绩。",
+  "howToPlay": "看完闪烁序列后，按相同顺序点击色块。",
+  "entry": "simon/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

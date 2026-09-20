@@ -1,0 +1,17 @@
+{
+  "id": "archery",
+  "name": "百步穿杨",
+  "emoji": "🏹",
+  "categories": ["sports", "puzzle"],
+  "tags": ["体育", "射箭", "物理"],
+  "summary": "读风向、调角度、卡蓄力，10 支箭打靶，看你能射中多少环！",
+  "description": "每轮靶距随机、风向随机。调整射箭角度并控制蓄力大小，箭矢受重力与风力影响飞行，按落点距靶心的距离计 10/8/6/4/2 环。10 支箭射完结算总环数。",
+  "howToPlay": "← → 调角度，按住空格/屏幕蓄力，松开放箭；留意顶部风向。",
+  "entry": "archery/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

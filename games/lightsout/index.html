@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>点灯谜题</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { position:relative; width:min(92vw,74vh,360px); aspect-ratio:1/1; background:#14161f;
+      border:3px solid #2a2e3d; border-radius:10px; touch-action:none;
+      display:flex; flex-wrap:wrap; padding:2.5%; gap:1.5%; }
+    .cell { width:17.2%; height:17.2%; border-radius:8px; border:2px solid #2a2e3d; background:#1a1d29;
+      display:flex; align-items:center; justify-content:center; font-size:clamp(14px,4.6vmin,24px);
+      cursor:pointer; transition:background .12s ease, box-shadow .12s ease; user-select:none; }
+    .cell.lit { background:var(--yellow); border-color:rgba(255,255,255,.35); box-shadow:0 0 14px rgba(255,210,63,.65); }
+    .cell.cur { outline:2px solid #fff; outline-offset:-2px; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; z-index:10; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>关卡<b id="level">1/5</b></span>
+      <span>步数<b id="moves">0</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <div id="board">
+      <div id="overlay">
+        <h1>💡 点灯谜题</h1>
+        <p>点击一格会翻转它与上下左右共 5 格<br/>把所有灯全部熄灭即过关，共 5 关<br/>方向键移动光标，空格翻转</p>
+        <button id="ov-btn">开始游戏</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const board = document.getElementById('board')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+      const levelEl = document.getElementById('level')
+      const movesEl = document.getElementById('moves')
+      const bestEl = document.getElementById('best')
+
+      const N = 5
+      let cells = []
+      let state = []
+      let level = 1, moves = 0, done = 0
+      let score = 0, running = false, over = false
+      let cur = 12
+      let best = Number(localStorage.getItem('lightsout-best') || 0)
+      if (best) bestEl.textContent = best
+
+      function buildCells() {
+        for (let i = 0; i < N * N; i++) {
+          const c = document.createElement('div')
+          c.className = 'cell'
+          c.dataset.i = i
+          board.insertBefore(c, overlay)
+          cells.push(c)
+        }
+      }
+
+      function paint() {
+        for (let i = 0; i < N * N; i++) {
+          cells[i].textContent = state[i] ? '💡' : '🌙'
+          cells[i].classList.toggle('lit', !!state[i])
+          cells[i].classList.toggle('cur', running && i === cur)
+        }
+      }
+
+      function toggleCross(i) {
+        const r = (i / N) | 0, c = i % N
+        const list = [[r, c], [r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]]
+        for (const [rr, cc] of list) {
+          if (rr < 0 || rr >= N || cc < 0 || cc >= N) continue
+          state[rr * N + cc] = !state[rr * N + cc]
+        }
+      }
+
+      function genLevel() {
+        state = new Array(N * N).fill(false)
+        const pool = []
+        for (let i = 0; i < N * N; i++) pool.push(i)
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = (Math.random() * (i + 1)) | 0
+          const t = pool[i]; pool[i] = pool[j]; pool[j] = t
+        }
+        const k = 6 + level
+        for (let n = 0; n < k; n++) toggleCross(pool[n])
+        paint()
+      }
+
+      function click(i) {
+        if (!running || over) return
+        cur = i
+        toggleCross(i)
+        moves++; movesEl.textContent = moves
+        paint()
+        if (state.every((v) => !v)) levelDone()
+      }
+
+      function levelDone() {
+        running = false
+        done = level
+        score = done * 100
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('lightsout-best', best) }
+        if (level >= 5) {
+          over = true
+          overlay.querySelector('h1').textContent = '🎉 全部通关'
+          overlay.querySelector('p').innerHTML =
+            '5 关全部熄灭！总步数 <b style="color:#ffd23f">' + moves + '</b><br/>' +
+            '得分 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+          ovBtn.textContent = '再来一局'
+        } else {
+          overlay.querySelector('h1').textContent = '✨ 第 ' + level + ' 关通过'
+          overlay.querySelector('p').innerHTML =
+            '已通过 <b style="color:#ffd23f">' + done + '</b> 关 · 当前得分 <b style="color:#ffd23f">' + score + '</b><br/>下一关灯光更多，加油！'
+          ovBtn.textContent = '下一关'
+        }
+        overlay.classList.remove('hidden')
+      }
+
+      function start() {
+        if (over || done === 0) { level = 1; moves = 0; done = 0; score = 0; movesEl.textContent = 0 }
+        else { level = done + 1 }
+        over = false
+        levelEl.textContent = level + '/5'
+        genLevel()
+        cur = 12
+        running = true
+        paint()
+        overlay.classList.add('hidden')
+      }
+
+      board.addEventListener('pointerdown', (e) => {
+        const c = e.target.closest('.cell')
+        if (c) click(Number(c.dataset.i))
+      })
+
+      window.addEventListener('keydown', (e) => {
+        if (!running || over) {
+          if ((e.code === 'Space' || e.code === 'Enter') && !overlay.classList.contains('hidden')) { e.preventDefault(); start() }
+          return
+        }
+        const r = (cur / N) | 0, c = cur % N
+        if (e.code === 'ArrowUp' && r > 0) { cur -= N; e.preventDefault() }
+        if (e.code === 'ArrowDown' && r < N - 1) { cur += N; e.preventDefault() }
+        if (e.code === 'ArrowLeft' && c > 0) { cur -= 1; e.preventDefault() }
+        if (e.code === 'ArrowRight' && c < N - 1) { cur += 1; e.preventDefault() }
+        if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); click(cur); return }
+        paint()
+      })
+      ovBtn.addEventListener('click', start)
+
+      buildCells()
+      state = new Array(N * N).fill(false)
+      paint()
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+    })()
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "id": "penalty",
+  "name": "点球大战",
+  "emoji": "⚽",
+  "categories": ["sports", "action"],
+  "tags": ["体育", "点球", "运气"],
+  "summary": "九宫格里选角度起脚，守门员会预判扑救，5 球定胜负的心理博弈！",
+  "description": "点击 3×3 球门九宫格中的一点射门，守门员随机扑向一格，随着进球增多他的预判越来越准。射失不扣分但浪费机会，5 球射完结算进球数。",
+  "howToPlay": "点击九宫格任一格射门；守门员会扑向某格；共 5 次机会。",
+  "entry": "penalty/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

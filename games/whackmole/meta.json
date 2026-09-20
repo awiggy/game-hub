@@ -1,0 +1,17 @@
+{
+  "id": "whackmole",
+  "name": "打地鼠",
+  "emoji": "🔨",
+  "categories": ["arcade", "casual"],
+  "tags": ["反应", "限时", "解压"],
+  "summary": "九个地洞地鼠乱窜，30 秒抡锤抢分，金鼠一锤顶三分！",
+  "description": "经典街机打地鼠：地洞随机冒出地鼠，点中即得 1 分，稀有的金鼠缩头更快却值 3 分。限时 30 秒，地鼠停留时间越来越短，是手速与专注的双重考验。",
+  "howToPlay": "点击 / 触碰冒头的地鼠 🐹 得 1 分，金鼠 ⭐ +3 分；键盘 1-9 对应九洞，空格开始，限时 30 秒。",
+  "entry": "whackmole/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

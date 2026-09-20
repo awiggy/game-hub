@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>太空侵略者</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #pads { position:absolute; bottom:8px; left:10px; right:10px; display:flex; justify-content:center; gap:14px; }
+    #pads button {
+      width:56px; height:44px; font-size:18px; font-weight:900; font-family:inherit;
+      color:#eef1f6; background:rgba(26,29,41,.8); border:2px solid #2a2e3d; border-radius:10px;
+    }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>得分<b id="score">0</b></span>
+      <span>波次<b id="wave">1</b></span>
+      <span>命<b id="lives">♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="460" height="560"></canvas>
+    <div id="pads">
+      <button data-k="ArrowLeft">←</button>
+      <button data-k="Space">🔥</button>
+      <button data-k="ArrowRight">→</button>
+    </div>
+    <div id="overlay">
+      <h1>👾 太空侵略者</h1>
+      <p>← → 移动 · 空格射击<br/>敌阵触边下压，别让他们到底<br/>3 命 · 清波后敌军加速</p>
+      <button id="ov-btn">开始防御</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const waveEl = document.getElementById('wave')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const ROWS = 4, COLS = 8
+      const EMO = ['👾','👽','🛸','🤖']
+      let enemies, dir, ex, px, bullet, ebullets, score, wave, lives, inv, running, over, keys, frame
+      let best = Number(localStorage.getItem('spaceinvaders-best') || 0)
+      bestEl.textContent = best
+
+      function spawnWave() {
+        enemies = []
+        for (let r = 0; r < ROWS; r++)
+          for (let c = 0; c < COLS; c++)
+            enemies.push({ r, c, e: EMO[r], fire: Math.random() < 0.3 })
+        dir = 1
+        ex = { x: 20, y: 60 }
+        waveEl.textContent = wave
+      }
+
+      function start() {
+        px = W / 2; bullet = null; ebullets = []
+        score = 0; wave = 1; lives = 3; inv = 0; frame = 0
+        keys = {}
+        running = true; over = false
+        scoreEl.textContent = 0; livesEl.textContent = '♥♥♥'
+        spawnWave()
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('spaceinvaders-best', best) }
+        overlay.querySelector('h1').textContent = '🛸 防线失守'
+        overlay.querySelector('p').innerHTML = '得分 <b style="color:#ffd23f">' + score + '</b> · 第 ' + wave + ' 波 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function eXY(en) {
+        const cw = 40, ch = 40
+        return { x: ex.x + en.c * cw + cw / 2, y: ex.y + en.r * ch + ch / 2 }
+      }
+
+      function step() {
+        frame++
+        if (keys.ArrowLeft) px = Math.max(24, px - 5)
+        if (keys.ArrowRight) px = Math.min(W - 24, px + 5)
+        if (keys.Space && !bullet) bullet = { x: px, y: H - 60 }
+
+        const speed = 0.5 + wave * 0.25 + (32 - Math.min(24, enemies.length)) * 0.04
+        ex.x += dir * speed
+        const xs = enemies.map(eXY)
+        const minX = Math.min(...xs.map((p) => p.x)), maxX = Math.max(...xs.map((p) => p.x))
+        if (maxX > W - 20 && dir > 0) { dir = -1; ex.y += 18 }
+        if (minX < 20 && dir < 0) { dir = 1; ex.y += 18 }
+
+        // 敌人随机开火
+        if (frame % Math.max(20, 50 - wave * 4) === 0 && enemies.length) {
+          const shooters = enemies.filter((e) => e.fire)
+          const src = (shooters.length ? shooters : enemies)[(Math.random() * (shooters.length ? shooters.length : enemies.length)) | 0]
+          const p = eXY(src)
+          ebullets.push({ x: p.x, y: p.y + 14 })
+        }
+
+        if (bullet) {
+          bullet.y -= 8
+          if (bullet.y < 0) bullet = null
+          else {
+            for (let i = enemies.length - 1; i >= 0; i--) {
+              const p = eXY(enemies[i])
+              if (Math.abs(bullet.x - p.x) < 18 && Math.abs(bullet.y - p.y) < 16) {
+                enemies.splice(i, 1)
+                bullet = null
+                score += 10
+                scoreEl.textContent = score
+                break
+              }
+            }
+          }
+        }
+
+        for (let i = ebullets.length - 1; i >= 0; i--) {
+          ebullets[i].y += 4.2
+          if (ebullets[i].y > H) { ebullets.splice(i, 1); continue }
+          if (inv <= 0 && Math.abs(ebullets[i].x - px) < 16 && ebullets[i].y > H - 56) {
+            ebullets.splice(i, 1)
+            lives--
+            inv = 90
+            livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+            if (lives <= 0) return end()
+          }
+        }
+        if (inv > 0) inv--
+
+        if (!enemies.length) { wave++; spawnWave(); return }
+        const lowest = Math.max(...enemies.map((e) => eXY(e).y))
+        if (lowest > H - 70) return end()
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        ctx.font = '22px sans-serif'
+        for (const e of enemies) {
+          const p = eXY(e)
+          ctx.fillText(e.e, p.x - 11, p.y + 8)
+        }
+        ctx.fillStyle = '#ffd23f'
+        if (bullet) ctx.fillRect(bullet.x - 2, bullet.y - 10, 4, 12)
+        ctx.fillStyle = '#ff4d5e'
+        for (const b of ebullets) ctx.fillRect(b.x - 2, b.y, 4, 10)
+        if (running && !over && (inv <= 0 || (frame >> 2) % 2 === 0)) {
+          ctx.fillStyle = '#5d84ff'
+          ctx.beginPath()
+          ctx.moveTo(px, H - 66); ctx.lineTo(px + 15, H - 40); ctx.lineTo(px - 15, H - 40)
+          ctx.closePath(); ctx.fill()
+        }
+        ctx.strokeStyle = '#2a2e3d'
+        ctx.beginPath(); ctx.moveTo(0, H - 34); ctx.lineTo(W, H - 34); ctx.stroke()
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (['ArrowLeft','ArrowRight','Space'].includes(e.code)) { e.preventDefault(); keys[e.code] = true }
+      })
+      window.addEventListener('keyup', (e) => { keys[e.code] = false })
+      document.querySelectorAll('#pads button').forEach((b) => {
+        const k = b.dataset.k
+        const set = (v) => (e) => { e.preventDefault(); keys[k] = v }
+        b.addEventListener('pointerdown', set(true))
+        b.addEventListener('pointerup', set(false))
+        b.addEventListener('pointerleave', set(false))
+      })
+      ovBtn.addEventListener('click', start)
+      keys = {}
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      px = W / 2; bullet = null; ebullets = []
+      score = 0; wave = 1; lives = 3; inv = 0; frame = 0; running = false; over = false
+      spawnWave()
+      loop()
+    })()
+  </script>
+</body>
+</html>

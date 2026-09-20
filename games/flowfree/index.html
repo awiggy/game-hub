@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>流水连线</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:min(88vw,420px); display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { width:min(88vw,420px); aspect-ratio:1; position:relative; background:#1a1d29;
+      border:3px solid #2a2e3d; border-radius:12px; touch-action:none; }
+    svg { position:absolute; inset:0; width:100%; height:100%; }
+    .cell-dot { position:absolute; width:9%; aspect-ratio:1; border-radius:50%; transform:translate(-50%,-50%); z-index:2; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.88); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>关卡<b id="lv">1/5</b></span>
+      <span>颜色<b id="pairs">0/0</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <div id="board"></div>
+  </div>
+  <div id="overlay">
+    <h1>🔗 流水连线</h1>
+    <p>按住端点拖到同色另一端<br/>路径不能交叉<br/>全部连通过关，共 5 关</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+  <script>
+    (() => {
+      const N = 5
+      const COLORS = ['#ff4d5e','#ffd23f','#2f55e4','#22b573','#8a5cf6']
+      // 每关端点对：[颜色下标, [r,c], [r,c]]
+      const LEVELS = [
+        [[0,[0,0],[4,4]],[1,[0,4],[4,0]]],
+        [[0,[0,0],[0,4]],[1,[2,0],[2,4]],[2,[4,0],[4,4]]],
+        [[0,[0,0],[0,4]],[1,[2,0],[2,4]],[2,[4,0],[4,4]],[3,[1,2],[3,2]]],
+        [[0,[0,0],[4,0]],[1,[0,1],[4,1]],[2,[0,3],[4,3]],[3,[0,4],[4,4]],[4,[1,2],[3,2]]],
+        [[0,[0,0],[3,0]],[1,[1,1],[4,1]],[2,[0,3],[3,3]],[3,[1,4],[4,4]],[4,[1,2],[3,2]]],
+      ]
+      const boardEl = document.getElementById('board')
+      const lvEl = document.getElementById('lv')
+      const pairsEl = document.getElementById('pairs')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let level, endpoints, paths, done, drag, running, over
+      let best = Number(localStorage.getItem('flowfree-best') || 0)
+      if (best) bestEl.textContent = best
+
+      function load(n) {
+        level = n
+        endpoints = LEVELS[n]
+        paths = endpoints.map(() => null)
+        done = endpoints.map(() => false)
+        drag = -1
+        lvEl.textContent = (n + 1) + '/5'
+        render()
+      }
+
+      function start() {
+        running = true; over = false
+        overlay.classList.add('hidden')
+        load(0)
+      }
+
+      function cellFromEvent(e) {
+        const r = boardEl.getBoundingClientRect()
+        const cx = (e.clientX - r.left) / r.width
+        const cy = (e.clientY - r.top) / r.height
+        return { r: Math.max(0, Math.min(N - 1, (cy * N) | 0)), c: Math.max(0, Math.min(N - 1, (cx * N) | 0)) }
+      }
+
+      function occupied(r, c, exceptColor) {
+        for (let i = 0; i < endpoints.length; i++) {
+          if (i === exceptColor) continue
+          const p = paths[i]
+          if (p && p.some((q) => q[0] === r && q[1] === c)) return true
+        }
+        return false
+      }
+
+      function isEndpoint(r, c, exceptColor) {
+        for (let i = 0; i < endpoints.length; i++) {
+          if (i === exceptColor) continue
+          for (const [, a, b] of [endpoints[i]]) {
+            if (a[0] === r && a[1] === c) return true
+            if (b[0] === r && b[1] === c) return true
+          }
+        }
+        return false
+      }
+
+      function beginDrag(e) {
+        if (!running || over) return
+        const { r, c } = cellFromEvent(e)
+        endpoints.forEach((ep, i) => {
+          for (const p of [ep[1], ep[2]]) {
+            if (p[0] === r && p[1] === c && !done[i]) { drag = i; paths[i] = [[r, c]]; render() }
+          }
+        })
+      }
+
+      function extendDrag(e) {
+        if (drag === -1) return
+        const { r, c } = cellFromEvent(e)
+        const path = paths[drag]
+        const [lr, lc] = path[path.length - 1]
+        if (lr === r && lc === c) return
+        if (Math.abs(lr - r) + Math.abs(lc - c) !== 1) return
+        if (occupied(r, c, drag) || isEndpoint(r, c, drag)) {
+          // 到达同色另一端则完成
+          const ep = endpoints[drag]
+          for (const p of [ep[1], ep[2]]) {
+            if (p[0] === r && p[1] === c && !(path.length === 1 && r === path[0][0] && c === path[0][1])) {
+              path.push([r, c])
+              done[drag] = true
+              drag = -1
+              render()
+              checkWin()
+              return
+            }
+          }
+          return
+        }
+        // 回退一步
+        if (path.length > 1 && path[path.length - 2][0] === r && path[path.length - 2][1] === c) {
+          path.pop(); render(); return
+        }
+        // 不能经过自己路径已有格（除相邻端点）
+        if (path.some((q) => q[0] === r && q[1] === c)) return
+        path.push([r, c])
+        render()
+      }
+
+      function endDrag() { drag = -1 }
+
+      function checkWin() {
+        const connected = done.filter(Boolean).length
+        pairsEl.textContent = connected + '/' + endpoints.length
+        if (connected === endpoints.length) {
+          if (level === LEVELS.length - 1) {
+            running = false; over = true
+            const score = 500
+            if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('flowfree-best', best) }
+            overlay.querySelector('h1').textContent = '🏆 全部通关'
+            overlay.querySelector('p').innerHTML = '五关连线全部完成！'
+            ovBtn.textContent = '再来一局'
+            overlay.classList.remove('hidden')
+          } else {
+            setTimeout(() => load(level + 1), 500)
+          }
+        }
+      }
+
+      function render() {
+        boardEl.innerHTML = '<svg></svg>'
+        const svg = boardEl.querySelector('svg')
+        const U = 100 / N
+        paths.forEach((p, i) => {
+          if (!p) return
+          const pts = p.map(([r, c]) => (c * U + U / 2) + ',' + (r * U + U / 2)).join(' ')
+          const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline')
+          poly.setAttribute('points', pts)
+          poly.setAttribute('fill', 'none')
+          poly.setAttribute('stroke', COLORS[i])
+          poly.setAttribute('stroke-width', '5')
+          poly.setAttribute('stroke-linecap', 'round')
+          poly.setAttribute('stroke-linejoin', 'round')
+          poly.setAttribute('opacity', done[i] ? 1 : 0.75)
+          svg.appendChild(poly)
+        })
+        endpoints.forEach((ep, i) => {
+          for (const [r, c] of [ep[1], ep[2]]) {
+            const d = document.createElement('div')
+            d.className = 'cell-dot'
+            d.style.left = (c * U + U / 2) + '%'
+            d.style.top = (r * U + U / 2) + '%'
+            d.style.background = COLORS[i]
+            d.style.border = '2px solid #14161f'
+            boardEl.appendChild(d)
+          }
+        })
+        const connected = done.filter(Boolean).length
+        pairsEl.textContent = connected + '/' + endpoints.length
+      }
+
+      boardEl.addEventListener('pointerdown', beginDrag)
+      boardEl.addEventListener('pointermove', extendDrag)
+      window.addEventListener('pointerup', endDrag)
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return done.filter(Boolean).length * 100 },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      running = false; over = false
+      endpoints = LEVELS[0]; paths = [null, null]; done = [false, false]
+      render()
+    })()
+  </script>
+</body>
+</html>

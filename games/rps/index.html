@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>✊ 石头剪刀布 · GAME HUB</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#0f1118;color:#eef2ff}*{box-sizing:border-box}body{margin:0;padding:20px 14px;min-height:100dvh;display:grid;place-items:center}main{width:min(100%,580px)}header{display:flex;align-items:center;justify-content:space-between;gap:12px}h1{font-size:clamp(22px,5vw,30px);margin:0}h2{margin:0 0 12px}.eyebrow{font-size:11px;letter-spacing:3px;color:#9daaff;margin:0 0 8px}.muted{color:#aeb7cd;font-size:13px;line-height:1.7}.rule{margin:18px 0;padding:12px 14px;border-left:3px solid #ffd84d;background:#1b2030}.arena{position:relative;background:#161b28;border:2px solid #343e57;border-radius:18px;padding:22px 16px;min-height:292px}.round{text-align:center;font-size:12px;color:#aeb7cd;letter-spacing:2px}.players{display:grid;grid-template-columns:1fr 32px 1fr;gap:8px;align-items:center;text-align:center}.player{min-width:0}.name{font-size:13px;color:#b8c4dd}.symbol{font-size:64px;line-height:1.45;min-height:94px}.score{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums}.versus{color:#67738f;font-size:12px}.status{text-align:center;min-height:42px;font-size:14px;color:#ffd84d;margin:14px 0 0;line-height:1.5}.controls{display:flex;gap:10px;margin:16px 0}.controls button{flex:1;min-width:0}button{font:inherit;font-weight:700;color:#eef2ff;background:#2f55e4;border:2px solid #7b95ff;border-radius:10px;padding:13px 10px;cursor:pointer;touch-action:manipulation;min-height:48px;transition:background .15s}button:hover:not(:disabled){background:#4169fa}button:focus-visible,a:focus-visible{outline:3px solid #ffd84d;outline-offset:3px}button:disabled{opacity:.45;cursor:default}.ghost{background:#22293a;border-color:#3b4660;font-size:12px;padding:9px 12px}.overlay{position:absolute;inset:0;background:#121725f2;border-radius:16px;display:grid;place-items:center;text-align:center;padding:24px;z-index:1}.overlay[hidden]{display:none}.overlay p{max-width:350px}.overlay button{background:#ffd84d;color:#171c2a;border-color:#fff1a2;padding-inline:28px}.record{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#aeb7cd;margin:20px 0 12px}.history{margin:0;padding:0;list-style:none;min-height:100px;font-size:13px}.history li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #262d40;padding:8px 0;color:#bcc7de}.history b{color:#eff3ff}footer{font-size:11px;color:#77839c;margin-top:18px;text-align:center;line-height:1.6}footer a{color:#9eafff}kbd{font-family:inherit;font-size:10px;color:#ccd5ee} .rolling .symbol{animation:pulse .18s infinite alternate}@keyframes pulse{to{transform:translateY(-5px);opacity:.5}}@media(prefers-reduced-motion:reduce){.rolling .symbol{animation:none}}@media(max-width:360px){body{padding:12px 10px}.arena{padding:16px 10px}.symbol{font-size:52px}.controls{gap:6px}.controls button{font-size:13px;padding:12px 6px}}
+</style>
+</head>
+<body>
+<main>
+<header><div><p class="eyebrow">GAME HUB / QUICK PLAY</p><h1>✊ 石头剪刀布</h1></div><button class="ghost" id="reset">重新开局</button></header>
+<p class="rule muted">石头胜剪刀，剪刀胜布，布胜石头。先得 10 分获胜。</p>
+<section class="arena" aria-label="游戏区域">
+<div class="round" id="round">准备开始</div>
+<div class="players"><div class="player"><p class="name" id="name0"></p><div class="symbol" id="symbol0">?</div><div class="score" id="score0">0</div></div><div class="versus">VS</div><div class="player"><p class="name" id="name1"></p><div class="symbol" id="symbol1">?</div><div class="score" id="score1">0</div></div></div>
+<p class="status" id="status" role="status" aria-live="polite">选好了吗？出拳吧。</p>
+<div class="overlay" id="overlay"><div><h2 id="result">✊ 石头剪刀布</h2><p class="muted" id="resultDetail">你的对手随机出拳。平局不计分，每一回合都是新机会。</p><button id="start">开始游戏</button></div></div>
+</section>
+<div class="controls"><button data-play="0">✊ 石头 <kbd>1</kbd></button><button data-play="1">✋ 布 <kbd>2</kbd></button><button data-play="2">✌️ 剪刀 <kbd>3</kbd></button></div>
+<p class="muted">键盘 1 石头 · 2 布 · 3 剪刀 · R 重新开局；也可点击或触屏。</p>
+<div class="record"><span id="record"></span><span>最近 4 回合</span></div>
+<ol class="history" id="history" aria-label="最近回合"><li>还没有回合记录</li></ol>
+<footer>玩法与代码参考：<a href="https://github.com/wanghao221/moyu/tree/15e88e245ddfbb4c7f0a9064202b5f50674296fb/游戏-26.石头剪刀布" target="_blank" rel="noopener noreferrer">海拥 / moyu</a> · GAME HUB 适配版</footer>
+</main>
+<script>
+// Reference: wanghao221/moyu @ 15e88e245ddfbb4c7f0a9064202b5f50674296fb
+// Adapted to a self-contained page with round locking, restart, keyboard input and __hub state.
+'use strict';
+const config = {"id": "rps", "dice": false, "target": 10, "labels": ["你", "电脑"], "recordLabel": "累计获胜场次", "ready": "选好了吗？出拳吧。"};
+const $ = (id) => document.getElementById(id);
+const buttons = [...document.querySelectorAll('[data-play]')];
+const faces = config.dice ? ['⚀','⚁','⚂','⚃','⚄','⚅'] : ['✊','✋','✌️'];
+const names = ['石头','布','剪刀'];
+const storageKey = 'hub-' + config.id + '-record';
+let points = [0,0], rounds = 0, started = false, over = false, busy = false, timer = null, record = 0;
+try { const value = Number(localStorage.getItem(storageKey)); if (Number.isSafeInteger(value) && value >= 0) record = value; } catch {}
+$('name0').textContent = config.labels[0];
+$('name1').textContent = config.labels[1];
+function render() {
+  $('score0').textContent = points[0]; $('score1').textContent = points[1];
+  $('round').textContent = started ? '第 ' + rounds + ' 回合 · 先得 ' + config.target + ' 分获胜' : '准备开始';
+  $('record').textContent = config.recordLabel + ' ' + record;
+  buttons.forEach((button) => { button.disabled = !started || over || busy; });
+  document.querySelector('.players').classList.toggle('rolling', busy);
+}
+function reset() {
+  clearTimeout(timer); timer = null;
+  points = [0,0]; rounds = 0; started = true; over = false; busy = false;
+  $('overlay').hidden = true;
+  $('symbol0').textContent = '?'; $('symbol1').textContent = '?';
+  $('status').textContent = config.ready;
+  $('history').replaceChildren();
+  render(); buttons[0].focus({ preventScroll:true });
+}
+function randomFace() { return Math.floor(Math.random() * faces.length); }
+function play(choice) {
+  if (!started || over || busy) return;
+  busy = true;
+  // Freeze both choices before the reveal; further clicks cannot change this round.
+  const first = config.dice ? randomFace() : choice;
+  const second = randomFace();
+  $('symbol0').textContent = config.dice ? '🎲' : faces[first];
+  $('symbol1').textContent = config.dice ? '🎲' : '…';
+  $('status').textContent = config.dice ? '骰子转动中…' : '电脑正在出拳…';
+  render();
+  timer = setTimeout(() => {
+    timer = null; busy = false; rounds++;
+    $('symbol0').textContent = faces[first]; $('symbol1').textContent = faces[second];
+    const winner = first === second ? -1 : config.dice ? (first > second ? 0 : 1) : ((first - second + 3) % 3 === 1 ? 0 : 1);
+    if (winner >= 0) points[winner]++;
+    const message = winner < 0 ? '平局，双方不加分' : config.labels[winner] + ' +1 分';
+    $('status').textContent = message;
+    const item = document.createElement('li');
+    const detail = document.createElement('span'); const outcome = document.createElement('b');
+    detail.textContent = '#' + rounds + '  ' + (config.dice ? (first + 1) + ' : ' + (second + 1) : names[first] + ' / ' + names[second]);
+    outcome.textContent = winner < 0 ? '平局' : config.labels[winner] + '胜';
+    item.append(detail, outcome); $('history').prepend(item);
+    while ($('history').children.length > 4) $('history').lastElementChild.remove();
+    if (points.some((score) => score >= config.target)) {
+      over = true;
+      const champion = points[0] >= config.target ? 0 : 1;
+      if (config.dice || champion === 0) {
+        record++;
+        try { localStorage.setItem(storageKey, String(record)); } catch {}
+      }
+      $('result').textContent = config.labels[champion] + '赢下整场！';
+      $('resultDetail').textContent = points[0] + ' : ' + points[1] + ' · 共 ' + rounds + ' 回合。再来一场吧。';
+      $('start').textContent = '再来一场'; $('overlay').hidden = false;
+      $('start').focus({ preventScroll:true });
+    }
+    render();
+  }, 450);
+}
+$('start').addEventListener('click', reset);
+$('reset').addEventListener('click', reset);
+buttons.forEach((button) => button.addEventListener('click', () => play(Number(button.dataset.play))));
+document.addEventListener('keydown', (event) => {
+  if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+  const key = event.key.toLowerCase();
+  if (key === 'r') { event.preventDefault(); reset(); }
+  else if (event.code === 'Space') {
+    event.preventDefault();
+    if (!started || over) reset(); else if (config.dice) play(0);
+  } else if (!config.dice && ['1','2','3'].includes(key)) {
+    event.preventDefault(); play(Number(key) - 1);
+  }
+});
+window.__hub = { get score(){ return points[0]; }, get over(){ return over; }, get started(){ return started; } };
+render();
+</script>
+</body>
+</html>

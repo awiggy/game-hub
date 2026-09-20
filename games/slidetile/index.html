@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>数字华容道</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { position:relative; width:min(92vw,74vh,340px); aspect-ratio:1/1; background:#14161f;
+      border:3px solid #2a2e3d; border-radius:10px; touch-action:none; }
+    .slot { position:absolute; width:21.5%; height:21.5%; border-radius:8px; background:#1a1d29; }
+    .tile { position:absolute; width:21.5%; height:21.5%; border-radius:8px;
+      background:linear-gradient(160deg,#2f55e4,#22398f); border:2px solid rgba(255,255,255,.18);
+      box-shadow:0 3px 0 rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center;
+      font-weight:800; font-size:clamp(18px,6vmin,30px); color:#fff; cursor:pointer; user-select:none;
+      transition:left .15s ease, top .15s ease; }
+    .tile:hover { filter:brightness(1.18); }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>步数<b id="moves">0</b></span>
+      <span>用时<b id="time">0s</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <div id="board">
+      <div id="overlay">
+        <h1>🔢 数字华容道</h1>
+        <p>点击与空格相邻的数字块滑入空格<br/>方向键同样可行，把 1~15 复原成序<br/>步数越少得分越高</p>
+        <button id="ov-btn">开始游戏</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const board = document.getElementById('board')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+      const movesEl = document.getElementById('moves')
+      const timeEl = document.getElementById('time')
+      const bestEl = document.getElementById('best')
+
+      let grid = [], tiles = {}
+      let moves = 0, secs = 0, timer = null
+      let score = 0, running = false, over = false
+      let best = Number(localStorage.getItem('slidetile-best') || 0)
+      if (best) bestEl.textContent = best
+
+      function place(el, idx) {
+        const r = (idx / 4) | 0, c = idx % 4
+        el.style.left = (2.8 + c * 24.3) + '%'
+        el.style.top = (2.8 + r * 24.3) + '%'
+      }
+
+      function buildSlots() {
+        for (let i = 0; i < 16; i++) {
+          const s = document.createElement('div')
+          s.className = 'slot'
+          place(s, i)
+          board.insertBefore(s, overlay)
+        }
+      }
+
+      function renderBoard() {
+        for (const k in tiles) tiles[k].remove()
+        tiles = {}
+        for (let i = 0; i < 16; i++) {
+          const v = grid[i]
+          if (!v) continue
+          const t = document.createElement('div')
+          t.className = 'tile'
+          t.textContent = v
+          t.dataset.v = v
+          place(t, i)
+          board.insertBefore(t, overlay)
+          tiles[v] = t
+        }
+      }
+
+      function emptyIdx() { return grid.indexOf(0) }
+
+      function solved() {
+        for (let i = 0; i < 15; i++) if (grid[i] !== i + 1) return false
+        return grid[15] === 0
+      }
+
+      function tryMove(idx) {
+        if (!running || over || idx < 0) return
+        const e = emptyIdx()
+        const er = (e / 4) | 0, ec = e % 4, r = (idx / 4) | 0, c = idx % 4
+        if (Math.abs(er - r) + Math.abs(ec - c) !== 1) return
+        const v = grid[idx]
+        grid[e] = v; grid[idx] = 0
+        place(tiles[v], e)
+        moves++; movesEl.textContent = moves
+        if (solved()) win()
+      }
+
+      function shuffle() {
+        grid = []
+        for (let i = 0; i < 15; i++) grid.push(i + 1)
+        grid.push(0)
+        let e = 15, last = -1
+        for (let n = 0; n < 120; n++) {
+          const er = (e / 4) | 0, ec = e % 4
+          const opts = []
+          if (er > 0) opts.push(e - 4)
+          if (er < 3) opts.push(e + 4)
+          if (ec > 0) opts.push(e - 1)
+          if (ec < 3) opts.push(e + 1)
+          const cands = opts.filter((i) => i !== last)
+          const pick = cands[(Math.random() * cands.length) | 0]
+          grid[e] = grid[pick]; grid[pick] = 0
+          last = e; e = pick
+        }
+      }
+
+      function startTimer() {
+        clearInterval(timer)
+        secs = 0; timeEl.textContent = '0s'
+        timer = setInterval(() => { secs++; timeEl.textContent = secs + 's' }, 1000)
+      }
+
+      function start() {
+        shuffle()
+        renderBoard()
+        moves = 0; movesEl.textContent = 0
+        score = 0; over = false; running = true
+        overlay.classList.add('hidden')
+        startTimer()
+      }
+
+      function win() {
+        running = false; over = true
+        clearInterval(timer)
+        score = Math.max(100, 1000 - moves)
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('slidetile-best', best) }
+        overlay.querySelector('h1').textContent = '🎉 复原成功'
+        overlay.querySelector('p').innerHTML =
+          '用时 <b style="color:#ffd23f">' + secs + 's</b> · 步数 <b style="color:#ffd23f">' + moves + '</b><br/>' +
+          '得分 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      board.addEventListener('pointerdown', (e) => {
+        const t = e.target.closest('.tile')
+        if (!t) return
+        tryMove(grid.indexOf(Number(t.dataset.v)))
+      })
+
+      window.addEventListener('keydown', (e) => {
+        if (!running || over) {
+          if (e.code === 'Space' && !overlay.classList.contains('hidden')) start()
+          return
+        }
+        const eIdx = emptyIdx()
+        const er = (eIdx / 4) | 0, ec = eIdx % 4
+        let target = -1
+        if (e.code === 'ArrowLeft' && ec < 3) target = eIdx + 1
+        if (e.code === 'ArrowRight' && ec > 0) target = eIdx - 1
+        if (e.code === 'ArrowUp' && er < 3) target = eIdx + 4
+        if (e.code === 'ArrowDown' && er > 0) target = eIdx - 4
+        if (target >= 0) { e.preventDefault(); tryMove(target) }
+      })
+      ovBtn.addEventListener('click', start)
+
+      grid = []
+      for (let i = 0; i < 15; i++) grid.push(i + 1)
+      grid.push(0)
+      buildSlots()
+      renderBoard()
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+    })()
+  </script>
+</body>
+</html>

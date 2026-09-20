@@ -1,0 +1,17 @@
+{
+  "id": "minisudoku",
+  "name": "六宫数独",
+  "emoji": "🔢",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["益智", "数独", "逻辑"],
+  "summary": "6×6 迷你数独：行列宫不重复，三关难度递增的逻辑填数挑战！",
+  "description": "六宫数独（2×3 宫，数字 1-6）。每行、每列、每宫数字不能重复，冲突会标红提示。三关挖空数量递增（14/18/22），全部完成即胜利，用时越短得分越高。",
+  "howToPlay": "点击空格选中，再点底部数字填入（再点同格清除）；填满且无冲突即过关。",
+  "entry": "minisudoku/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

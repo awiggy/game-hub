@@ -1,0 +1,17 @@
+{
+  "id": "lightsout",
+  "name": "点灯谜题",
+  "emoji": "💡",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["点灯", "逻辑", "翻转"],
+  "summary": "5x5 点灯翻格解谜，5 关难度递增，熄灭所有灯光即过关！",
+  "description": "经典 Lights Out 益智游戏：点击任意一格，它和上下左右共 5 格同时翻转亮灭。从全灭状态按关卡随机生成保证可解的初始局面，把所有灯熄灭即可进入下一关，共 5 关。",
+  "howToPlay": "点击格子翻转它与上下左右 5 格；全部熄灭过关；方向键+空格也可操作。",
+  "entry": "lightsout/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

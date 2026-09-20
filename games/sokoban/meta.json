@@ -1,0 +1,17 @@
+{
+  "id": "sokoban",
+  "name": "像素推箱子",
+  "emoji": "📦",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["益智", "经典", "思考"],
+  "summary": "把箱子一格一格推到目标点上，一步走错满盘皆输的经典谜题！",
+  "description": "经典推箱子。方向键移动小人，将所有箱子推到发光的目标点上即过关，共 5 关。箱子只能推不能拉，步数越少得分越高。",
+  "howToPlay": "方向键 / WASD / 滑动移动；把箱子推到 ✦ 目标点上。",
+  "entry": "sokoban/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

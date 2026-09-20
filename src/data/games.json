@@ -1,5 +1,965 @@
 [
   {
+    "id": "diceduel",
+    "name": "骰子对决",
+    "emoji": "🎲",
+    "categories": [
+      "casual",
+      "card"
+    ],
+    "tags": [
+      "双人",
+      "运气",
+      "骰子"
+    ],
+    "summary": "两人同屏掷骰比大小，先赢 5 回合拿下整场。",
+    "description": "每轮双方各掷一颗六面骰，点数较大者得一分，相同则平局。两位玩家共用一个屏幕，也可以独自体验。先得 5 分者获胜，保留最近回合记录和本机已完成场次。",
+    "howToPlay": "点击掷骰或按空格，双方同时掷骰。先得 5 分获胜；R 重新开局。",
+    "entry": "diceduel/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-21",
+    "featured": true,
+    "plays": 0
+  },
+  {
+    "id": "rps",
+    "name": "石头剪刀布",
+    "emoji": "✊",
+    "categories": [
+      "casual",
+      "arcade"
+    ],
+    "tags": [
+      "猜拳",
+      "人机",
+      "短局"
+    ],
+    "summary": "与随机出拳的电脑对决，抢先拿到 10 分！",
+    "description": "经典石头剪刀布，平局不计分，先赢 10 回合的一方获胜。电脑随机出拳，不会学习或预测你的选择。支持点击、触屏和数字键，记录你赢下的对局数。",
+    "howToPlay": "点击出拳，或按 1 石头、2 布、3 剪刀。先得 10 分获胜；空格开始，R 重新开局。",
+    "entry": "rps/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-21",
+    "featured": true,
+    "plays": 0
+  },
+  {
+    "id": "antcolony",
+    "name": "蚂蚁帝国",
+    "emoji": "🐜",
+    "categories": [
+      "simulation",
+      "strategy"
+    ],
+    "tags": [
+      "模拟",
+      "策略",
+      "采集"
+    ],
+    "summary": "点击草地派出蚂蚁采集食物，升级蚁群，3 分钟内疯狂囤粮！",
+    "description": "点击画布任意位置派出蚂蚁前往采集并运回巢穴，食物可以升级蚁群上限、移速与巢穴自产。180 秒倒计时结束时统计采集总量。",
+    "howToPlay": "点击草地放蚂蚁；食物够了点下方升级按钮；倒计时结束结算。",
+    "entry": "antcolony/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "archery",
+    "name": "百步穿杨",
+    "emoji": "🏹",
+    "categories": [
+      "sports",
+      "puzzle"
+    ],
+    "tags": [
+      "体育",
+      "射箭",
+      "物理"
+    ],
+    "summary": "读风向、调角度、卡蓄力，10 支箭打靶，看你能射中多少环！",
+    "description": "每轮靶距随机、风向随机。调整射箭角度并控制蓄力大小，箭矢受重力与风力影响飞行，按落点距靶心的距离计 10/8/6/4/2 环。10 支箭射完结算总环数。",
+    "howToPlay": "← → 调角度，按住空格/屏幕蓄力，松开放箭；留意顶部风向。",
+    "entry": "archery/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "asteroids",
+    "name": "星际小行星",
+    "emoji": "🪨",
+    "categories": [
+      "shooter",
+      "action"
+    ],
+    "tags": [
+      "射击",
+      "太空",
+      "经典"
+    ],
+    "summary": "惯性飞行 + 屏幕环绕的太空清场：大陨石劈三段，看你飞得过几波！",
+    "description": "街机经典小行星。飞船带惯性推进与屏幕环绕，射击击碎陨石：大劈中、中劈小、小消失。清空一波后下一波更密集，被撞掉命（重生短暂无敌），3 命耗尽结束。",
+    "howToPlay": "← → 旋转，↑ 推进，空格射击；屏幕会环绕。",
+    "entry": "asteroids/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "basketball",
+    "name": "街头投篮",
+    "emoji": "🏀",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "tags": [
+      "体育",
+      "投篮",
+      "街机"
+    ],
+    "summary": "蓄力投篮：掌握力度与距离，45 秒内疯狂得分，空心球有额外奖励！",
+    "description": "篮筐每轮随机出现在不同距离，按住蓄力（力度条来回摆动）松开出手，篮球沿抛物线飞行。进球 +2，不碰筐的空心入网 +3，打铁不中不得分。45 秒限时挑战。",
+    "howToPlay": "按住空格或屏幕蓄力，松开投篮；力度决定飞行远近。",
+    "entry": "basketball/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "biggerorlower",
+    "name": "大小对决",
+    "emoji": "🔀",
+    "categories": [
+      "card",
+      "casual"
+    ],
+    "tags": [
+      "棋牌",
+      "运气",
+      "休闲"
+    ],
+    "summary": "下一张牌更大还是更小？连对越多分越高，一把定输赢！",
+    "description": "翻开一张牌，押注下一张比它更大或更小（A 最小 K 最大，相等算输）。押对继续翻牌累计连对，连对三次之后每次得双倍分，押错即结束。",
+    "howToPlay": "点「更大」或「更小」按钮押注；对了继续，错了结算。",
+    "entry": "biggerorlower/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "blackjack",
+    "name": "21点",
+    "emoji": "🃏",
+    "categories": [
+      "card",
+      "casual"
+    ],
+    "tags": [
+      "棋牌",
+      "卡牌",
+      "运气"
+    ],
+    "summary": "要牌还是停牌？和庄家斗智斗勇，100 金币起步别破产！",
+    "description": "经典 21 点。每局押注 10 金币，你要牌凑近 21 点但不能爆；停牌后庄家补牌到 17 点以上再比大小。Blackjack 赔 1.5 倍，金币耗尽即破产。",
+    "howToPlay": "点「要牌」补一张或「停牌」开牌；A 可当 1 或 11。",
+    "entry": "blackjack/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "catcheggs",
+    "name": "接鸡蛋",
+    "emoji": "🥚",
+    "categories": [
+      "arcade",
+      "casual"
+    ],
+    "tags": [
+      "街机",
+      "反应",
+      "手速"
+    ],
+    "summary": "母鸡下蛋你用篮子接，炸弹千万别碰，漏蛋也要扣命！",
+    "description": "三只母鸡在顶上来回踱步随机下蛋，移到底部的篮子接住它们。10% 是炸弹，接到扣命；普通蛋落地漏掉也扣命。下蛋越来越快，3 命耗尽结束。",
+    "howToPlay": "← → 或 A D 移动篮子；手机拖动；接蛋得分、躲炸弹。",
+    "entry": "catcheggs/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "crossy",
+    "name": "横穿车流",
+    "emoji": "🐔",
+    "categories": [
+      "action",
+      "racing"
+    ],
+    "tags": [
+      "过马路",
+      "躲避",
+      "小鸡"
+    ],
+    "summary": "带小鸡逐格跳跃横穿车流，视野随行滚动，能走多远？",
+    "description": "俯视网格上，小鸡要一步步跳过一条条车流不息的马路。每条车道方向、车速和车距各不相同，前进 1 行得 1 分，被车撞上即结束。镜头跟随小鸡滚动，越往前车道越快，考验胆识和时机。",
+    "howToPlay": "↑↓←→ 或滑动屏幕逐格移动小鸡；前进 1 行 +1 分，被车撞到即结束。",
+    "entry": "crossy/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "elevator",
+    "name": "电梯调度员",
+    "emoji": "🛗",
+    "categories": [
+      "simulation",
+      "puzzle"
+    ],
+    "tags": [
+      "模拟",
+      "调度",
+      "策略"
+    ],
+    "summary": "点击楼层指挥电梯接送乘客，别让任何人在大堂等太久，看你能送多少位！",
+    "description": "10 层大楼里乘客不断出现并等待上下楼。点击楼层按钮指挥电梯移动，停靠时自动接送：送达一位 +10 分。乘客等待超过 12 秒会流失并扣 1 心，5 心耗尽游戏结束。",
+    "howToPlay": "点击楼层按钮让电梯移动；停靠自动接送乘客；别让乘客等太久。",
+    "entry": "elevator/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "farmclicker",
+    "name": "摸鱼农场",
+    "emoji": "🌾",
+    "categories": [
+      "simulation",
+      "casual"
+    ],
+    "tags": [
+      "模拟",
+      "经营",
+      "点击"
+    ],
+    "summary": "种菜收菜赚金币，升级农场的快乐点击经营，目标赚到 500 金币！",
+    "description": "点击空地种下作物，等待几秒成熟后点击收获卖出。金币可以升级生长速度或提高售价，不断滚雪球，目标累计赚取 500 金币。",
+    "howToPlay": "点击空地种菜（花 1 金币），成熟后点击收获；金币够了就点升级按钮。",
+    "entry": "farmclicker/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "flowfree",
+    "name": "流水连线",
+    "emoji": "🔗",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "益智",
+      "连线",
+      "休闲"
+    ],
+    "summary": "同色两点一线牵，路径不许交叉，五关连线脑力挑战！",
+    "description": "按住同色端点拖动画出连线，把每一对颜色点连接起来。路径不能交叉或占用彼此的格子，全部连通即过关，共 5 关、颜色对数递增。",
+    "howToPlay": "从一个端点按住拖到同色另一个端点；全部颜色连通过关。",
+    "entry": "flowfree/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "fruitcut",
+    "name": "切水果",
+    "emoji": "🍉",
+    "categories": [
+      "action",
+      "arcade"
+    ],
+    "tags": [
+      "切割",
+      "连击",
+      "反应"
+    ],
+    "summary": "按住滑动切开抛起的水果，连切有加成，千万别碰到炸弹！",
+    "description": "水果从屏幕底部被抛起，按住并滑动即可挥刀切割，一次滑动切开多个水果还能获得连击加成。混在其中的炸弹碰不得，水果落地漏掉 3 个也会结束，看看你能切多少个。",
+    "howToPlay": "按住鼠标或手指滑动切水果；切开 +1，连击有加成；切到炸弹或漏 3 个水果即结束。",
+    "entry": "fruitcut/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "guessnum",
+    "name": "猜数字 1A2B",
+    "emoji": "🔍",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "益智",
+      "推理",
+      "经典"
+    ],
+    "summary": "4 位数字密码，xAyB 反馈推理，10 次之内猜中它！",
+    "description": "经典猜数字游戏。系统随机生成 4 位不重复数字，每次猜测返回 xAyB 反馈（A 表示数字与位置都对，B 表示数字对位置错），通过逻辑推理在 10 次内破解，用得越少得分越高。",
+    "howToPlay": "点数字键组装 4 位猜测，点确认；根据 xAyB 反馈推理出答案。",
+    "entry": "guessnum/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "hanoi",
+    "name": "汉诺塔",
+    "emoji": "🗼",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "汉诺塔",
+      "递归",
+      "策略"
+    ],
+    "summary": "经典汉诺塔 5 盘挑战，大盘不压小盘，最少 31 步通关。",
+    "description": "古老的递归智力游戏：把左柱上 5 个大小不一的圆盘全部移到右柱，移动中大盘永远不能压在小盘上。点柱拿起或放下圆盘，非法操作会抖动提示，步数越少得分越高。",
+    "howToPlay": "点击柱子拿起顶盘，再点另一柱放下；大盘不能压小盘；全部移到第三柱即过关。",
+    "entry": "hanoi/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "knifehit",
+    "name": "飞刀挑战",
+    "emoji": "🔪",
+    "categories": [
+      "action",
+      "casual"
+    ],
+    "tags": [
+      "飞刀",
+      "反应",
+      "手速"
+    ],
+    "summary": "旋转圆盘上见缝插刀，插满把数过关，转速越来越快！",
+    "description": "圆盘不停旋转，转速逐关提升还会周期性换向。点击或按空格把飞刀掷向圆盘，插在空白处得分并留在盘上随盘转动，一旦与已有的刀角度太近就会相撞出局。每关插满 6+关卡数 把刀即可进入下一关。",
+    "howToPlay": "空格或点击发刀；每关插满 6+关卡数 把过关；与已插的刀相撞即结束。",
+    "entry": "knifehit/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "lightsout",
+    "name": "点灯谜题",
+    "emoji": "💡",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "点灯",
+      "逻辑",
+      "翻转"
+    ],
+    "summary": "5x5 点灯翻格解谜，5 关难度递增，熄灭所有灯光即过关！",
+    "description": "经典 Lights Out 益智游戏：点击任意一格，它和上下左右共 5 格同时翻转亮灭。从全灭状态按关卡随机生成保证可解的初始局面，把所有灯熄灭即可进入下一关，共 5 关。",
+    "howToPlay": "点击格子翻转它与上下左右 5 格；全部熄灭过关；方向键+空格也可操作。",
+    "entry": "lightsout/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "match3",
+    "name": "甜蜜三消",
+    "emoji": "🍬",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "益智",
+      "消除",
+      "经典"
+    ],
+    "summary": "交换相邻糖果凑三消，连锁翻倍爽感十足，90 秒限时冲高分！",
+    "description": "经典三消玩法。8×8 棋盘六种糖果，点击交换相邻两颗，凑成三个及以上同色即消除，上方糖果下落、顶部补充，连锁反应分数翻倍。无可消组合时自动洗牌。",
+    "howToPlay": "点击选中糖果，再点击相邻糖果交换；三连及以上自动消除。",
+    "entry": "match3/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "maze",
+    "name": "迷宫探险",
+    "emoji": "🌀",
+    "categories": [
+      "puzzle",
+      "arcade"
+    ],
+    "tags": [
+      "益智",
+      "迷宫",
+      "探索"
+    ],
+    "summary": "随机生成的迷宫三连关：越来越大越来越绕，找到出口就是胜利！",
+    "description": "递归回溯算法随机生成迷宫，三关尺寸递增（11×11 → 15×15 → 19×19）。用方向键或滑动从左上角走到右下角的出口，步数与用时越少得分越高。",
+    "howToPlay": "方向键 / WASD / 滑动屏幕移动；从左上 ⭐ 走到右下 🚪。",
+    "entry": "maze/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "minisudoku",
+    "name": "六宫数独",
+    "emoji": "🔢",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "益智",
+      "数独",
+      "逻辑"
+    ],
+    "summary": "6×6 迷你数独：行列宫不重复，三关难度递增的逻辑填数挑战！",
+    "description": "六宫数独（2×3 宫，数字 1-6）。每行、每列、每宫数字不能重复，冲突会标红提示。三关挖空数量递增（14/18/22），全部完成即胜利，用时越短得分越高。",
+    "howToPlay": "点击空格选中，再点底部数字填入（再点同格清除）；填满且无冲突即过关。",
+    "entry": "minisudoku/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "ninjadash",
+    "name": "忍者酷跑",
+    "emoji": "🥷",
+    "categories": [
+      "action",
+      "arcade"
+    ],
+    "tags": [
+      "跑酷",
+      "跳跃",
+      "忍者"
+    ],
+    "summary": "忍者自动奔跑越来越快，二段跳躲避尖刺与断坑，能跑多远？",
+    "description": "忍者不停地向前飞奔，速度会越来越快。看准时机起跳，空中还能再跳一次，躲开地面尖刺、悬空方块并跳过断坑。一旦撞上或坠落游戏结束，奔跑距离就是你的分数。",
+    "howToPlay": "空格或点击屏幕跳跃，空中可再按一次二段跳；撞到尖刺、方块或掉进断坑即结束。",
+    "entry": "ninjadash/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "penalty",
+    "name": "点球大战",
+    "emoji": "⚽",
+    "categories": [
+      "sports",
+      "action"
+    ],
+    "tags": [
+      "体育",
+      "点球",
+      "运气"
+    ],
+    "summary": "九宫格里选角度起脚，守门员会预判扑救，5 球定胜负的心理博弈！",
+    "description": "点击 3×3 球门九宫格中的一点射门，守门员随机扑向一格，随着进球增多他的预判越来越准。射失不扣分但浪费机会，5 球射完结算进球数。",
+    "howToPlay": "点击九宫格任一格射门；守门员会扑向某格；共 5 次机会。",
+    "entry": "penalty/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "petfeed",
+    "name": "云养喵",
+    "emoji": "🐱",
+    "categories": [
+      "simulation",
+      "casual"
+    ],
+    "tags": [
+      "模拟",
+      "养成",
+      "休闲"
+    ],
+    "summary": "喂食逗玩铲屎三连，维持猫主子的饱食与心情，看你能养多少秒！",
+    "description": "猫咪的饱食度与心情会持续下降，喂食、逗玩、铲屎各有冷却时间，合理轮换操作让任何一条都不归零。任一状态清零即结束，存活时间就是你的成绩。",
+    "howToPlay": "点击三个动作按钮（注意冷却）；饱食度或心情归零则结束。",
+    "entry": "petfeed/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "pianotile",
+    "name": "琴键快按",
+    "emoji": "🎹",
+    "categories": [
+      "arcade",
+      "casual"
+    ],
+    "tags": [
+      "街机",
+      "反应",
+      "音乐"
+    ],
+    "summary": "黑块滚落别错过：四列键盘 D F J K 或点击，手速与节奏的双重考验！",
+    "description": "钢琴块玩法。黑块沿四列轨道滚落，每行恰好一个；点击对应列或按 D/F/J/K 消除，速度随分数递增。点到白列或黑块触底都算失败。",
+    "howToPlay": "点击黑块所在列，或按 D F J K；黑块触底即失败。",
+    "entry": "pianotile/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "reaction",
+    "name": "极速反应",
+    "emoji": "⚡",
+    "categories": [
+      "arcade",
+      "casual"
+    ],
+    "tags": [
+      "反应",
+      "竞技",
+      "手速"
+    ],
+    "summary": "红转绿的一瞬间点下去！20 回合测出你的真实反应速度，犯规 3 次出局。",
+    "description": "反应速度测试器。区域先变红进入等待，随机 0.5~2.5 秒后变绿——立刻点击！提前点击算犯规扣 1 次，犯规 3 次出局。完成 20 回合后按平均反应毫秒换算得分。",
+    "howToPlay": "红色时等待，变绿的瞬间点击整块区域；共 20 回合。",
+    "entry": "reaction/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "reversi",
+    "name": "黑白棋",
+    "emoji": "⚫",
+    "categories": [
+      "card",
+      "strategy"
+    ],
+    "tags": [
+      "棋牌",
+      "对战",
+      "策略"
+    ],
+    "summary": "夹住就翻面的棋盘博弈：占地为王，终局子多者胜！",
+    "description": "经典黑白棋（奥赛罗）。你执黑先手，落子必须夹住至少一枚对方棋子并全部翻转；合法点会高亮。AI 采用位置权重贪心策略（占角优先），双方均无法落子时终局结算。",
+    "howToPlay": "点击高亮的合法格落子；夹住的白子会被翻成黑子。",
+    "entry": "reversi/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "shielddef",
+    "name": "护盾守卫",
+    "emoji": "🛡️",
+    "categories": [
+      "action",
+      "shooter"
+    ],
+    "tags": [
+      "弹幕",
+      "守护",
+      "反应"
+    ],
+    "summary": "转动护盾挡下四面射来的弹雨，守住中央核心，越撑越难！",
+    "description": "子弹从屏幕四边不断射向中央核心，一段 70 度的护盾弧绕核旋转。用方向键调整护盾转速，或按住拖动直接控制角度，把子弹挡下得分。漏弹会损失一命，共 3 命，弹幕会越来越密越来越快。",
+    "howToPlay": "← → 调整护盾转速，或按住拖动跟随角度；挡弹 +1，子弹击中核心 -1 命，共 3 命。",
+    "entry": "shielddef/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "shopkeeper",
+    "name": "街角小店",
+    "emoji": "🏪",
+    "categories": [
+      "simulation",
+      "strategy"
+    ],
+    "tags": [
+      "模拟",
+      "经营",
+      "策略"
+    ],
+    "summary": "10 天经营挑战：低价进货高价卖出，看你能把 100 金币滚到多少！",
+    "description": "每天三种随机商品报价，用资产进货；次日按随机波动的售价自动售罄，低买高卖赚差价。初始 100 金币，经营 10 天结算总资产，破产则提前结束。",
+    "howToPlay": "点 ＋ 进货，点「开张营业」结算次日售价并卖出全部库存，共 10 天。",
+    "entry": "shopkeeper/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "simon",
+    "name": "记忆色序",
+    "emoji": "🎵",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "记忆",
+      "反应",
+      "休闲"
+    ],
+    "summary": "记住不断加长的颜色序列并复述，你的短期记忆能撑到第几轮？",
+    "description": "经典西蒙记忆游戏。四个色块按序列点亮，看完后按同样顺序点击。每答对一轮序列加长一位，点错即结束。轮数就是你的成绩。",
+    "howToPlay": "看完闪烁序列后，按相同顺序点击色块。",
+    "entry": "simon/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "skiing",
+    "name": "高山滑雪",
+    "emoji": "🎿",
+    "categories": [
+      "sports",
+      "racing"
+    ],
+    "tags": [
+      "体育",
+      "竞速",
+      "躲避"
+    ],
+    "summary": "雪山速降越来越快，左右闪避树林与岩石，看你能滑出多远！",
+    "description": "滑雪者从山顶向下飞驰，速度持续提升；滑道两侧与中央不断出现树林和岩石，触碰到即结束。滑行距离就是成绩，随时准备急转。",
+    "howToPlay": "← → 或 A D 左右移动；手机端触摸屏幕左右半边。",
+    "entry": "skiing/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "slidetile",
+    "name": "数字华容道",
+    "emoji": "🔢",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "华容道",
+      "滑块",
+      "排序"
+    ],
+    "summary": "4x4 滑块复原 1~15，步数越少分越高，考验你的规划力！",
+    "description": "经典的 15 数字滑块益智游戏，开局从复原态随机打乱 120 步保证必定可解。点击与空格相邻的数字块将其滑入空格，也可用方向键操作，把 1~15 复原成顺序即获胜。",
+    "howToPlay": "点击空格旁的数字块滑动，或用方向键；将 1~15 按顺序复原即过关。",
+    "entry": "slidetile/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "sokoban",
+    "name": "像素推箱子",
+    "emoji": "📦",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "益智",
+      "经典",
+      "思考"
+    ],
+    "summary": "把箱子一格一格推到目标点上，一步走错满盘皆输的经典谜题！",
+    "description": "经典推箱子。方向键移动小人，将所有箱子推到发光的目标点上即过关，共 5 关。箱子只能推不能拉，步数越少得分越高。",
+    "howToPlay": "方向键 / WASD / 滑动移动；把箱子推到 ✦ 目标点上。",
+    "entry": "sokoban/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "spaceinvaders",
+    "name": "太空侵略者",
+    "emoji": "👾",
+    "categories": [
+      "shooter",
+      "arcade"
+    ],
+    "tags": [
+      "射击",
+      "街机",
+      "经典"
+    ],
+    "summary": "外星阵列步步逼近，最后一道防线就交给你了，一波更比一波快！",
+    "description": "街机殿堂级经典。4×8 敌人阵列整体左右移动、触边下压，随机开火；你在底部移动射击（同屏一发）。敌人被清光进入下一波且移速提升，敌人触底或命尽即结束。",
+    "howToPlay": "← → 移动，空格射击；别让敌人降到底线。",
+    "entry": "spaceinvaders/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "stacker",
+    "name": "叠叠乐",
+    "emoji": "📦",
+    "categories": [
+      "arcade",
+      "puzzle"
+    ],
+    "tags": [
+      "街机",
+      "时机",
+      "经典"
+    ],
+    "summary": "横条左右移动，掐准时机落下堆塔，偏一点塔身就削窄一分！",
+    "description": "街机厅经典叠方块。横条在塔顶往返移动，点击落下：与下层重叠的部分保留，悬空部分被切除，塔身越来越窄。完全错位即失败，每 5 层提速一次。",
+    "howToPlay": "点击 / 空格放下移动中的横条；重叠越多塔越稳。",
+    "entry": "stacker/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "tabletennis",
+    "name": "乒乓快打",
+    "emoji": "🏓",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "tags": [
+      "体育",
+      "对战",
+      "反应"
+    ],
+    "summary": "横版乒乓对决：跟随来球上下移动球拍，AI 越打越快，3 命定生死！",
+    "description": "你控制左侧球拍，AI 控制右侧。球速每回合提升 3%，AI 的反应会逐渐变快但永远有极限——抓住空当得分。你漏球扣 1 命，3 命耗尽结束，得分是你赢下的回合数。",
+    "howToPlay": "移动鼠标 / ↑↓ 键 / 上下滑动控制球拍上下；接住球并打回对方半场。",
+    "entry": "tabletennis/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "tictactoe",
+    "name": "井字棋",
+    "emoji": "⭕",
+    "categories": [
+      "card",
+      "strategy"
+    ],
+    "tags": [
+      "棋牌",
+      "对战",
+      "经典"
+    ],
+    "summary": "三子连珠对弈完美 AI：它不会输，你能逼出多少连平？",
+    "description": "经典井字棋。你执 X 先手，AI 执 O 且使用 minimax 算法——理论上不可战胜，你的目标是每局都逼平。连胜次数（平局不断、输局清零）就是你的战绩。",
+    "howToPlay": "点击空格落子，三子连线即胜；连胜越多分越高。",
+    "entry": "tictactoe/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "towerdef",
+    "name": "像素塔防",
+    "emoji": "🗼",
+    "categories": [
+      "strategy",
+      "action"
+    ],
+    "tags": [
+      "策略",
+      "塔防",
+      "防守"
+    ],
+    "summary": "沿途布塔阻击一波波魔物，击杀赚金币，能守到第几波？",
+    "description": "轻量塔防。敌人沿 S 形路径行进，血量逐波增长；点击路径旁空地建炮塔（50 金币，自动索敌开火），击杀得金币。敌人走到终点扣命，10 命耗尽结束。",
+    "howToPlay": "点击空地建炮塔（50 金币）；点按钮召唤下一波。",
+    "entry": "towerdef/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "twentyfour",
+    "name": "速算24点",
+    "emoji": "🧮",
+    "categories": [
+      "card",
+      "puzzle"
+    ],
+    "tags": [
+      "棋牌",
+      "心算",
+      "益智"
+    ],
+    "summary": "四张牌加减乘除凑 24，30 秒一题，越算越上头！",
+    "description": "经典 24 点。每题发 4 张牌（保证有解），点选两张牌与一个运算符合成新牌，逐步算到只剩一张且等于 24 即得分。每题限时 30 秒，3 次失败（超时或换题累计）结束。",
+    "howToPlay": "点两张牌 + 运算符合成；目标是合成 24；卡住可换题（扣分）。",
+    "entry": "twentyfour/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "whackmole",
+    "name": "打地鼠",
+    "emoji": "🔨",
+    "categories": [
+      "arcade",
+      "casual"
+    ],
+    "tags": [
+      "反应",
+      "限时",
+      "解压"
+    ],
+    "summary": "九个地洞地鼠乱窜，30 秒抡锤抢分，金鼠一锤顶三分！",
+    "description": "经典街机打地鼠：地洞随机冒出地鼠，点中即得 1 分，稀有的金鼠缩头更快却值 3 分。限时 30 秒，地鼠停留时间越来越短，是手速与专注的双重考验。",
+    "howToPlay": "点击 / 触碰冒头的地鼠 🐹 得 1 分，金鼠 ⭐ +3 分；键盘 1-9 对应九洞，空格开始，限时 30 秒。",
+    "entry": "whackmole/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-20",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "2048",
     "name": "数字合合乐 2048",
     "emoji": "🔢",

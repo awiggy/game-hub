@@ -1,0 +1,17 @@
+{
+  "id": "shielddef",
+  "name": "护盾守卫",
+  "emoji": "🛡️",
+  "categories": ["action", "shooter"],
+  "tags": ["弹幕", "守护", "反应"],
+  "summary": "转动护盾挡下四面射来的弹雨，守住中央核心，越撑越难！",
+  "description": "子弹从屏幕四边不断射向中央核心，一段 70 度的护盾弧绕核旋转。用方向键调整护盾转速，或按住拖动直接控制角度，把子弹挡下得分。漏弹会损失一命，共 3 命，弹幕会越来越密越来越快。",
+  "howToPlay": "← → 调整护盾转速，或按住拖动跟随角度；挡弹 +1，子弹击中核心 -1 命，共 3 命。",
+  "entry": "shielddef/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

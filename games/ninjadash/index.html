@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>忍者酷跑</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>距离<b id="score">0</b>米</span>
+      <span>速度<b id="speed">x1.0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="560" height="400"></canvas>
+    <div id="overlay">
+      <h1>🥷 忍者酷跑</h1>
+      <p>空格 / 点击 跳跃，空中再按一次二段跳<br/>躲开尖刺 ▲ 悬空方块，跳过断坑<br/>坠出屏幕或相撞即结束，距离就是分数</p>
+      <button id="ov-btn">开始游戏</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const speedEl = document.getElementById('speed')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+      const GY = H - 64
+      const PX = 118, PW = 30, PH = 40
+
+      let spikes, blocks, pits, dist, speed, spawnGap, bg1, bg2
+      let py, vy, jumps, grounded, running, over
+      let best = Number(localStorage.getItem('ninjadash-best') || 0)
+      bestEl.textContent = best
+
+      function reset() {
+        spikes = []; blocks = []; pits = []
+        dist = 0; speed = 3.4; spawnGap = 300; bg1 = 0; bg2 = 0
+        py = GY - PH; vy = 0; jumps = 0; grounded = true
+      }
+
+      function meters() { return Math.floor(dist / 12) }
+
+      function start() {
+        reset()
+        running = true; over = false
+        scoreEl.textContent = '0'
+        speedEl.textContent = 'x1.0'
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        const sc = meters()
+        if (sc > best) { best = sc; bestEl.textContent = best; localStorage.setItem('ninjadash-best', best) }
+        overlay.querySelector('h1').textContent = '💥 游戏结束'
+        overlay.querySelector('p').innerHTML = '本次奔跑 <b style="color:#ffd23f">' + sc + '</b> 米 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function spawn() {
+        const r = Math.random()
+        if (r < 0.3) {
+          const n = Math.random() < 0.35 ? 2 : 1
+          for (let i = 0; i < n; i++) spikes.push(W + 40 + i * 26)
+        } else if (r < 0.58) {
+          blocks.push({ x: W + 40, y: GY - 128, w: 36, h: 36 })
+        } else if (r < 0.84) {
+          pits.push({ x: W + 40, w: Math.min(64 + speed * 7, 118) })
+        } else {
+          blocks.push({ x: W + 40, y: GY - 54, w: 32, h: 54 })
+        }
+      }
+
+      function hit(ax, ay, aw, ah, bx, by, bw, bh) {
+        return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by
+      }
+
+      function step() {
+        dist += speed
+        speed = Math.min(8.5, 3.4 + dist * 0.0011)
+        scoreEl.textContent = String(meters())
+        speedEl.textContent = 'x' + (speed / 3.4).toFixed(1)
+        bg1 = (bg1 + speed * 0.22) % 320
+        bg2 = (bg2 + speed * 0.45) % 220
+        spawnGap -= speed
+        if (spawnGap <= 0) { spawn(); spawnGap = 205 + speed * 26 }
+
+        vy += 0.55
+        py += vy
+        const cx = PX + PW / 2
+        let onPit = false
+        for (const pt of pits) if (cx > pt.x + 3 && cx < pt.x + pt.w - 3) onPit = true
+        grounded = false
+        if (!onPit && py + PH >= GY && py + PH <= GY + 12 && vy >= 0) {
+          py = GY - PH; vy = 0; jumps = 0; grounded = true
+        }
+        if (py > H + 50) return end()
+
+        const px2 = PX + 5, py2 = py + 3, pw2 = PW - 10, ph2 = PH - 5
+        for (const s of spikes) if (hit(px2, py2, pw2, ph2, s.x + 5, GY - 20, 16, 20)) return end()
+        for (const b of blocks) if (hit(px2, py2, pw2, ph2, b.x, b.y, b.w, b.h)) return end()
+
+        for (let i = spikes.length - 1; i >= 0; i--) if (spikes[i] < -60) spikes.splice(i, 1)
+        for (let i = blocks.length - 1; i >= 0; i--) if (blocks[i].x + blocks[i].w < -60) blocks.splice(i, 1)
+        for (let i = pits.length - 1; i >= 0; i--) if (pits[i].x + pits[i].w < -80) pits.splice(i, 1)
+      }
+
+      function jump() {
+        if (!running || over) return
+        if (grounded) { vy = -11.4; jumps = 1; grounded = false }
+        else if (jumps < 2) { vy = -10.4; jumps = 2 }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        ctx.font = '34px sans-serif'
+        ctx.fillText('🌙', W - 70, 58)
+        ctx.fillStyle = '#181c28'
+        for (let x = -(bg1 % 160); x < W + 160; x += 160) {
+          ctx.beginPath()
+          ctx.moveTo(x, GY)
+          ctx.lineTo(x + 80, GY - 90)
+          ctx.lineTo(x + 160, GY)
+          ctx.closePath()
+          ctx.fill()
+        }
+        ctx.fillStyle = '#151926'
+        for (let x = -(bg2 % 110); x < W + 110; x += 110) {
+          ctx.fillRect(x, GY - 34, 55, 34)
+        }
+        ctx.fillStyle = '#22262f'
+        ctx.fillRect(0, GY, W, H - GY)
+        ctx.fillStyle = '#2c313d'
+        for (let x = -(dist % 48); x < W; x += 48) ctx.fillRect(x, GY + 14, 24, 4)
+        for (const pt of pits) {
+          ctx.fillStyle = '#0b0d13'
+          ctx.fillRect(pt.x, GY - 2, pt.w, H - GY + 4)
+          ctx.fillStyle = '#3a4054'
+          ctx.fillRect(pt.x - 3, GY - 2, 3, H - GY + 4)
+          ctx.fillRect(pt.x + pt.w, GY - 2, 3, H - GY + 4)
+        }
+        ctx.fillStyle = '#ff4d5e'
+        for (const s of spikes) {
+          ctx.beginPath()
+          ctx.moveTo(s.x, GY)
+          ctx.lineTo(s.x + 13, GY - 26)
+          ctx.lineTo(s.x + 26, GY)
+          ctx.closePath()
+          ctx.fill()
+        }
+        for (const b of blocks) {
+          ctx.fillStyle = '#2f55e4'
+          ctx.fillRect(b.x, b.y, b.w, b.h)
+          ctx.strokeStyle = '#5a76ff'
+          ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1)
+        }
+        ctx.font = '32px sans-serif'
+        ctx.fillText('🥷', PX - 4, py + 30)
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (!running || over) {
+          if ((e.code === 'Space' || e.code === 'Enter') && !overlay.classList.contains('hidden')) start()
+          return
+        }
+        if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') { e.preventDefault(); jump() }
+      })
+      cv.addEventListener('pointerdown', (e) => { e.preventDefault(); jump() })
+      ovBtn.addEventListener('click', start)
+
+      reset(); running = false; over = false
+
+      window.__hub = {
+        get score() { return meters() },
+        get over() { return over },
+        get started() { return running },
+      }
+      loop()
+    })()
+  </script>
+</body>
+</html>

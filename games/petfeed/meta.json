@@ -1,0 +1,17 @@
+{
+  "id": "petfeed",
+  "name": "云养喵",
+  "emoji": "🐱",
+  "categories": ["simulation", "casual"],
+  "tags": ["模拟", "养成", "休闲"],
+  "summary": "喂食逗玩铲屎三连，维持猫主子的饱食与心情，看你能养多少秒！",
+  "description": "猫咪的饱食度与心情会持续下降，喂食、逗玩、铲屎各有冷却时间，合理轮换操作让任何一条都不归零。任一状态清零即结束，存活时间就是你的成绩。",
+  "howToPlay": "点击三个动作按钮（注意冷却）；饱食度或心情归零则结束。",
+  "entry": "petfeed/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

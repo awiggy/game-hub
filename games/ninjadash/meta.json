@@ -1,0 +1,17 @@
+{
+  "id": "ninjadash",
+  "name": "忍者酷跑",
+  "emoji": "🥷",
+  "categories": ["action", "arcade"],
+  "tags": ["跑酷", "跳跃", "忍者"],
+  "summary": "忍者自动奔跑越来越快，二段跳躲避尖刺与断坑，能跑多远？",
+  "description": "忍者不停地向前飞奔，速度会越来越快。看准时机起跳，空中还能再跳一次，躲开地面尖刺、悬空方块并跳过断坑。一旦撞上或坠落游戏结束，奔跑距离就是你的分数。",
+  "howToPlay": "空格或点击屏幕跳跃，空中可再按一次二段跳；撞到尖刺、方块或掉进断坑即结束。",
+  "entry": "ninjadash/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

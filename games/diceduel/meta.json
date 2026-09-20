@@ -1,0 +1,13 @@
+{
+  "id": "diceduel",
+  "name": "骰子对决",
+  "emoji": "🎲",
+  "categories": ["casual", "card"],
+  "tags": ["双人", "运气", "骰子"],
+  "summary": "两人同屏掷骰比大小，先赢 5 回合拿下整场。",
+  "description": "每轮双方各掷一颗六面骰，点数较大者得一分，相同则平局。两位玩家共用一个屏幕，也可以独自体验。先得 5 分者获胜，保留最近回合记录和本机已完成场次。",
+  "howToPlay": "点击掷骰或按空格，双方同时掷骰。先得 5 分获胜；R 重新开局。",
+  "entry": "diceduel/index.html",
+  "createdAt": "2026-09-21",
+  "featured": true
+}

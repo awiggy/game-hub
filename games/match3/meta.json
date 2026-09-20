@@ -1,0 +1,17 @@
+{
+  "id": "match3",
+  "name": "甜蜜三消",
+  "emoji": "🍬",
+  "categories": ["puzzle", "casual"],
+  "tags": ["益智", "消除", "经典"],
+  "summary": "交换相邻糖果凑三消，连锁翻倍爽感十足，90 秒限时冲高分！",
+  "description": "经典三消玩法。8×8 棋盘六种糖果，点击交换相邻两颗，凑成三个及以上同色即消除，上方糖果下落、顶部补充，连锁反应分数翻倍。无可消组合时自动洗牌。",
+  "howToPlay": "点击选中糖果，再点击相邻糖果交换；三连及以上自动消除。",
+  "entry": "match3/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

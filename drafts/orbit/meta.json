@@ -1,0 +1,17 @@
+{
+  "id": "orbit",
+  "name": "星环躲避",
+  "emoji": "🪐",
+  "categories": ["arcade", "action"],
+  "tags": ["街机", "反应", "走位"],
+  "summary": "小球绕环飞行，点击随时反向，躲开四面八方袭来的流星！",
+  "description": "小球沿中心圆轨道匀速转动，点击随时反向调整走位。流星从画布四边径直飞向中心，撞上即结束。流星越来越快越来越密，数一数你躲过了多少颗。",
+  "howToPlay": "点击 / 空格让小球反向；流星飞过中心线 +1 分。",
+  "entry": "orbit/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

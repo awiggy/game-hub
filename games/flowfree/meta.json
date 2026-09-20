@@ -1,0 +1,17 @@
+{
+  "id": "flowfree",
+  "name": "流水连线",
+  "emoji": "🔗",
+  "categories": ["puzzle", "casual"],
+  "tags": ["益智", "连线", "休闲"],
+  "summary": "同色两点一线牵，路径不许交叉，五关连线脑力挑战！",
+  "description": "按住同色端点拖动画出连线，把每一对颜色点连接起来。路径不能交叉或占用彼此的格子，全部连通即过关，共 5 关、颜色对数递增。",
+  "howToPlay": "从一个端点按住拖到同色另一个端点；全部颜色连通过关。",
+  "entry": "flowfree/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

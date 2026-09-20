@@ -1,0 +1,17 @@
+{
+  "id": "catcheggs",
+  "name": "接鸡蛋",
+  "emoji": "🥚",
+  "categories": ["arcade", "casual"],
+  "tags": ["街机", "反应", "手速"],
+  "summary": "母鸡下蛋你用篮子接，炸弹千万别碰，漏蛋也要扣命！",
+  "description": "三只母鸡在顶上来回踱步随机下蛋，移到底部的篮子接住它们。10% 是炸弹，接到扣命；普通蛋落地漏掉也扣命。下蛋越来越快，3 命耗尽结束。",
+  "howToPlay": "← → 或 A D 移动篮子；手机拖动；接蛋得分、躲炸弹。",
+  "entry": "catcheggs/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

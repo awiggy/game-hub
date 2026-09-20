@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>云养喵</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body {
+      background:#0f1118; color:#eef1f6;
+      font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center;
+      touch-action:manipulation; overflow:hidden;
+    }
+    #wrap { width:min(92vw,400px); position:relative; display:flex; flex-direction:column; gap:14px; }
+    #hud { display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #cat { text-align:center; font-size:76px; filter:drop-shadow(3px 3px 0 rgba(0,0,0,.5)); }
+    .bar-row { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:900; }
+    .bar-row span { width:52px; }
+    .track { flex:1; height:16px; border:2px solid #2a2e3d; border-radius:999px; background:#14161f; overflow:hidden; }
+    .fill { height:100%; transition:width .25s; }
+    #fill-hunger { background:var(--yellow); }
+    #fill-mood { background:var(--blue); }
+    #acts { display:flex; gap:10px; }
+    .act {
+      flex:1; font-family:inherit; font-weight:700; font-size:14px; color:#eef1f6;
+      background:#1a1d29; border:2px solid #2a2e3d; border-radius:10px;
+      padding:14px 4px; cursor:pointer; line-height:1.6;
+    }
+    .act:disabled { opacity:.4; cursor:not-allowed; }
+    .act:not(:disabled):active { background:var(--blue); }
+    .act small { display:block; font-size:11px; color:#8b93a7; }
+    #overlay {
+      position:fixed; inset:0; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px;
+    }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button {
+      background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700;
+      padding:10px 32px; border-radius:8px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>存活<b id="time">0s</b></span>
+      <span>BEST<b id="best">0s</b></span>
+    </div>
+    <div id="cat">🐱</div>
+    <div class="bar-row"><span>饱食度</span><div class="track"><div class="fill" id="fill-hunger" style="width:100%"></div></div></div>
+    <div class="bar-row"><span>心情</span><div class="track"><div class="fill" id="fill-mood" style="width:100%"></div></div></div>
+    <div id="acts">
+      <button class="act" id="a-feed">🐟 喂食<small>+30 饱食</small></button>
+      <button class="act" id="a-play">🧶 逗玩<small>+25 心情</small></button>
+      <button class="act" id="a-clean">🧹 铲屎<small>各 +8</small></button>
+    </div>
+  </div>
+  <div id="overlay">
+    <h1>🐱 云养喵</h1>
+    <p>饱食度与心情持续下降<br/>喂食 / 逗玩 / 铲屎各带冷却，合理轮换<br/>任一状态归零即结束，比拼存活时长</p>
+    <button id="ov-btn">开始养猫</button>
+  </div>
+  <script>
+    (() => {
+      const ACTS = [
+        { el: 'a-feed', cd: 3000, label: '🐟 喂食', sub: '+30 饱食' },
+        { el: 'a-play', cd: 4000, label: '🧶 逗玩', sub: '+25 心情' },
+        { el: 'a-clean', cd: 8000, label: '🧹 铲屎', sub: '各 +8' },
+      ]
+      const timeEl = document.getElementById('time')
+      const bestEl = document.getElementById('best')
+      const catEl = document.getElementById('cat')
+      const fillH = document.getElementById('fill-hunger')
+      const fillM = document.getElementById('fill-mood')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let hunger, mood, seconds, running, over, cds
+      let best = Number(localStorage.getItem('petfeed-best') || 0)
+      bestEl.textContent = best + 's'
+
+      const buttons = ACTS.map((a) => document.getElementById(a.el))
+
+      function start() {
+        hunger = 100; mood = 100; seconds = 0
+        cds = ACTS.map(() => 0)
+        running = true; over = false
+        overlay.classList.add('hidden')
+        render()
+      }
+
+      function end(reason) {
+        running = false; over = true
+        const s = Math.floor(seconds)
+        if (s > best) { best = s; bestEl.textContent = best + 's'; localStorage.setItem('petfeed-best', best) }
+        overlay.querySelector('h1').textContent = '😿 ' + reason
+        overlay.querySelector('p').innerHTML = '存活 <b style="color:#ffd23f">' + s + '</b> 秒 · 最佳 ' + best + ' 秒'
+        ovBtn.textContent = '再养一只'
+        overlay.classList.remove('hidden')
+      }
+
+      function render() {
+        fillH.style.width = Math.max(0, hunger) + '%'
+        fillM.style.width = Math.max(0, mood) + '%'
+        timeEl.textContent = Math.floor(seconds) + 's'
+        catEl.textContent = over ? '💀' : hunger < 30 || mood < 30 ? '😾' : '😺'
+        buttons.forEach((b, i) => {
+          const a = ACTS[i]
+          const left = cds[i]
+          b.disabled = !running || left > 0
+          b.innerHTML = left > 0
+            ? a.label + '<small>冷却 ' + (left / 1000).toFixed(1) + 's</small>'
+            : a.label + '<small>' + a.sub + '</small>'
+        })
+      }
+
+      buttons.forEach((b, i) => {
+        b.addEventListener('click', () => {
+          if (!running || over || cds[i] > 0) return
+          cds[i] = ACTS[i].cd
+          if (i === 0) hunger = Math.min(100, hunger + 30)
+          else if (i === 1) mood = Math.min(100, mood + 25)
+          else { hunger = Math.min(100, hunger + 8); mood = Math.min(100, mood + 8) }
+          catEl.textContent = i === 1 ? '😻' : '😸'
+          render()
+        })
+      })
+
+      let last = 0
+      function loop(t) {
+        requestAnimationFrame(loop)
+        if (!last) last = t
+        const dt = Math.min(100, t - last)
+        last = t
+        if (running && !over) {
+          seconds += dt / 1000
+          hunger -= 2 * dt / 1000
+          mood -= 1.5 * dt / 1000
+          let dirty = false
+          for (let i = 0; i < 3; i++) {
+            if (cds[i] > 0) { cds[i] = Math.max(0, cds[i] - dt); dirty = true }
+          }
+          if (hunger <= 0) { hunger = 0; end('猫饿晕了') }
+          else if (mood <= 0) { mood = 0; end('猫伤心离家出走了') }
+          else if (dirty || Math.floor(seconds * 10) % 5 === 0) render()
+        }
+      }
+
+      ovBtn.addEventListener('click', start)
+      requestAnimationFrame(loop)
+
+      window.__hub = {
+        get score() { return Math.floor(seconds) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      hunger = 100; mood = 100; seconds = 0; cds = [0, 0, 0]; running = false; over = false
+    })()
+  </script>
+</body>
+</html>

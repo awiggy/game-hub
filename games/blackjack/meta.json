@@ -1,0 +1,17 @@
+{
+  "id": "blackjack",
+  "name": "21点",
+  "emoji": "🃏",
+  "categories": ["card", "casual"],
+  "tags": ["棋牌", "卡牌", "运气"],
+  "summary": "要牌还是停牌？和庄家斗智斗勇，100 金币起步别破产！",
+  "description": "经典 21 点。每局押注 10 金币，你要牌凑近 21 点但不能爆；停牌后庄家补牌到 17 点以上再比大小。Blackjack 赔 1.5 倍，金币耗尽即破产。",
+  "howToPlay": "点「要牌」补一张或「停牌」开牌；A 可当 1 或 11。",
+  "entry": "blackjack/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}

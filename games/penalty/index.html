@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>点球大战</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body {
+      background:#0f1118; color:#eef1f6;
+      font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center;
+      touch-action:manipulation; overflow:hidden;
+    }
+    #wrap { width:min(92vw,420px); position:relative; display:flex; flex-direction:column; gap:12px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #msg { font-size:15px; font-weight:900; min-height:22px; }
+    #goal {
+      position:relative; width:100%; aspect-ratio:8/5;
+      background:#14161f; border:3px solid #2a2e3d; border-radius:12px; overflow:hidden;
+    }
+    #net {
+      position:absolute; inset:12px 12px 40px;
+      display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:4px;
+      border:4px solid #3a4152; border-radius:6px;
+      background:repeating-linear-gradient(45deg,#181b26 0 8px,#14161f 8px 16px);
+    }
+    .cell { cursor:pointer; transition:background .15s; }
+    .cell:hover { background:rgba(47,85,228,.25); }
+    #gk { position:absolute; font-size:44px; left:50%; bottom:44px; transform:translateX(-50%); transition:all .22s ease; }
+    #ball { position:absolute; font-size:26px; left:50%; bottom:6px; transform:translateX(-50%); transition:all .22s ease; }
+    #dots { display:flex; gap:8px; font-size:18px; }
+    #overlay {
+      position:fixed; inset:0; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px;
+    }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button {
+      background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700;
+      padding:10px 32px; border-radius:8px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>进球<b id="score">0</b></span>
+      <span>剩余<b id="left">5</b>球</span>
+      <span>BEST<b id="best">0</b>/5</span>
+    </div>
+    <div id="goal">
+      <div id="net"></div>
+      <div id="gk">🧍</div>
+      <div id="ball">⚽</div>
+    </div>
+    <div id="msg">点击九宫格选择射门角度</div>
+    <div id="dots"></div>
+  </div>
+  <div id="overlay">
+    <h1>⚽ 点球大战</h1>
+    <p>点击九宫格任一格射门<br/>守门员随机扑救，进球越多他越准<br/>共 5 球，命中越多越好</p>
+    <button id="ov-btn">走上点球点</button>
+  </div>
+  <script>
+    (() => {
+      const netEl = document.getElementById('net')
+      const gkEl = document.getElementById('gk')
+      const ballEl = document.getElementById('ball')
+      const msgEl = document.getElementById('msg')
+      const dotsEl = document.getElementById('dots')
+      const scoreEl = document.getElementById('score')
+      const leftEl = document.getElementById('left')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let score, taken, level, running, over, busy
+      let best = Number(localStorage.getItem('penalty-best') || 0)
+      bestEl.textContent = best
+
+      const cells = []
+      for (let i = 0; i < 9; i++) {
+        const c = document.createElement('div')
+        c.className = 'cell'
+        c.onclick = () => shoot(i)
+        netEl.appendChild(c)
+        cells.push(c)
+      }
+
+      function start() {
+        score = 0; taken = 0; level = 0
+        running = true; over = false; busy = false
+        scoreEl.textContent = 0; leftEl.textContent = 5
+        renderDots()
+        overlay.classList.add('hidden')
+      }
+
+      function renderDots() {
+        dotsEl.innerHTML = ''
+        for (let i = 0; i < 5; i++) {
+          const d = document.createElement('span')
+          d.textContent = i < taken ? (i < score ? '⚽' : '❌') : '⬜'
+          dotsEl.appendChild(d)
+        }
+      }
+
+      function shoot(i) {
+        if (!running || over || busy) return
+        busy = true
+        const r = (i / 3) | 0, c = i % 3
+        // 球飞向目标格
+        ballEl.style.left = (16 + c * 33) + '%'
+        ballEl.style.bottom = (44 + (2 - r) * 18) + '%'
+        const saveProb = 0.25 + 0.1 * level
+        const gkCell = Math.random() < saveProb ? i : (Math.random() * 9) | 0
+        setTimeout(() => {
+          gkEl.style.left = (16 + (gkCell % 3) * 33) + '%'
+          gkEl.style.bottom = (40 + (2 - ((gkCell / 3) | 0)) * 18) + '%'
+          gkEl.textContent = '🧤'
+        }, 120)
+        setTimeout(() => {
+          const miss = Math.random() < 0.05
+          const saved = gkCell === i
+          if (!miss && !saved) {
+            score++
+            cells[i].style.background = 'rgba(34,181,115,.4)'
+            msgEl.textContent = '⚽ 球进了！'
+          } else {
+            cells[i].style.background = 'rgba(255,77,94,.4)'
+            msgEl.textContent = saved ? '🧤 被扑出来了！' : '💨 打飞了！'
+          }
+          scoreEl.textContent = score
+          taken++
+          level = score
+          leftEl.textContent = 5 - taken
+          renderDots()
+          setTimeout(() => {
+            cells[i].style.background = ''
+            gkEl.style.left = '50%'; gkEl.style.bottom = '44px'; gkEl.textContent = '🧍'
+            ballEl.style.left = '50%'; ballEl.style.bottom = '6px'
+            if (taken >= 5) {
+              running = false; over = true
+              if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('penalty-best', best) }
+              overlay.querySelector('h1').textContent = score >= 4 ? '🏆 神射手' : score >= 2 ? '👏 不俗发挥' : '😵 需要加练'
+              overlay.querySelector('p').innerHTML = '5 球命中 <b style="color:#ffd23f">' + score + '</b> 球 · 最佳 ' + best + '/5'
+              ovBtn.textContent = '再来一轮'
+              overlay.classList.remove('hidden')
+            } else {
+              busy = false
+              msgEl.textContent = '点击九宫格选择射门角度'
+            }
+          }, 700)
+        }, 340)
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      score = 0; taken = 0; level = 0; running = false; over = false; busy = false
+      renderDots()
+    })()
+  </script>
+</body>
+</html>

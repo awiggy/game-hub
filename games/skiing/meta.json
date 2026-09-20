@@ -1,0 +1,17 @@
+{
+  "id": "skiing",
+  "name": "高山滑雪",
+  "emoji": "🎿",
+  "categories": ["sports", "racing"],
+  "tags": ["体育", "竞速", "躲避"],
+  "summary": "雪山速降越来越快，左右闪避树林与岩石，看你能滑出多远！",
+  "description": "滑雪者从山顶向下飞驰，速度持续提升；滑道两侧与中央不断出现树林和岩石，触碰到即结束。滑行距离就是成绩，随时准备急转。",
+  "howToPlay": "← → 或 A D 左右移动；手机端触摸屏幕左右半边。",
+  "entry": "skiing/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-20",
+  "featured": false,
+  "plays": 0
+}
