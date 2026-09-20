@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { fileURLToPath } from 'node:url'
 
 // publicDir 指向 games/：每个子文件夹是一个自包含小游戏，
 // 开发时直接以 /snake/index.html 这样的路径访问，构建时整体拷入 dist。
@@ -9,4 +10,12 @@ export default defineConfig({
   base: './',
   publicDir: 'games',
   server: { port: 5173 },
+  build: {
+    rollupOptions: {
+      input: {
+        hub: fileURLToPath(new URL('./index.html', import.meta.url)),
+        poster: fileURLToPath(new URL('./poster/index.html', import.meta.url)),
+      },
+    },
+  },
 })

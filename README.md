@@ -8,6 +8,12 @@
 - **仓库**：https://github.com/awiggy/game-hub
 - **部署**：push 到 main 即自动构建发布（GitHub Actions → GitHub Pages）
 
+## 黑白像素动态海报 · 第一版
+
+[![黑白像素浮岛、粒子光门与同行的旅人](docs/poster/preview.gif)](https://awiggy.github.io/game-hub/poster/)
+
+[打开交互海报](https://awiggy.github.io/game-hub/poster/)：独行、同行、岔路三个场景，无可见文案。移动指针产生视差，点击释放粒子波纹；下方图标可切换场景、暂停或重播。
+
 ## 开发
 
 ```bash

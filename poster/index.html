@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080808">
+    <meta name="description" content="一张没有文案的黑白像素动态海报。独行、同行，以及尚未选择的路。">
+    <title>同行 · 动态海报</title>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <main class="poster" aria-label="黑白像素互动海报">
+      <canvas id="world" tabindex="0" role="img" aria-describedby="instructions" aria-label="漂浮在黑暗中的像素岛屿，旅人沿着分岔道路走向粒子构成的圆形光门。">黑白像素岛屿和结伴旅行的人物。</canvas>
+      <p id="instructions" class="sr-only">海报自动循环三个场景。移动指针产生视差，点击画面释放粒子。左右方向键切换场景，空格暂停或继续。下方三个按钮分别选择独行、同行和岔路场景。</p>
+      <div class="corner corner-a" aria-hidden="true"></div>
+      <div class="corner corner-b" aria-hidden="true"></div>
+      <nav class="scenes" aria-label="海报场景">
+        <button class="scene" data-scene="0" aria-label="独行" aria-pressed="true"><span></span></button>
+        <button class="scene" data-scene="1" aria-label="同行" aria-pressed="false"><span></span></button>
+        <button class="scene" data-scene="2" aria-label="岔路" aria-pressed="false"><span></span></button>
+      </nav>
+      <div class="tools">
+        <button id="replay" aria-label="重新播放"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8a8 8 0 1 1-1 8M5 3v5h5"/></svg></button>
+        <button id="pause" aria-label="暂停动画" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="pause-icon" d="M8 5v14M16 5v14"/><path class="play-icon" d="m9 5 10 7-10 7z"/></svg></button>
+      </div>
+      <div class="timeline" aria-hidden="true"><i id="progress"></i></div>
+    </main>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

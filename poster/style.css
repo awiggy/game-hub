@@ -1,0 +1,21 @@
+:root{color-scheme:dark;background:#080808;color:#eee;font-family:system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;overflow-x:hidden;background:#080808}
+.poster{position:relative;width:min(100vw,1600px);aspect-ratio:8/5;isolation:isolate;background:#080808;overflow:hidden}
+canvas{display:block;width:100%;height:100%;image-rendering:pixelated;cursor:crosshair;outline:none;touch-action:pan-y}
+canvas:focus-visible{outline:1px solid #aaa;outline-offset:-10px}
+.poster::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,#00000013 3px,#00000013 4px);opacity:.45;z-index:1}
+.corner{position:absolute;width:14px;height:14px;opacity:.4;pointer-events:none;border-color:#bbb}
+.corner-a{top:5%;left:4%;border-top:1px solid;border-left:1px solid}.corner-b{bottom:9%;right:4%;border-right:1px solid;border-bottom:1px solid}
+button{display:grid;place-items:center;width:44px;height:44px;padding:0;background:transparent;border:0;color:#999;cursor:pointer;touch-action:manipulation}
+button:hover{color:#fff}button:focus-visible{outline:1px solid #fff;outline-offset:-5px}
+.scenes{position:absolute;bottom:4%;left:calc(50% - 66px);display:flex;z-index:2}
+.scene span{width:5px;height:5px;background:#666;transform:rotate(45deg);transition:background .3s,box-shadow .3s}
+.scene[aria-pressed=true] span{background:#fff;box-shadow:0 0 0 4px #ffffff12}
+.tools{position:absolute;right:3%;bottom:4%;display:flex;z-index:2}
+svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.5;fill:none}.play-icon{display:none}
+#pause[aria-pressed=true] .pause-icon{display:none}#pause[aria-pressed=true] .play-icon{display:block}
+.timeline{position:absolute;bottom:3.3%;left:4%;right:4%;height:1px;background:#202020;overflow:hidden}
+.timeline i{display:block;width:100%;height:100%;background:#888;transform-origin:left;transform:scaleX(0)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:650px){.poster{aspect-ratio:3/4;max-height:100svh}.tools{right:3%;bottom:4%}.scenes{left:4%}.corner-b{bottom:13%}.timeline{bottom:3%}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
