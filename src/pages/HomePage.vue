@@ -1,294 +1,585 @@
 <script setup>
-import { computed } from 'vue'
-import gamesData from '../data/games.json'
-import { CATEGORIES } from '../game-meta'
-import GameCard from '../components/GameCard.vue'
-
-const featured = computed(() => gamesData.filter((g) => g.featured))
-
-const catCounts = computed(() => {
-  const counts = {}
-  for (const g of gamesData) {
-    for (const c of g.categories) counts[c] = (counts[c] || 0) + 1
-  }
-  return counts
-})
-
-const stats = computed(() => [
-  { num: gamesData.length, label: '在线游戏' },
-  { num: CATEGORIES.length, label: '游戏分类' },
-  { num: '0 秒', label: '安装等待' },
-])
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import games from "../data/games.json";
+import { CATEGORIES } from "../game-meta";
+import GameCard from "../components/GameCard.vue";
+import HubIcon from "../components/HubIcon.vue";
+import heroArt from "../assets/pixel-world.webp";
+const router = useRouter(),
+  active = ref("");
+const byIds = (ids) =>
+  ids.map((id) => games.find((g) => g.id === id)).filter(Boolean);
+const selected = computed(() =>
+  active.value
+    ? games.filter((g) => g.categories.includes(active.value)).slice(0, 4)
+    : byIds(["snake", "tetris", "flappy", "2048"]),
+);
+const more = byIds(["minesweeper", "gobang", "memory", "skiing"]);
+const categories = CATEGORIES.slice(0, 4);
+const captions = [
+  "在数字之间，找到安全的路。",
+  "一黑一白，见招拆招。",
+  "翻开卡片，记住美好的瞬间。",
+  "从山顶出发，享受飞驰的感觉。",
+];
+function randomGame() {
+  router.push("/game/" + games[Math.floor(Math.random() * games.length)].id);
+}
 </script>
-
 <template>
-  <div class="container">
-    <!-- Hero -->
-    <section class="hero card">
-      <div class="hero-deco hero-deco-1">🕹️</div>
-      <div class="hero-deco hero-deco-2">🧩</div>
-      <div class="hero-deco hero-deco-3">🚀</div>
-      <h1 class="hero-title">游戏大全</h1>
-      <p class="hero-sub">
-        AI 时代的开源小游戏平台 · 全部免费 · 即点即玩
-      </p>
-      <p class="hero-desc">
-        按分类浏览小游戏，点开即可试玩；后续将开放「用 AI 做一个」，
-        选定品类、一句话描述，即可生成属于你的小游戏并发布上架。
-      </p>
-      <div class="hero-actions">
-        <router-link to="/library" class="btn btn-primary">进入游戏库 →</router-link>
-        <a href="#cat-grid" class="btn btn-yellow">按分类逛逛</a>
+  <div class="container home-page">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">BROWSER ARCADE / {{ games.length }} GAMES</p>
+        <h1>生活很大，<br />先玩一局。</h1>
+        <p class="hero-desc">
+          {{ games.length }} 款免费小游戏。<br
+            class="medium-break"
+          />打开浏览器，就能开始。
+        </p>
+        <div class="hero-actions">
+          <router-link to="/library" class="btn btn-primary"
+            >探索游戏<HubIcon name="up" :size="19" /></router-link
+          ><button class="random-link" @click="randomGame">随机开一局</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img
+          :src="heroArt"
+          alt="彩色像素浮岛上，一位旅人面向云海中的金色光门"
+          width="2000"
+          height="800"
+          fetchpriority="high"
+        />
+        <div class="hero-caption">
+          <span>01</span><span>PRESS<br />PAUSE.<br />START<br />PLAYING.</span>
+        </div>
       </div>
     </section>
-
-    <!-- 数据条 -->
-    <section class="stats">
-      <div v-for="s in stats" :key="s.label" class="stat card">
-        <b>{{ s.num }}</b>
-        <span>{{ s.label }}</span>
+    <div class="facts" aria-label="平台概览">
+      <span
+        ><b>{{ games.length }}</b> 款游戏</span
+      ><span
+        ><b>{{ CATEGORIES.length }}</b> 个分类</span
+      ><span>全部免费</span><span>无需下载</span>
+    </div>
+    <section class="featured">
+      <div class="section-heading">
+        <h2>选一局，换个心情。</h2>
+        <div class="category-tabs" role="group" aria-label="精选游戏分类">
+          <button
+            :class="{ active: !active }"
+            :aria-pressed="!active"
+            @click="active = ''"
+          >
+            全部</button
+          ><template v-for="c in categories" :key="c.id"
+            ><span aria-hidden="true">/</span
+            ><button
+              :class="{ active: active === c.id }"
+              :aria-pressed="active === c.id"
+              @click="active = c.id"
+            >
+              {{ c.name }}
+            </button></template
+          ><router-link to="/library" class="all-link" aria-label="查看全部分类"
+            ><HubIcon name="up" :size="17"
+          /></router-link>
+        </div>
+      </div>
+      <div class="game-grid featured-grid">
+        <GameCard v-for="(g, i) in selected" :key="g.id" :game="g" :index="i" />
       </div>
     </section>
-
-    <!-- 分类入口 -->
-    <section id="cat-grid">
-      <h2 class="section-title">游戏分类</h2>
-      <div class="cat-grid">
-        <router-link
-          v-for="c in CATEGORIES"
-          :key="c.id"
-          :to="`/library?cat=${c.id}`"
-          class="cat-tile card"
-        >
-          <span class="cat-emoji">{{ c.emoji }}</span>
-          <span class="cat-name">{{ c.name }}</span>
-          <span class="cat-count">{{ catCounts[c.id] || 0 }} 款</span>
-        </router-link>
-      </div>
-    </section>
-
-    <!-- 精选游戏 -->
-    <section>
-      <h2 class="section-title">精选游戏</h2>
-      <div class="game-grid">
-        <GameCard v-for="g in featured" :key="g.id" :game="g" />
-      </div>
-    </section>
-
-    <!-- AI 创作入口 -->
-    <section class="ai-teaser card">
-      <div class="ai-teaser-text">
-        <h2>⚡ 用 AI 做一个小游戏</h2>
-        <p>选定分类 → 一句话描述 → 生成 → 沙箱试玩 → 上架。创作页已开放，先来体验完整流程。</p>
-      </div>
-      <router-link to="/create" class="ai-badge">去创作 →</router-link>
+    <section class="discover-more">
+      <h2>再发现<br class="wide-break" />一点乐趣。</h2>
+      <router-link
+        v-for="(g, i) in more"
+        :key="g.id"
+        :to="'/game/' + g.id"
+        class="more-item"
+        ><div>
+          <h3>{{ g.name }}</h3>
+          <HubIcon name="up" :size="14" />
+        </div>
+        <p>{{ captions[i] }}</p></router-link
+      >
     </section>
   </div>
 </template>
-
 <style scoped>
 .hero {
-  position: relative;
-  overflow: hidden;
-  padding: 56px 32px;
-  text-align: center;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(47, 85, 228, 0.12), transparent 40%),
-    radial-gradient(circle at 80% 80%, rgba(255, 210, 63, 0.25), transparent 40%),
-    var(--card);
-}
-
-.hero-title {
-  margin: 0 0 12px;
-  font-size: 44px;
-  font-weight: 900;
-  letter-spacing: 8px;
-  text-shadow: 4px 4px 0 var(--yellow);
-}
-
-.hero-sub {
-  margin: 0 0 10px;
-  font-size: 16px;
-  font-weight: 900;
-  color: var(--blue);
-  letter-spacing: 2px;
-}
-
-.hero-desc {
-  margin: 0 auto 24px;
-  max-width: 560px;
-  font-size: 14px;
-  line-height: 1.9;
-  color: var(--muted);
-}
-
-.hero-actions {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.hero-deco {
-  position: absolute;
-  font-size: 40px;
-  opacity: 0.5;
-}
-
-.hero-deco-1 {
-  top: 18px;
-  left: 26px;
-  transform: rotate(-12deg);
-}
-
-.hero-deco-2 {
-  bottom: 20px;
-  left: 12%;
-  transform: rotate(10deg);
-}
-
-.hero-deco-3 {
-  top: 24px;
-  right: 8%;
-  transform: rotate(8deg);
-}
-
-.stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin: 24px 0 36px;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 28px;
+  padding-bottom: 18px;
+  min-height: 330px;
 }
-
-.stat {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 10px;
-  padding: 16px;
-}
-
-.stat b {
-  font-size: 26px;
-  font-weight: 900;
-  color: var(--blue);
-}
-
-.stat span {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-.cat-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  margin-bottom: 36px;
-}
-
-.cat-tile {
+.hero-copy {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 18px 8px;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  justify-content: center;
+  padding: 10px 0 16px;
 }
-
-.cat-tile:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 rgba(20, 22, 31, 0.9);
-  background: var(--yellow);
+.hero-copy .eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  margin-bottom: 15px;
 }
-
-.cat-emoji {
-  font-size: 30px;
-}
-
-.cat-name {
-  font-size: 15px;
+h1 {
+  margin: 0 0 18px;
+  font-size: 63px;
   font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -3px;
+  -webkit-text-stroke: 0.7px currentColor;
+  white-space: nowrap;
 }
-
-.cat-count {
-  font-size: 12px;
-  font-weight: 700;
+.hero-desc {
+  font-size: 13px;
   color: var(--muted);
+  line-height: 1.8;
+  margin: 0 0 28px;
 }
-
-.cat-tile:hover .cat-count {
+.medium-break {
+  display: none;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 29px;
+}
+.hero-actions .btn {
+  min-height: 46px;
+  padding: 12px 22px;
+  gap: 14px;
+}
+.random-link {
+  padding: 7px 0;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  font-size: 14px;
+  font-weight: 650;
+  background: none;
+  white-space: nowrap;
+}
+.random-link:hover {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+.hero-visual {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px;
+  gap: 16px;
+  min-height: 325px;
+  position: relative;
+}
+.hero-visual img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0 auto 0 0;
+  max-width: calc(100% - 50px);
+  object-fit: cover;
+  image-rendering: pixelated;
+  border: 1px solid #385c584f;
+}
+.hero-caption {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: 1px solid #96a49b80;
+  padding-left: 12px;
+  font: 8px/1.6 var(--mono);
+  letter-spacing: 0.6px;
+}
+.hero-caption > span:first-child {
+  font-size: 12px;
+}
+.facts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 13px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.facts span {
+  text-align: center;
+  border-right: 1px solid #aab1ad;
+}
+.facts span:last-child {
+  border-right: 0;
+}
+.facts b {
+  font-weight: 500;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.featured {
+  padding: 30px 0;
+}
+.featured .section-heading {
+  margin-bottom: 18px;
+}
+.featured h2 {
+  font-size: 36px;
+  font-weight: 900;
+  -webkit-text-stroke: 0.3px currentColor;
+}
+.featured-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+.category-tabs {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.category-tabs button {
+  position: relative;
+  border: 0;
+  background: none;
+  color: inherit;
+  padding: 8px 1px;
+  font-size: 12px;
+}
+.category-tabs button.active {
+  color: var(--ink);
+  font-weight: 700;
+}
+.category-tabs button.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--blue);
+}
+.category-tabs button:hover {
+  color: var(--blue);
+}
+.category-tabs > span {
+  font: 11px var(--mono);
+  color: #9aa2a1;
+}
+.all-link {
+  display: grid;
+  margin-left: 7px;
   color: var(--ink);
 }
-
-.game-grid {
+.discover-more {
+  border-top: 1px solid var(--ink);
+  padding: 23px 0 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 18px;
+  grid-template-columns: 1.1fr repeat(4, 1fr);
+  gap: 0;
+  align-items: center;
 }
-
-.ai-teaser {
-  margin-top: 36px;
+.discover-more h2 {
+  font-size: 29px;
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin: 0;
+  padding-right: 25px;
+}
+.wide-break {
+  display: none;
+}
+.more-item {
+  border-left: 1px solid #adb5b2;
+  padding: 3px 18px;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.more-item > div {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  padding: 24px 28px;
-  background: linear-gradient(135deg, #1b2f8a, #2f55e4);
-  color: #fff;
+  gap: 5px;
 }
-
-.ai-teaser h2 {
-  margin: 0 0 6px;
-  font-size: 20px;
-  font-weight: 900;
-}
-
-.ai-teaser p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.ai-badge {
-  flex: none;
-  padding: 8px 16px;
-  border: 2px solid #fff;
-  border-radius: 999px;
-  background: var(--yellow);
-  color: var(--ink);
+.more-item h3 {
   font-size: 14px;
-  font-weight: 900;
+  margin: 0;
+  font-weight: 750;
+  white-space: nowrap;
 }
-
-@media (max-width: 860px) {
-  .cat-grid {
-    grid-template-columns: repeat(3, 1fr);
+.more-item p {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 7px 0 0;
+}
+.more-item:hover h3,
+.more-item:hover svg {
+  color: var(--blue);
+}
+@media (min-width: 1450px) {
+  .hero {
+    grid-template-columns: 365px minmax(0, 1fr);
+  }
+  h1 {
+    font-size: 70px;
+  }
+  .hero-visual {
+    min-height: 350px;
+  }
+  .hero-desc {
+    font-size: 14px;
   }
 }
-
-@media (max-width: 560px) {
-  .hero-title {
-    font-size: 32px;
-    letter-spacing: 4px;
+@media (max-width: 1150px) {
+  .hero {
+    grid-template-columns: 290px minmax(0, 1fr);
+    gap: 22px;
   }
-
-  .hero-deco {
-    display: none;
+  h1 {
+    font-size: 56px;
+    letter-spacing: -2px;
   }
-
-  .stats {
+  .hero-actions {
+    gap: 22px;
+  }
+  .hero-desc {
+    font-size: 12px;
+  }
+  .hero-copy .eyebrow {
+    font-size: 9px;
+  }
+  .hero-visual {
+    min-height: 300px;
+    grid-template-columns: minmax(0, 1fr) 27px;
+    gap: 12px;
+  }
+  .hero-visual img {
+    max-width: calc(100% - 39px);
+  }
+  .hero-caption {
+    padding-left: 9px;
+    font-size: 7px;
+  }
+  .featured h2 {
+    font-size: 30px;
+  }
+  .category-tabs {
+    gap: 12px;
+  }
+  .discover-more {
+    grid-template-columns: 1fr repeat(4, 1fr);
+  }
+  .discover-more h2 {
+    font-size: 26px;
+  }
+  .wide-break {
+    display: block;
+  }
+  .more-item {
+    padding: 3px 13px;
+  }
+  .more-item p {
+    font-size: 9px;
+  }
+}
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 245px minmax(0, 1fr);
+    gap: 18px;
+  }
+  h1 {
+    font-size: 47px;
+  }
+  .hero-visual {
+    min-height: 280px;
     grid-template-columns: 1fr;
   }
-
-  .cat-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .hero-visual img {
+    max-width: 100%;
   }
-
-  .ai-teaser {
-    flex-direction: column;
+  .hero-caption {
+    display: none;
+  }
+  .hero-desc {
+    font-size: 12px;
+  }
+  .medium-break {
+    display: block;
+  }
+  .hero-actions {
+    gap: 18px;
+  }
+  .hero-actions .btn {
+    font-size: 12px;
+    padding: 11px 17px;
+    gap: 8px;
+  }
+  .random-link {
+    font-size: 12px;
+  }
+  .featured .section-heading {
     align-items: flex-start;
+    gap: 12px;
+  }
+  .featured h2 {
+    font-size: 27px;
+  }
+  .category-tabs {
+    gap: 10px;
+  }
+  .category-tabs button {
+    font-size: 11px;
+  }
+  .all-link {
+    display: none;
+  }
+  .featured-grid {
+    gap: 14px;
+  }
+  .discover-more {
+    grid-template-columns: repeat(4, 1fr);
+    row-gap: 20px;
+  }
+  .discover-more h2 {
+    grid-column: 1/-1;
+    font-size: 26px;
+  }
+  .wide-break {
+    display: none;
+  }
+  .more-item:nth-child(2) {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .more-item {
+    min-height: 48px;
+  }
+  .featured-grid :deep(.game-index) {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding-bottom: 17px;
+  }
+  .hero-copy {
+    padding: 4px 0 0;
+  }
+  .hero-copy .eyebrow {
+    font-size: 9px;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: 53px;
+    line-height: 1.12;
+    letter-spacing: -2.5px;
+    margin-bottom: 17px;
+  }
+  .hero-desc {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  .medium-break {
+    display: none;
+  }
+  .hero-actions {
+    gap: 29px;
+  }
+  .hero-actions .btn {
+    font-size: 13px;
+    padding: 12px 20px;
+  }
+  .random-link {
+    font-size: 13px;
+  }
+  .hero-visual {
+    height: 200px;
+    min-height: 0;
+  }
+  .hero-visual img {
+    object-position: center;
+  }
+  .facts {
+    font-size: 10px;
+    padding: 12px 0;
+  }
+  .facts b {
+    font-size: 11px;
+  }
+  .featured {
+    padding: 25px 0;
+  }
+  .featured .section-heading {
+    display: block;
+    margin-bottom: 19px;
+  }
+  .featured h2 {
+    font-size: 29px;
+    letter-spacing: -1px;
+  }
+  .category-tabs {
+    margin-top: 13px;
+    gap: 15px;
+  }
+  .category-tabs button {
+    font-size: 12px;
+  }
+  .all-link {
+    display: grid;
+    margin-left: auto;
+  }
+  .featured-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 23px 13px;
+  }
+  .featured-grid :deep(.game-index) {
+    display: block;
+  }
+  .discover-more {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 22px;
+    padding-top: 22px;
+  }
+  .discover-more h2 {
+    font-size: 27px;
+  }
+  .more-item:nth-child(4) {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .more-item {
+    padding: 0 14px;
+  }
+  .more-item p {
+    font-size: 10px;
+  }
+  .more-item h3 {
+    font-size: 13px;
+  }
+}
+@media (max-width: 370px) {
+  h1 {
+    font-size: 48px;
+  }
+  .hero-desc {
+    font-size: 11px;
+  }
+  .category-tabs {
+    gap: 12px;
+  }
+  .hero-visual {
+    height: 175px;
   }
 }
 </style>

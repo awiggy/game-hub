@@ -1,139 +1,137 @@
 <script setup>
-import { ref, computed } from 'vue'
-
-const props = defineProps({
-  game: { type: Object, required: true },
-})
-
-// 点击后才加载 iframe，避免列表页/详情页打开即占用焦点和性能
-const started = ref(false)
-const wrapEl = ref(null)
-const frameKey = ref(0)
-
-const src = computed(() => `${import.meta.env.BASE_URL}${props.game.entry}`)
-
-function start() {
-  started.value = true
+import { ref, computed, nextTick } from "vue";
+import HubIcon from "./HubIcon.vue";
+import GameArt from "./GameArt.vue";
+const props = defineProps({ game: { type: Object, required: true } });
+const started = ref(false),
+  wrapEl = ref(null),
+  frameEl = ref(null),
+  frameKey = ref(0),
+  notice = ref("");
+const src = computed(() => import.meta.env.BASE_URL + props.game.entry);
+async function start() {
+  started.value = true;
+  await nextTick();
+  frameEl.value?.focus();
 }
-
 function restart() {
-  frameKey.value++
+  if (started.value) frameKey.value++;
 }
-
 function openNew() {
-  window.open(src.value, '_blank')
+  window.open(src.value, "_blank", "noopener,noreferrer");
 }
-
 async function fullscreen() {
-  if (!document.fullscreenElement) {
-    await wrapEl.value?.requestFullscreen()
-  } else {
-    await document.exitFullscreen()
+  notice.value = "";
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else if (wrapEl.value?.requestFullscreen) {
+      await wrapEl.value.requestFullscreen();
+    } else {
+      notice.value = "此浏览器不支持全屏，可以在新窗口中游玩。";
+    }
+  } catch {
+    notice.value = "暂时无法全屏，可以在新窗口中游玩。";
   }
 }
 </script>
-
 <template>
-  <div ref="wrapEl" class="game-frame card">
+  <div ref="wrapEl" class="game-frame">
     <div class="frame-bar">
-      <span class="frame-dots">
-        <i></i><i></i><i></i>
-      </span>
-      <span class="frame-name">{{ game.name }}</span>
-      <span class="frame-actions">
-        <button class="frame-btn" title="重新开始" @click="restart">⟳ 重开</button>
-        <button class="frame-btn" title="新窗口打开" @click="openNew">↗ 新窗口</button>
-        <button class="frame-btn" title="全屏" @click="fullscreen">⛶ 全屏</button>
-      </span>
+      <span class="frame-label"><span></span>PLAY / {{ game.name }}</span>
+      <div class="frame-actions">
+        <button :disabled="!started" title="重新开始" @click="restart">
+          <HubIcon name="restart" :size="14" /><span>重开</span></button
+        ><button title="新窗口打开" @click="openNew">
+          <HubIcon name="up" :size="15" /><span>新窗口</span></button
+        ><button title="全屏" @click="fullscreen">
+          <HubIcon name="expand" :size="15" /><span>全屏</span>
+        </button>
+      </div>
     </div>
-
     <div class="frame-stage">
       <iframe
         v-if="started"
+        ref="frameEl"
         :key="frameKey"
         :src="src"
         class="frame-iframe"
-        title="游戏画面"
+        :title="game.name + '游戏画面'"
         allow="fullscreen"
-      ></iframe>
-      <button v-else class="frame-cover" @click="start">
-        <span class="cover-emoji">{{ game.emoji }}</span>
-        <span class="cover-play">▶ 开始试玩</span>
-        <span class="cover-hint">{{ game.platform }} · 免登录 · 即点即玩</span>
+        @load="frameEl?.focus()"
+      ></iframe
+      ><button v-else class="frame-cover" @click="start">
+        <div class="cover-art"><GameArt :game="game" /></div>
+        <div class="cover-action">
+          <span class="play-label"
+            ><HubIcon name="play" :size="22" />开始游戏</span
+          ><span class="cover-hint">无需下载 / 免登录 / 即点即玩</span>
+        </div>
       </button>
+    </div>
+    <p v-if="notice" class="frame-notice" role="status">{{ notice }}</p>
+    <div class="frame-foot">
+      <span>{{ started ? "好好享受这一局。" : "准备好，开始一点快乐。" }}</span
+      ><span>GAME HUB</span>
     </div>
   </div>
 </template>
-
 <style scoped>
 .game-frame {
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #657972;
+  background: var(--paper);
+  min-width: 0;
 }
-
 .frame-bar {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 12px;
-  border-bottom: var(--border);
-  background: var(--paper);
+  padding: 12px 14px;
+  border-bottom: 1px solid #a1b3a9;
+  background: #e7ece3;
 }
-
-.frame-dots {
+.frame-label {
   display: flex;
-  gap: 5px;
+  align-items: center;
+  gap: 8px;
+  font: 9px var(--mono);
+  color: #4d6e5e;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-
-.frame-dots i {
-  width: 10px;
-  height: 10px;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  background: var(--yellow);
+.frame-label > span {
+  width: 6px;
+  height: 6px;
+  background: #53967c;
+  flex: none;
 }
-
-.frame-dots i:nth-child(2) {
-  background: var(--blue);
-}
-
-.frame-dots i:nth-child(3) {
-  background: var(--danger);
-}
-
-.frame-name {
-  font-size: 13px;
-  font-weight: 900;
-}
-
 .frame-actions {
-  margin-left: auto;
   display: flex;
-  gap: 6px;
+  gap: 16px;
+  margin-left: auto;
+  flex: none;
 }
-
-.frame-btn {
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border: 2px solid var(--ink);
-  border-radius: 6px;
-  background: #fff;
-  cursor: pointer;
-  box-shadow: 2px 2px 0 rgba(20, 22, 31, 0.9);
+.frame-actions button {
+  border: 0;
+  background: none;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
 }
-
-.frame-btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: none;
+.frame-actions button:hover:not(:disabled) {
+  color: var(--blue);
 }
-
 .frame-stage {
   position: relative;
-  height: clamp(420px, 62vh, 620px);
-  background: #0f1118;
+  height: clamp(430px, 62vh, 640px);
+  background: #f1f1e8;
 }
-
 .frame-iframe {
   position: absolute;
   inset: 0;
@@ -141,53 +139,109 @@ async function fullscreen() {
   height: 100%;
   border: 0;
   display: block;
+  background: #0f1118;
 }
-
 .frame-cover {
   position: absolute;
   inset: 0;
   width: 100%;
-  border: 0;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  font-family: inherit;
-  background: repeating-linear-gradient(
-    45deg,
-    #14161f,
-    #14161f 14px,
-    #1a1d29 14px,
-    #1a1d29 28px
-  );
+  gap: 27px;
+  border: 0;
+  background: #f1f1e8;
+  padding: 20px;
 }
-
-.cover-emoji {
-  font-size: 56px;
-  filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.5));
+.cover-art {
+  width: min(72%, 410px);
+  aspect-ratio: 4/3;
+  border: 1px solid #5c887b55;
 }
-
-.cover-play {
-  padding: 12px 32px;
-  background: var(--yellow);
-  color: var(--ink);
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: 2px;
+.cover-action {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 13px;
 }
-
-.cover-hint {
-  color: #8b93a7;
-  font-size: 12px;
+.play-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+  background: var(--blue);
+  color: white;
+  padding: 13px 30px;
+  font-size: 16px;
   font-weight: 700;
 }
-
-:fullscreen .frame-stage {
+.frame-cover:hover .play-label {
+  background: var(--blue-deep);
+}
+.cover-hint {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+.frame-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  border-top: 1px solid #a1b3a9;
+  padding: 10px 14px;
+  font-size: 9px;
+  color: #6c8274;
+}
+.frame-foot span:last-child {
+  font-family: var(--mono);
+  letter-spacing: 1px;
+}
+.frame-notice {
+  font-size: 11px;
+  color: #966a28;
+  background: #fff0cc;
+  padding: 10px;
+  margin: 0;
+}
+.game-frame:fullscreen {
+  width: 100%;
   height: 100%;
+  border: 0;
+}
+.game-frame:fullscreen .frame-stage {
+  height: auto;
+  flex: 1;
+}
+.game-frame:fullscreen .frame-foot {
+  display: none;
+}
+@media (max-width: 500px) {
+  .frame-bar {
+    padding: 10px;
+    gap: 8px;
+  }
+  .frame-label {
+    font-size: 8px;
+  }
+  .frame-actions {
+    gap: 12px;
+  }
+  .frame-actions button span {
+    display: none;
+  }
+  .frame-actions button {
+    padding: 4px;
+  }
+  .frame-stage {
+    height: 480px;
+    max-height: 75svh;
+    min-height: 380px;
+  }
+  .cover-art {
+    width: 88%;
+  }
+  .play-label {
+    font-size: 15px;
+  }
 }
 </style>

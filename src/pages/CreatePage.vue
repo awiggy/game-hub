@@ -1,99 +1,110 @@
 <script setup>
-import { ref, computed } from 'vue'
-import gamesData from '../data/games.json'
-import { CATEGORIES, catEmoji } from '../game-meta'
+import { ref, computed } from "vue";
+import gamesData from "../data/games.json";
+import { CATEGORIES } from "../game-meta";
+import { CATEGORY_VISUALS } from "../game-visuals";
+import HubIcon from "../components/HubIcon.vue";
 
-const category = ref('')
-const prompt = ref('')
-const status = ref('idle') // idle | loading | done
-const demo = ref(false)
-const progress = ref('')
-const progressPct = ref(0)
-const result = ref(null)
+const category = ref("");
+const prompt = ref("");
+const status = ref("idle"); // idle | loading | done
+const demo = ref(false);
+const progress = ref("");
+const progressPct = ref(0);
+const result = ref(null);
 
 const EXAMPLES = [
-  '陨石躲避：飞船左右移动，躲开天而降的陨石，坚持越久分越高',
-  '接水果：篮子左右移动接住掉落的水果，炸弹不能接',
-  '跳一跳：按住蓄力松手起跳，跳上一个个平台，落空即失败',
-  '消星星：点击相邻同色方块消除得分，越快连击越高',
-]
+  "陨石躲避：飞船左右移动，躲开天而降的陨石，坚持越久分越高",
+  "接水果：篮子左右移动接住掉落的水果，炸弹不能接",
+  "跳一跳：按住蓄力松手起跳，跳上一个个平台，落空即失败",
+  "消星星：点击相邻同色方块消除得分，越快连击越高",
+];
 
 // 演示模式：按分类映射一个现有游戏作为预览示例
 const DEMO_MAP = {
-  arcade: 'snake',
-  casual: 'snake',
-  puzzle: '2048',
-  card: 'gobang',
-  action: 'breakout',
-  shooter: 'planewar',
-  strategy: 'minesweeper',
-  racing: 'racedodge',
-  simulation: '2048',
-  sports: 'breakout',
-}
+  arcade: "snake",
+  casual: "snake",
+  puzzle: "2048",
+  card: "gobang",
+  action: "breakout",
+  shooter: "planewar",
+  strategy: "minesweeper",
+  racing: "racedodge",
+  simulation: "2048",
+  sports: "breakout",
+};
 
 const canGenerate = computed(
   () => category.value && prompt.value.trim().length >= 4,
-)
+);
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // 部署在子路径（如 GitHub Pages）时 iframe 相对资源要拼 BASE_URL
-const BASE = import.meta.env.BASE_URL
+const BASE = import.meta.env.BASE_URL;
 
 async function generate() {
-  if (!canGenerate.value || status.value === 'loading') return
-  status.value = 'loading'
-  result.value = null
-  demo.value = false
-  progressPct.value = 8
+  if (!canGenerate.value || status.value === "loading") return;
+  status.value = "loading";
+  result.value = null;
+  demo.value = false;
+  progressPct.value = 8;
 
   // 真实生成接口（MVP 第 2 步接入云函数后生效）
   try {
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ category: category.value, prompt: prompt.value.trim() }),
-    })
-    if (!res.ok) throw new Error('HTTP ' + res.status)
-    const data = await res.json()
-    if (!data || !data.entry) throw new Error('响应格式错误')
-    result.value = data
-    progressPct.value = 100
-    status.value = 'done'
-    return
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        category: category.value,
+        prompt: prompt.value.trim(),
+      }),
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if (!data || !data.entry) throw new Error("响应格式错误");
+    result.value = data;
+    progressPct.value = 100;
+    status.value = "done";
+    return;
   } catch {
     // 后端未接入 → 演示模式
   }
 
-  demo.value = true
-  progress.value = '正在理解你的创意…'
-  progressPct.value = 22
-  await sleep(900)
-  progress.value = '正在编写游戏代码…'
-  progressPct.value = 58
-  await sleep(1200)
-  progress.value = '正在质检并生成预览…'
-  progressPct.value = 86
-  await sleep(800)
-  const g = gamesData.find((x) => x.id === (DEMO_MAP[category.value] || 'snake'))
+  demo.value = true;
+  progress.value = "演示：读取玩法描述…";
+  progressPct.value = 22;
+  await sleep(900);
+  progress.value = "演示：匹配现有游戏示例…";
+  progressPct.value = 58;
+  await sleep(1200);
+  progress.value = "演示：准备示例预览…";
+  progressPct.value = 86;
+  await sleep(800);
+  const g = gamesData.find(
+    (x) => x.id === (DEMO_MAP[category.value] || "snake"),
+  );
   result.value = {
     demo: true,
     id: g.id,
     entry: g.entry,
-    name: prompt.value.trim().slice(0, 12).replace(/[，。：:、！？\s]+$/, '') || g.name,
+    name:
+      prompt.value
+        .trim()
+        .slice(0, 12)
+        .replace(/[，。：:、！？\s]+$/, "") || g.name,
     emoji: g.emoji,
     summary: g.summary,
-  }
-  progress.value = '完成'
-  progressPct.value = 100
-  status.value = 'done'
+  };
+  progress.value = "完成";
+  progressPct.value = 100;
+  status.value = "done";
 }
 
 function reset() {
-  status.value = 'idle'
-  result.value = null
-  progressPct.value = 0
+  status.value = "idle";
+  result.value = null;
+  progressPct.value = 0;
 }
 </script>
 
@@ -101,10 +112,10 @@ function reset() {
   <div class="container create-page">
     <!-- 头部说明 -->
     <section class="create-head card">
-      <h1>⚡ 用 AI 做一个小游戏</h1>
+      <p class="eyebrow">AI GAME LAB / 演示模式</p>
+      <h1>让灵感，开始一局。</h1>
       <p>
-        选分类 → 一句话描述 → 生成 → 沙箱试玩 → 一键上架。
-        生成后端接入中，当前可体验完整流程：<b>演示模式</b>会用现有游戏示例展示预览效果。
+        选择一个分类，写下你的想法，体验创作流程。当前处于<b>演示模式</b>，预览来自内置示例游戏；生成与发布服务尚未接入。
       </p>
     </section>
 
@@ -119,7 +130,7 @@ function reset() {
           :class="{ active: category === c.id }"
           @click="category = c.id"
         >
-          <span class="cat-emoji">{{ c.emoji }}</span>
+          <HubIcon :name="CATEGORY_VISUALS[c.id].icon" :size="27" />
           <span class="cat-name">{{ c.name }}</span>
         </button>
       </div>
@@ -131,6 +142,7 @@ function reset() {
       <div class="prompt-card card">
         <textarea
           v-model="prompt"
+          aria-label="描述你的游戏玩法"
           rows="3"
           maxlength="120"
           placeholder="例如：控制小飞船左右移动，躲开天上掉下来的陨石，坚持越久分数越高"
@@ -159,7 +171,7 @@ function reset() {
         :disabled="!canGenerate || status === 'loading'"
         @click="generate"
       >
-        {{ status === 'loading' ? '生成中…' : '⚡ 开始生成' }}
+        {{ status === "loading" ? "准备中…" : "体验创作流程" }}
       </button>
       <span v-if="status === 'idle' && !canGenerate" class="muted">
         先选分类，再写一句玩法描述（至少 4 个字）
@@ -178,7 +190,9 @@ function reset() {
     <section v-if="status === 'done' && result" class="result-card card">
       <div class="result-head">
         <h2>{{ result.emoji }} {{ result.name }}</h2>
-        <span v-if="demo" class="chip chip-yellow">演示模式 · 预览为示例游戏</span>
+        <span v-if="demo" class="chip chip-yellow"
+          >演示模式 · 预览为示例游戏</span
+        >
         <span v-else class="chip chip-blue">生成完成</span>
       </div>
       <p class="muted result-desc">{{ result.summary }}</p>
@@ -208,10 +222,10 @@ function reset() {
 }
 
 .create-head {
-  padding: 26px 30px;
-  background:
-    radial-gradient(circle at 85% 20%, rgba(255, 210, 63, 0.28), transparent 45%),
-    var(--card);
+  padding: 18px 0 25px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
 }
 
 .create-head h1 {
@@ -219,10 +233,10 @@ function reset() {
   font-size: 26px;
   font-weight: 900;
   letter-spacing: 2px;
-  text-shadow: 3px 3px 0 var(--yellow);
+  text-shadow: none;
 }
 
-.create-head p {
+.create-head p:not(.eyebrow) {
   margin: 0;
   font-size: 14px;
   line-height: 1.9;
@@ -252,8 +266,9 @@ function reset() {
 }
 
 .cat-tile:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0 rgba(20, 22, 31, 0.9);
+  transform: translateY(-2px);
+  box-shadow: none;
+  background: #e7ede4;
 }
 
 .cat-tile.active {
@@ -309,7 +324,7 @@ function reset() {
 }
 
 .chip-btn {
-  border: 2px solid var(--ink);
+  border: 1px solid var(--grid);
   background: var(--paper);
   font-family: inherit;
   font-weight: 700;
@@ -358,7 +373,7 @@ function reset() {
 
 .progress-track {
   height: 12px;
-  border: 2px solid var(--ink);
+  border: 1px solid var(--grid);
   border-radius: 999px;
   background: var(--paper);
   overflow: hidden;

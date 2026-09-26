@@ -1,274 +1,265 @@
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import gamesData from '../data/games.json'
-import { catName, catEmoji, catGradient } from '../game-meta'
-import GameFrame from '../components/GameFrame.vue'
-import GameCard from '../components/GameCard.vue'
-
-const route = useRoute()
-
-const game = computed(() => gamesData.find((g) => g.id === route.params.id))
-
-const related = computed(() => {
-  if (!game.value) return []
-  const main = game.value.categories[0]
-  return gamesData
-    .filter((g) => g.id !== game.value.id && g.categories.includes(main))
-    .slice(0, 3)
-})
-
-const infoRows = computed(() => {
-  if (!game.value) return []
-  const g = game.value
-  return [
-    ['分类', g.categories.map(catName).join(' / ')],
-    ['平台', g.platform],
-    ['试玩方式', g.playMode === 'online' ? '在线试玩' : g.playMode],
-    ['价格', g.price],
-    ['更新时间', g.createdAt],
-  ]
-})
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import games from "../data/games.json";
+import { catName } from "../game-meta";
+import GameFrame from "../components/GameFrame.vue";
+import GameCard from "../components/GameCard.vue";
+import HubIcon from "../components/HubIcon.vue";
+const route = useRoute();
+const game = computed(() => games.find((g) => g.id === route.params.id));
+const related = computed(() =>
+  game.value
+    ? games
+        .filter(
+          (g) =>
+            g.id !== game.value.id &&
+            g.categories.includes(game.value.categories[0]),
+        )
+        .slice(0, 4)
+    : [],
+);
 </script>
-
 <template>
-  <div v-if="game" class="container">
-    <!-- 头部信息 -->
-    <div class="detail-head card">
-      <div class="head-cover" :style="{ background: catGradient(game.categories[0]) }">
-        {{ game.emoji }}
-      </div>
-      <div class="head-info">
+  <div v-if="game" class="container detail-page">
+    <nav class="breadcrumbs" aria-label="当前位置">
+      <router-link to="/library">游戏库</router-link><span>/</span
+      ><router-link :to="'/library?cat=' + game.categories[0]">{{
+        catName(game.categories[0])
+      }}</router-link
+      ><span>/</span><span>{{ game.name }}</span>
+    </nav>
+    <header class="detail-head">
+      <div>
+        <p class="eyebrow">TAKE A LITTLE BREAK / PLAY NOW</p>
         <h1>{{ game.name }}</h1>
-        <p class="head-summary">{{ game.summary }}</p>
-        <div class="head-tags">
-          <span v-for="c in game.categories" :key="c" class="chip chip-blue">
-            {{ catEmoji(c) }} {{ catName(c) }}
-          </span>
-          <span v-for="t in game.tags" :key="t" class="chip">{{ t }}</span>
-        </div>
+        <p>{{ game.summary }}</p>
       </div>
-      <div class="head-price">
-        <b>{{ game.price }}</b>
-        <span>免登录试玩</span>
+      <div class="detail-badges">
+        <span>{{ game.categories.map(catName).join(" / ") }}</span
+        ><span>免费 · 免登录</span>
       </div>
-    </div>
-
+    </header>
     <div class="detail-layout">
-      <!-- 主区：试玩 + 介绍 -->
-      <div class="detail-main">
-        <GameFrame :game="game" />
-
-        <section class="detail-section card">
-          <h2 class="section-title">游戏介绍</h2>
-          <p class="desc">{{ game.description }}</p>
+      <GameFrame :key="game.id" :game="game" />
+      <aside class="play-notes">
+        <section>
+          <p class="eyebrow">01 / HOW TO PLAY</p>
+          <h2>这样玩。</h2>
+          <p>{{ game.howToPlay }}</p>
         </section>
-
-        <section class="detail-section card">
-          <h2 class="section-title">玩法说明</h2>
-          <p class="desc how">{{ game.howToPlay }}</p>
-        </section>
-      </div>
-
-      <!-- 侧栏：信息 + 相关推荐 -->
-      <aside class="detail-aside">
-        <div class="info-card card">
-          <h2 class="section-title">游戏信息</h2>
-          <dl>
-            <template v-for="row in infoRows" :key="row[0]">
-              <dt>{{ row[0] }}</dt>
-              <dd>{{ row[1] }}</dd>
-            </template>
-          </dl>
-        </div>
-
-        <div v-if="related.length" class="info-card card">
-          <h2 class="section-title">同类推荐</h2>
-          <div class="related-grid">
-            <GameCard v-for="g in related" :key="g.id" :game="g" />
+        <section>
+          <p class="eyebrow">02 / ABOUT THE GAME</p>
+          <h2>关于这一局</h2>
+          <p>{{ game.description }}</p>
+          <div class="tags">
+            <span v-for="tag in game.tags" :key="tag">{{ tag }}</span>
           </div>
-        </div>
+        </section>
+        <router-link to="/library" class="back-library"
+          >换个游戏，再玩一局<HubIcon name="up" :size="17"
+        /></router-link>
       </aside>
     </div>
+    <section class="related-section" v-if="related.length">
+      <div class="section-heading">
+        <h2>也许，你还喜欢。</h2>
+        <router-link
+          :to="'/library?cat=' + game.categories[0]"
+          class="text-link"
+          >更多{{ catName(game.categories[0]) }}<HubIcon name="up" :size="16"
+        /></router-link>
+      </div>
+      <div class="game-grid">
+        <GameCard v-for="(g, i) in related" :key="g.id" :game="g" :index="i" />
+      </div>
+    </section>
   </div>
-
-  <!-- 未找到 -->
-  <div v-else class="container">
-    <div class="empty card">
-      <span class="empty-emoji">🎮</span>
-      <p>没有找到这款游戏，可能已下架</p>
-      <router-link to="/library" class="btn btn-primary">返回游戏库</router-link>
-    </div>
+  <div v-else class="container not-found">
+    <p class="eyebrow">GAME NOT FOUND</p>
+    <h1>这款游戏暂时不在这里。</h1>
+    <router-link to="/library" class="btn btn-primary"
+      >返回游戏库<HubIcon name="arrow" :size="17"
+    /></router-link>
   </div>
 </template>
-
 <style scoped>
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 10px;
+  color: var(--muted);
+  margin: 4px 0 27px;
+}
+.breadcrumbs a:hover {
+  color: var(--blue);
+}
 .detail-head {
   display: flex;
-  gap: 18px;
-  padding: 20px;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 26px;
 }
-
-.head-cover {
-  flex: none;
-  width: 110px;
-  height: 110px;
-  display: grid;
-  place-items: center;
-  font-size: 54px;
-  border: var(--border);
-  border-radius: var(--radius);
-  filter: drop-shadow(3px 3px 0 rgba(20, 22, 31, 0.4));
+.detail-head .eyebrow {
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-bottom: 13px;
 }
-
-.head-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.head-info h1 {
-  margin: 0 0 8px;
-  font-size: 26px;
-  font-weight: 900;
-}
-
-.head-summary {
+.detail-head h1 {
+  font-size: 37px;
+  letter-spacing: -1px;
   margin: 0 0 12px;
-  font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.25;
+}
+.detail-head p:last-child {
   color: var(--muted);
+  font-size: 12px;
+  line-height: 1.9;
+  margin: 0;
+  max-width: 740px;
 }
-
-.head-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.head-price {
-  flex: none;
+.detail-badges {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  align-self: center;
-  padding: 12px 18px;
-  border: var(--border);
-  border-radius: var(--radius);
-  background: var(--yellow);
-  box-shadow: var(--shadow-sm);
+  gap: 10px;
+  border-left: 1px solid #aab4af;
+  padding-left: 25px;
+  flex: none;
+  font-size: 11px;
+  color: var(--muted);
 }
-
-.head-price b {
-  font-size: 20px;
-  font-weight: 900;
+.detail-badges span:last-child {
+  color: #427f69;
 }
-
-.head-price span {
-  font-size: 12px;
-  font-weight: 700;
-}
-
 .detail-layout {
   display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) 265px;
+  gap: 30px;
   align-items: start;
 }
-
-.detail-main {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
+.play-notes section {
+  padding: 20px 0 24px;
+  border-top: 1px solid var(--ink);
 }
-
-.detail-section {
-  padding: 20px;
+.play-notes h2 {
+  font-size: 20px;
+  margin: 0 0 12px;
+  letter-spacing: -0.6px;
 }
-
-.desc {
-  margin: 0;
-  font-size: 14px;
-  line-height: 2;
-  color: var(--ink);
+.play-notes .eyebrow {
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
 }
-
-.desc.how {
-  font-weight: 700;
-  background: var(--paper);
-  border: 2px dashed var(--ink);
-  border-radius: 6px;
-  padding: 12px 16px;
-}
-
-.detail-aside {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  position: sticky;
-  top: 84px;
-}
-
-.info-card {
-  padding: 18px;
-}
-
-.info-card dl {
-  margin: 0;
-}
-
-.info-card dt {
-  float: left;
-  clear: left;
-  width: 72px;
-  margin-bottom: 10px;
+.play-notes section > p:last-of-type {
   font-size: 12px;
-  font-weight: 900;
+  line-height: 2;
   color: var(--muted);
-}
-
-.info-card dd {
-  margin: 0 0 10px 82px;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.related-grid {
-  display: grid;
-  gap: 14px;
-}
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 60px 20px;
-}
-
-.empty-emoji {
-  font-size: 44px;
-}
-
-.empty p {
   margin: 0;
-  font-weight: 700;
-  color: var(--muted);
 }
-
-@media (max-width: 900px) {
+.tags {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+.tags span {
+  font-size: 9px;
+  padding: 4px 7px;
+  border: 1px solid #d0d5cd;
+  color: #667d74;
+}
+.back-library {
+  display: flex;
+  justify-content: space-between;
+  border-top: var(--border);
+  padding-top: 18px;
+  font-size: 12px;
+  color: var(--blue);
+}
+.related-section {
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid var(--ink);
+}
+.related-section h2 {
+  font-size: 27px;
+}
+.not-found {
+  padding-top: 60px;
+  padding-bottom: 70px;
+}
+.not-found h1 {
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+@media (max-width: 1000px) {
+  .detail-layout {
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 22px;
+  }
+  .detail-head h1 {
+    font-size: 32px;
+  }
+  .play-notes section > p:last-of-type {
+    font-size: 11px;
+  }
+}
+@media (max-width: 780px) {
   .detail-layout {
     grid-template-columns: 1fr;
   }
-
-  .detail-aside {
-    position: static;
+  .play-notes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
   }
-
-  .head-price {
+  .back-library {
+    grid-column: 1/-1;
+    padding: 0;
+    border: 0;
+  }
+  .detail-badges {
     display: none;
+  }
+  .related-section .game-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 500px) {
+  .breadcrumbs {
+    font-size: 9px;
+    margin-bottom: 22px;
+  }
+  .detail-head h1 {
+    font-size: 29px;
+  }
+  .detail-head p:last-child {
+    font-size: 11px;
+  }
+  .play-notes {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .play-notes section {
+    padding: 18px 0;
+  }
+  .play-notes section > p:last-of-type {
+    font-size: 12px;
+  }
+  .play-notes h2 {
+    font-size: 22px;
+  }
+  .back-library {
+    margin-top: 8px;
+  }
+  .related-section h2 {
+    font-size: 24px;
+  }
+  .related-section .text-link {
+    font-size: 11px;
   }
 }
 </style>

@@ -1,304 +1,350 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import gamesData from '../data/games.json'
-import { CATEGORIES, catName } from '../game-meta'
-import GameCard from '../components/GameCard.vue'
-
-const route = useRoute()
-const router = useRouter()
-
-const search = ref('')
-const sortBy = ref('new')
-
-const activeCat = computed(() => route.query.cat || '')
-
-const catCounts = computed(() => {
-  const counts = {}
-  for (const g of gamesData) {
-    for (const c of g.categories) counts[c] = (counts[c] || 0) + 1
-  }
-  return counts
-})
-
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import games from "../data/games.json";
+import { CATEGORIES, catName } from "../game-meta";
+import GameCard from "../components/GameCard.vue";
+import HubIcon from "../components/HubIcon.vue";
+const route = useRoute(),
+  router = useRouter();
+const activeCat = computed(() =>
+  CATEGORIES.some((c) => c.id === route.query.cat) ? route.query.cat : "",
+);
+const search = computed({
+  get: () => (typeof route.query.q === "string" ? route.query.q : ""),
+  set: (q) => router.replace({ query: { ...route.query, q: q || undefined } }),
+});
+const sortBy = computed({
+  get: () => (route.query.sort === "name" ? "name" : "new"),
+  set: (sort) => router.replace({ query: { ...route.query, sort } }),
+});
+const counts = computed(() =>
+  Object.fromEntries(
+    CATEGORIES.map((c) => [
+      c.id,
+      games.filter((g) => g.categories.includes(c.id)).length,
+    ]),
+  ),
+);
 const filtered = computed(() => {
-  let list = [...gamesData]
-  if (activeCat.value) {
-    list = list.filter((g) => g.categories.includes(activeCat.value))
-  }
-  const kw = search.value.trim().toLowerCase()
-  if (kw) {
-    list = list.filter((g) =>
-      [g.name, g.summary, ...g.tags].join(' ').toLowerCase().includes(kw),
-    )
-  }
-  if (sortBy.value === 'new') {
-    list.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-  } else if (sortBy.value === 'plays') {
-    list.sort((a, b) => b.plays - a.plays)
-  } else if (sortBy.value === 'name') {
-    list.sort((a, b) => a.name.localeCompare(b.name, 'zh'))
-  }
-  return list
-})
-
-function selectCat(id) {
-  router.push({ query: id ? { cat: id } : {} })
+  const list = games.filter(
+    (g) =>
+      (!activeCat.value || g.categories.includes(activeCat.value)) &&
+      [g.name, g.summary, ...g.tags]
+        .join(" ")
+        .toLowerCase()
+        .includes(search.value.trim().toLowerCase()),
+  );
+  return list.sort(
+    sortBy.value === "name"
+      ? (a, b) => a.name.localeCompare(b.name, "zh")
+      : (a, b) => b.createdAt.localeCompare(a.createdAt),
+  );
+});
+function selectCat(cat) {
+  router.push({ query: { ...route.query, cat: cat || undefined } });
+}
+function randomGame() {
+  const pool = filtered.value.length ? filtered.value : games;
+  router.push("/game/" + pool[Math.floor(Math.random() * pool.length)].id);
+}
+function clear() {
+  router.replace({ query: {} });
 }
 </script>
-
 <template>
-  <div class="container library-layout">
-    <!-- 侧栏：分类筛选 -->
-    <aside class="filter-panel card">
-      <div class="filter-head">
-        <b>筛选</b>
-        <button v-if="activeCat" class="filter-clear" @click="selectCat('')">清除</button>
+  <div class="container library-page">
+    <header class="library-header">
+      <div>
+        <p class="eyebrow">THE GAME COLLECTION / {{ games.length }} GAMES</p>
+        <h1>下一局，玩什么？</h1>
+        <p>熟悉的经典，偶遇的新鲜。把喜欢的游戏慢慢找出来。</p>
       </div>
-
-      <div class="filter-group">
-        <p class="filter-label">游戏分类</p>
-        <button
-          class="filter-item"
-          :class="{ active: !activeCat }"
-          @click="selectCat('')"
-        >
-          全部 <span class="count">{{ gamesData.length }}</span>
-        </button>
-        <button
-          v-for="c in CATEGORIES"
-          :key="c.id"
-          class="filter-item"
-          :class="{ active: activeCat === c.id }"
-          @click="selectCat(c.id)"
-        >
-          {{ c.emoji }} {{ c.name }}
-          <span class="count">{{ catCounts[c.id] || 0 }}</span>
-        </button>
-      </div>
-
-      <div class="filter-group">
-        <p class="filter-label">试玩方式</p>
-        <span class="filter-item static">▶ 在线试玩</span>
-      </div>
-    </aside>
-
-    <!-- 主区：工具栏 + 游戏网格 -->
-    <div class="library-main">
-      <div class="toolbar card">
-        <div class="toolbar-left">
-          <h1 class="toolbar-title">
-            {{ activeCat ? catName(activeCat) : '全部' }}游戏
-            <span class="count-pill">{{ filtered.length }}</span>
-          </h1>
-        </div>
-        <div class="toolbar-right">
-          <input v-model="search" class="search" type="search" placeholder="搜索游戏 / 标签…" />
-          <select v-model="sortBy" class="sort">
-            <option value="new">最新发布</option>
-            <option value="plays">最多游玩</option>
-            <option value="name">名称</option>
+      <button class="btn btn-primary" @click="randomGame">
+        <HubIcon name="shuffle" :size="17" />随机开一局
+      </button>
+    </header>
+    <nav class="filter-tabs" aria-label="游戏分类">
+      <button
+        :class="{ active: !activeCat }"
+        :aria-pressed="!activeCat"
+        @click="selectCat('')"
+      >
+        全部<small>{{ games.length }}</small></button
+      ><button
+        v-for="c in CATEGORIES"
+        :key="c.id"
+        :class="{ active: activeCat === c.id }"
+        :aria-pressed="activeCat === c.id"
+        @click="selectCat(c.id)"
+      >
+        {{ c.name }}<small>{{ counts[c.id] }}</small>
+      </button>
+    </nav>
+    <section aria-label="游戏列表">
+      <div class="toolbar">
+        <h2>
+          {{ activeCat ? catName(activeCat) : "全部" }}游戏<span>{{
+            filtered.length
+          }}</span>
+        </h2>
+        <div class="toolbar-controls">
+          <label class="search-field"
+            ><HubIcon name="search" :size="17" /><input
+              v-model="search"
+              type="search"
+              placeholder="搜索游戏 / 玩法"
+              aria-label="在游戏库中搜索" /></label
+          ><select v-model="sortBy" aria-label="游戏排序">
+            <option value="new">最新加入</option>
+            <option value="name">按名称</option>
           </select>
         </div>
       </div>
-
-      <div v-if="filtered.length" class="game-grid">
-        <GameCard v-for="g in filtered" :key="g.id" :game="g" />
-      </div>
-
-      <div v-else class="empty card">
-        <span class="empty-emoji">🕳️</span>
-        <p>没有找到符合条件的游戏</p>
-        <button class="btn btn-primary" @click="selectCat(''); search = ''">
-          查看全部游戏
+      <div v-if="search" class="search-summary" aria-live="polite">
+        “{{ search }}” 的搜索结果<button @click="search = ''">
+          清除搜索<HubIcon name="close" :size="13" />
         </button>
       </div>
-    </div>
+      <div v-if="filtered.length" class="game-grid">
+        <GameCard v-for="(g, i) in filtered" :key="g.id" :game="g" :index="i" />
+      </div>
+      <div v-else class="empty">
+        <HubIcon name="search" :size="35" />
+        <h3>还没找到这款游戏。</h3>
+        <p>换个关键词，或看看其他分类吧。</p>
+        <button class="btn btn-primary" @click="clear">看看全部游戏</button>
+      </div>
+      <p v-if="filtered.length" class="shelf-end">
+        END OF COLLECTION / {{ filtered.length }} GAMES
+      </p>
+    </section>
   </div>
 </template>
-
 <style scoped>
-.library-layout {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 20px;
-  align-items: start;
-}
-
-.filter-panel {
-  position: sticky;
-  top: 84px;
-  padding: 16px;
-}
-
-.filter-head {
+.library-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 10px;
-  border-bottom: var(--border);
-  font-size: 15px;
+  gap: 30px;
+  padding: 17px 0 30px;
+}
+.library-header h1 {
+  font-size: 43px;
+  letter-spacing: -2px;
+  line-height: 1.25;
   font-weight: 900;
+  margin: 0 0 13px;
 }
-
-.filter-clear {
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--blue);
-  background: none;
-  border: 0;
-  cursor: pointer;
-  padding: 0;
-}
-
-.filter-group {
-  margin-top: 16px;
-}
-
-.filter-label {
-  margin: 0 0 8px;
-  font-size: 12px;
-  font-weight: 900;
-  color: var(--muted);
-  letter-spacing: 1px;
-}
-
-.filter-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  margin-bottom: 4px;
-  padding: 7px 10px;
-  font-family: inherit;
+.library-header p:last-child {
   font-size: 13px;
-  font-weight: 700;
-  text-align: left;
-  background: none;
-  border: 2px solid transparent;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.filter-item:hover {
-  background: var(--paper);
-}
-
-.filter-item.active {
-  background: var(--blue);
-  color: #fff;
-  border-color: var(--ink);
-  box-shadow: 2px 2px 0 rgba(20, 22, 31, 0.9);
-}
-
-.filter-item.static {
-  cursor: default;
   color: var(--muted);
+  margin: 0;
+  line-height: 1.8;
 }
-
-.count {
-  font-size: 11px;
-  opacity: 0.75;
+.library-header .eyebrow {
+  color: #558179;
+  font-size: 10px;
+  margin-bottom: 15px;
 }
-
+.filter-tabs {
+  display: flex;
+  gap: 0;
+  align-items: center;
+  overflow-x: auto;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  scrollbar-width: thin;
+  margin-bottom: 27px;
+}
+.filter-tabs button {
+  border: 0;
+  background: none;
+  white-space: nowrap;
+  padding: 17px 19px;
+  position: relative;
+  font-size: 12px;
+  color: var(--muted);
+  flex: 1;
+}
+.filter-tabs button:first-child {
+  padding-left: 12px;
+}
+.filter-tabs button small {
+  font: 9px var(--mono);
+  margin-left: 8px;
+  opacity: 0.65;
+}
+.filter-tabs button.active {
+  color: var(--ink);
+  font-weight: 750;
+  background: #e7ede4;
+}
+.filter-tabs button.active::after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  bottom: 0;
+  left: 15px;
+  right: 15px;
+  background: var(--blue);
+}
+.filter-tabs button:hover {
+  color: var(--blue);
+}
 .toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding: 14px 16px;
-  margin-bottom: 18px;
+  gap: 20px;
+  margin-bottom: 25px;
 }
-
-.toolbar-title {
+.toolbar h2 {
+  font-size: 24px;
+  letter-spacing: -0.7px;
   margin: 0;
-  font-size: 20px;
-  font-weight: 900;
+}
+.toolbar h2 span {
+  font: 11px var(--mono);
+  color: var(--muted);
+  margin-left: 12px;
+  vertical-align: middle;
+}
+.toolbar-controls {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+}
+.search-field {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.count-pill {
-  padding: 2px 10px;
-  background: var(--yellow);
-  border: 2px solid var(--ink);
-  border-radius: 999px;
-  font-size: 13px;
-}
-
-.toolbar-right {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.search,
-.sort {
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 8px 12px;
-  border: var(--border);
-  border-radius: 6px;
-  background: #fff;
-  color: var(--ink);
-}
-
-.search {
-  width: 200px;
-}
-
-.search:focus {
-  outline: 2px solid var(--blue);
-  outline-offset: -2px;
-}
-
-.game-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 18px;
-}
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 60px 20px;
-}
-
-.empty-emoji {
-  font-size: 44px;
-}
-
-.empty p {
-  margin: 0;
-  font-weight: 700;
+  border-bottom: 1px solid #a3ada9;
+  padding: 8px 0;
   color: var(--muted);
 }
-
-@media (max-width: 860px) {
-  .library-layout {
-    grid-template-columns: 1fr;
+.search-field:focus-within {
+  border-color: var(--blue);
+}
+.search-field input {
+  border: 0;
+  background: none;
+  outline: none;
+  min-width: 0;
+  width: 195px;
+  font-size: 12px;
+}
+.toolbar select {
+  font-size: 12px;
+  padding: 9px 7px;
+  border: var(--border);
+  border-radius: 0;
+  background: transparent;
+}
+.search-summary {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin: -6px 0 22px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.search-summary button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: none;
+  font-size: 11px;
+  color: var(--blue);
+}
+.empty {
+  text-align: center;
+  padding: 65px 15px;
+}
+.empty svg {
+  color: #448a7a;
+}
+.empty h3 {
+  font-size: 24px;
+  margin: 20px 0 8px;
+}
+.empty p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 25px;
+}
+.shelf-end {
+  font: 9px var(--mono);
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-align: center;
+  margin: 45px 0 0;
+}
+@media (max-width: 1050px) {
+  .filter-tabs button {
+    padding: 16px 15px;
   }
-
-  .filter-panel {
-    position: static;
+  .filter-tabs button small {
+    margin-left: 5px;
   }
-
-  .filter-group {
-    display: flex;
+  .library-header h1 {
+    font-size: 38px;
+  }
+}
+@media (max-width: 680px) {
+  .library-header {
+    padding: 7px 0 24px;
+    gap: 20px;
     flex-wrap: wrap;
-    gap: 6px;
+    align-items: flex-start;
   }
-
-  .filter-item {
-    width: auto;
-    margin-bottom: 0;
+  .library-header h1 {
+    font-size: 33px;
+    letter-spacing: -1.3px;
+  }
+  .library-header .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+  .library-header p:last-child {
+    font-size: 11px;
+  }
+  .library-header .btn {
+    font-size: 12px;
+    padding: 10px 18px;
+    min-height: 40px;
+  }
+  .filter-tabs {
+    margin-bottom: 22px;
+  }
+  .filter-tabs button {
+    padding: 14px 15px;
+  }
+  .filter-tabs button small {
+    display: none;
+  }
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 17px;
+  }
+  .toolbar h2 {
+    font-size: 23px;
+  }
+  .toolbar-controls {
+    width: 100%;
+  }
+  .search-field {
+    flex: 1;
+  }
+  .search-field input {
+    width: 100%;
+  }
+  .toolbar select {
+    font-size: 11px;
+  }
+  .game-grid :deep(.game-index) {
+    display: none;
   }
 }
 </style>
