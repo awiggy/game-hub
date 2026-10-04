@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>弹射打靶</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>目标<b id="left">0</b></span>
+      <span>炮弹<b id="shots">0</b></span>
+      <span>BEST<b id="best">0</b>关</span>
+    </div>
+    <canvas id="cv" width="480" height="600"></canvas>
+    <div id="overlay">
+      <h1>🔵 弹射打靶</h1>
+      <p>炮台角度自动摆动，点击发射<br/>炮弹撞墙反弹最多 3 次<br/>击中全部目标过关，炮弹有限</p>
+      <button id="ov-btn">开始射击</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      // 关卡：cannon [x,y] walls [x,y,w,h] targets [x,y] shots
+      const LEVELS = [
+        { cannon: [60, 540], shots: 4,
+          walls: [[200, 240, 80, 20]],
+          targets: [[420, 120], [420, 480]] },
+        { cannon: [60, 300], shots: 5,
+          walls: [[180, 120, 20, 200], [180, 420, 260, 20]],
+          targets: [[420, 100], [60, 80], [420, 320]] },
+        { cannon: [240, 540], shots: 5,
+          walls: [[100, 300, 120, 20], [260, 300, 120, 20], [100, 140, 280, 20]],
+          targets: [[60, 80], [420, 80], [240, 240]] },
+        { cannon: [60, 540], shots: 6,
+          walls: [[140, 380, 200, 20], [340, 200, 20, 200], [140, 200, 100, 20]],
+          targets: [[420, 100], [60, 100], [240, 120], [420, 480]] },
+      ]
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const leftEl = document.getElementById('left')
+      const shotsEl = document.getElementById('shots')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let level, cannon, walls, targets, shots, angle, dir, bullets, running, over, frame
+      let best = Number(localStorage.getItem('ricochet-best') || 0)
+      bestEl.textContent = best
+
+      function load(nv) {
+        level = nv
+        const L = LEVELS[nv]
+        cannon = { x: L.cannon[0], y: L.cannon[1] }
+        walls = L.walls.map((w) => [...w])
+        targets = L.targets.map((t) => ({ x: t[0], y: t[1], hit: false }))
+        shots = L.shots
+        bullets = []
+        angle = -1.2; dir = 1
+        leftEl.textContent = targets.filter((t) => !t.hit).length
+        shotsEl.textContent = shots
+      }
+
+      function start() {
+        running = true; over = false
+        overlay.classList.add('hidden')
+        load(0)
+      }
+
+      function end(win) {
+        running = false; over = true
+        if (win && level + 1 > best) { best = level + 1; bestEl.textContent = best + '关'; localStorage.setItem('ricochet-best', best) }
+        overlay.querySelector('h1').textContent = win ? '🎯 全部命中' : '💀 炮弹耗尽'
+        overlay.querySelector('p').innerHTML = win
+          ? '四关全部通关，弹道大师！'
+          : '第 ' + (level + 1) + ' 关还剩 ' + targets.filter((t) => !t.hit).length + ' 个目标'
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function fire() {
+        if (!running || over || shots <= 0 || bullets.length >= 3) return
+        shots--
+        shotsEl.textContent = shots
+        bullets.push({
+          x: cannon.x, y: cannon.y,
+          vx: Math.sin(angle) * 9, vy: -Math.cos(angle) * 9,
+          bounces: 0,
+        })
+      }
+
+      function step() {
+        frame++
+        angle += dir * 0.016
+        if (angle > 1.25) { angle = 1.25; dir = -1 }
+        if (angle < -1.25) { angle = -1.25; dir = 1 }
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const b = bullets[i]
+          b.x += b.vx
+          b.y += b.vy
+          // 外墙反弹
+          if (b.x < 6) { b.x = 6; b.vx = Math.abs(b.vx); b.bounces++ }
+          if (b.x > W - 6) { b.x = W - 6; b.vx = -Math.abs(b.vx); b.bounces++ }
+          if (b.y < 6) { b.y = 6; b.vy = Math.abs(b.vy); b.bounces++ }
+          if (b.y > H - 6) { b.y = H - 6; b.vy = -Math.abs(b.vy); b.bounces++ }
+          // 内墙反弹
+          for (const [wx, wy, ww, wh] of walls) {
+            if (b.x > wx && b.x < wx + ww && b.y > wy && b.y < wy + wh) {
+              // 最小穿透轴
+              const l = b.x - wx, r = wx + ww - b.x, t = b.y - wy, bo = wy + wh - b.y
+              const m = Math.min(l, r, t, bo)
+              if (m === l) { b.x = wx; b.vx = -Math.abs(b.vx) }
+              else if (m === r) { b.x = wx + ww; b.vx = Math.abs(b.vx) }
+              else if (m === t) { b.y = wy; b.vy = -Math.abs(b.vy) }
+              else { b.y = wy + wh; b.vy = Math.abs(b.vy) }
+              b.bounces++
+            }
+          }
+          // 命中目标
+          for (const t of targets) {
+            if (!t.hit && Math.hypot(t.x - b.x, t.y - b.y) < 14) {
+              t.hit = true
+              bullets.splice(i, 1)
+              leftEl.textContent = targets.filter((x) => !x.hit).length
+              if (targets.every((x) => x.hit)) {
+                if (level === LEVELS.length - 1) return end(true)
+                msg('✓ 过关！')
+                setTimeout(() => load(level + 1), 700)
+              }
+              break
+            }
+          }
+          if (b.bounces > 3 || bullets.includes(b) === false) continue
+          if (b.bounces > 3) bullets.splice(i, 1)
+        }
+      }
+
+      function msg(t) {
+        bestEl.textContent = best + '关 · ' + t
+        setTimeout(() => { bestEl.textContent = best + '关' }, 700)
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        ctx.fillStyle = '#2a3350'
+        for (const [wx, wy, ww, wh] of walls) {
+          ctx.beginPath(); ctx.roundRect(wx, wy, ww, wh, 6); ctx.fill()
+        }
+        ctx.font = '20px sans-serif'
+        for (const t of targets) {
+          ctx.globalAlpha = t.hit ? 0.2 : 1
+          ctx.fillText('🎯', t.x - 12, t.y + 8)
+          ctx.globalAlpha = 1
+        }
+        // 炮台
+        ctx.fillStyle = '#5d84ff'
+        ctx.beginPath(); ctx.arc(cannon.x, cannon.y, 14, 0, Math.PI * 2); ctx.fill()
+        ctx.strokeStyle = '#5d84ff'
+        ctx.lineWidth = 5
+        ctx.beginPath()
+        ctx.moveTo(cannon.x, cannon.y)
+        ctx.lineTo(cannon.x + Math.sin(angle) * 26, cannon.y - Math.cos(angle) * 26)
+        ctx.stroke()
+        ctx.fillStyle = '#ffd23f'
+        for (const b of bullets) {
+          ctx.beginPath(); ctx.arc(b.x, b.y, 5, 0, Math.PI * 2); ctx.fill()
+        }
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      cv.addEventListener('pointerdown', (e) => { e.preventDefault(); fire() })
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault()
+          if (!running && !overlay.classList.contains('hidden')) start()
+          else fire()
+        }
+      })
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return level * 100 },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      level = 0; cannon = { x: 60, y: 540 }; walls = []; targets = []
+      shots = 0; angle = -1.2; dir = 1; bullets = []
+      running = false; over = false; frame = 0
+    })()
+  </script>
+</body>
+</html>

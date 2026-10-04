@@ -1,0 +1,17 @@
+{
+  "id": "flagquiz",
+  "name": "国旗问答",
+  "emoji": "🌏",
+  "categories": ["puzzle", "casual"],
+  "tags": ["知识", "问答", "竞速"],
+  "summary": "看国旗猜国家：四选一限时挑战，答对越快分越高，十题见分晓！",
+  "description": "看国旗猜国家的知识问答。每题展示一面国旗 emoji，从四个国家名中选出正确答案，答对按剩余时间得分，答错不扣分但浪费 3 秒。共 10 题，累计得分结算。",
+  "howToPlay": "看国旗点选正确的国家名；10 题结算总分。",
+  "entry": "flagquiz/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

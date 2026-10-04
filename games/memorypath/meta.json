@@ -1,0 +1,17 @@
+{
+  "id": "memorypath",
+  "name": "记忆路线",
+  "emoji": "🛤️",
+  "categories": ["puzzle", "casual"],
+  "tags": ["记忆", "路径", "观察"],
+  "summary": "一条路线在网格上闪过，凭记忆原路走一遍，每关路线更长！",
+  "description": "路径记忆测试。网格上会闪现一条相连的路线（从起点到终点），闪过后凭记忆从起点出发逐步走到终点。走对进入下一关（路线更长），走错扣 1 命（3 命）。",
+  "howToPlay": "记住闪现的路线，从起点开始按顺序走到终点。",
+  "entry": "memorypath/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

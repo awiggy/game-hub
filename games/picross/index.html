@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>数织拼图</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:min(92vw,440px); display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { display:grid; gap:2px; background:#1a1d29; border:3px solid #2a2e3d; border-radius:12px; padding:8px; }
+    .clue { display:flex; align-items:flex-end; justify-content:flex-end; gap:2px; font-size:11px; font-weight:900; color:#8b93a7; padding:2px; }
+    .cell {
+      aspect-ratio:1; border-radius:4px; background:#14161f; border:2px solid #2a3350; cursor:pointer;
+    }
+    .cell.on { background:var(--blue); border-color:#5d84ff; }
+    .cell.bad { background:#ff4d5e; border-color:#c22739; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>关卡<b id="lv">1/3</b></span>
+      <span>涂错<b id="wrong">0</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <div id="board"></div>
+  </div>
+  <div id="overlay">
+    <h1>🟦 数织拼图</h1>
+    <p>行/列旁数字=连续黑格的长度序列<br/>点击格子涂黑（再点清除）<br/>全部符合提示即过关 · 共三关</p>
+    <button id="ov-btn">开始解谜</button>
+  </div>
+  <script>
+    (() => {
+      // 三关 5x5 隐藏图案（人工设计，行/列提示由程序生成）
+      const PATTERNS = [
+        [
+          '.....',
+          '.###.',
+          '.#.#.',
+          '.###.',
+          '.....',
+        ],
+        [
+          '#...#',
+          '##.##',
+          '#####',
+          '.###.',
+          '..#..',
+        ],
+        [
+          '..#..',
+          '.###.',
+          '#####',
+          '.###.',
+          '..#..',
+        ],
+      ]
+      const boardEl = document.getElementById('board')
+      const lvEl = document.getElementById('lv')
+      const wrongEl = document.getElementById('wrong')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const N = 5
+      let level, solution, marks, wrongs, running, over
+      let best = Number(localStorage.getItem('picross-best') || 0)
+      if (best) bestEl.textContent = best
+
+      function clueOf(line) {
+        const runs = []
+        let n = 0
+        for (const ch of line) {
+          if (ch === '#') n++
+          else if (n) { runs.push(n); n = 0 }
+        }
+        if (n) runs.push(n)
+        return runs.length ? runs : [0]
+      }
+
+      function load(nv) {
+        level = nv
+        solution = PATTERNS[nv].map((row) => row.split(''))
+        marks = Array.from({ length: N }, () => Array(N).fill(false))
+        wrongs = 0
+        wrongEl.textContent = 0
+        lvEl.textContent = (nv + 1) + '/3'
+        render()
+      }
+
+      function start() {
+        running = true; over = false
+        overlay.classList.add('hidden')
+        load(0)
+      }
+
+      function rowClue(r) { return clueOf(solution[r].join('')) }
+      function colClue(c) { return clueOf(solution.map((row) => row[c]).join('')) }
+
+      function check() {
+        // 涂满的格子与答案完全一致即胜
+        for (let r = 0; r < N; r++)
+          for (let c = 0; c < N; c++)
+            if (marks[r][c] !== (solution[r][c] === '#')) return
+        if (level === PATTERNS.length - 1) {
+          running = false; over = true
+          const score = Math.max(100, 900 - wrongs * 30)
+          if (!best || score > best) { best = score; bestEl.textContent = best; localStorage.setItem('picross-best', best) }
+          overlay.querySelector('h1').textContent = '🟦 三关全部解出'
+          overlay.querySelector('p').innerHTML = '涂错 ' + wrongs + ' 次 · 得分 <b style="color:#ffd23f">' + score + '</b>'
+          ovBtn.textContent = '再来一局'
+          overlay.classList.remove('hidden')
+        } else {
+          msg('✓ 过关！')
+          setTimeout(() => load(level + 1), 700)
+        }
+      }
+
+      function msg(t) {
+        lvEl.textContent = (level + 1) + '/3 · ' + t
+        setTimeout(() => { lvEl.textContent = (level + 1) + '/3' }, 650)
+      }
+
+      function render() {
+        boardEl.innerHTML = ''
+        boardEl.style.gridTemplateColumns = 'auto repeat(' + N + ',1fr)'
+        boardEl.style.gridTemplateRows = 'auto repeat(' + N + ',1fr)'
+        // 空角
+        boardEl.appendChild(document.createElement('div'))
+        // 列提示
+        for (let c = 0; c < N; c++) {
+          const el = document.createElement('div')
+          el.className = 'clue'
+          el.style.flexDirection = 'column'
+          el.innerHTML = colClue(c).map((n) => '<span>' + n + '</span>').join('')
+          boardEl.appendChild(el)
+        }
+        for (let r = 0; r < N; r++) {
+          // 行提示
+          const el = document.createElement('div')
+          el.className = 'clue'
+          el.innerHTML = rowClue(r).map((n) => '<span>' + n + '</span>').join('')
+          boardEl.appendChild(el)
+          for (let c = 0; c < N; c++) {
+            const cell = document.createElement('div')
+            cell.className = 'cell' + (marks[r][c] ? ' on' : '')
+            cell.onclick = () => {
+              if (!running || over) return
+              marks[r][c] = !marks[r][c]
+              const isWrong = marks[r][c] && solution[r][c] !== '#'
+              if (isWrong) { wrongs++; wrongEl.textContent = wrongs }
+              render()
+              check()
+            }
+            boardEl.appendChild(cell)
+          }
+        }
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return Math.max(100, 900 - wrongs * 30) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      level = 0; solution = PATTERNS[0].map((row) => row.split(''))
+      marks = Array.from({ length: N }, () => Array(N).fill(false))
+      wrongs = 0; running = false; over = false
+      render()
+    })()
+  </script>
+</body>
+</html>

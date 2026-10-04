@@ -1,0 +1,16 @@
+{
+  "id": "ropeswing",
+  "name": "荡绳飞跃",
+  "emoji": "🕸️",
+  "categories": ["arcade", "action"],
+  "summary": "抓着荡绳飞过悬崖：摆到最高点松手飞出去，落在下一个平台继续荡！",
+  "description": "荡绳飞跃平台游戏。角色抓着绳索像钟摆一样摆动，看准摆到最高点时松手飞出，落在前方平台上即可抓住新的绳索继续。 miss 掉下悬崖即结束，平台数就是成绩。",
+  "howToPlay": "点击 / 空格在摆到高处时松手；落在前方平台上继续荡。",
+  "entry": "ropeswing/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

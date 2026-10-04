@@ -1,0 +1,17 @@
+{
+  "id": "bomber",
+  "name": "炸弹超人",
+  "emoji": "💣",
+  "categories": ["arcade", "action"],
+  "tags": ["街机", "策略", "经典"],
+  "summary": "放下炸弹炸碎砖墙消灭敌人，小心别被自己的炸弹波及！",
+  "description": "炸弹人玩法。在迷宫中放置炸弹（2 秒后十字方向爆炸），炸碎砖墙并消灭全部敌人过关；自己被爆炸波及扣 1 命（2 命）。敌人被消灭即进入下一关。",
+  "howToPlay": "方向键移动，空格放炸弹；2 秒后十字爆炸，别炸到自己。",
+  "entry": "bomber/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

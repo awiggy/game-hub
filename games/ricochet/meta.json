@@ -1,0 +1,17 @@
+{
+  "id": "ricochet",
+  "name": "弹射打靶",
+  "emoji": "🔵",
+  "categories": ["shooter", "puzzle"],
+  "tags": ["射击", "反弹", "解谜"],
+  "summary": "炮弹会在墙上反弹：卡准摆动角度发射，利用反弹击中躲在死角的目标！",
+  "description": "弹射解谜射击。炮台角度自动摆动，点击发射；炮弹沿直线飞行并在墙上反弹，最多弹 3 次后消失。击中所有目标即过关，共四关，炮弹数量有限。",
+  "howToPlay": "点击发射（角度自动摆动）；炮弹反弹最多 3 次，击中全部目标过关。",
+  "entry": "ricochet/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

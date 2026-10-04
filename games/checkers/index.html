@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>跳棋对战</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { width:100%; aspect-ratio:1; display:grid; grid-template-columns:repeat(8,1fr);
+      grid-template-rows:repeat(8,1fr); gap:2px; background:#1a1d29; border:3px solid #2a2e3d; border-radius:12px; padding:5px; }
+    .cell { border-radius:4px; background:#22432e; display:grid; place-items:center; cursor:default; }
+    .cell.dark { cursor:default; }
+    .cell.canmove { cursor:pointer; }
+    .cell.canmove::after { content:''; position:absolute; width:14%; aspect-ratio:1; border-radius:50%; background:rgba(255,210,63,.55); }
+    .cell.sel { outline:3px solid var(--yellow); }
+    .cell.target { outline:2px dashed #22b573; }
+    .piece { width:74%; aspect-ratio:1; border-radius:50%; border:2px solid rgba(0,0,0,.4);
+      display:grid; place-items:center; font-weight:900; font-size:14px; }
+    .piece.me { background:#5d84ff; }
+    .piece.ai { background:#ff4d5e; }
+    .piece.king::after { content:'👑'; font-size:12px; }
+    #msg { font-size:14px; font-weight:900; min-height:20px; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>我(蓝)<b id="me">12</b></span>
+      <span>AI(红)<b id="ai">12</b></span>
+      <span>BEST<b id="best">0</b>胜</span>
+    </div>
+    <div id="board"></div>
+    <div id="msg">点击棋子选中，再点斜前方目标格</div>
+  </div>
+  <div id="overlay">
+    <h1>⚫ 跳棋对战</h1>
+    <p>斜向前进移动，跳过敌子即吃<br/>到达底线升王（可后退）<br/>吃光对方或让其无法行动获胜</p>
+    <button id="ov-btn">开始对局</button>
+  </div>
+  <script>
+    (() => {
+      const N = 8
+      const boardEl = document.getElementById('board')
+      const meEl = document.getElementById('me')
+      const aiEl = document.getElementById('ai')
+      const bestEl = document.getElementById('best')
+      const msgEl = document.getElementById('msg')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      // board[r][c]: null 空格（不可用）/ 0 空 / {p:'me'|'ai', king:bool}
+      let board, sel, wins, running, over, mustFrom
+      let best = Number(localStorage.getItem('checkers-best') || 0)
+      bestEl.textContent = best
+
+      const cells = []
+      for (let r = 0; r < N; r++)
+        for (let c = 0; c < N; c++) {
+          const el = document.createElement('div')
+          el.className = 'cell'
+          el.onclick = () => click(r, c)
+          boardEl.appendChild(el)
+          cells.push(el)
+        }
+
+      function setup() {
+        board = Array.from({ length: N }, () => Array(N).fill(null))
+        // 只有暗格 (r+c)%2===1 可用
+        for (let r = 0; r < N; r++)
+          for (let c = 0; c < N; c++) {
+            if ((r + c) % 2 === 0) board[r][c] = null
+            else if (r < 3) board[r][c] = { p: 'ai', king: false }
+            else if (r > 4) board[r][c] = { p: 'me', king: false }
+            else board[r][c] = 0
+          }
+        sel = -1
+      }
+
+      function start() {
+        wins = wins || 0
+        running = true; over = false
+        overlay.classList.add('hidden')
+        setup()
+        msgEl.textContent = '点击你的棋子选中'
+        render()
+      }
+
+      function inB(r, c) { return r >= 0 && r < N && c >= 0 && c < N }
+
+      // me 向上（r-1），ai 向下（r+1）；king 双向
+      function movesFor(r, c) {
+        const p = board[r][c]
+        const out = []
+        const fwd = p.p === 'me' ? -1 : 1
+        const dirs = p.king ? [-1, 1] : [fwd]
+        for (const dr of dirs)
+          for (const dc of [-1, 1]) {
+            const r1 = r + dr, c1 = c + dc
+            if (!inB(r1, c1) || !board[r1][c1] || board[r1][c1] === 0) {
+              if (inB(r1, c1) && board[r1][c1] === 0) out.push({ r: r1, c: c1, cap: null })
+              continue
+            }
+            if (board[r1][c1].p !== p.p) {
+              const r2 = r + dr * 2, c2 = c + dc * 2
+              if (inB(r2, c2) && board[r2][c2] === 0) out.push({ r: r2, c: c2, cap: r1 + ',' + c1 })
+            }
+          }
+        return out
+      }
+
+      function allMoves(p) {
+        const list = []
+        for (let r = 0; r < N; r++)
+          for (let c = 0; c < N; c++) {
+            const pc = board[r][c]
+            if (pc && pc.p === p) list.push(...movesFor(r, c).map((m) => ({ ...m, fr: r, fc: c })))
+          }
+        return list
+      }
+
+      function count(p) {
+        let n = 0
+        for (const row of board) for (const pc of row) if (pc && pc.p === p) n++
+        return n
+      }
+
+      function finish(playerWin) {
+        running = false; over = true
+        if (playerWin) {
+          wins++
+          if (wins > best) { best = wins; bestEl.textContent = best; localStorage.setItem('checkers-best', best) }
+        }
+        overlay.querySelector('h1').textContent = playerWin ? '🏆 你赢了' : '🤖 AI 获胜'
+        overlay.querySelector('p').innerHTML = '胜场 <b style="color:#ffd23f">' + wins + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function after() {
+        const meN = count('me'), aiN = count('ai')
+        meEl.textContent = meN; aiEl.textContent = aiN
+        const myMoves = allMoves('me').length
+        const aiMoves = allMoves('ai').length
+        if (aiN === 0 || (turnAi && aiMoves === 0)) return finish(true)
+        if (meN === 0 || myMoves === 0) return finish(false)
+      }
+
+      let turnAi = false
+
+      function click(r, c) {
+        if (!running || over) return
+        const pc = board[r][c]
+        if (typeof pc === 'object' && pc && pc.p === 'me') {
+          sel = { r, c }
+          msgEl.textContent = ''
+          render()
+          return
+        }
+        if (sel === -1) return
+        // 执行移动
+        const mvs = movesFor(sel.r, sel.c)
+        const m = mvs.find((m) => m.r === r && m.c === c)
+        if (!m) { msgEl.textContent = '只能斜走一步或跳吃'; return }
+        const piece = board[sel.r][sel.c]
+        board[sel.r][sel.c] = 0
+        board[r][c] = piece
+        if (m.cap) {
+          const [cr, cc] = m.cap.split(',').map(Number)
+          board[cr][cc] = 0
+        }
+        // 升王
+        if (r === 0) piece.king = true
+        sel = -1
+        render()
+        after()
+        if (over) return
+        // AI 回合
+        turnAi = true
+        msgEl.textContent = 'AI 思考中…'
+        setTimeout(aiMove, 500)
+      }
+
+      function aiMove() {
+        if (over) return
+        const moves = allMoves('ai')
+        if (!moves.length) return after()
+        // 优先吃子
+        const caps = moves.filter((m) => m.cap)
+        const m = caps.length ? caps[(Math.random() * caps.length) | 0] : moves[(Math.random() * moves.length) | 0]
+        const piece = board[m.fr][m.fc]
+        board[m.fr][m.fc] = 0
+        board[m.r][m.c] = piece
+        if (m.cap) {
+          const [cr, cc] = m.cap.split(',').map(Number)
+          board[cr][cc] = 0
+        }
+        if (m.r === N - 1) piece.king = true
+        turnAi = false
+        render()
+        after()
+        if (!over) msgEl.textContent = '轮到你'
+      }
+
+      function render() {
+        for (let r = 0; r < N; r++)
+          for (let c = 0; c < N; c++) {
+            const el = cells[r * N + c]
+            el.className = 'cell' + ((r + c) % 2 === 1 ? ' dark' : '')
+            el.innerHTML = ''
+            const pc = board[r][c]
+            if (pc && pc.p) {
+              const d = document.createElement('div')
+              d.className = 'piece ' + pc.p + (pc.king ? ' king' : '')
+              el.appendChild(d)
+            }
+            if (running && !over && typeof pc === 'object' && pc && pc.p === 'me') {
+              const has = movesFor(r, c).length
+              if (has) el.classList.add('canmove')
+            }
+            if (sel === -1) continue
+            if (sel.r === r && sel.c === c) el.classList.add('sel')
+            else {
+              const mvs = movesFor(sel.r, sel.c)
+              if (mvs.some((m) => m.r === r && m.c === c)) el.classList.add('target')
+            }
+          }
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return wins },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      setup()
+      wins = 0; running = false; over = false; turnAi = false
+      render()
+    })()
+  </script>
+</body>
+</html>

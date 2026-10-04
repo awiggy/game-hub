@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>成语接龙</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:14px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #cur { font-size:30px; font-weight:900; letter-spacing:6px; background:#1a1d29; border:3px solid #2a2e3d;
+      border-radius:12px; padding:18px 0; width:100%; text-align:center; }
+    #cur b { color:var(--yellow); }
+    #opts { width:100%; display:flex; flex-direction:column; gap:10px; }
+    #opts button {
+      font-family:inherit; font-size:18px; font-weight:900; letter-spacing:4px; padding:16px 0;
+      color:#eef1f6; background:#1a1d29; border:2px solid #2a3350; border-radius:10px; cursor:pointer;
+    }
+    #opts button.ok { background:#22b573; border-color:#fff; }
+    #opts button.bad { background:#ff4d5e; border-color:#fff; }
+    #opts button:disabled { cursor:default; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>连击<b id="score">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="cur"></div>
+    <div id="opts"></div>
+  </div>
+  <div id="overlay">
+    <h1>🐉 成语接龙</h1>
+    <p>读成语的最后一个字<br/>从四个选项中选出以它开头的新成语<br/>答对连击加分，答错即结束</p>
+    <button id="ov-btn">开始接龙</button>
+  </div>
+  <script>
+    (() => {
+      // 每项: [成语, 可接的下一个成语（也在词库中）]
+      const DB = [
+        '一心一意', '意气风发', '发扬光大', '大快人心', '心平气和',
+        '和风细雨', '雨过天晴', '晴天霹雳', '历历在目', '目不转睛',
+        '精益求精', '锦上添花', '花好月圆', '圆圆满满', '满载而归',
+        '归心似箭', '箭在弦上', '上善若水', '水到渠成', '成千上万',
+        '万象更新', '心口如一', '一见如故', '故弄玄虚', '虚怀若谷',
+        '谷底求生', '生生不息', '息息相关', '开门见山', '山穷水尽',
+        '尽善尽美', '美中不足', '足智多谋', '谋事在人', '人山人海',
+        '海阔天空', '空前绝后', '后来居上', '上行下效', '笑逐颜开',
+      ]
+      const curEl = document.getElementById('cur')
+      const optsEl = document.getElementById('opts')
+      const scoreEl = document.getElementById('score')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let cur, streak, running, over
+      let best = Number(localStorage.getItem('idiomchain-best') || 0)
+      bestEl.textContent = best
+
+      function start() {
+        streak = 0
+        running = true; over = false
+        scoreEl.textContent = 0
+        overlay.classList.add('hidden')
+        cur = '一心一意'
+        show(cur)
+      }
+
+      function end() {
+        running = false; over = true
+        if (streak > best) { best = streak; bestEl.textContent = best; localStorage.setItem('idiomchain-best', best) }
+        overlay.querySelector('h1').textContent = '🐉 接龙中断'
+        overlay.querySelector('p').innerHTML = '连击 <b style="color:#ffd23f">' + streak + '</b> 次 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function show(idiom) {
+        cur = idiom
+        curEl.innerHTML = idiom.slice(0, 3) + '<b>' + idiom[3] + '</b>'
+        const tail = idiom[3]
+        // 找词库中以 tail 开头的其他成语（正确答案）
+        const cands = DB.filter((w) => w !== idiom && w[0] === tail)
+        // 从词库随机凑 3 个干扰项（不以 tail 开头）
+        const wrongs = DB.filter((w) => w !== idiom && w[0] !== tail)
+          .sort(() => Math.random() - 0.5).slice(0, 3)
+        const opts = [...cands.slice(0, 1), ...wrongs].sort(() => Math.random() - 0.5)
+        if (!opts.some((w) => w[0] === tail)) {
+          // 词库接不上了：宽松处理——显示重开提示
+          curEl.innerHTML = idiom + '<br/><small style="font-size:12px;color:#8b93a7">词库接不上了，重新开始</small>'
+          setTimeout(start, 1200)
+          return
+        }
+        optsEl.innerHTML = ''
+        opts.forEach((w) => {
+          const b = document.createElement('button')
+          b.textContent = w
+          b.onclick = () => pick(w, b, cands[0])
+          optsEl.appendChild(b)
+        })
+      }
+
+      function pick(w, b, correct) {
+        if (!running || over) return
+        // 答对条件：w 以 cur 尾字开头
+        const ok = w[0] === cur[3]
+        if (ok) {
+          b.classList.add('ok')
+          streak++
+          scoreEl.textContent = streak
+          setTimeout(() => show(w), 450)
+        } else {
+          b.classList.add('bad')
+          // 高亮正确答案
+          optsEl.querySelectorAll('button').forEach((x) => {
+            if (x.textContent === correct) x.classList.add('ok')
+          })
+          end()
+        }
+        optsEl.querySelectorAll('button').forEach((x) => (x.disabled = true))
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return streak },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      cur = ''; streak = 0; running = false; over = false
+    })()
+  </script>
+</body>
+</html>

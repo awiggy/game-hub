@@ -93,6 +93,16 @@ const ICONS = {
   numchain: "grid",
   tankbattle: "sword",
   goldminer: "target",
+  airhockey: "ball",
+  idiomchain: "grid",
+  flagquiz: "flag",
+  ricochet: "target",
+  picross: "puzzle",
+  ropeswing: "bolt",
+  bomber: "sword",
+  memorypath: "grid",
+  bingo: "card",
+  checkers: "card",
 };
 export function visualFor(game) {
   return {

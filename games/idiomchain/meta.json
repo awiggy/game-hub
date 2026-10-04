@@ -1,0 +1,17 @@
+{
+  "id": "idiomchain",
+  "name": "成语接龙",
+  "emoji": "🐉",
+  "categories": ["puzzle", "casual"],
+  "tags": ["成语", "接龙", "知识"],
+  "summary": "用上一个成语的尾字接出新成语，四选一答对连击，看你能接多长！",
+  "description": "成语接龙问答。系统给出一个成语，你从四个选项中选出以其尾字开头的新成语，答对连击加分并继续接龙；答错即结束。词库约 40 条常用成语。",
+  "howToPlay": "读顶部成语的最后一个字，从四个选项中选出以它开头的成语。",
+  "entry": "idiomchain/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

@@ -1,5 +1,29 @@
 [
   {
+    "id": "airhockey",
+    "name": "冰球对战",
+    "emoji": "🏒",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "tags": [
+      "体育",
+      "对战",
+      "反应"
+    ],
+    "summary": "桌面上疾驰的冰球：移动球拍攻防兼备，先攻进对方球门 5 次获胜！",
+    "description": "冰球桌对战。你的球拍在下半场跟随指针移动，AI 把守上半场；冰球高速滑行并全桌反弹，撞入对方球门得 1 分。先得 5 分者获胜。",
+    "howToPlay": "移动鼠标 / 手指控制球拍；把冰球打进对方球门。",
+    "entry": "airhockey/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "battleship",
     "name": "海战棋",
     "emoji": "🚢",
@@ -24,6 +48,102 @@
     "plays": 0
   },
   {
+    "id": "bingo",
+    "name": "宾果连",
+    "emoji": "🎲",
+    "categories": [
+      "card",
+      "casual"
+    ],
+    "tags": [
+      "棋牌",
+      "运气",
+      "休闲"
+    ],
+    "summary": "5×5 卡片与 AI 竞速：喊中的数字自动划掉，先连成一线喊 BINGO！",
+    "description": "经典宾果。你的 5×5 卡片随机填数，系统每轮随机报号，双方卡片上的相同数字自动划掉，先在横、竖、斜任一方向连成五线的获胜。赌的就是手气和运气！",
+    "howToPlay": "点「报号」逐轮进行；卡片数字自动划掉，先连成一线喊 BINGO。",
+    "entry": "bingo/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "bomber",
+    "name": "炸弹超人",
+    "emoji": "💣",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "tags": [
+      "街机",
+      "策略",
+      "经典"
+    ],
+    "summary": "放下炸弹炸碎砖墙消灭敌人，小心别被自己的炸弹波及！",
+    "description": "炸弹人玩法。在迷宫中放置炸弹（2 秒后十字方向爆炸），炸碎砖墙并消灭全部敌人过关；自己被爆炸波及扣 1 命（2 命）。敌人被消灭即进入下一关。",
+    "howToPlay": "方向键移动，空格放炸弹；2 秒后十字爆炸，别炸到自己。",
+    "entry": "bomber/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "checkers",
+    "name": "跳棋对战",
+    "emoji": "⚫",
+    "categories": [
+      "card",
+      "strategy"
+    ],
+    "tags": [
+      "棋牌",
+      "对战",
+      "策略"
+    ],
+    "summary": "斜走跳吃：跳过对方棋子即可吃掉它，吃光对方或让对方无路可走获胜！",
+    "description": "经典西洋跳棋（简化版）。你执蓝棋在下方，斜向前进移动；跳过对方棋子即可吃掉它。到达底线升为王（可后退）。吃光对方棋子或让对方无法行动即获胜，AI 会优先吃子。",
+    "howToPlay": "点击棋子选中，再点斜前方目标格；跳过敌子即吃。",
+    "entry": "checkers/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "flagquiz",
+    "name": "国旗问答",
+    "emoji": "🌏",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "知识",
+      "问答",
+      "竞速"
+    ],
+    "summary": "看国旗猜国家：四选一限时挑战，答对越快分越高，十题见分晓！",
+    "description": "看国旗猜国家的知识问答。每题展示一面国旗 emoji，从四个国家名中选出正确答案，答对按剩余时间得分，答错不扣分但浪费 3 秒。共 10 题，累计得分结算。",
+    "howToPlay": "看国旗点选正确的国家名；10 题结算总分。",
+    "entry": "flagquiz/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "goldminer",
     "name": "黄金矿工",
     "emoji": "⛏️",
@@ -40,6 +160,30 @@
     "description": "经典黄金矿工。钩子在矿工手中来回摆动，点击放下抓取：金块价值高但越重拉得越慢，石头不值钱又沉重，钻石又快又值钱。60 秒内达到目标金额即可进入下一关。",
     "howToPlay": "点击放下钩子抓取物品；60 秒内攒够目标金额过关。",
     "entry": "goldminer/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "idiomchain",
+    "name": "成语接龙",
+    "emoji": "🐉",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "成语",
+      "接龙",
+      "知识"
+    ],
+    "summary": "用上一个成语的尾字接出新成语，四选一答对连击，看你能接多长！",
+    "description": "成语接龙问答。系统给出一个成语，你从四个选项中选出以其尾字开头的新成语，答对连击加分并继续接龙；答错即结束。词库约 40 条常用成语。",
+    "howToPlay": "读顶部成语的最后一个字，从四个选项中选出以它开头的成语。",
+    "entry": "idiomchain/index.html",
     "platform": "浏览器",
     "playMode": "online",
     "price": "免费",
@@ -88,6 +232,30 @@
     "description": "物理滚珠迷宫。方向键施加倾斜力让滚珠带惯性滚动（会滑行），穿过迷宫到达绿色终点洞；黑色陷阱洞掉入即重置回起点。三关布局递增。",
     "howToPlay": "方向键 / WASD 施加倾斜力；把滚珠引进绿色终点洞。",
     "entry": "marblemaze/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "memorypath",
+    "name": "记忆路线",
+    "emoji": "🛤️",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "记忆",
+      "路径",
+      "观察"
+    ],
+    "summary": "一条路线在网格上闪过，凭记忆原路走一遍，每关路线更长！",
+    "description": "路径记忆测试。网格上会闪现一条相连的路线（从起点到终点），闪过后凭记忆从起点出发逐步走到终点。走对进入下一关（路线更长），走错扣 1 命（3 命）。",
+    "howToPlay": "记住闪现的路线，从起点开始按顺序走到终点。",
+    "entry": "memorypath/index.html",
     "platform": "浏览器",
     "playMode": "online",
     "price": "免费",
@@ -168,6 +336,30 @@
     "plays": 0
   },
   {
+    "id": "picross",
+    "name": "数织拼图",
+    "emoji": "🟦",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "数织",
+      "逻辑",
+      "像素"
+    ],
+    "summary": "按行列数字提示涂满方格，还原隐藏的像素画，逻辑推理的乐趣！",
+    "description": "数织（Nonogram）玩法。行列旁的数字表示该行/列中连续涂黑格的长度序列，据此推理涂满格子。填满且完全符合提示即过关，共三关 5×5 图案。",
+    "howToPlay": "点击格子涂黑（再点清除）；使每行列的连续黑格序列与数字提示一致。",
+    "entry": "picross/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "pipeconnect",
     "name": "接水管",
     "emoji": "🔧",
@@ -184,6 +376,50 @@
     "description": "经典接水管谜题。点击管道块使其旋转 90°，让水从左侧水源一路连通到右侧出水口。共三关，管道布局越来越复杂，步数越少得分越高。",
     "howToPlay": "点击管道块旋转 90°；让水从源头连通到出水口。",
     "entry": "pipeconnect/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "ricochet",
+    "name": "弹射打靶",
+    "emoji": "🔵",
+    "categories": [
+      "shooter",
+      "puzzle"
+    ],
+    "tags": [
+      "射击",
+      "反弹",
+      "解谜"
+    ],
+    "summary": "炮弹会在墙上反弹：卡准摆动角度发射，利用反弹击中躲在死角的目标！",
+    "description": "弹射解谜射击。炮台角度自动摆动，点击发射；炮弹沿直线飞行并在墙上反弹，最多弹 3 次后消失。击中所有目标即过关，共四关，炮弹数量有限。",
+    "howToPlay": "点击发射（角度自动摆动）；炮弹反弹最多 3 次，击中全部目标过关。",
+    "entry": "ricochet/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "ropeswing",
+    "name": "荡绳飞跃",
+    "emoji": "🕸️",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "tags": [],
+    "summary": "抓着荡绳飞过悬崖：摆到最高点松手飞出去，落在下一个平台继续荡！",
+    "description": "荡绳飞跃平台游戏。角色抓着绳索像钟摆一样摆动，看准摆到最高点时松手飞出，落在前方平台上即可抓住新的绳索继续。 miss 掉下悬崖即结束，平台数就是成绩。",
+    "howToPlay": "点击 / 空格在摆到高处时松手；落在前方平台上继续荡。",
+    "entry": "ropeswing/index.html",
     "platform": "浏览器",
     "playMode": "online",
     "price": "免费",

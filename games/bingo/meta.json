@@ -1,0 +1,17 @@
+{
+  "id": "bingo",
+  "name": "宾果连",
+  "emoji": "🎲",
+  "categories": ["card", "casual"],
+  "tags": ["棋牌", "运气", "休闲"],
+  "summary": "5×5 卡片与 AI 竞速：喊中的数字自动划掉，先连成一线喊 BINGO！",
+  "description": "经典宾果。你的 5×5 卡片随机填数，系统每轮随机报号，双方卡片上的相同数字自动划掉，先在横、竖、斜任一方向连成五线的获胜。赌的就是手气和运气！",
+  "howToPlay": "点「报号」逐轮进行；卡片数字自动划掉，先连成一线喊 BINGO。",
+  "entry": "bingo/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

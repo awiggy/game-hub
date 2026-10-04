@@ -1,0 +1,17 @@
+{
+  "id": "checkers",
+  "name": "跳棋对战",
+  "emoji": "⚫",
+  "categories": ["card", "strategy"],
+  "tags": ["棋牌", "对战", "策略"],
+  "summary": "斜走跳吃：跳过对方棋子即可吃掉它，吃光对方或让对方无路可走获胜！",
+  "description": "经典西洋跳棋（简化版）。你执蓝棋在下方，斜向前进移动；跳过对方棋子即可吃掉它。到达底线升为王（可后退）。吃光对方棋子或让对方无法行动即获胜，AI 会优先吃子。",
+  "howToPlay": "点击棋子选中，再点斜前方目标格；跳过敌子即吃。",
+  "entry": "checkers/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}
