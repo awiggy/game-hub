@@ -208,7 +208,7 @@
         aim = null
       })
       ovBtn.addEventListener('click', start)
-      loop()
+      requestAnimationFrame(loop)
 
       window.__hub = {
         get score() { return Math.max(0, 30 - total) },

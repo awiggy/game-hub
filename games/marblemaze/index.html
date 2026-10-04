@@ -225,7 +225,7 @@
       window.addEventListener('keydown', (e) => { keys[e.code] = true; if (e.code.startsWith('Arrow')) e.preventDefault() })
       window.addEventListener('keyup', (e) => { keys[e.code] = false })
       ovBtn.addEventListener('click', start)
-      loop()
+      requestAnimationFrame(loop)
 
       window.__hub = {
         get score() { return Math.max(100, 1000 - totalFalls * 50) },

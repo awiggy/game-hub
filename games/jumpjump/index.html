@@ -207,18 +207,18 @@
       cv.addEventListener('pointerdown', (e) => { e.preventDefault(); press() })
       window.addEventListener('pointerup', release)
       ovBtn.addEventListener('click', start)
-      loop()
+
+      plats = [{ x: 0, y: 0, size: 60 }]
+      idx = 0; power = 0; charging = false; combo = 0; score = 0
+      guy = { x: 0, y: 0, z: 0, vz: 0, air: false, tx: 0, ty: 0 }
+      jumping = false; running = false; over = false
 
       window.__hub = {
         get score() { return score },
         get over() { return over },
         get started() { return running },
       }
-
-      plats = [{ x: 0, y: 0, size: 60 }]
-      idx = 0; power = 0; charging = false; combo = 0; score = 0
-      guy = { x: 0, y: 0, z: 0, vz: 0, air: false, tx: 0, ty: 0 }
-      jumping = false; running = false; over = false
+      loop()
     })()
   </script>
 </body>

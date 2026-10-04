@@ -71,9 +71,11 @@
         foes = []
         for (let i = 0; i < 3; i++) {
           let r, c
+          let tries = 0
           do {
             r = ROWS - 1 - ((Math.random() * 3) | 0)
             c = COLS - 1 - ((Math.random() * 3) | 0)
+            if (++tries > 60) { walls[r][c] = '.'; break }
           } while (walls[r][c] !== '.')
           foes.push({ r, c, dx: 0, dy: 1 })
         }
@@ -230,7 +232,7 @@
         if (e.code === 'Space') { e.preventDefault(); if (!running && !overlay.classList.contains('hidden')) start(); else placeBomb() }
       })
       ovBtn.addEventListener('click', start)
-      loop()
+      requestAnimationFrame(loop)
 
       window.__hub = {
         get score() { return kills },
@@ -238,9 +240,9 @@
         get started() { return running },
       }
 
-      level = 1; walls = []; bricks = []
-      player = { r: 0, c: 0 }; foes = []; bombs = []; blasts = []
+      level = 1
       lives = 2; kills = 0; running = false; over = false; frame = 0
+      genLevel(1)
     })()
   </script>
 </body>

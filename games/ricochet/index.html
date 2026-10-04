@@ -203,7 +203,7 @@
         }
       })
       ovBtn.addEventListener('click', start)
-      loop()
+      requestAnimationFrame(loop)
 
       window.__hub = {
         get score() { return level * 100 },

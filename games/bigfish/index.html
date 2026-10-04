@@ -161,7 +161,7 @@
       cv.addEventListener('pointermove', (e) => { const p = toGame(e); tx = p.x; ty = p.y })
       cv.addEventListener('touchmove', (e) => { const p = toGame(e.touches[0]); tx = p.x; ty = p.y }, { passive: true })
       ovBtn.addEventListener('click', start)
-      loop()
+      requestAnimationFrame(loop)
 
       window.__hub = {
         get score() { return score },

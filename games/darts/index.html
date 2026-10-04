@@ -157,7 +157,7 @@
       })
       cv.addEventListener('pointerdown', (e) => { e.preventDefault(); tap() })
       ovBtn.addEventListener('click', start)
-      loop()
+      requestAnimationFrame(loop)
 
       window.__hub = {
         get score() { return score },

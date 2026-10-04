@@ -173,7 +173,7 @@
         px.y = Math.max(H / 2 + 30, Math.min(H - PR, (e.touches[0].clientY - r.top) * (H / r.height)))
       }, { passive: true })
       ovBtn.addEventListener('click', start)
-      loop()
+      requestAnimationFrame(loop)
 
       window.__hub = {
         get score() { return ps },

@@ -71,7 +71,7 @@
         }
 
       function start() {
-        visited = new Set()
+        visited = new Map()
         kr = -1; kc = -1; steps = 0; bestRun = 0
         running = true; over = false
         stepsEl.textContent = 0
@@ -150,7 +150,7 @@
         get started() { return running },
       }
 
-      visited = new Set(); kr = -1; kc = -1; steps = 0
+      visited = new Map(); kr = -1; kc = -1; steps = 0
       running = false; over = false
       render()
     })()
