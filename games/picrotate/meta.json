@@ -1,0 +1,17 @@
+{
+  "id": "picrotate",
+  "name": "旋转拼图",
+  "emoji": "🧩",
+  "categories": ["puzzle", "casual"],
+  "tags": ["益智", "旋转", "观察"],
+  "summary": "九宫格拼图全被打乱了方向，点击旋转归位，拼出完整的图案！",
+  "description": "旋转式拼图。3×3 图案被切分并随机旋转，点击任意格子逆时针旋转 90°，全部归位即过关。三关图案复杂度递增，点击次数越少得分越高。",
+  "howToPlay": "点击格子旋转 90°（逆时针）；所有格子方向归位即过关。",
+  "entry": "picrotate/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

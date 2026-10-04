@@ -1,0 +1,17 @@
+{
+  "id": "lightbike",
+  "name": "光轨对决",
+  "emoji": "🏍️",
+  "categories": ["action", "arcade"],
+  "tags": ["对战", "走位", "科幻"],
+  "summary": "摩托身后留下致命光墙：包抄逼死 AI 对手，撞墙或撞轨即输！",
+  "description": "Tron 式光轨摩托对战。你的蓝色摩托与 AI 对手持续行驶并留下光墙，任何一方撞到边界、对方光墙或自己的光墙即输。存活更久或让 AI 先撞即获胜，赢一轮 +1 分。",
+  "howToPlay": "← → 转向（或点击屏幕左右半边）；别撞任何光墙和边界。",
+  "entry": "lightbike/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

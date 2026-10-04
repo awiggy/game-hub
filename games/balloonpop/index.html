@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>戳气球</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>得分<b id="score">0</b></span>
+      <span>命<b id="lives">♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="420" height="600"></canvas>
+    <div id="overlay">
+      <h1>🎈 戳气球</h1>
+      <p>点击升起的气球戳破得分<br/>金气球 ⭐ +3 · 黑炸弹 💣 -1 命<br/>共 3 命，越来越快</p>
+      <button id="ov-btn">开始游戏</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const KINDS = [
+        { e: '🎈', c: '#ff6b7a', v: 1 },
+        { e: '🎈', c: '#5d84ff', v: 1 },
+        { e: '🎈', c: '#22b573', v: 1 },
+        { e: '🎈', c: '#ffd23f', v: 3, star: true },
+        { e: '💣', c: '#333', v: 0, bomb: true },
+      ]
+
+      let balloons, score, lives, running, over, frame, pops
+      let best = Number(localStorage.getItem('balloonpop-best') || 0)
+      bestEl.textContent = best
+
+      function start() {
+        balloons = []; score = 0; lives = 3; frame = 0; pops = []
+        running = true; over = false
+        scoreEl.textContent = 0; livesEl.textContent = '♥♥♥'
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('balloonpop-best', best) }
+        overlay.querySelector('h1').textContent = '💥 游戏结束'
+        overlay.querySelector('p').innerHTML = '得分 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function step() {
+        frame++
+        const rate = Math.max(20, 55 - frame / 40)
+        if (frame % rate === 0) {
+          const roll = Math.random()
+          const k = roll < 0.1 ? KINDS[4] : roll < 0.22 ? KINDS[3] : KINDS[(Math.random() * 3) | 0]
+          balloons.push({
+            x: 30 + Math.random() * (W - 60), y: H + 20,
+            v: 1.1 + frame / 1400, k,
+            sway: Math.random() * Math.PI * 2,
+          })
+        }
+        for (let i = balloons.length - 1; i >= 0; i--) {
+          const b = balloons[i]
+          b.y -= b.v
+          b.sway += 0.03
+          if (b.y < -24) balloons.splice(i, 1)
+        }
+        for (let i = pops.length - 1; i >= 0; i--) {
+          pops[i].t -= 1
+          if (pops[i].t <= 0) pops.splice(i, 1)
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        ctx.font = '30px sans-serif'
+        for (const b of balloons) {
+          const sx = b.x + Math.sin(b.sway) * 8
+          ctx.fillText(b.k.e, sx - 14, b.y)
+          if (!b.k.bomb) {
+            ctx.strokeStyle = b.k.c
+            ctx.lineWidth = 2
+            ctx.beginPath(); ctx.arc(sx, b.y - 9, 13, 0, Math.PI * 2); ctx.stroke()
+          }
+        }
+        ctx.font = '900 16px sans-serif'
+        for (const p of pops) {
+          ctx.fillStyle = '#ffd23f'
+          ctx.fillText('+' + p.v, p.x - 8, p.y - (24 - p.t) * 1.2)
+          ctx.globalAlpha = p.t / 24
+        }
+        ctx.globalAlpha = 1
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      cv.addEventListener('pointerdown', (e) => {
+        e.preventDefault()
+        if (!running || over) return
+        const r = cv.getBoundingClientRect()
+        const x = (e.clientX - r.left) * (W / r.width)
+        const y = (e.clientY - r.top) * (H / r.height)
+        for (let i = balloons.length - 1; i >= 0; i--) {
+          const b = balloons[i]
+          const sx = b.x + Math.sin(b.sway) * 8
+          if (Math.hypot(x - sx, y - (b.y - 9)) < 22) {
+            balloons.splice(i, 1)
+            if (b.k.bomb) {
+              lives--
+              livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+              if (lives <= 0) end()
+            } else {
+              score += b.k.v
+              scoreEl.textContent = score
+              pops.push({ x: sx, y: b.y, v: b.k.v, t: 24 })
+            }
+            return
+          }
+        }
+      })
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      balloons = []; score = 0; lives = 3; frame = 0; pops = []; running = false; over = false
+    })()
+  </script>
+</body>
+</html>

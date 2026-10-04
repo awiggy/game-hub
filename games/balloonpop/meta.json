@@ -1,0 +1,17 @@
+{
+  "id": "balloonpop",
+  "name": "戳气球",
+  "emoji": "🎈",
+  "categories": ["casual", "arcade"],
+  "tags": ["休闲", "反应", "街机"],
+  "summary": "气球从底部升起，手快点破得分，黑色炸弹气球千万别戳！",
+  "description": "气球不断从屏幕底部升起，点击戳破得分：普通气球 +1，金气球 +3。黑色炸弹混在其中，戳到扣 1 命；气球飘出顶部漏掉不扣分但可惜。速度渐快，3 命耗尽结束。",
+  "howToPlay": "点击气球戳破；金气球 +3；黑色炸弹 💣 别碰；共 3 命。",
+  "entry": "balloonpop/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

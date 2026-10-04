@@ -1,0 +1,17 @@
+{
+  "id": "colorfill",
+  "name": "填色拼图",
+  "emoji": "🎨",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["策略", "染色", "思考"],
+  "summary": "从左上角出发逐步染色，把整块画布染成同色，步数有限想清楚再点！",
+  "description": "经典 Flood It 玩法。每次选择一种颜色，与起点相连的区域整体染成该色并向外扩张，把整块画布染成同色即胜利。剩余步数越多得分越高，共三关面积递增。",
+  "howToPlay": "点击底部色块，染开与左上角相连的区域；步数用完前染满全盘。",
+  "entry": "colorfill/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

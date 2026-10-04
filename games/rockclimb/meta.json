@@ -1,0 +1,17 @@
+{
+  "id": "rockclimb",
+  "name": "岩壁攀岩",
+  "emoji": "🧗",
+  "categories": ["sports", "action"],
+  "tags": ["体育", "手速", "节奏"],
+  "summary": "左右手交替快速敲击向上攀爬！手一滑就往下掉，看你能爬多高！",
+  "description": "节奏攀岩游戏。交替按 ← → （或点击左右半屏）让攀岩者步步向上，速度越快爬得越快；随机出现「打滑」警报，需要在 1 秒内连按任意方向稳住，失败会下滑一段。高度就是成绩。",
+  "howToPlay": "交替按 ← → / 左右半屏向上爬；出现打滑警报时快速连按稳住。",
+  "entry": "rockclimb/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

@@ -1,6 +1,6 @@
 # 项目记忆
 
-更新日期：2026-09-28
+更新日期：2026-10-04
 
 ## 产品边界
 
@@ -53,3 +53,14 @@
 - 浏览器抽测通过：打字达人（输入单词消除得分链路完整）、拆弹专家（按手册剪线正确不误爆）；游戏库页面确认 60 款卡片与新版像素杂志风渲染正常。
 - 本轮改动已提交推送 `main` 触发 GitHub Pages 自动部署；货架总数从 50 款增至 60 款。
 - 其余 7 款新游戏（jumpjump/fishing/bowling/trafficrush/rushhour/mathrun/memorymatrix/darts 中未抽测部分）只做了静态检查，深度玩法验收待后续按 `docs/verification-2026-09-21.md` 的方式补做。
+
+## 扩充到 70 款（2026-10-04）
+
+- 用户要求再新增 10 款，货架从 60 款扩至 70 款。
+- 其中 `orbit` 星环躲避是从 `drafts/orbit/` 收编转正的：补齐了 `games/orbit/index.html` 实现，drafts 副本不再使用（保留未删）。
+- 新增 9 款：`colorfill` 填色拼图（flood-fill 限时染色）、`balloonpop` 戳气球（升起气球点击、躲炸弹）、`dicehill` 骰子爬塔（push-your-luck 博弈）、`blinkblink` 火眼金睛（双阵找不同）、`rockclimb` 岩壁攀岩（交替按键+打滑抢按）、`lightbike` 光轨对决（Tron 光墙 AI 对战）、`picrotate` 旋转拼图（点击转正方向）、`highjump` 跳高挑战（力度+起跳时机两段式）、`sushichef` 上菜快手（订单序列点击）。
+- 全部遵守约定：单文件、`__hub` 钩子、键盘+触屏、本地最高分、Canvas 先初始化状态再启动绘制循环。
+- `src/game-visuals.js` ICONS 表增量补充 10 个新游戏图标；未触碰像素杂志风重构样式。
+- `npm run check` 70 款全过；`npm run build` 通过；游戏库确认 70 张卡片渲染正常。
+- 浏览器抽测通过：`orbit`（运行中、小球绕环正常）、`sushichef`（按订单点击食材 done=1）；连同上一轮的 typewriter/bombdefuse，两批新游戏共 4 款完成交互级验证，其余 16 款（两批合计）仍为静态检查，深度验收待补。
+- 提交推送 `main` 触发 Pages 自动部署；部署完成与线上冒烟（门户/typewriter/darts 均 200）已确认。

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>光轨对决</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>胜场<b id="score">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="560" height="560"></canvas>
+    <div id="overlay">
+      <h1>🏍️ 光轨对决</h1>
+      <p>← → 转向 / 点击屏幕左右半边<br/>摩托留下致命光墙<br/>逼 AI 撞墙，撞墙即输，赢一轮 +1</p>
+      <button id="ov-btn">开始对决</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const G = 8 // 网格
+      const COLS = W / G, ROWS = H / G
+      const scoreEl = document.getElementById('score')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let player, ai, trails, dirQueue, score, running, over, roundOver, frame
+      let best = Number(localStorage.getItem('lightbike-best') || 0)
+      bestEl.textContent = best
+
+      function start() {
+        player = { x: 10, y: (ROWS / 2) | 0, dx: 1, dy: 0 }
+        ai = { x: COLS - 10, y: (ROWS / 2) | 0, dx: -1, dy: 0 }
+        trails = new Set()
+        trails.add(player.x + ',' + player.y)
+        trails.add(ai.x + ',' + ai.y)
+        dirQueue = []
+        score = score || 0
+        running = true; over = false; roundOver = false; frame = 0
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('lightbike-best', best) }
+        overlay.querySelector('h1').textContent = '🏁 对决结束'
+        overlay.querySelector('p').innerHTML = '胜场 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function free(x, y) {
+        return x >= 0 && x < COLS && y >= 0 && y < ROWS && !trails.has(x + ',' + y)
+      }
+
+      function aiThink() {
+        // 贪心 + 前瞻：优先直行，避免死路；偶尔转向包抄
+        const head = ai
+        const dirs = [[1,0],[-1,0],[0,1],[0,-1]]
+        // 不许直接掉头
+        const opts = dirs.filter(([dx, dy]) => !(dx === -head.dx && dy === -head.dy))
+        let bestMove = null, bestScore = -1e9
+        for (const [dx, dy] of opts) {
+          const nx = head.x + dx, ny = head.y + dy
+          if (!free(nx, ny)) continue
+          // 前瞻空域
+          let open = 0
+          for (let k = 1; k <= 6; k++) {
+            if (free(nx + dx * k, ny + dy * k)) open++
+            else break
+          }
+          // 朝玩家方向包抄的倾向
+          const toP = (head.x - player.x) * dx + (head.y - player.y) * dy
+          const v = open * 10 + (dx === head.dx && dy === head.dy ? 3 : 0) + toP * 0.3 + Math.random() * 2
+          if (v > bestScore) { bestScore = v; bestMove = [dx, dy] }
+        }
+        if (bestMove) { ai.dx = bestMove[0]; ai.dy = bestMove[1] }
+      }
+
+      function step() {
+        frame++
+        // 玩家转向队列
+        while (dirQueue.length) {
+          const [dx, dy] = dirQueue.shift()
+          if (!(dx === -player.dx && dy === -player.dy)) { player.dx = dx; player.dy = dy; break }
+        }
+        if (frame % 2 === 0) aiThink()
+        // 移动
+        player.x += player.dx
+        player.y += player.dy
+        ai.x += ai.dx
+        ai.y += ai.dy
+        const pDead = !free(player.x, player.y)
+        const aDead = !free(ai.x, ai.y)
+        if (pDead || aDead) {
+          roundOver = true
+          running = false
+          if (aDead && !pDead) {
+            score++
+            scoreEl.textContent = score
+            best = Math.max(best, score)
+            bestEl.textContent = best
+            localStorage.setItem('lightbike-best', best)
+          }
+          if (best > Number(localStorage.getItem('lightbike-best') || 0)) {
+            localStorage.setItem('lightbike-best', best)
+          }
+          overlay.querySelector('h1').textContent = pDead ? (aDead ? '🤝 同归于尽' : '💥 你撞了') : '🏆 AI 撞了！'
+          overlay.querySelector('p').innerHTML = '胜场 <b style="color:#ffd23f">' + score + '</b> · 点下方按钮再来'
+          ovBtn.textContent = '下一轮'
+          overlay.classList.remove('hidden')
+          return
+        }
+        trails.add(player.x + ',' + player.y)
+        trails.add(ai.x + ',' + ai.y)
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        // 网格
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)'
+        for (let x = 0; x <= COLS; x++) { ctx.beginPath(); ctx.moveTo(x * G, 0); ctx.lineTo(x * G, H); ctx.stroke() }
+        for (let y = 0; y <= ROWS; y++) { ctx.beginPath(); ctx.moveTo(0, y * G); ctx.lineTo(W, y * G); ctx.stroke() }
+        // 光墙
+        for (const key of trails) {
+          const [x, y] = key.split(',').map(Number)
+          const isPlayerTrail = true
+          ctx.fillStyle = '#22437a'
+          ctx.fillRect(x * G, y * G, G - 1, G - 1)
+        }
+        // 玩家头
+        ctx.fillStyle = '#5d84ff'
+        ctx.fillRect(player.x * G - 1, player.y * G - 1, G + 2, G + 2)
+        ctx.fillStyle = '#ffd23f'
+        ctx.fillRect(ai.x * G - 1, ai.y * G - 1, G + 2, G + 2)
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      function turn(dx, dy) {
+        if (!running || over || dirQueue.length > 1) return
+        dirQueue.push([dx, dy])
+      }
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') { e.preventDefault(); turn(-1, 0) }
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') { e.preventDefault(); turn(1, 0) }
+        if (e.code === 'ArrowUp' || e.code === 'KeyW') { e.preventDefault(); turn(0, -1) }
+        if (e.code === 'ArrowDown' || e.code === 'KeyS') { e.preventDefault(); turn(0, 1) }
+      })
+      cv.addEventListener('pointerdown', (e) => {
+        const r = cv.getBoundingClientRect()
+        const left = (e.clientX - r.left) < r.width / 2
+        // 简化：左右半屏表示相对当前方向的左右转
+        const [dx, dy] = [player.dx, player.dy]
+        if (left) turn(dy, -dx)
+        else turn(-dy, dx)
+      })
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      player = { x: 10, y: 35, dx: 1, dy: 0 }
+      ai = { x: 60, y: 35, dx: -1, dy: 0 }
+      trails = new Set(); dirQueue = []
+      score = 0; running = false; over = false; frame = 0
+    })()
+  </script>
+</body>
+</html>

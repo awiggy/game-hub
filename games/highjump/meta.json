@@ -1,0 +1,17 @@
+{
+  "id": "highjump",
+  "name": "跳高挑战",
+  "emoji": "🦘",
+  "categories": ["sports", "arcade"],
+  "tags": ["体育", "时机", "蓄力"],
+  "summary": "蓄力起跳翻越横杆：力度和时机都要卡准，杆子一次比一次高！",
+  "description": "两段式跳高：先卡住摆动的助跑力度，再在恰当位置按下起跳。跳过横杆进入下一轮，杆高逐轮提升；碰到横杆扣 1 次机会，3 次失败结束。最终高度就是成绩。",
+  "howToPlay": "点一次锁定力度 → 待运动员到起跳线时再点一次起跳。",
+  "entry": "highjump/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

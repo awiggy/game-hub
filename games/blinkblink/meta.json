@@ -1,0 +1,17 @@
+{
+  "id": "blinkblink",
+  "name": "火眼金睛",
+  "emoji": "👀",
+  "categories": ["puzzle", "casual"],
+  "tags": ["观察", "找不同", "休闲"],
+  "summary": "两块 emoji 阵里藏着一个不一样的，限时找出来，越找越难！",
+  "description": "找不同游戏。左右两块 4×4 emoji 阵几乎一模一样，只有一格不同。限时找出并点击异样格，答对 +100 加时，答错扣 1 命（3 命）。网格逐渐变大，考验眼力。",
+  "howToPlay": "点击左阵中与右阵不同的那一格；答错扣命。",
+  "entry": "blinkblink/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

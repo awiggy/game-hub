@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>旋转拼图</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { position:relative; display:flex; flex-direction:column; gap:12px; align-items:center; }
+    #hud { width:min(88vw,380px); display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { width:min(88vw,380px); aspect-ratio:1; display:grid; grid-template-columns:repeat(3,1fr);
+      grid-template-rows:repeat(3,1fr); gap:6px; background:#1a1d29; border:3px solid #2a2e3d; border-radius:12px; padding:8px; }
+    .tile {
+      display:grid; place-items:center; font-size:min(11vw,52px); border-radius:10px; cursor:pointer;
+      background:#14161f; border:2px solid #2a3350; transition:transform .15s; user-select:none;
+    }
+    .tile.done { border-color:#22b573; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>关卡<b id="lv">1/3</b></span>
+      <span>旋转<b id="moves">0</b>次</span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <div id="board"></div>
+  </div>
+  <div id="overlay">
+    <h1>🧩 旋转拼图</h1>
+    <p>点击格子逆时针旋转 90°<br/>所有格子的箭头都指向正上即过关<br/>三关递增，点击越少分越高</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+  <script>
+    (() => {
+      // 每关一个 3x3 图案（中心对称符号，旋转后方向可辨）
+      const PATTERNS = [
+        [['⬆','⬆','⬆'],['⭐','⭐','⭐'],['⬆','⬆','⬆']],
+        [['🔺','⬆','🔺'],['⬆','⭐','⬆'],['🔻','⬆','🔻']],
+        [['➡','⬆','⬅'],['⬆','🌟','⬆'],['⬇','⬆','⬆']],
+      ]
+      const boardEl = document.getElementById('board')
+      const lvEl = document.getElementById('lv')
+      const movesEl = document.getElementById('moves')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let level, grid, moves, totalMoves, running, over
+      let best = Number(localStorage.getItem('picrotate-best') || 0)
+      if (best) bestEl.textContent = best
+
+      function load(nv) {
+        level = nv
+        const pat = PATTERNS[nv]
+        grid = pat.map((row) => row.map((ch) => ({ ch, rot: 0 })))
+        // 随机旋转（保证至少一半格子被打乱）
+        for (const row of grid)
+          for (const t of row)
+            if (Math.random() < 0.8) t.rot = ((Math.random() * 4) | 0) * 90
+        if (solved()) load(nv)
+        moves = 0
+        lvEl.textContent = (nv + 1) + '/3'
+        movesEl.textContent = 0
+        render()
+      }
+
+      function start() {
+        totalMoves = 0
+        running = true; over = false
+        overlay.classList.add('hidden')
+        load(0)
+      }
+
+      function solved() {
+        return grid.every((row) => row.every((t) => t.rot % 360 === 0))
+      }
+
+      function win() {
+        if (level === PATTERNS.length - 1) {
+          running = false; over = true
+          const score = Math.max(100, 1000 - totalMoves * 5)
+          if (!best || score > best) { best = score; bestEl.textContent = best; localStorage.setItem('picrotate-best', best) }
+          overlay.querySelector('h1').textContent = '🧩 拼图完成'
+          overlay.querySelector('p').innerHTML = '总旋转 ' + totalMoves + ' 次 · 得分 <b style="color:#ffd23f">' + score + '</b>'
+          ovBtn.textContent = '再来一局'
+          overlay.classList.remove('hidden')
+        } else {
+          totalMoves += moves
+          msg('✓ 过关！')
+          setTimeout(() => load(level + 1), 700)
+        }
+      }
+
+      function msg(t) {
+        lvEl.textContent = (level + 1) + '/3 · ' + t
+        setTimeout(() => { lvEl.textContent = (level + 1) + '/3' }, 650)
+      }
+
+      function click(i) {
+        if (!running || over) return
+        const r = (i / 3) | 0, c = i % 3
+        const t = grid[r][c]
+        t.rot = (t.rot + 270) % 360 // 逆时针 90
+        moves++
+        totalMoves++
+        movesEl.textContent = moves
+        render()
+        if (solved()) win()
+      }
+
+      function render() {
+        boardEl.innerHTML = ''
+        grid.forEach((row, r) =>
+          row.forEach((t, c) => {
+            const el = document.createElement('div')
+            el.className = 'tile' + (t.rot % 360 === 0 ? ' done' : '')
+            el.textContent = t.ch
+            el.style.transform = 'rotate(' + t.rot + 'deg)'
+            el.onclick = () => click(r * 3 + c)
+            boardEl.appendChild(el)
+          }))
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return Math.max(100, 1000 - totalMoves * 5) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      grid = PATTERNS[0].map((row) => row.map((ch) => ({ ch, rot: 0 })))
+      level = 0; moves = 0; totalMoves = 0; running = false; over = false
+      render()
+    })()
+  </script>
+</body>
+</html>

@@ -53,6 +53,16 @@ const ICONS = {
   mathrun: "grid",
   memorymatrix: "grid",
   darts: "target",
+  orbit: "rocket",
+  colorfill: "puzzle",
+  balloonpop: "heart",
+  dicehill: "game",
+  blinkblink: "grid",
+  rockclimb: "flag",
+  lightbike: "bolt",
+  picrotate: "puzzle",
+  highjump: "flag",
+  sushichef: "house",
 };
 export function visualFor(game) {
   return {

@@ -1,5 +1,53 @@
 [
   {
+    "id": "balloonpop",
+    "name": "戳气球",
+    "emoji": "🎈",
+    "categories": [
+      "casual",
+      "arcade"
+    ],
+    "tags": [
+      "休闲",
+      "反应",
+      "街机"
+    ],
+    "summary": "气球从底部升起，手快点破得分，黑色炸弹气球千万别戳！",
+    "description": "气球不断从屏幕底部升起，点击戳破得分：普通气球 +1，金气球 +3。黑色炸弹混在其中，戳到扣 1 命；气球飘出顶部漏掉不扣分但可惜。速度渐快，3 命耗尽结束。",
+    "howToPlay": "点击气球戳破；金气球 +3；黑色炸弹 💣 别碰；共 3 命。",
+    "entry": "balloonpop/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "blinkblink",
+    "name": "火眼金睛",
+    "emoji": "👀",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "观察",
+      "找不同",
+      "休闲"
+    ],
+    "summary": "两块 emoji 阵里藏着一个不一样的，限时找出来，越找越难！",
+    "description": "找不同游戏。左右两块 4×4 emoji 阵几乎一模一样，只有一格不同。限时找出并点击异样格，答对 +100 加时，答错扣 1 命（3 命）。网格逐渐变大，考验眼力。",
+    "howToPlay": "点击左阵中与右阵不同的那一格；答错扣命。",
+    "entry": "blinkblink/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "bombdefuse",
     "name": "拆弹专家",
     "emoji": "💣",
@@ -48,6 +96,30 @@
     "plays": 0
   },
   {
+    "id": "colorfill",
+    "name": "填色拼图",
+    "emoji": "🎨",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "策略",
+      "染色",
+      "思考"
+    ],
+    "summary": "从左上角出发逐步染色，把整块画布染成同色，步数有限想清楚再点！",
+    "description": "经典 Flood It 玩法。每次选择一种颜色，与起点相连的区域整体染成该色并向外扩张，把整块画布染成同色即胜利。剩余步数越多得分越高，共三关面积递增。",
+    "howToPlay": "点击底部色块，染开与左上角相连的区域；步数用完前染满全盘。",
+    "entry": "colorfill/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "darts",
     "name": "飞镖高手",
     "emoji": "🎯",
@@ -64,6 +136,30 @@
     "description": "两段式瞄准飞镖。第一步锁定垂直位置（光标上下移动），第二步锁定水平位置（左右摆动），按下投出。按落点环数计分（5~50 分，中心红心 50），8 支飞镖结算总分。",
     "howToPlay": "点一次锁定竖直位置 → 再点一次锁定水平位置投出；共 8 镖。",
     "entry": "darts/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "dicehill",
+    "name": "骰子爬塔",
+    "emoji": "🎲",
+    "categories": [
+      "card",
+      "casual"
+    ],
+    "tags": [
+      "棋牌",
+      "博弈",
+      "运气"
+    ],
+    "summary": "掷骰子向上爬：收手保分还是继续冲？摔下来可什么都拿不到！",
+    "description": "经典 push-your-luck 博弈。掷出 1-6 决定本层步数，累计层数越高奖励越大；但掷出 1 会摔落清空本次进度。随时可以「收手」把层数兑换成分数，10 次掷骰机会用完即结束。",
+    "howToPlay": "点「掷骰子」向上爬，点「收手」兑换成分数；掷出 1 摔落清零本层。",
+    "entry": "dicehill/index.html",
     "platform": "浏览器",
     "playMode": "online",
     "price": "免费",
@@ -96,6 +192,30 @@
     "plays": 0
   },
   {
+    "id": "highjump",
+    "name": "跳高挑战",
+    "emoji": "🦘",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "tags": [
+      "体育",
+      "时机",
+      "蓄力"
+    ],
+    "summary": "蓄力起跳翻越横杆：力度和时机都要卡准，杆子一次比一次高！",
+    "description": "两段式跳高：先卡住摆动的助跑力度，再在恰当位置按下起跳。跳过横杆进入下一轮，杆高逐轮提升；碰到横杆扣 1 次机会，3 次失败结束。最终高度就是成绩。",
+    "howToPlay": "点一次锁定力度 → 待运动员到起跳线时再点一次起跳。",
+    "entry": "highjump/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "jumpjump",
     "name": "跳一跳",
     "emoji": "🐸",
@@ -112,6 +232,30 @@
     "description": "经典蓄力跳跳玩法。按住屏幕或空格蓄力（小人对压力越蹲越低），松手向前跳出。落在平台边缘 +1 分，落在正中心 +2 分并连击翻倍加成，没跳上平台即结束。",
     "howToPlay": "按住空格 / 屏幕蓄力，松手起跳；落在平台中心有连击加成。",
     "entry": "jumpjump/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "lightbike",
+    "name": "光轨对决",
+    "emoji": "🏍️",
+    "categories": [
+      "action",
+      "arcade"
+    ],
+    "tags": [
+      "对战",
+      "走位",
+      "科幻"
+    ],
+    "summary": "摩托身后留下致命光墙：包抄逼死 AI 对手，撞墙或撞轨即输！",
+    "description": "Tron 式光轨摩托对战。你的蓝色摩托与 AI 对手持续行驶并留下光墙，任何一方撞到边界、对方光墙或自己的光墙即输。存活更久或让 AI 先撞即获胜，赢一轮 +1 分。",
+    "howToPlay": "← → 转向（或点击屏幕左右半边）；别撞任何光墙和边界。",
+    "entry": "lightbike/index.html",
     "platform": "浏览器",
     "playMode": "online",
     "price": "免费",
@@ -168,6 +312,78 @@
     "plays": 0
   },
   {
+    "id": "orbit",
+    "name": "星环躲避",
+    "emoji": "🪐",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "tags": [
+      "街机",
+      "反应",
+      "走位"
+    ],
+    "summary": "小球绕环飞行，点击随时反向，躲开四面八方袭来的流星！",
+    "description": "小球沿中心圆轨道匀速转动，点击随时反向调整走位。流星从画布四边径直飞向中心，撞上即结束。流星越来越快越来越密，数一数你躲过了多少颗。",
+    "howToPlay": "点击 / 空格让小球反向；流星飞过中心线 +1 分。",
+    "entry": "orbit/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "picrotate",
+    "name": "旋转拼图",
+    "emoji": "🧩",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "益智",
+      "旋转",
+      "观察"
+    ],
+    "summary": "九宫格拼图全被打乱了方向，点击旋转归位，拼出完整的图案！",
+    "description": "旋转式拼图。3×3 图案被切分并随机旋转，点击任意格子逆时针旋转 90°，全部归位即过关。三关图案复杂度递增，点击次数越少得分越高。",
+    "howToPlay": "点击格子旋转 90°（逆时针）；所有格子方向归位即过关。",
+    "entry": "picrotate/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "rockclimb",
+    "name": "岩壁攀岩",
+    "emoji": "🧗",
+    "categories": [
+      "sports",
+      "action"
+    ],
+    "tags": [
+      "体育",
+      "手速",
+      "节奏"
+    ],
+    "summary": "左右手交替快速敲击向上攀爬！手一滑就往下掉，看你能爬多高！",
+    "description": "节奏攀岩游戏。交替按 ← → （或点击左右半屏）让攀岩者步步向上，速度越快爬得越快；随机出现「打滑」警报，需要在 1 秒内连按任意方向稳住，失败会下滑一段。高度就是成绩。",
+    "howToPlay": "交替按 ← → / 左右半屏向上爬；出现打滑警报时快速连按稳住。",
+    "entry": "rockclimb/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "rushhour",
     "name": "汽车华容道",
     "emoji": "🚙",
@@ -184,6 +400,30 @@
     "description": "经典 Rush Hour 玩法。6×6 停车场里横竖停满车辆，车辆只能沿自身方向前后滑动。点击选中一辆车，用方向按钮移动，帮助红色小车到达右侧出口。共 4 关。",
     "howToPlay": "点击选车 → 方向按钮滑动（车辆只能沿自身方向移动）；红色车到右缘出口过关。",
     "entry": "rushhour/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "sushichef",
+    "name": "上菜快手",
+    "emoji": "🍣",
+    "categories": [
+      "simulation",
+      "action"
+    ],
+    "tags": [
+      "模拟",
+      "节奏",
+      "经营"
+    ],
+    "summary": "照订单依次点击食材出寿司，手忙脚乱的时刻到了，出一份赚一份！",
+    "description": "寿司店高峰期。左侧出现订单（2-4 个食材的序列），按顺序点击右侧食材台出餐：顺序错或超时都算失败单。出对 +10 加时，失败 -1 命，3 命结束。",
+    "howToPlay": "按订单从左到右依次点击食材；错了扣命，对了加分加时。",
+    "entry": "sushichef/index.html",
     "platform": "浏览器",
     "playMode": "online",
     "price": "免费",

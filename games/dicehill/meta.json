@@ -1,0 +1,17 @@
+{
+  "id": "dicehill",
+  "name": "骰子爬塔",
+  "emoji": "🎲",
+  "categories": ["card", "casual"],
+  "tags": ["棋牌", "博弈", "运气"],
+  "summary": "掷骰子向上爬：收手保分还是继续冲？摔下来可什么都拿不到！",
+  "description": "经典 push-your-luck 博弈。掷出 1-6 决定本层步数，累计层数越高奖励越大；但掷出 1 会摔落清空本次进度。随时可以「收手」把层数兑换成分数，10 次掷骰机会用完即结束。",
+  "howToPlay": "点「掷骰子」向上爬，点「收手」兑换成分数；掷出 1 摔落清零本层。",
+  "entry": "dicehill/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

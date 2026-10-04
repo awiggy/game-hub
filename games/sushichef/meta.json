@@ -1,0 +1,17 @@
+{
+  "id": "sushichef",
+  "name": "上菜快手",
+  "emoji": "🍣",
+  "categories": ["simulation", "action"],
+  "tags": ["模拟", "节奏", "经营"],
+  "summary": "照订单依次点击食材出寿司，手忙脚乱的时刻到了，出一份赚一份！",
+  "description": "寿司店高峰期。左侧出现订单（2-4 个食材的序列），按顺序点击右侧食材台出餐：顺序错或超时都算失败单。出对 +10 加时，失败 -1 命，3 命结束。",
+  "howToPlay": "按订单从左到右依次点击食材；错了扣命，对了加分加时。",
+  "entry": "sushichef/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}
