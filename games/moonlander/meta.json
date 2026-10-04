@@ -1,0 +1,17 @@
+{
+  "id": "moonlander",
+  "name": "登月着陆",
+  "emoji": "🌕",
+  "categories": ["simulation", "action"],
+  "tags": ["模拟", "物理", "精准"],
+  "summary": "反推引擎点一点，稳稳降落在月面平台：燃料有限，着陆越稳分越高！",
+  "description": "经典登月着陆物理游戏。按住喷气反推克服月面重力，控制下降速度与水平漂移，安全降落在发光平台上。着陆越平稳、剩余燃料越多分越高，燃料耗尽只能听天由命。",
+  "howToPlay": "按住空格 / 屏幕点火反推；轻柔落在发光平台内。",
+  "entry": "moonlander/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

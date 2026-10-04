@@ -1,6 +1,6 @@
 # 项目记忆
 
-更新日期：2026-10-04
+更新日期：2026-10-04（第二批）
 
 ## 产品边界
 
@@ -64,3 +64,14 @@
 - `npm run check` 70 款全过；`npm run build` 通过；游戏库确认 70 张卡片渲染正常。
 - 浏览器抽测通过：`orbit`（运行中、小球绕环正常）、`sushichef`（按订单点击食材 done=1）；连同上一轮的 typewriter/bombdefuse，两批新游戏共 4 款完成交互级验证，其余 16 款（两批合计）仍为静态检查，深度验收待补。
 - 提交推送 `main` 触发 Pages 自动部署；部署完成与线上冒烟（门户/typewriter/darts 均 200）已确认。
+
+## 扩充到 80 款（2026-10-04 第二批）
+
+- 用户要求再新增 10 款，货架从 70 款扩至 80 款。
+- 新增：`hangman` 猜单词（字母试错+提示+吊小人）、`connect4` 四子连线（制胜点/封堵 AI）、`ballsort` 彩球分装（逆向洗牌生成可解题）、`lianliankan` 连连看（≤2 转弯连通判定+死局重排）、`bigfish` 大鱼吃小鱼（体型成长食物链）、`rhymtap` 节奏拍点（收缩圈时机判定）、`schulte` 舒尔特方格（1-25 顺序点击计时）、`tightrope` 走钢丝（重心漂移平衡）、`pyramid` 金字塔纸牌（凑 13 消除）、`moonlander` 登月着陆（反推引擎物理着陆）。
+- 全部遵守约定：单文件、`__hub` 钩子、键盘+触屏、本地最高分、Canvas 先初始化状态再启动绘制循环。
+- `connect4` 曾有一处 `streak` 重复声明语法错误，`npm run check` 拦截后已修复——静态质检在构建前置中发挥了预期作用。
+- `src/game-visuals.js` ICONS 表增量补充 10 个图标。
+- `npm run check` 80 款全过；`npm run build` 通过；游戏库确认 80 张卡片。
+- 浏览器抽测通过：`hangman`（5 次字母点击全部正确落点并判定，本局单词 music 恰好全 miss 属正常随机）、`ballsort`（同色顶管合法倒装 moves=1）；`bigfish/rhymtap/schulte/tightrope/pyramid/moonlander` 为静态检查，深度玩法验收待补。
+- 提交推送 `main` 触发 Pages 自动部署，线上冒烟待验证。

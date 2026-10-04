@@ -1,0 +1,17 @@
+{
+  "id": "ballsort",
+  "name": "彩球分装",
+  "emoji": "🧪",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["益智", "排序", "思考"],
+  "summary": "把混在一起的彩球分门别类：每管同色即通关，规则简单上手极难放下！",
+  "description": "经典 Ball Sort 谜题。若干试管装有混色彩球，点击一根试管拿起顶部球，再点击另一根完成倒装（目标管为空或顶部同色且有空间）。每管同色即过关，共三关。",
+  "howToPlay": "点试管拿起顶球，再点目标试管倒装；每管同色即过关。",
+  "entry": "ballsort/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

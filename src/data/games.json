@@ -1,5 +1,245 @@
 [
   {
+    "id": "ballsort",
+    "name": "彩球分装",
+    "emoji": "🧪",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "益智",
+      "排序",
+      "思考"
+    ],
+    "summary": "把混在一起的彩球分门别类：每管同色即通关，规则简单上手极难放下！",
+    "description": "经典 Ball Sort 谜题。若干试管装有混色彩球，点击一根试管拿起顶部球，再点击另一根完成倒装（目标管为空或顶部同色且有空间）。每管同色即过关，共三关。",
+    "howToPlay": "点试管拿起顶球，再点目标试管倒装；每管同色即过关。",
+    "entry": "ballsort/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "bigfish",
+    "name": "大鱼吃小鱼",
+    "emoji": "🐠",
+    "categories": [
+      "arcade",
+      "casual"
+    ],
+    "tags": [
+      "街机",
+      "成长",
+      "海洋"
+    ],
+    "summary": "海底食物链法则：吃掉比你小的鱼慢慢长大，比你还大的鱼要躲远点！",
+    "description": "海底成长游戏。控制你的小鱼跟随指针游动，吃掉比自己小的鱼得分并慢慢长大；体型比你大的鱼碰到就扣 1 命（3 命）。越吃越大，能吃的范围也越来越广。",
+    "howToPlay": "移动鼠标 / 手指引导小鱼；吃小鱼长大，躲开大鱼。",
+    "entry": "bigfish/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "connect4",
+    "name": "四子连线",
+    "emoji": "🔴",
+    "categories": [
+      "card",
+      "strategy"
+    ],
+    "tags": [
+      "棋牌",
+      "对战",
+      "策略"
+    ],
+    "summary": "往竖井里投子，横竖斜先连成四子者胜，和 AI 斗智斗勇！",
+    "description": "经典 Connect Four。点击列把棋子投入竖井（落在最底空位），先在横、竖、斜任意方向连成四子者获胜。AI 会抓住制胜点、封堵你的连势，也会抢占中心。",
+    "howToPlay": "点击某一列投子；先连成四子者胜。",
+    "entry": "connect4/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "hangman",
+    "name": "猜单词",
+    "emoji": "🔤",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "解谜",
+      "字母",
+      "词汇"
+    ],
+    "summary": "看提示猜英文单词：一个字母一个字母试，6 次机会别吊死小人！",
+    "description": "经典猜单词（吊小人）游戏。根据中文提示在字母键盘中试字母，猜对填入对应位置，猜错扣一次机会（共 6 次）。解开一个单词自动进入下一个，解开的单词数就是成绩。",
+    "howToPlay": "点击字母键或敲键盘；全部字母猜出即解开，6 次猜错结束。",
+    "entry": "hangman/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "lianliankan",
+    "name": "连连看",
+    "emoji": "🔗",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "益智",
+      "配对",
+      "经典"
+    ],
+    "summary": "点两个相同图案，只要连线转弯不超过两次就消除，清空棋盘获胜！",
+    "description": "经典连连看。点击两个相同图案的方块，若它们可以用不超过两次转弯的路径连通（路径不穿过其他方块）即消除。全部消除获胜，卡住可重排，限时挑战。",
+    "howToPlay": "点击两个相同图案；路径最多转两个弯即消除。",
+    "entry": "lianliankan/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "moonlander",
+    "name": "登月着陆",
+    "emoji": "🌕",
+    "categories": [
+      "simulation",
+      "action"
+    ],
+    "tags": [
+      "模拟",
+      "物理",
+      "精准"
+    ],
+    "summary": "反推引擎点一点，稳稳降落在月面平台：燃料有限，着陆越稳分越高！",
+    "description": "经典登月着陆物理游戏。按住喷气反推克服月面重力，控制下降速度与水平漂移，安全降落在发光平台上。着陆越平稳、剩余燃料越多分越高，燃料耗尽只能听天由命。",
+    "howToPlay": "按住空格 / 屏幕点火反推；轻柔落在发光平台内。",
+    "entry": "moonlander/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "pyramid",
+    "name": "金字塔纸牌",
+    "emoji": "🔺",
+    "categories": [
+      "card",
+      "casual"
+    ],
+    "tags": [
+      "棋牌",
+      "纸牌",
+      "配对"
+    ],
+    "summary": "金字塔里找两两相加为 13 的牌对，把整座塔拆干净！",
+    "description": "经典 Pyramid Solitaire。点击金字塔上两张和为 13 的牌（K 单独可消）即可移除；被压住的牌要先拆上面的。配一张牌堆辅助，全部清空即胜，无路可走即败。",
+    "howToPlay": "点击两张和为 13 的牌消除（K=13 单独消除）；牌堆翻张辅助。",
+    "entry": "pyramid/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "rhymtap",
+    "name": "节奏拍点",
+    "emoji": "⭕",
+    "categories": [
+      "arcade",
+      "casual"
+    ],
+    "tags": [
+      "节奏",
+      "时机",
+      "音乐"
+    ],
+    "summary": "白圈收缩到与黄圈重合的一瞬间拍下去，越准分越高，15 拍定音准！",
+    "description": "节奏时机判定游戏。屏幕随机位置出现目标：外圈从大到小收缩，在内圈与目标圈重合的瞬间点击。偏差越小得分越高（PERFECT / GOOD / MISS），共 15 拍结算。",
+    "howToPlay": "外圈收缩到与内圈重合时点击目标；共 15 拍。",
+    "entry": "rhymtap/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "schulte",
+    "name": "舒尔特方格",
+    "emoji": "🔢",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "专注",
+      "眼力",
+      "竞技"
+    ],
+    "summary": "把乱序的 1-25 按顺序快速点完，注意力测试的金标准，比拼秒速！",
+    "description": "经典舒尔特方格注意力测试。5×5 网格随机打乱 1-25，从 1 开始按顺序点击直到 25，用时越短越强。耗时换算得分，最快纪录本地保存。",
+    "howToPlay": "从 1 开始按顺序点击到 25；点错不扣但浪费时间，越快越好。",
+    "entry": "schulte/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "tightrope",
+    "name": "走钢丝",
+    "emoji": "🎪",
+    "categories": [
+      "sports",
+      "action"
+    ],
+    "tags": [
+      "体育",
+      "平衡",
+      "紧张"
+    ],
+    "summary": "身体不断乱晃，左右点按纠正重心，在钢丝上多待一秒都是勇气！",
+    "description": "高空走钢丝平衡挑战。重心会随机漂移且越来越颠，点击左右（或按 ← →）施加反方向力保持直立；倾斜超出边界即坠下。生存时长就是成绩，走得越远加成越多。",
+    "howToPlay": "点左/右（或 ← →）纠正倾斜；指针离开立柱即坠落。",
+    "entry": "tightrope/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "balloonpop",
     "name": "戳气球",
     "emoji": "🎈",

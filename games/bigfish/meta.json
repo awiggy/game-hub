@@ -1,0 +1,17 @@
+{
+  "id": "bigfish",
+  "name": "大鱼吃小鱼",
+  "emoji": "🐠",
+  "categories": ["arcade", "casual"],
+  "tags": ["街机", "成长", "海洋"],
+  "summary": "海底食物链法则：吃掉比你小的鱼慢慢长大，比你还大的鱼要躲远点！",
+  "description": "海底成长游戏。控制你的小鱼跟随指针游动，吃掉比自己小的鱼得分并慢慢长大；体型比你大的鱼碰到就扣 1 命（3 命）。越吃越大，能吃的范围也越来越广。",
+  "howToPlay": "移动鼠标 / 手指引导小鱼；吃小鱼长大，躲开大鱼。",
+  "entry": "bigfish/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

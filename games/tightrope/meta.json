@@ -1,0 +1,17 @@
+{
+  "id": "tightrope",
+  "name": "走钢丝",
+  "emoji": "🎪",
+  "categories": ["sports", "action"],
+  "tags": ["体育", "平衡", "紧张"],
+  "summary": "身体不断乱晃，左右点按纠正重心，在钢丝上多待一秒都是勇气！",
+  "description": "高空走钢丝平衡挑战。重心会随机漂移且越来越颠，点击左右（或按 ← →）施加反方向力保持直立；倾斜超出边界即坠下。生存时长就是成绩，走得越远加成越多。",
+  "howToPlay": "点左/右（或 ← →）纠正倾斜；指针离开立柱即坠落。",
+  "entry": "tightrope/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

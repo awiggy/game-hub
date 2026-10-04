@@ -1,0 +1,17 @@
+{
+  "id": "pyramid",
+  "name": "金字塔纸牌",
+  "emoji": "🔺",
+  "categories": ["card", "casual"],
+  "tags": ["棋牌", "纸牌", "配对"],
+  "summary": "金字塔里找两两相加为 13 的牌对，把整座塔拆干净！",
+  "description": "经典 Pyramid Solitaire。点击金字塔上两张和为 13 的牌（K 单独可消）即可移除；被压住的牌要先拆上面的。配一张牌堆辅助，全部清空即胜，无路可走即败。",
+  "howToPlay": "点击两张和为 13 的牌消除（K=13 单独消除）；牌堆翻张辅助。",
+  "entry": "pyramid/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

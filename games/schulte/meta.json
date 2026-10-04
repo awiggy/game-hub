@@ -1,0 +1,17 @@
+{
+  "id": "schulte",
+  "name": "舒尔特方格",
+  "emoji": "🔢",
+  "categories": ["puzzle", "casual"],
+  "tags": ["专注", "眼力", "竞技"],
+  "summary": "把乱序的 1-25 按顺序快速点完，注意力测试的金标准，比拼秒速！",
+  "description": "经典舒尔特方格注意力测试。5×5 网格随机打乱 1-25，从 1 开始按顺序点击直到 25，用时越短越强。耗时换算得分，最快纪录本地保存。",
+  "howToPlay": "从 1 开始按顺序点击到 25；点错不扣但浪费时间，越快越好。",
+  "entry": "schulte/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

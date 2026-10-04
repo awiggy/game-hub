@@ -63,6 +63,16 @@ const ICONS = {
   picrotate: "puzzle",
   highjump: "flag",
   sushichef: "house",
+  hangman: "grid",
+  connect4: "game",
+  ballsort: "puzzle",
+  lianliankan: "puzzle",
+  bigfish: "heart",
+  rhymtap: "music",
+  schulte: "grid",
+  tightrope: "flag",
+  pyramid: "card",
+  moonlander: "rocket",
 };
 export function visualFor(game) {
   return {

@@ -1,0 +1,17 @@
+{
+  "id": "lianliankan",
+  "name": "连连看",
+  "emoji": "🔗",
+  "categories": ["puzzle", "casual"],
+  "tags": ["益智", "配对", "经典"],
+  "summary": "点两个相同图案，只要连线转弯不超过两次就消除，清空棋盘获胜！",
+  "description": "经典连连看。点击两个相同图案的方块，若它们可以用不超过两次转弯的路径连通（路径不穿过其他方块）即消除。全部消除获胜，卡住可重排，限时挑战。",
+  "howToPlay": "点击两个相同图案；路径最多转两个弯即消除。",
+  "entry": "lianliankan/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

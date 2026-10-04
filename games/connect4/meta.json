@@ -1,0 +1,17 @@
+{
+  "id": "connect4",
+  "name": "四子连线",
+  "emoji": "🔴",
+  "categories": ["card", "strategy"],
+  "tags": ["棋牌", "对战", "策略"],
+  "summary": "往竖井里投子，横竖斜先连成四子者胜，和 AI 斗智斗勇！",
+  "description": "经典 Connect Four。点击列把棋子投入竖井（落在最底空位），先在横、竖、斜任意方向连成四子者获胜。AI 会抓住制胜点、封堵你的连势，也会抢占中心。",
+  "howToPlay": "点击某一列投子；先连成四子者胜。",
+  "entry": "connect4/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

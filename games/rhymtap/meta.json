@@ -1,0 +1,17 @@
+{
+  "id": "rhymtap",
+  "name": "节奏拍点",
+  "emoji": "⭕",
+  "categories": ["arcade", "casual"],
+  "tags": ["节奏", "时机", "音乐"],
+  "summary": "白圈收缩到与黄圈重合的一瞬间拍下去，越准分越高，15 拍定音准！",
+  "description": "节奏时机判定游戏。屏幕随机位置出现目标：外圈从大到小收缩，在内圈与目标圈重合的瞬间点击。偏差越小得分越高（PERFECT / GOOD / MISS），共 15 拍结算。",
+  "howToPlay": "外圈收缩到与内圈重合时点击目标；共 15 拍。",
+  "entry": "rhymtap/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

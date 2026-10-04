@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>四子连线</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { width:100%; aspect-ratio:7/6; display:grid; grid-template-columns:repeat(7,1fr);
+      grid-template-rows:repeat(6,1fr); gap:4px; background:#1a3a7a; border:3px solid #2a2e3d; border-radius:12px; padding:8px; }
+    .hole { border-radius:50%; background:#14161f; cursor:pointer; display:grid; place-items:center; }
+    .hole .d { width:78%; aspect-ratio:1; border-radius:50%; animation:drop .2s ease; }
+    .hole .d.p1 { background:#ff4d5e; }
+    .hole .d.p2 { background:#ffd23f; }
+    .hole .d.win { box-shadow:0 0 10px #fff; }
+    @keyframes drop { from { transform:translateY(-14px); opacity:.4; } }
+    #msg { font-size:15px; font-weight:900; min-height:22px; }
+    #again { font-family:inherit; font-weight:900; font-size:14px; color:#eef1f6; background:var(--blue);
+      border:2px solid #fff; border-radius:10px; padding:10px 28px; cursor:pointer; visibility:hidden; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>你(红) vs AI(黄)</span>
+      <span>胜场<b id="score">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="board"></div>
+    <div id="msg">点击列投子，先连四子者胜</div>
+    <button id="again">再来一局</button>
+  </div>
+  <div id="overlay">
+    <h1>🔴 四子连线</h1>
+    <p>点击列投子，子落最底空位<br/>横竖斜先连四子者胜<br/>AI 会抢制胜点、封你的连势</p>
+    <button id="ov-btn">开始对局</button>
+  </div>
+  <script>
+    (() => {
+      const R = 6, C = 7
+      const boardEl = document.getElementById('board')
+      const msgEl = document.getElementById('msg')
+      const againBtn = document.getElementById('again')
+      const scoreEl = document.getElementById('score')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let grid, turn, over, streak, running
+      let best = Number(localStorage.getItem('connect4-best') || 0)
+      bestEl.textContent = best
+
+      const cells = []
+      for (let r = 0; r < R; r++)
+        for (let c = 0; c < C; c++) {
+          const h = document.createElement('div')
+          h.className = 'hole'
+          h.onclick = () => drop(c)
+          boardEl.appendChild(h)
+          cells.push(h)
+        }
+
+      function lowest(c) {
+        for (let r = R - 1; r >= 0; r--) if (!grid[r][c]) return r
+        return -1
+      }
+
+      function winAt(bd, p) {
+        const DIRS = [[0,1],[1,0],[1,1],[1,-1]]
+        for (let r = 0; r < R; r++)
+          for (let c = 0; c < C; c++)
+            for (const [dr, dc] of DIRS) {
+              if (r + dr * 3 >= R || r + dr * 3 < 0) continue
+              if (c + dc * 3 >= C || c + dc * 3 < 0) continue
+              if ([0,1,2,3].every((k) => bd[r + dr * k][c + dc * k] === p)) return true
+            }
+        return false
+      }
+
+      function render(winCells) {
+        for (let r = 0; r < R; r++)
+          for (let c = 0; c < C; c++) {
+            const el = cells[r * C + c]
+            el.innerHTML = ''
+            const v = grid[r][c]
+            if (v) {
+              const d = document.createElement('div')
+              d.className = 'd p' + v + (winCells && winCells.includes(r * C + c) ? ' win' : '')
+              el.appendChild(d)
+            }
+          }
+      }
+
+      function newGame() {
+        grid = Array.from({ length: R }, () => Array(C).fill(0))
+        turn = 1; over = false; running = true
+        msgEl.textContent = '你先手，点击列投子'
+        againBtn.style.visibility = 'hidden'
+        render()
+      }
+
+      function start() {
+        streak = 0
+        scoreEl.textContent = 0
+        overlay.classList.add('hidden')
+        newGame()
+      }
+
+      function winCells(bd, p) {
+        const DIRS = [[0,1],[1,0],[1,1],[1,-1]]
+        for (let r = 0; r < R; r++)
+          for (let c = 0; c < C; c++)
+            for (const [dr, dc] of DIRS) {
+              if (r + dr * 3 >= R || r + dr * 3 < 0 || c + dc * 3 >= C || c + dc * 3 < 0) continue
+              const list = [0,1,2,3].map((k) => (r + dr * k) * C + (c + dc * k))
+              if (list.every((i) => bd[(i / C) | 0][i % C] === p)) return list
+            }
+        return null
+      }
+
+      function finish(result, cells) {
+        running = false; over = true
+        render(cells)
+        if (result === 'win') {
+          streak++
+          msgEl.textContent = '🎉 四子连线，你赢了！'
+        } else if (result === 'lose') {
+          streak = 0
+          msgEl.textContent = '🤖 AI 连成四子'
+        } else {
+          msgEl.textContent = '🤝 棋盘满了，平局'
+        }
+        streakEl()
+        if (streak > best) { best = streak; bestEl.textContent = best; localStorage.setItem('connect4-best', best) }
+        againBtn.style.visibility = 'visible'
+      }
+
+      function streakEl() { scoreEl.textContent = streak }
+
+      function drop(c) {
+        if (!running || over || turn !== 1) return
+        const r = lowest(c)
+        if (r < 0) return
+        grid[r][c] = 1
+        render()
+        if (winAt(grid, 1)) return finish('win', winCells(grid, 1))
+        if (grid.flat().every(Boolean)) return finish('draw')
+        turn = 2
+        msgEl.textContent = 'AI 思考中…'
+        setTimeout(aiMove, 420)
+      }
+
+      function aiMove() {
+        if (over) return
+        // 1. 制胜点 2. 封堵 3. 中心优先 + 避免送胜
+        const tryFor = (p) => {
+          for (let c = 0; c < C; c++) {
+            const r = lowest(c)
+            if (r < 0) continue
+            grid[r][c] = p
+            const w = winAt(grid, p)
+            grid[r][c] = 0
+            if (w) return c
+          }
+          return -1
+        }
+        let c = tryFor(2)
+        if (c < 0) c = tryFor(1)
+        if (c < 0) {
+          const order = [3, 2, 4, 1, 5, 0, 6].filter((cc) => lowest(cc) >= 0)
+          for (const cc of order) {
+            const r = lowest(cc)
+            grid[r][cc] = 2
+            // 别让玩家在正上方一步致胜
+            const r2 = lowest(cc)
+            let bad = false
+            if (r2 >= 0) {
+              grid[r2][cc] = 1
+              bad = winAt(grid, 1)
+              grid[r2][cc] = 0
+            }
+            grid[r][cc] = 0
+            if (!bad) { c = cc; break }
+          }
+          if (c < 0) c = order[0]
+        }
+        const r = lowest(c)
+        grid[r][c] = 2
+        render()
+        if (winAt(grid, 2)) return finish('lose', winCells(grid, 2))
+        if (grid.flat().every(Boolean)) return finish('draw')
+        turn = 1
+        msgEl.textContent = '轮到你，点击列投子'
+      }
+
+      againBtn.addEventListener('click', newGame)
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return streak },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      streak = 0
+      grid = Array.from({ length: R }, () => Array(C).fill(0))
+      turn = 1; over = false; running = false
+      render()
+    })()
+  </script>
+</body>
+</html>

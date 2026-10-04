@@ -1,0 +1,17 @@
+{
+  "id": "hangman",
+  "name": "猜单词",
+  "emoji": "🔤",
+  "categories": ["puzzle", "casual"],
+  "tags": ["解谜", "字母", "词汇"],
+  "summary": "看提示猜英文单词：一个字母一个字母试，6 次机会别吊死小人！",
+  "description": "经典猜单词（吊小人）游戏。根据中文提示在字母键盘中试字母，猜对填入对应位置，猜错扣一次机会（共 6 次）。解开一个单词自动进入下一个，解开的单词数就是成绩。",
+  "howToPlay": "点击字母键或敲键盘；全部字母猜出即解开，6 次猜错结束。",
+  "entry": "hangman/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

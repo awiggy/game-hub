@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>节奏拍点</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>得分<b id="score">0</b></span>
+      <span>第<b id="tap">0/15</b>拍</span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="480" height="560"></canvas>
+    <div id="overlay">
+      <h1>⭕ 节奏拍点</h1>
+      <p>白圈不断收缩<br/>与黄色内圈重合的瞬间点击<br/>PERFECT 100 / GOOD 50 / MISS 0</p>
+      <button id="ov-btn">开始节奏</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const tapEl = document.getElementById('tap')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const T = 1100 // 收缩时长 ms
+      let target, phase, taps, score, judge, judgeT, running, over, lastT
+      let best = Number(localStorage.getItem('rhymtap-best') || 0)
+      bestEl.textContent = best
+
+      function newTarget() {
+        target = {
+          x: 90 + Math.random() * (W - 180),
+          y: 90 + Math.random() * (H - 180),
+          t0: performance.now(),
+          r0: 92,
+          r1: 34,
+        }
+        phase = 'live'
+      }
+
+      function start() {
+        taps = 0; score = 0; judge = ''; judgeT = 0
+        running = true; over = false
+        scoreEl.textContent = 0; tapEl.textContent = '0/15'
+        overlay.classList.add('hidden')
+        newTarget()
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('rhymtap-best', best) }
+        overlay.querySelector('h1').textContent = '🥁 节奏结束'
+        overlay.querySelector('p').innerHTML = '总分 <b style="color:#ffd23f">' + score + '</b> / 1500 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function tapNow() {
+        if (!running || over || phase !== 'live') return
+        const t = (performance.now() - target.t0) / T
+        const rNow = target.r0 + (target.r1 - target.r0) * t
+        const err = Math.abs(rNow - target.r1)
+        let pts, label
+        if (err < 4) { pts = 100; label = 'PERFECT!' }
+        else if (err < 12) { pts = 50; label = 'GOOD' }
+        else { pts = 0; label = 'MISS' }
+        score += pts
+        scoreEl.textContent = score
+        judge = label + (pts ? ' +' + pts : '')
+        judgeT = 36
+        taps++
+        tapEl.textContent = taps + '/15'
+        if (taps >= 15) return end()
+        newTarget()
+      }
+
+      function step() {
+        if (judgeT > 0) judgeT--
+        if (phase === 'live') {
+          const t = (performance.now() - target.t0) / T
+          if (t >= 1.25) {
+            // 超时未点 = MISS
+            judge = 'MISS'
+            judgeT = 36
+            taps++
+            tapEl.textContent = taps + '/15'
+            if (taps >= 15) return end()
+            newTarget()
+          }
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        if (target) {
+          const t = Math.min(1.25, (performance.now() - target.t0) / T)
+          const rNow = target.r0 + (target.r1 - target.r0) * Math.min(1, t)
+          ctx.strokeStyle = '#2a3350'
+          ctx.lineWidth = 2
+          ctx.beginPath(); ctx.arc(target.x, target.y, target.r1, 0, Math.PI * 2); ctx.stroke()
+          if (t <= 1) {
+            ctx.strokeStyle = '#eef1f6'
+            ctx.lineWidth = 3
+            ctx.beginPath(); ctx.arc(target.x, target.y, Math.max(4, rNow), 0, Math.PI * 2); ctx.stroke()
+          }
+          ctx.fillStyle = '#ffd23f'
+          ctx.beginPath(); ctx.arc(target.x, target.y, 4, 0, Math.PI * 2); ctx.fill()
+        }
+        if (judgeT > 0) {
+          ctx.fillStyle = judge.includes('PERFECT') ? '#22b573' : judge.includes('GOOD') ? '#5d84ff' : '#ff4d5e'
+          ctx.font = '900 26px sans-serif'
+          ctx.textAlign = 'center'
+          ctx.fillText(judge, W / 2, 60)
+          ctx.textAlign = 'left'
+        }
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      cv.addEventListener('pointerdown', (e) => { e.preventDefault(); tapNow() })
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault()
+          if (!running && !overlay.classList.contains('hidden')) start()
+          else tapNow()
+        }
+      })
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      target = null; taps = 0; score = 0; judge = ''; judgeT = 0
+      running = false; over = false; phase = 'idle'
+    })()
+  </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>走钢丝</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>时长<b id="score">0s</b></span>
+      <span>距离<b id="dist">0m</b></span>
+      <span>BEST<b id="best">0s</b></span>
+    </div>
+    <canvas id="cv" width="480" height="560"></canvas>
+    <div id="overlay">
+      <h1>🎪 走钢丝</h1>
+      <p>重心不断乱晃且越来越颠<br/>点左 / 右（或 ← →）纠正倾斜<br/>指针离开立柱即坠落，坚持就是一切</p>
+      <button id="ov-btn">登台表演</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const WIRE_Y = 300
+      const scoreEl = document.getElementById('score')
+      const distEl = document.getElementById('dist')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      // 状态先初始化
+      let lean, leanV, seconds, dist, running, over, driftT, frame
+      let best = Number(localStorage.getItem('tightrope-best') || 0)
+      bestEl.textContent = best + 's'
+
+      function start() {
+        lean = 0; leanV = 0; seconds = 0; dist = 0
+        driftT = 0; frame = 0
+        running = true; over = false
+        scoreEl.textContent = '0s'; distEl.textContent = '0m'
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        const s = seconds.toFixed(1)
+        if (Number(s) > best) { best = Number(s); bestEl.textContent = best + 's'; localStorage.setItem('tightrope-best', best) }
+        overlay.querySelector('h1').textContent = '😱 坠落了'
+        overlay.querySelector('p').innerHTML = '坚持 <b style="color:#ffd23f">' + s + '</b> 秒 · 走了 ' + dist.toFixed(1) + 'm · 最佳 ' + best + 's'
+        ovBtn.textContent = '再试一次'
+        overlay.classList.remove('hidden')
+      }
+
+      function push(d) {
+        if (!running || over) return
+        leanV -= d * 0.012
+      }
+
+      function step() {
+        frame++
+        seconds += 1 / 60
+        dist += 0.4
+        scoreEl.textContent = seconds.toFixed(1) + 's'
+        distEl.textContent = dist.toFixed(1) + 'm'
+        // 随机漂移（随时间加剧）
+        driftT -= 1 / 60
+        if (driftT <= 0) {
+          driftT = 0.4 + Math.random() * 0.8
+          leanV += (Math.random() - 0.5) * (0.012 + Math.min(0.03, seconds * 0.0004))
+        }
+        leanV += lean * 0.0009 // 倒得越厉害越难拉回
+        lean += leanV
+        leanV *= 0.995
+        if (Math.abs(lean) > 1) end()
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        // 天空
+        ctx.fillStyle = '#1a1d29'
+        ctx.fillRect(0, 0, W, 120)
+        // 钢丝
+        ctx.strokeStyle = '#3a4152'
+        ctx.lineWidth = 3
+        ctx.beginPath(); ctx.moveTo(0, WIRE_Y); ctx.lineTo(W, WIRE_Y); ctx.stroke()
+        // 立柱
+        ctx.fillStyle = '#2a2e3d'
+        ctx.fillRect(30, WIRE_Y, 8, H - WIRE_Y)
+        ctx.fillRect(W - 38, WIRE_Y, 8, H - WIRE_Y)
+        // 平衡杆 + 人
+        const cx = W / 2 + lean * 130
+        const tilt = lean * 0.6
+        ctx.save()
+        ctx.translate(cx, WIRE_Y - 26)
+        ctx.rotate(tilt)
+        ctx.fillStyle = '#5d84ff'
+        ctx.fillRect(-30, -4, 60, 6) // 平衡杆
+        ctx.font = '30px sans-serif'
+        ctx.fillText('🤹', -15, 26)
+        ctx.restore()
+        // 倾斜计
+        ctx.fillStyle = '#2a2e3d'
+        ctx.fillRect(W / 2 - 90, 50, 180, 12)
+        ctx.fillStyle = '#ffd23f'
+        const px2 = Math.max(-1, Math.min(1, lean))
+        ctx.fillRect(W / 2 - 6 + px2 * 84, 48, 12, 16)
+        ctx.fillStyle = '#8b93a7'
+        ctx.font = '700 12px sans-serif'
+        ctx.fillText('← 左', 40, 60)
+        ctx.fillText('右 →', W - 70, 60)
+        // 操作提示
+        ctx.fillStyle = '#8b93a7'
+        ctx.font = '700 12px sans-serif'
+        ctx.fillText('点左/右半屏 或 ← → 纠正重心', 14, H - 12)
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') { e.preventDefault(); push(-1) }
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') { e.preventDefault(); push(1) }
+      })
+      cv.addEventListener('pointerdown', (e) => {
+        const r = cv.getBoundingClientRect()
+        push((e.clientX - r.left) < r.width / 2 ? -1 : 1)
+      })
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return Math.floor(seconds * 10) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      lean = 0; leanV = 0; seconds = 0; dist = 0
+      driftT = 0; frame = 0; running = false; over = false
+    })()
+  </script>
+</body>
+</html>
