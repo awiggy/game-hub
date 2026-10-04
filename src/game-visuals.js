@@ -83,6 +83,16 @@ const ICONS = {
   shellgame: "game",
   wordle: "grid",
   billiards: "ball",
+  pipeconnect: "puzzle",
+  onestroke: "puzzle",
+  snakesladders: "game",
+  battleship: "target",
+  knightstour: "flag",
+  minipac: "game",
+  marblemaze: "puzzle",
+  numchain: "grid",
+  tankbattle: "sword",
+  goldminer: "target",
 };
 export function visualFor(game) {
   return {

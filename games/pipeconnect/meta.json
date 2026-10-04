@@ -1,0 +1,17 @@
+{
+  "id": "pipeconnect",
+  "name": "接水管",
+  "emoji": "🔧",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["解谜", "旋转", "经典"],
+  "summary": "点击旋转水管，把水源和出水口接通，三关管道越接越复杂！",
+  "description": "经典接水管谜题。点击管道块使其旋转 90°，让水从左侧水源一路连通到右侧出水口。共三关，管道布局越来越复杂，步数越少得分越高。",
+  "howToPlay": "点击管道块旋转 90°；让水从源头连通到出水口。",
+  "entry": "pipeconnect/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

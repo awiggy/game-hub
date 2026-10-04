@@ -1,0 +1,17 @@
+{
+  "id": "numchain",
+  "name": "连数字走格",
+  "emoji": "➡️",
+  "categories": ["puzzle", "casual"],
+  "tags": ["观察", "顺序", "眼力"],
+  "summary": "数字散布在网格上：从 1 走到 N，每步必须走到相邻格，眼疾手快！",
+  "description": "顺序连线走格。数字 1-N 随机散布在网格中，从 1 开始按顺序点击，每次点击的数字必须与上一个相邻（上下左右）。全部连完即过关，越快分越高，共三关数字递增。",
+  "howToPlay": "从 1 开始按顺序点击；每个数字必须与上一个相邻。",
+  "entry": "numchain/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

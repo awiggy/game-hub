@@ -1,5 +1,245 @@
 [
   {
+    "id": "battleship",
+    "name": "海战棋",
+    "emoji": "🚢",
+    "categories": [
+      "card",
+      "strategy"
+    ],
+    "tags": [
+      "策略",
+      "推理",
+      "海战"
+    ],
+    "summary": "45 发炮弹找出并击沉海域里全部 5 艘敌舰，命中连击有奖励！",
+    "description": "海战推理游戏。8×8 海域随机部署 5 艘敌舰（航母 4 格/战列 3 格×2/驱逐 2 格×2），点击格子开炮：命中显示🔥并可顺势追击，全部击沉获胜；45 发炮弹用完未清场即失败。",
+    "howToPlay": "点击格子开炮，🔥=命中浪花=未中；击沉全部敌舰获胜。",
+    "entry": "battleship/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "goldminer",
+    "name": "黄金矿工",
+    "emoji": "⛏️",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "tags": [
+      "街机",
+      "时机",
+      "收集"
+    ],
+    "summary": "钩子来回摆动，掐准时机放下抓金块：金块越重拉得越慢，60 秒冲刺目标！",
+    "description": "经典黄金矿工。钩子在矿工手中来回摆动，点击放下抓取：金块价值高但越重拉得越慢，石头不值钱又沉重，钻石又快又值钱。60 秒内达到目标金额即可进入下一关。",
+    "howToPlay": "点击放下钩子抓取物品；60 秒内攒够目标金额过关。",
+    "entry": "goldminer/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "knightstour",
+    "name": "骑士巡游",
+    "emoji": "♞",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "棋类",
+      "规划",
+      "图论"
+    ],
+    "summary": "马走日遍历棋盘：每格只停一次，走遍 25 格才算完成经典骑士巡游！",
+    "description": "国际象棋骑士巡游谜题。在 5×5 棋盘上移动骑士（走日字），每个格子只能停留一次。无路可走且未遍历完即失败，成功遍历全部 25 格就是完成经典的骑士巡游。",
+    "howToPlay": "点击高亮格走马（日字）；每格只停一次，遍历全盘获胜。",
+    "entry": "knightstour/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "marblemaze",
+    "name": "迷宫滚珠",
+    "emoji": "🔮",
+    "categories": [
+      "puzzle",
+      "arcade"
+    ],
+    "tags": [
+      "物理",
+      "迷宫",
+      "操控"
+    ],
+    "summary": "倾斜迷宫让滚珠滑向终点：有惯性会打滑，小心掉进陷阱洞！",
+    "description": "物理滚珠迷宫。方向键施加倾斜力让滚珠带惯性滚动（会滑行），穿过迷宫到达绿色终点洞；黑色陷阱洞掉入即重置回起点。三关布局递增。",
+    "howToPlay": "方向键 / WASD 施加倾斜力；把滚珠引进绿色终点洞。",
+    "entry": "marblemaze/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "minipac",
+    "name": "吃豆小人",
+    "emoji": "🟡",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "tags": [
+      "街机",
+      "迷宫",
+      "经典"
+    ],
+    "summary": "迷宫里吃光所有豆子，两只幽灵紧追不舍，经典街机紧张感直接拉满！",
+    "description": "迷你吃豆人。方向键控制小人在迷宫中移动吃掉所有豆子（每颗 10 分），两只幽灵会追踪你，被碰到扣 1 命（3 命）。清空全部豆子进入下一关，幽灵速度提升。",
+    "howToPlay": "方向键 / 滑动控制移动；吃光豆子过关，别被幽灵抓住。",
+    "entry": "minipac/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "numchain",
+    "name": "连数字走格",
+    "emoji": "➡️",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "观察",
+      "顺序",
+      "眼力"
+    ],
+    "summary": "数字散布在网格上：从 1 走到 N，每步必须走到相邻格，眼疾手快！",
+    "description": "顺序连线走格。数字 1-N 随机散布在网格中，从 1 开始按顺序点击，每次点击的数字必须与上一个相邻（上下左右）。全部连完即过关，越快分越高，共三关数字递增。",
+    "howToPlay": "从 1 开始按顺序点击；每个数字必须与上一个相邻。",
+    "entry": "numchain/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "onestroke",
+    "name": "一笔画",
+    "emoji": "✏️",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "解谜",
+      "图论",
+      "思考"
+    ],
+    "summary": "笔不离纸走完所有连线：每条边只能走一次，你能一笔画出图形吗？",
+    "description": "一笔画（欧拉路径）谜题。点击相邻节点沿着连线移动，每条线只能经过一次，走过所有连线即通关。三个图形难度递增，需要先观察奇点数量规划路线。",
+    "howToPlay": "点击相邻节点沿线移动；每条线只能走一次，走完所有线过关。",
+    "entry": "onestroke/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "pipeconnect",
+    "name": "接水管",
+    "emoji": "🔧",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "解谜",
+      "旋转",
+      "经典"
+    ],
+    "summary": "点击旋转水管，把水源和出水口接通，三关管道越接越复杂！",
+    "description": "经典接水管谜题。点击管道块使其旋转 90°，让水从左侧水源一路连通到右侧出水口。共三关，管道布局越来越复杂，步数越少得分越高。",
+    "howToPlay": "点击管道块旋转 90°；让水从源头连通到出水口。",
+    "entry": "pipeconnect/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "snakesladders",
+    "name": "蛇梯棋",
+    "emoji": "🐍",
+    "categories": [
+      "card",
+      "casual"
+    ],
+    "tags": [
+      "棋牌",
+      "掷骰",
+      "经典"
+    ],
+    "summary": "掷骰爬楼梯小心滑蛇梯，先到 100 格者胜，和 AI 对决运气与勇气！",
+    "description": "经典蛇梯棋。轮流掷骰前进，踩到梯子顺梯而上，踩到蛇头滑落蛇尾。你与 AI 轮流出手，率先到达或越过 100 格者获胜。",
+    "howToPlay": "点「掷骰子」前进；梯子向上、蛇向下；先到 100 者胜。",
+    "entry": "snakesladders/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "tankbattle",
+    "name": "像素坦克",
+    "emoji": "🚜",
+    "categories": [
+      "shooter",
+      "action"
+    ],
+    "tags": [
+      "射击",
+      "对战",
+      "街机"
+    ],
+    "summary": "驾驶坦克穿行废墟战场，击毁来袭敌军坦克，看看你能守住几波！",
+    "description": "俯视角坦克射击。方向键移动坦克（自动朝向），空格开炮；敌军坦克从边缘驶入并随机开火。击毁敌军 +100，被击中 -1 命（3 命）。砖墙可以被打碎，阵地战走位两不误。",
+    "howToPlay": "← → ↑ ↓ 移动，空格开炮；击毁全部敌军坦克。",
+    "entry": "tankbattle/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "anagram",
     "name": "拼词大师",
     "emoji": "🔠",

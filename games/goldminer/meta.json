@@ -1,0 +1,17 @@
+{
+  "id": "goldminer",
+  "name": "黄金矿工",
+  "emoji": "⛏️",
+  "categories": ["arcade", "action"],
+  "tags": ["街机", "时机", "收集"],
+  "summary": "钩子来回摆动，掐准时机放下抓金块：金块越重拉得越慢，60 秒冲刺目标！",
+  "description": "经典黄金矿工。钩子在矿工手中来回摆动，点击放下抓取：金块价值高但越重拉得越慢，石头不值钱又沉重，钻石又快又值钱。60 秒内达到目标金额即可进入下一关。",
+  "howToPlay": "点击放下钩子抓取物品；60 秒内攒够目标金额过关。",
+  "entry": "goldminer/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

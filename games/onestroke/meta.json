@@ -1,0 +1,17 @@
+{
+  "id": "onestroke",
+  "name": "一笔画",
+  "emoji": "✏️",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["解谜", "图论", "思考"],
+  "summary": "笔不离纸走完所有连线：每条边只能走一次，你能一笔画出图形吗？",
+  "description": "一笔画（欧拉路径）谜题。点击相邻节点沿着连线移动，每条线只能经过一次，走过所有连线即通关。三个图形难度递增，需要先观察奇点数量规划路线。",
+  "howToPlay": "点击相邻节点沿线移动；每条线只能走一次，走完所有线过关。",
+  "entry": "onestroke/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

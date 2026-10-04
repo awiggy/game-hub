@@ -1,0 +1,17 @@
+{
+  "id": "battleship",
+  "name": "海战棋",
+  "emoji": "🚢",
+  "categories": ["card", "strategy"],
+  "tags": ["策略", "推理", "海战"],
+  "summary": "45 发炮弹找出并击沉海域里全部 5 艘敌舰，命中连击有奖励！",
+  "description": "海战推理游戏。8×8 海域随机部署 5 艘敌舰（航母 4 格/战列 3 格×2/驱逐 2 格×2），点击格子开炮：命中显示🔥并可顺势追击，全部击沉获胜；45 发炮弹用完未清场即失败。",
+  "howToPlay": "点击格子开炮，🔥=命中浪花=未中；击沉全部敌舰获胜。",
+  "entry": "battleship/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

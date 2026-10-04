@@ -1,0 +1,17 @@
+{
+  "id": "minipac",
+  "name": "吃豆小人",
+  "emoji": "🟡",
+  "categories": ["arcade", "action"],
+  "tags": ["街机", "迷宫", "经典"],
+  "summary": "迷宫里吃光所有豆子，两只幽灵紧追不舍，经典街机紧张感直接拉满！",
+  "description": "迷你吃豆人。方向键控制小人在迷宫中移动吃掉所有豆子（每颗 10 分），两只幽灵会追踪你，被碰到扣 1 命（3 命）。清空全部豆子进入下一关，幽灵速度提升。",
+  "howToPlay": "方向键 / 滑动控制移动；吃光豆子过关，别被幽灵抓住。",
+  "entry": "minipac/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

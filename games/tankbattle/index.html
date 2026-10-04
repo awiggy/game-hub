@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>像素坦克</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>得分<b id="score">0</b></span>
+      <span>命<b id="lives">♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="520" height="520"></canvas>
+    <div id="overlay">
+      <h1>🚜 像素坦克</h1>
+      <p>← → ↑ ↓ 移动，空格开炮<br/>砖墙可被打碎，敌军从边缘驶入<br/>击毁 +100，被击中 -1 命</p>
+      <button id="ov-btn">开赴战场</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const T = 40, COLS = 13, ROWS = 13
+      const W = COLS * T, H = ROWS * T
+      const cv = document.getElementById('cv')
+      cv.width = W; cv.height = H
+      const ctx = cv.getContext('2d')
+      const scoreEl = document.getElementById('score')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      // 地图：# 钢墙 B 砖墙 . 空地
+      const MAP = [
+        '#############',
+        '#.....B.....#',
+        '#.B.B.B.B.B.#',
+        '#.....B.....#',
+        '#BB..BBB..BB#',
+        '#.....B.....#',
+        '#.B.B...B.B.#',
+        '#.....B.....#',
+        '#BB..BBB..BB#',
+        '#.....B.....#',
+        '#.B.B.B.B.B.#',
+        '#.....B.....#',
+        '#############',
+      ]
+
+      let walls, player, enemies, bullets, score, lives, kills, wave, running, over, frame, inv, spawnT
+      let best = Number(localStorage.getItem('tankbattle-best') || 0)
+      bestEl.textContent = best
+
+      function isWall(r, c) {
+        if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return true
+        return walls[r][c] !== '.'
+      }
+
+      function load() {
+        walls = MAP.map((row) => row.split(''))
+        player = { r: 11, c: 6, dx: 0, dy: -1, cd: 0 }
+        enemies = []; bullets = []
+        kills = 0; frame = 0; inv = 90; spawnT = 0
+      }
+
+      function start() {
+        score = score || 0
+        lives = lives || 3
+        running = true; over = false
+        scoreEl.textContent = score; livesEl.textContent = '♥'.repeat(lives)
+        load()
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('tankbattle-best', best) }
+        overlay.querySelector('h1').textContent = '💥 战车被毁'
+        overlay.querySelector('p').innerHTML = '击毁 <b style="color:#ffd23f">' + kills + '</b> 辆 · 得分 ' + score + ' · 最佳 ' + best
+        ovBtn.textContent = '重返战场'
+        overlay.classList.remove('hidden')
+      }
+
+      function free(r, c) {
+        if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return false
+        if (walls[r][c] !== '.') return false
+        // 与其他坦克重叠
+        if (enemies.some((e) => e.r === r && e.c === c)) return false
+        if (player.r === r && player.c === c) return false
+        return true
+      }
+
+      function spawnEnemy() {
+        const spots = [[1, 1], [1, COLS - 2], [ROWS - 2, 1], [ROWS - 2, COLS - 2]]
+        const [r, c] = spots[(Math.random() * spots.length) | 0]
+        if (free(r, c)) enemies.push({ r, c, dx: 0, dy: 1, cd: 60 + Math.random() * 60 })
+      }
+
+      function shoot(t, friendly) {
+        bullets.push({
+          r: t.r * T + T / 2, c: t.c * T + T / 2,
+          dx: t.dx, dy: t.dy,
+          friendly,
+        })
+      }
+
+      function step() {
+        frame++
+        // 敌军生成
+        spawnT--
+        if (spawnT <= 0 && enemies.length < 3) {
+          spawnEnemy()
+          spawnT = Math.max(60, 160 - kills * 8)
+        }
+        // 敌军移动 + 开火
+        for (const e of enemies) {
+          e.cd--
+          if (e.cd <= 0) {
+            shoot(e, false)
+            e.cd = 90 + Math.random() * 80
+          }
+          if (frame % 24 === 0) {
+            // 随机走
+            for (let tries = 0; tries < 4; tries++) {
+              const d = (Math.random() * 4) | 0
+              const [dx, dy] = [[0, -1], [1, 0], [0, 1], [-1, 0]][d]
+              if (free(e.r + dy, e.c + dx)) {
+                e.r += dy; e.c += dx
+                e.dx = dx; e.dy = dy
+                break
+              }
+            }
+          }
+        }
+        // 子弹
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const b = bullets[i]
+          b.c += b.dx * 8
+          b.r += b.dy * 8
+          const gr = (b.r / T) | 0, gc = (b.c / T) | 0
+          if (isWall(gr, gc)) {
+            // 砖墙被打碎
+            if (walls[gr][gc] === 'B') walls[gr][gc] = '.'
+            bullets.splice(i, 1)
+            continue
+          }
+          if (b.friendly) {
+            const hit = enemies.find((e) => e.r === gr && e.c === gc)
+            if (hit) {
+              bullets.splice(i, 1)
+              enemies.splice(enemies.indexOf(hit), 1)
+              kills++
+              score += 100
+              scoreEl.textContent = score
+              continue
+            }
+          } else if (inv <= 0 && (player.r === gr && player.c === gc)) {
+            bullets.splice(i, 1)
+            lives--
+            inv = 100
+            livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+            if (lives <= 0) return end()
+            continue
+          }
+          if (b.c < 0 || b.c > W || b.r < 0 || b.r > H) bullets.splice(i, 1)
+        }
+        if (inv > 0) inv--
+        // 敌军与玩家碰撞检测（同格）
+        for (const e of enemies) {
+          if (e.r === player.r && e.c === player.c && inv <= 0) {
+            lives--
+            inv = 100
+            livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+            if (lives <= 0) return end()
+          }
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        for (let r = 0; r < ROWS; r++)
+          for (let c = 0; c < COLS; c++) {
+            if (walls[r][c] === '#') {
+              ctx.fillStyle = '#3a4152'
+              ctx.fillRect(c * T + 2, r * T + 2, T - 4, T - 4)
+            } else if (walls[r][c] === 'B') {
+              ctx.fillStyle = '#8a4a2a'
+              ctx.fillRect(c * T + 2, r * T + 2, T - 4, T - 4)
+              ctx.fillStyle = '#a86038'
+              ctx.fillRect(c * T + 6, r * T + 6, T - 12, T - 12)
+            }
+          }
+        ctx.font = (T - 8) + 'px sans-serif'
+        for (const e of enemies) {
+          if ((e.dx === 0 && e.dy === 1) || (e.dx === 0 && e.dy === -1)) {
+            ctx.save()
+            ctx.translate(e.c * T + T / 2, e.r * T + T / 2)
+            ctx.rotate(Math.PI / 2)
+            ctx.fillText('🚜', -14, 12)
+            ctx.restore()
+          } else ctx.fillText('🚜', e.c * T + 4, e.r * T + T - 6)
+        }
+        if (running && !over && (inv <= 0 || (frame >> 2) % 2 === 0)) {
+          ctx.fillText('🛡', player.c * T + 4, player.r * T + T - 6)
+        }
+        ctx.fillStyle = '#ffd23f'
+        for (const b of bullets) ctx.fillRect(b.c - 3, b.r - 3, 6, 6)
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      function tryMove(dx, dy) {
+        if (!running || over) return
+        player.dx = dx; player.dy = dy
+        const nr = player.r + dy, nc = player.c + dx
+        if (free(nr, nc)) { player.r = nr; player.c = nc }
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') { e.preventDefault(); tryMove(-1, 0) }
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') { e.preventDefault(); tryMove(1, 0) }
+        if (e.code === 'ArrowUp' || e.code === 'KeyW') { e.preventDefault(); tryMove(0, -1) }
+        if (e.code === 'ArrowDown' || e.code === 'KeyS') { e.preventDefault(); tryMove(0, 1) }
+        if (e.code === 'Space') {
+          e.preventDefault()
+          if (running && !over && player.cd <= 0) {
+            shoot(player, true)
+            player.cd = 15
+          }
+        }
+      })
+      ovBtn.addEventListener('click', start)
+      setInterval(() => { if (player) player.cd = Math.max(0, player.cd - 1) }, 16)
+
+      walls = MAP.map((row) => row.split(''))
+      player = { r: 11, c: 6, dx: 0, dy: -1, cd: 0 }
+      enemies = []; bullets = []
+      score = 0; lives = 3; kills = 0; inv = 0; frame = 0; spawnT = 0
+      running = false; over = false
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+      loop()
+    })()
+  </script>
+</body>
+</html>

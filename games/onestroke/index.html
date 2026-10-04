@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>一笔画</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:min(88vw,420px); display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:12px; background:#14161f; max-width:88vw; max-height:66vh; cursor:pointer; }
+    #msg { font-size:14px; font-weight:900; min-height:20px; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>关卡<b id="lv">1/3</b></span>
+      <span>剩余线<b id="left">0</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <canvas id="cv" width="440" height="440"></canvas>
+    <div id="msg"></div>
+  </div>
+  <div id="overlay">
+    <h1>✏️ 一笔画</h1>
+    <p>点击相邻节点沿线移动<br/>每条线只能经过一次<br/>走完所有连线即通关</p>
+    <button id="ov-btn">开始挑战</button>
+  </div>
+  <script>
+    (() => {
+      // 图定义：nodes [x,y]（0-100 归一化），edges [a,b]
+      const LEVELS = [
+        { nodes: [[50,15],[15,50],[50,50],[85,50],[50,85]],
+          edges: [[0,1],[0,2],[0,3],[1,2],[2,3],[2,4],[1,4],[3,4]] },
+        { nodes: [[50,10],[85,35],[85,70],[50,90],[15,70],[15,35],[50,50]],
+          edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,6],[1,6],[2,6],[3,6],[4,6],[5,6]] },
+        { nodes: [[50,8],[90,30],[90,70],[50,92],[10,70],[10,30],[30,50],[70,50]],
+          edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,6],[6,3],[2,7],[7,5],[6,1],[6,2],[6,4],[6,5],[0,7]] },
+      ]
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const lvEl = document.getElementById('lv')
+      const leftEl = document.getElementById('left')
+      const bestEl = document.getElementById('best')
+      const msgEl = document.getElementById('msg')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let level, nodes, edges, used, at, left, running, over
+      let best = Number(localStorage.getItem('onestroke-best') || 0)
+      if (best) bestEl.textContent = best
+
+      const PX = (p) => ({ x: 30 + p[0] / 100 * (cv.width - 60), y: 30 + p[1] / 100 * (cv.height - 60) })
+
+      function load(nv) {
+        level = nv
+        nodes = LEVELS[nv].nodes
+        edges = LEVELS[nv].edges.map((e) => [...e])
+        used = new Set()
+        at = -1
+        left = edges.length
+        lvEl.textContent = (nv + 1) + '/3'
+        leftEl.textContent = left
+        msgEl.textContent = at < 0 ? '点击任意节点起步' : ''
+        draw()
+      }
+
+      function start() {
+        running = true; over = false
+        overlay.classList.add('hidden')
+        load(0)
+      }
+
+      function win() {
+        if (level === LEVELS.length - 1) {
+          running = false; over = true
+          if (!best || level + 1 > best) { best = level + 1; bestEl.textContent = best; localStorage.setItem('onestroke-best', best) }
+          overlay.querySelector('h1').textContent = '✏️ 全部一笔画成'
+          overlay.querySelector('p').innerHTML = '三个图形全部完成，你很有图形直觉！'
+          ovBtn.textContent = '再来一局'
+          overlay.classList.remove('hidden')
+        } else {
+          msgEl.textContent = '✓ 过关！'
+          setTimeout(() => load(level + 1), 700)
+        }
+      }
+
+      function fail() {
+        running = false; over = true
+        overlay.querySelector('h1').textContent = '😵 线走死了'
+        overlay.querySelector('p').innerHTML = '还有 ' + left + ' 条线没走完，重新规划起点（从奇点开始）'
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      // 邻接检测：两点间有未使用的边
+      function edgeBetween(a, b) {
+        return edges.findIndex((e, i) => !used.has(i) &&
+          ((e[0] === a && e[1] === b) || (e[0] === b && e[1] === a)))
+      }
+
+      function clickNode(i) {
+        if (!running || over) return
+        if (at === -1) {
+          at = i
+          msgEl.textContent = ''
+          draw()
+          return
+        }
+        const ei = edgeBetween(at, i)
+        if (ei < 0) { msgEl.textContent = '这两个点之间没有可走的线'; return }
+        used.add(ei)
+        left--
+        leftEl.textContent = left
+        at = i
+        if (left === 0) return win()
+        // 死路检测：当前点没有可用边且还有剩余
+        const stuck = !edges.some((e, k) => !used.has(k) && (e[0] === at || e[1] === at))
+        if (stuck) return fail()
+        draw()
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, cv.width, cv.height)
+        const pts = nodes.map(PX)
+        // 边
+        edges.forEach((e, i) => {
+          const a = pts[e[0]], b = pts[e[1]]
+          ctx.strokeStyle = used.has(i) ? 'rgba(34,181,115,0.25)' : '#5d84ff'
+          ctx.lineWidth = used.has(i) ? 3 : 4
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke()
+        })
+        // 可走提示
+        if (at >= 0 && running && !over) {
+          edges.forEach((e, i) => {
+            if (used.has(i)) return
+            const other = e[0] === at ? e[1] : e[1] === at ? e[0] : -1
+            if (other >= 0) {
+              ctx.strokeStyle = 'rgba(255,210,63,0.5)'
+              ctx.lineWidth = 3
+              ctx.beginPath(); ctx.moveTo(pts[at].x, pts[at].y); ctx.lineTo(pts[other].x, pts[other].y); ctx.stroke()
+            }
+          })
+        }
+        // 节点
+        nodes.forEach((p, i) => {
+          const q = pts[i]
+          ctx.fillStyle = i === at ? '#ffd23f' : '#eef1f6'
+          ctx.beginPath(); ctx.arc(q.x, q.y, i === at ? 14 : 10, 0, Math.PI * 2); ctx.fill()
+        })
+      }
+
+      cv.addEventListener('pointerdown', (e) => {
+        const r = cv.getBoundingClientRect()
+        const x = (e.clientX - r.left) * (cv.width / r.width)
+        const y = (e.clientY - r.top) * (cv.height / r.height)
+        let bestD = 1e9, bi = -1
+        nodes.forEach((p, i) => {
+          const q = PX(p)
+          const d = Math.hypot(q.x - x, q.y - y)
+          if (d < bestD) { bestD = d; bi = i }
+        })
+        if (bi >= 0 && bestD < 40) clickNode(bi)
+      })
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return level * 100 },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      level = 0; nodes = LEVELS[0].nodes; edges = LEVELS[0].edges.map((e) => [...e])
+      used = new Set(); at = -1; left = edges.length; running = false; over = false
+      draw()
+    })()
+  </script>
+</body>
+</html>

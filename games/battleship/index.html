@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>海战棋</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,460px); position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { width:100%; aspect-ratio:1; display:grid; grid-template-columns:repeat(8,1fr);
+      grid-template-rows:repeat(8,1fr); gap:3px; background:#12203c; border:3px solid #2a2e3d; border-radius:12px; padding:6px; }
+    .cell { border-radius:5px; background:#1a2f52; cursor:pointer; display:grid; place-items:center; font-size:15px; }
+    .cell:hover { background:#24406e; }
+    .cell.miss { background:#14161f; cursor:default; }
+    .cell.hit { background:#7a2430; cursor:default; }
+    .cell.sunk { background:#ff4d5e; cursor:default; }
+    #msg { font-size:14px; font-weight:900; min-height:20px; }
+    #fleet { font-size:11px; font-weight:700; color:#8b93a7; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>炮弹<b id="shots">45</b></span>
+      <span>击沉<b id="sunk">0/5</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <div id="board"></div>
+    <div id="msg">点击格子开炮</div>
+    <div id="fleet">敌舰：航母×4格 · 战列舰×3格 · 驱逐舰×2格×2</div>
+  </div>
+  <div id="overlay">
+    <h1>🚢 海战棋</h1>
+    <p>8×8 海域藏着 5 艘敌舰<br/>点击开炮，命中可顺势追击<br/>45 发炮弹内全部击沉获胜</p>
+    <button id="ov-btn">进入战斗</button>
+  </div>
+  <script>
+    (() => {
+      const N = 8
+      const SHIPS = [4, 3, 3, 2, 2]
+      const boardEl = document.getElementById('board')
+      const shotsEl = document.getElementById('shots')
+      const sunkEl = document.getElementById('sunk')
+      const bestEl = document.getElementById('best')
+      const msgEl = document.getElementById('msg')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let ships, shots, fired, sunkCount, running, over
+      let best = Number(localStorage.getItem('battleship-best') || 0)
+
+      function deploy() {
+        const occ = new Set()
+        const fleet = []
+        for (const len of SHIPS) {
+          for (let tries = 0; tries < 500; tries++) {
+            const horiz = Math.random() < 0.5
+            const r = (Math.random() * (horiz ? N : N - len + 1)) | 0
+            const c = (Math.random() * (horiz ? N - len + 1 : N)) | 0
+            const cells = []
+            for (let k = 0; k < len; k++) {
+              const rr = r + (horiz ? 0 : k), cc = c + (horiz ? k : 0)
+              if (occ.has(rr + ',' + cc)) { ok = false; break }
+              cells.push(rr + ',' + cc)
+            }
+            var ok = true
+            if (cells.some((x) => occ.has(x))) continue
+            cells.forEach((x) => occ.add(x))
+            fleet.push({ cells, hits: new Set() })
+            break
+          }
+        }
+        return fleet
+      }
+
+      function start() {
+        ships = deploy()
+        shots = 45; sunkCount = 0
+        fired = new Set()
+        running = true; over = false
+        shotsEl.textContent = 45; sunkEl.textContent = '0/5'
+        msgEl.textContent = '点击格子开炮'
+        overlay.classList.add('hidden')
+        render()
+      }
+
+      function render() {
+        boardEl.innerHTML = ''
+        for (let r = 0; r < N; r++)
+          for (let c = 0; c < N; c++) {
+            const el = document.createElement('div')
+            const key = r + ',' + c
+            el.className = 'cell'
+            if (fired.has(key)) {
+              const ship = ships.find((s) => s.cells.includes(key))
+              if (ship) {
+                const sunk = ship.cells.every((x) => fired.has(x))
+                el.classList.add(sunk ? 'sunk' : 'hit')
+                el.textContent = '💥'
+              } else {
+                el.classList.add('miss')
+                el.textContent = '·'
+              }
+            }
+            el.onclick = () => fire(r, c)
+            boardEl.appendChild(el)
+          }
+      }
+
+      function fire(r, c) {
+        if (!running || over) return
+        const key = r + ',' + c
+        if (fired.has(key)) return
+        fired.add(key)
+        shots--
+        shotsEl.textContent = shots
+        const ship = ships.find((s) => s.cells.includes(key))
+        if (ship) {
+          ship.hits.add(key)
+          if (ship.cells.every((x) => fired.has(x))) {
+            sunkCount++
+            sunkEl.textContent = sunkCount + '/5'
+            msgEl.textContent = '🚢 击沉一艘舰！剩余炮弹 ' + shots
+          } else msgEl.textContent = '🔥 命中！继续追击'
+          if (sunkCount === 5) {
+            running = false; over = true
+            if (!best || 45 - shots < best) { best = 45 - shots; bestEl.textContent = best + '发'; localStorage.setItem('battleship-best', best) }
+            overlay.querySelector('h1').textContent = '🏆 海域清空'
+            overlay.querySelector('p').innerHTML =
+              '用掉 <b style="color:#ffd23f">' + (45 - shots) + '</b> 发炮弹（剩余 ' + shots + '）· 最佳 ' + (best || '—') + '发'
+            ovBtn.textContent = '再来一战'
+            overlay.classList.remove('hidden')
+            return
+          }
+        } else msgEl.textContent = '🌊 浪花一片，没打中'
+        render()
+        if (shots <= 0) {
+          running = false; over = true
+          overlay.querySelector('h1').textContent = '💀 炮弹耗尽'
+          overlay.querySelector('p').innerHTML = '击沉 ' + sunkCount + '/5 艘 · 最佳战绩 ' + (best || '—') + '发'
+          ovBtn.textContent = '再来一战'
+          overlay.classList.remove('hidden')
+        }
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return sunkCount * 10 },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      ships = []; shots = 45; fired = new Set(); sunkCount = 0
+      running = false; over = false
+      render()
+    })()
+  </script>
+</body>
+</html>

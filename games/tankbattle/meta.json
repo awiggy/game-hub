@@ -1,0 +1,17 @@
+{
+  "id": "tankbattle",
+  "name": "像素坦克",
+  "emoji": "🚜",
+  "categories": ["shooter", "action"],
+  "tags": ["射击", "对战", "街机"],
+  "summary": "驾驶坦克穿行废墟战场，击毁来袭敌军坦克，看看你能守住几波！",
+  "description": "俯视角坦克射击。方向键移动坦克（自动朝向），空格开炮；敌军坦克从边缘驶入并随机开火。击毁敌军 +100，被击中 -1 命（3 命）。砖墙可以被打碎，阵地战走位两不误。",
+  "howToPlay": "← → ↑ ↓ 移动，空格开炮；击毁全部敌军坦克。",
+  "entry": "tankbattle/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

@@ -1,0 +1,17 @@
+{
+  "id": "marblemaze",
+  "name": "迷宫滚珠",
+  "emoji": "🔮",
+  "categories": ["puzzle", "arcade"],
+  "tags": ["物理", "迷宫", "操控"],
+  "summary": "倾斜迷宫让滚珠滑向终点：有惯性会打滑，小心掉进陷阱洞！",
+  "description": "物理滚珠迷宫。方向键施加倾斜力让滚珠带惯性滚动（会滑行），穿过迷宫到达绿色终点洞；黑色陷阱洞掉入即重置回起点。三关布局递增。",
+  "howToPlay": "方向键 / WASD 施加倾斜力；把滚珠引进绿色终点洞。",
+  "entry": "marblemaze/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}

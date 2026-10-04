@@ -1,0 +1,17 @@
+{
+  "id": "knightstour",
+  "name": "骑士巡游",
+  "emoji": "♞",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["棋类", "规划", "图论"],
+  "summary": "马走日遍历棋盘：每格只停一次，走遍 25 格才算完成经典骑士巡游！",
+  "description": "国际象棋骑士巡游谜题。在 5×5 棋盘上移动骑士（走日字），每个格子只能停留一次。无路可走且未遍历完即失败，成功遍历全部 25 格就是完成经典的骑士巡游。",
+  "howToPlay": "点击高亮格走马（日字）；每格只停一次，遍历全盘获胜。",
+  "entry": "knightstour/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-05",
+  "featured": false,
+  "plays": 0
+}
