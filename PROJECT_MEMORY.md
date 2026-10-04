@@ -1,6 +1,17 @@
 # 项目记忆
 
-更新日期：2026-10-05（第二批）
+更新日期：2026-10-05（全面测修轮）
+
+## 全面测修（2026-10-05）
+
+- 用户要求对全部待验收游戏「测修一遍」。待验收共 46 款（第二~六批累计），本轮全部完成浏览器实测（启动+交互+状态读取），110 款货架全部达到交互级验证。
+- **新增质检工具** `scripts/run-game-smoke.js`：mock DOM/canvas 环境在 vm 中实际执行每款游戏 IIFE 同步代码，抓运行时初始化错误；已接入 prebuild（registry → check → smoke → build）。
+- **修复 8 处真实 bug**：
+  1. `rushhour` 关卡数据三处硬伤（L1/L4 车辆格子重叠、原 L3 红车被永久堵死不可解）——重设计全部 4 关并用 BFS 求解器验证无重叠+可解（最短解 5/5/7/4 步）；
+  2. 16 款违反「先初始化状态再启动绘制循环」（airhockey/balloonpop/bigfish/billiards/bomber/bowling/darts/golf/highjump/lightbike/marblemaze/moonlander/ricochet/ropeswing/sniper/minipac）——统一修复为 `requestAnimationFrame(loop)` 异步首帧；
+  3. `knightstour` 用 Set.get（Set 无此方法），改 Map；
+  4. `bomber` 尾部初始化 `walls=[]` 未调用 genLevel，且 genLevel 敌人出生 do-while 有 1/512 概率死循环（9 个候选格全为钢墙）——加 60 次尝试上限强制清格。
+- 方法论沉淀：mock 冒烟只能抓同步初始化错误；真实浏览器交互测试发现的两类问题（rushhour 关卡不可解、bomber 低概率死循环）mock 抓不到，两者互补缺一不可。浏览器测 Canvas 游戏时点击必须按 canvas 实际渲染 rect 计算坐标，不能用 iframe 比例估算；测试脚本轮询要先点 cover 才会出现 iframe（reload 后 started 重置）。
 
 ## 产品边界
 
