@@ -1,0 +1,17 @@
+{
+  "id": "memorymatrix",
+  "name": "记忆矩阵",
+  "emoji": "🧊",
+  "categories": ["puzzle", "casual"],
+  "tags": ["记忆", "观察", "休闲"],
+  "summary": "闪过的方块位置你记住了吗？每一关多一格，看你的视觉记忆上限！",
+  "description": "视觉记忆测试。网格中随机点亮若干方块，短暂展示后熄灭，凭记忆点出所有亮过的格子。每关多亮一格，点错扣 1 命（3 命），点满进入下一关。",
+  "howToPlay": "记住闪亮的格子位置，熄灭后全部点出来；点错扣命。",
+  "entry": "memorymatrix/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

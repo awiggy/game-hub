@@ -1,6 +1,6 @@
 # 项目记忆
 
-更新日期：2026-09-26
+更新日期：2026-09-28
 
 ## 产品边界
 
@@ -14,7 +14,7 @@
 - 本项目线上地址：https://awiggy.github.io/game-hub/
 - 用户指定的参考仓库：https://github.com/wanghao221/moyu
 - 参考版本：`15e88e245ddfbb4c7f0a9064202b5f50674296fb`。README 是大量游戏/工具的索引，仓库实际提交的源码少于索引数量。
-- 本次选用「游戏-26.石头剪刀布」和「游戏-52.骰子游戏」，具体来源与适配说明见 `SOURCES.md`。
+- 曾从中选用「游戏-26.石头剪刀布」和「游戏-52.骰子游戏」，具体来源与适配说明见 `SOURCES.md`。
 
 ## 当前工作
 
@@ -42,3 +42,14 @@
 - 新插画由内置 image_gen 生成：`src/assets/pixel-world.webp` 是彩色像素浮岛横幅，`pixel-covers.webp` 是 8 款游戏的封面图集；其他游戏使用分类色与图形封面。封面为概念插画，不代表游戏内画面。
 - 生成提示词及验收记录保存在 `docs/design/2026-09-26/`。项目仍为 50 款游戏、10 个分类；未修改 `games/` 内部文件。
 - 用户随后于 2026-09-26 明确要求更新 GitHub 在线地址，本次视觉重构通过提交并推送 `main` 触发既有 GitHub Pages 工作流发布；线上地址仍为 `https://awiggy.github.io/game-hub/`。
+
+## 扩充到 60 款（2026-09-28）
+
+- 用户要求在 50 款基础上再新增 10 款游戏，玩法不与现有货架重复。
+- 新增 10 款（全部单文件、`__hub` 钩子、键盘+触屏、本地最高分，Canvas 游戏遵守「先初始化状态再启动绘制循环」约定）：
+  `typewriter` 打字达人（落词打字）、`jumpjump` 跳一跳（蓄力跳台）、`fishing` 休闲钓鱼（两段式拉扯）、`bowling` 保龄球之夜（三段投球）、`bombdefuse` 拆弹专家（按序剪线）、`trafficrush` 峰值路口（红绿灯调度）、`rushhour` 汽车华容道（4 静态关滑块）、`mathrun` 算术冲刺（限时心算三选一）、`memorymatrix` 记忆矩阵（位置记忆）、`darts` 飞镖高手（两段瞄准）。
+- `src/game-visuals.js` 的 ICONS 表为新游戏补了图标映射（增量修改，未动重构样式）。
+- `npm run check` 60 款全部通过；`npm run build` 通过；注册表已重建为 60 款，游戏库分类计数自动更新（街机 19/解谜 33/休闲 26 等）。
+- 浏览器抽测通过：打字达人（输入单词消除得分链路完整）、拆弹专家（按手册剪线正确不误爆）；游戏库页面确认 60 款卡片与新版像素杂志风渲染正常。
+- 本轮改动已提交推送 `main` 触发 GitHub Pages 自动部署；货架总数从 50 款增至 60 款。
+- 其余 7 款新游戏（jumpjump/fishing/bowling/trafficrush/rushhour/mathrun/memorymatrix/darts 中未抽测部分）只做了静态检查，深度玩法验收待后续按 `docs/verification-2026-09-21.md` 的方式补做。

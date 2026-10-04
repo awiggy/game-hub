@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>记忆矩阵</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { position:relative; display:flex; flex-direction:column; gap:12px; align-items:center; }
+    #hud { width:min(88vw,400px); display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #grid {
+      width:min(88vw,400px); aspect-ratio:1;
+      display:grid; gap:8px; background:#1a1d29; border:3px solid #2a2e3d; border-radius:14px; padding:10px;
+    }
+    .cell { border-radius:10px; background:#14161f; border:2px solid #2a3350; cursor:pointer; transition:background .12s; }
+    .cell.lit { background:var(--yellow); border-color:var(--yellow); }
+    .cell.good { background:#22b573; border-color:#0f7a4a; }
+    .cell.bad { background:#ff4d5e; border-color:#c22739; }
+    #msg { font-size:15px; font-weight:900; min-height:22px; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>关卡<b id="lv">1</b></span>
+      <span>命<b id="lives">♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="grid"></div>
+    <div id="msg">点击开始后记住闪亮的格子</div>
+  </div>
+  <div id="overlay">
+    <h1>🧊 记忆矩阵</h1>
+    <p>方块短暂点亮后熄灭<br/>凭记忆点出所有亮过的格子<br/>每关多一格，点错扣 1 命</p>
+    <button id="ov-btn">开始测试</button>
+  </div>
+  <script>
+    (() => {
+      const gridEl = document.getElementById('grid')
+      const lvEl = document.getElementById('lv')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const msgEl = document.getElementById('msg')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let level, size, targets, picked, phase, lives, running, over, timers
+      let best = Number(localStorage.getItem('memorymatrix-best') || 0)
+      bestEl.textContent = best
+
+      function clearTimers() { (timers || []).forEach(clearTimeout); timers = [] }
+      const later = (fn, ms) => timers.push(setTimeout(fn, ms))
+
+      function start() {
+        level = 1; lives = 3
+        running = true; over = false
+        lvEl.textContent = 1; livesEl.textContent = '♥♥♥'
+        overlay.classList.add('hidden')
+        nextLevel()
+      }
+
+      function end() {
+        running = false; over = true
+        clearTimers()
+        const score = (level - 1) * 100
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('memorymatrix-best', best) }
+        overlay.querySelector('h1').textContent = '🧠 记忆到顶了'
+        overlay.querySelector('p').innerHTML = '通过 <b style="color:#ffd23f">' + (level - 1) + '</b> 关 · 得分 ' + score + ' · 最佳 ' + best
+        ovBtn.textContent = '再来一次'
+        overlay.classList.remove('hidden')
+      }
+
+      function nextLevel() {
+        size = Math.min(6, 3 + ((level / 3) | 0))
+        const count = Math.min(size * size - 4, 2 + level)
+        gridEl.style.gridTemplateColumns = 'repeat(' + size + ',1fr)'
+        gridEl.style.gridTemplateRows = 'repeat(' + size + ',1fr)'
+        lvEl.textContent = level
+        targets = new Set()
+        while (targets.size < count) targets.add((Math.random() * size * size) | 0)
+        picked = new Set()
+        phase = 'show'
+        msgEl.textContent = '记住亮起的 ' + count + ' 个格子…'
+        // 全部先熄灭
+        draw()
+        later(() => {
+          targets.forEach((i) => cellEls[i].classList.add('lit'))
+          later(() => {
+            cellEls.forEach((c) => c.classList.remove('lit'))
+            phase = 'pick'
+            msgEl.textContent = '点出刚才亮过的格子'
+          }, 900 + count * 120)
+        }, 500)
+        draw()
+      }
+
+      let cellEls = []
+      function draw() {
+        gridEl.innerHTML = ''
+        cellEls = []
+        for (let i = 0; i < size * size; i++) {
+          const el = document.createElement('div')
+          el.className = 'cell'
+          if (targets.has(i) && phase === 'show') el.classList.add('lit')
+          el.onclick = () => pick(i)
+          gridEl.appendChild(el)
+          cellEls.push(el)
+        }
+      }
+
+      function pick(i) {
+        if (!running || over || phase !== 'pick' || picked.has(i)) return
+        picked.add(i)
+        if (targets.has(i)) {
+          cellEls[i].classList.add('good')
+          if (picked.size === targets.size) {
+            phase = 'wait'
+            msgEl.textContent = '✓ 全对！下一关…'
+            later(nextLevel, 800)
+          }
+        } else {
+          cellEls[i].classList.add('bad')
+          lives--
+          livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+          if (lives <= 0) return end()
+          // 清错重来本关
+          phase = 'wait'
+          msgEl.textContent = '✗ 点错了，重看一遍'
+          later(() => {
+            picked = new Set()
+            nextLevelSame()
+          }, 900)
+        }
+      }
+
+      function nextLevelSame() {
+        phase = 'show'
+        msgEl.textContent = '记住亮起的 ' + targets.size + ' 个格子…'
+        draw()
+        later(() => {
+          targets.forEach((i2) => cellEls[i2].classList.add('lit'))
+          later(() => {
+            cellEls.forEach((c) => c.classList.remove('lit'))
+            phase = 'pick'
+            msgEl.textContent = '点出刚才亮过的格子'
+          }, 900 + targets.size * 120)
+        }, 500)
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return (level - 1) * 100 },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      level = 1; size = 3; targets = new Set(); picked = new Set()
+      phase = 'idle'; lives = 3; running = false; over = false; timers = []
+    })()
+  </script>
+</body>
+</html>

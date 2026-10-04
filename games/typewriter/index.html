@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>打字达人</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,460px); position:relative; display:flex; flex-direction:column; gap:10px; }
+    #hud { display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #sky { position:relative; height:min(58vh,420px); background:#1a1d29; border:3px solid #2a2e3d; border-radius:12px; overflow:hidden; }
+    .word { position:absolute; font-size:18px; font-weight:900; color:#c9d4f5; white-space:nowrap; padding:4px 10px;
+      background:#14161f; border:2px solid #2a3350; border-radius:8px; }
+    .word .done { color:#22b573; }
+    .word.target { border-color:var(--yellow); }
+    #input { width:100%; font-family:inherit; font-size:18px; font-weight:700; padding:12px 14px;
+      background:#1a1d29; border:2px solid #2a3350; border-radius:10px; color:#eef1f6; outline:none; }
+    #input:focus { border-color:var(--blue); }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>得分<b id="score">0</b></span>
+      <span>命<b id="lives">♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="sky"></div>
+    <input id="input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="在这里输入单词…" />
+  </div>
+  <div id="overlay">
+    <h1>⌨️ 打字达人</h1>
+    <p>单词从天而降，在输入框打出来即可消除<br/>前缀匹配会锁定目标并高亮<br/>单词触底 -1 命 · 共 3 命</p>
+    <button id="ov-btn">开始打字</button>
+  </div>
+  <script>
+    (() => {
+      const WORDS = ['game','code','star','pixel','level','score','fast','jump','block','hero','loop','cloud','spark','quest','magic','sharp','brave','storm','flash','light','space','pixel','robot','tiger','maple','ocean','piano','raven','solar','vivid']
+      const sky = document.getElementById('sky')
+      const inputEl = document.getElementById('input')
+      const scoreEl = document.getElementById('score')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let words, score, lives, running, over, speed, spawnIn
+      let best = Number(localStorage.getItem('typewriter-best') || 0)
+      bestEl.textContent = best
+
+      function start() {
+        words = []
+        score = 0; lives = 3; speed = 26; spawnIn = 20
+        running = true; over = false
+        scoreEl.textContent = 0; livesEl.textContent = '♥♥♥'
+        inputEl.value = ''
+        overlay.classList.add('hidden')
+        render()
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('typewriter-best', best) }
+        overlay.querySelector('h1').textContent = '💀 游戏结束'
+        overlay.querySelector('p').innerHTML = '消除 <b style="color:#ffd23f">' + score + '</b> 个单词 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function spawn() {
+        const w = WORDS[(Math.random() * WORDS.length) | 0]
+        words.push({ w, x: 8 + Math.random() * 68, y: -34 })
+      }
+
+      // 当前输入作为前缀匹配的词
+      function match() {
+        const t = inputEl.value.trim().toLowerCase()
+        if (!t) return -1
+        let bestIdx = -1, bestY = -1
+        for (let i = 0; i < words.length; i++) {
+          if (words[i].w.startsWith(t) && words[i].y > bestY) { bestY = words[i].y; bestIdx = i }
+        }
+        return bestIdx
+      }
+
+      function step() {
+        spawnIn--
+        if (spawnIn <= 0) {
+          spawn()
+          spawnIn = Math.max(34, 95 - score * 2)
+        }
+        const m = match()
+        for (let i = words.length - 1; i >= 0; i--) {
+          const w = words[i]
+          w.y += speed / 60
+          if (w.y > sky.clientHeight - 34) {
+            words.splice(i, 1)
+            lives--
+            livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+            inputEl.value = ''
+            if (lives <= 0) { render(); return end() }
+          }
+        }
+        // 完整匹配即消除
+        if (m >= 0 && words[m] && words[m].w === inputEl.value.trim().toLowerCase()) {
+          words.splice(m, 1)
+          score++
+          scoreEl.textContent = score
+          speed = 26 + Math.min(50, score * 1.4)
+          inputEl.value = ''
+        }
+        render(m)
+      }
+
+      function render(m) {
+        sky.innerHTML = ''
+        for (let i = 0; i < words.length; i++) {
+          const w = words[i]
+          const el = document.createElement('div')
+          el.className = 'word' + (i === m ? ' target' : '')
+          el.style.left = w.x + '%'
+          el.style.top = w.y + 'px'
+          const t = inputEl.value.trim().toLowerCase()
+          if (i === m && t) {
+            el.innerHTML = '<span class="done">' + w.w.slice(0, t.length) + '</span>' + w.w.slice(t.length)
+          } else el.textContent = w.w
+          sky.appendChild(el)
+        }
+      }
+
+      let lastT = 0
+      function loop(t) {
+        requestAnimationFrame(loop)
+        if (!lastT) lastT = t
+        const dt = Math.min(50, t - lastT)
+        lastT = t
+        if (running && !over) {
+          // 用固定步长模拟，简单稳定
+          if (dt >= 16) step()
+        }
+      }
+
+      inputEl.addEventListener('input', () => { if (running && !over) { const m = match(); render(m) } })
+      ovBtn.addEventListener('click', () => { start(); inputEl.focus() })
+      requestAnimationFrame(loop)
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      words = []; score = 0; lives = 3; speed = 26; spawnIn = 20; running = false; over = false
+    })()
+  </script>
+</body>
+</html>

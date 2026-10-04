@@ -1,0 +1,17 @@
+{
+  "id": "typewriter",
+  "name": "打字达人",
+  "emoji": "⌨️",
+  "categories": ["puzzle", "casual"],
+  "tags": ["打字", "反应", "学习"],
+  "summary": "单词从天而降，输入正确字母即可消除，3 次漏词就结束！",
+  "description": "英文单词不断从屏幕上方落下，在输入框中打字即可消除对应单词（前缀匹配高亮）。单词触底扣 1 命，速度随分数提升，3 命耗尽结束。手机可调出输入法打字。",
+  "howToPlay": "在输入框中输入落下的单词；单词触底 -1 命。",
+  "entry": "typewriter/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

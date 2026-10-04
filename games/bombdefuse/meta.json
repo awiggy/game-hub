@@ -1,0 +1,17 @@
+{
+  "id": "bombdefuse",
+  "name": "拆弹专家",
+  "emoji": "💣",
+  "categories": ["puzzle", "action"],
+  "tags": ["解谜", "限时", "紧张"],
+  "summary": "按手册顺序剪断线路！倒计时嘀嗒作响，剪错一根当场爆炸！",
+  "description": "紧张刺激的拆弹游戏。每颗炸弹有 5-8 根彩色线路，顶部手册给出剪线顺序，按顺序点击剪断。倒计时随炸弹编号不断缩短，剪错或超时即爆炸。成功拆弹数量就是成绩。",
+  "howToPlay": "按顶部手册顺序点击剪线；剪错或倒计时归零都会爆炸。",
+  "entry": "bombdefuse/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

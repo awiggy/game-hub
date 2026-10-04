@@ -1,0 +1,17 @@
+{
+  "id": "fishing",
+  "name": "休闲钓鱼",
+  "emoji": "🎣",
+  "categories": ["casual", "simulation"],
+  "tags": ["休闲", "钓鱼", "时机"],
+  "summary": "等鱼咬钩再进入拉扯环节，稳住力度条把鱼拉上来，60 秒渔获比拼！",
+  "description": "两段式钓鱼：抛竿后等待鱼咬钩（浮漂下沉瞬间点击），随后进入拉扯——按住让力度标记上升、松开下落，让标记保持在绿色区域充满捕获进度。进度满即钓到，稀有鱼分数更高。",
+  "howToPlay": "咬钩时点击 → 拉扯时按住/松开让标记停在绿区；60 秒结算。",
+  "entry": "fishing/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

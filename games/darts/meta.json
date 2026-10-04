@@ -1,0 +1,17 @@
+{
+  "id": "darts",
+  "name": "飞镖高手",
+  "emoji": "🎯",
+  "categories": ["sports", "arcade"],
+  "tags": ["体育", "瞄准", "时机"],
+  "summary": "两段锁定：先卡准上下、再卡准左右，8 支飞镖冲击最高环数！",
+  "description": "两段式瞄准飞镖。第一步锁定垂直位置（光标上下移动），第二步锁定水平位置（左右摆动），按下投出。按落点环数计分（5~50 分，中心红心 50），8 支飞镖结算总分。",
+  "howToPlay": "点一次锁定竖直位置 → 再点一次锁定水平位置投出；共 8 镖。",
+  "entry": "darts/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

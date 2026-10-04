@@ -43,6 +43,16 @@ const ICONS = {
   planewar: "rocket",
   minesweeper: "grid",
   rps: "game",
+  typewriter: "music",
+  jumpjump: "bolt",
+  fishing: "heart",
+  bowling: "ball",
+  bombdefuse: "bolt",
+  trafficrush: "car",
+  rushhour: "car",
+  mathrun: "grid",
+  memorymatrix: "grid",
+  darts: "target",
 };
 export function visualFor(game) {
   return {

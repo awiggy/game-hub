@@ -1,5 +1,245 @@
 [
   {
+    "id": "bombdefuse",
+    "name": "拆弹专家",
+    "emoji": "💣",
+    "categories": [
+      "puzzle",
+      "action"
+    ],
+    "tags": [
+      "解谜",
+      "限时",
+      "紧张"
+    ],
+    "summary": "按手册顺序剪断线路！倒计时嘀嗒作响，剪错一根当场爆炸！",
+    "description": "紧张刺激的拆弹游戏。每颗炸弹有 5-8 根彩色线路，顶部手册给出剪线顺序，按顺序点击剪断。倒计时随炸弹编号不断缩短，剪错或超时即爆炸。成功拆弹数量就是成绩。",
+    "howToPlay": "按顶部手册顺序点击剪线；剪错或倒计时归零都会爆炸。",
+    "entry": "bombdefuse/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "bowling",
+    "name": "保龄球之夜",
+    "emoji": "🎳",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "tags": [
+      "体育",
+      "瞄准",
+      "物理"
+    ],
+    "summary": "定站位、卡角度、锁力度，一球滚出去撞散十个瓶，三局拼总分！",
+    "description": "三段式保龄球：先左右调整站位，再卡准摆动的瞄准角度，最后锁定力度条掷球。球沿车道滚动并轻微弯钩，撞散木瓶。共 3 局，每局清瓶数量计分。",
+    "howToPlay": "点三次完成：站位 → 角度（摆动中点击锁定）→ 力度（摆动中点击锁定）。",
+    "entry": "bowling/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "darts",
+    "name": "飞镖高手",
+    "emoji": "🎯",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "tags": [
+      "体育",
+      "瞄准",
+      "时机"
+    ],
+    "summary": "两段锁定：先卡准上下、再卡准左右，8 支飞镖冲击最高环数！",
+    "description": "两段式瞄准飞镖。第一步锁定垂直位置（光标上下移动），第二步锁定水平位置（左右摆动），按下投出。按落点环数计分（5~50 分，中心红心 50），8 支飞镖结算总分。",
+    "howToPlay": "点一次锁定竖直位置 → 再点一次锁定水平位置投出；共 8 镖。",
+    "entry": "darts/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "fishing",
+    "name": "休闲钓鱼",
+    "emoji": "🎣",
+    "categories": [
+      "casual",
+      "simulation"
+    ],
+    "tags": [
+      "休闲",
+      "钓鱼",
+      "时机"
+    ],
+    "summary": "等鱼咬钩再进入拉扯环节，稳住力度条把鱼拉上来，60 秒渔获比拼！",
+    "description": "两段式钓鱼：抛竿后等待鱼咬钩（浮漂下沉瞬间点击），随后进入拉扯——按住让力度标记上升、松开下落，让标记保持在绿色区域充满捕获进度。进度满即钓到，稀有鱼分数更高。",
+    "howToPlay": "咬钩时点击 → 拉扯时按住/松开让标记停在绿区；60 秒结算。",
+    "entry": "fishing/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "jumpjump",
+    "name": "跳一跳",
+    "emoji": "🐸",
+    "categories": [
+      "casual",
+      "arcade"
+    ],
+    "tags": [
+      "休闲",
+      "蓄力",
+      "手感"
+    ],
+    "summary": "按住蓄力松手起跳，跳上一个个平台，落在正中心还有连击加成！",
+    "description": "经典蓄力跳跳玩法。按住屏幕或空格蓄力（小人对压力越蹲越低），松手向前跳出。落在平台边缘 +1 分，落在正中心 +2 分并连击翻倍加成，没跳上平台即结束。",
+    "howToPlay": "按住空格 / 屏幕蓄力，松手起跳；落在平台中心有连击加成。",
+    "entry": "jumpjump/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "mathrun",
+    "name": "算术冲刺",
+    "emoji": "➗",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "心算",
+      "抢答",
+      "学习"
+    ],
+    "summary": "五秒一道心算题，三选一点答案，连对越多速度越快！",
+    "description": "心算反应挑战。屏幕给出加减乘算式与三个选项，5 秒内选出正确答案；连对提升连击与计时压力，答错或超时扣 1 命。3 命耗尽结束，看你能连对多少题。",
+    "howToPlay": "点击正确答案（或按 1/2/3 键）；答错或超时 -1 命。",
+    "entry": "mathrun/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "memorymatrix",
+    "name": "记忆矩阵",
+    "emoji": "🧊",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "记忆",
+      "观察",
+      "休闲"
+    ],
+    "summary": "闪过的方块位置你记住了吗？每一关多一格，看你的视觉记忆上限！",
+    "description": "视觉记忆测试。网格中随机点亮若干方块，短暂展示后熄灭，凭记忆点出所有亮过的格子。每关多亮一格，点错扣 1 命（3 命），点满进入下一关。",
+    "howToPlay": "记住闪亮的格子位置，熄灭后全部点出来；点错扣命。",
+    "entry": "memorymatrix/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "rushhour",
+    "name": "汽车华容道",
+    "emoji": "🚙",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "益智",
+      "滑块",
+      "思考"
+    ],
+    "summary": "车群中杀出一条路：滑动车辆给红色小车让道，送它冲出出口！",
+    "description": "经典 Rush Hour 玩法。6×6 停车场里横竖停满车辆，车辆只能沿自身方向前后滑动。点击选中一辆车，用方向按钮移动，帮助红色小车到达右侧出口。共 4 关。",
+    "howToPlay": "点击选车 → 方向按钮滑动（车辆只能沿自身方向移动）；红色车到右缘出口过关。",
+    "entry": "rushhour/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "trafficrush",
+    "name": "峰值路口",
+    "emoji": "🚦",
+    "categories": [
+      "simulation",
+      "strategy"
+    ],
+    "tags": [
+      "模拟",
+      "调度",
+      "策略"
+    ],
+    "summary": "十字路口的红绿灯由你指挥：切换绿灯放行车辆，别让任何方向等炸了！",
+    "description": "交通指挥模拟。东南西北四个方向不断来车排队，点击方向按钮（或按 1-4）切换绿灯放行。通过一辆 +1 分，车辆等待超时会流失并扣 1 心，5 心耗尽结束。",
+    "howToPlay": "点方向按钮 / 按 1-4 切换绿灯；绿灯方向车辆依次通过。",
+    "entry": "trafficrush/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "typewriter",
+    "name": "打字达人",
+    "emoji": "⌨️",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "打字",
+      "反应",
+      "学习"
+    ],
+    "summary": "单词从天而降，输入正确字母即可消除，3 次漏词就结束！",
+    "description": "英文单词不断从屏幕上方落下，在输入框中打字即可消除对应单词（前缀匹配高亮）。单词触底扣 1 命，速度随分数提升，3 命耗尽结束。手机可调出输入法打字。",
+    "howToPlay": "在输入框中输入落下的单词；单词触底 -1 命。",
+    "entry": "typewriter/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-09-28",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "diceduel",
     "name": "骰子对决",
     "emoji": "🎲",

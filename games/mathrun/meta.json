@@ -1,0 +1,17 @@
+{
+  "id": "mathrun",
+  "name": "算术冲刺",
+  "emoji": "➗",
+  "categories": ["puzzle", "casual"],
+  "tags": ["心算", "抢答", "学习"],
+  "summary": "五秒一道心算题，三选一点答案，连对越多速度越快！",
+  "description": "心算反应挑战。屏幕给出加减乘算式与三个选项，5 秒内选出正确答案；连对提升连击与计时压力，答错或超时扣 1 命。3 命耗尽结束，看你能连对多少题。",
+  "howToPlay": "点击正确答案（或按 1/2/3 键）；答错或超时 -1 命。",
+  "entry": "mathrun/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

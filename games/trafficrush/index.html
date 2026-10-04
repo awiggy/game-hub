@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>峰值路口</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #cross { position:relative; width:100%; aspect-ratio:1; background:#1a1d29; border:3px solid #2a2e3d; border-radius:12px; overflow:hidden; }
+    #cross .road-h { position:absolute; left:0; right:0; top:calc(50% - 30px); height:60px; background:#2a2e3d; }
+    #cross .road-v { position:absolute; top:0; bottom:0; left:calc(50% - 30px); width:60px; background:#2a2e3d; }
+    .lane-line { position:absolute; background:#3a4152; }
+    .car { position:absolute; font-size:20px; transition:all .18s linear; }
+    .light { position:absolute; width:18px; height:18px; border-radius:50%; border:2px solid #14161f; background:#ff4d5e; }
+    .light.green { background:#22b573; }
+    #pads { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; width:100%; }
+    #pads button {
+      font-family:inherit; font-weight:900; font-size:14px; padding:10px 0;
+      color:#eef1f6; background:#1a1d29; border:2px solid #2a2e3d; border-radius:10px; cursor:pointer;
+    }
+    #pads button.on { background:#22b573; border-color:#fff; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>通过<b id="score">0</b></span>
+      <span>耐心<b id="lives">♥♥♥♥♥</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="cross">
+      <div class="road-h"></div><div class="road-v"></div>
+      <div class="lane-line" style="left:0;right:0;top:50%;height:2px"></div>
+      <div class="lane-line" style="top:0;bottom:0;left:50%;width:2px"></div>
+    </div>
+    <div id="pads">
+      <button data-d="0">↑ 北</button>
+      <button data-d="1">→ 东</button>
+      <button data-d="2">↓ 南</button>
+      <button data-d="3">← 西</button>
+    </div>
+  </div>
+  <div id="overlay">
+    <h1>🚦 峰值路口</h1>
+    <p>点方向按钮 / 按 1-4 切换绿灯<br/>绿灯方向排队车辆依次通过<br/>等待超时流失扣 1 心，共 5 心</p>
+    <button id="ov-btn">开始指挥</button>
+  </div>
+  <script>
+    (() => {
+      const cross = document.getElementById('cross')
+      const scoreEl = document.getElementById('score')
+      const livesEl = document.getElementById('lives')
+      const bestEl = document.getElementById('best')
+      const padsEl = document.getElementById('pads')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+      const padBtns = [...padsEl.querySelectorAll('button')]
+
+      // 方向 0北(从下往上) 1东(从左往右) 2南(从上往下) 3西(从右往左)
+      const EXIT = [
+        { x: 50, y: -10 }, { x: 110, y: 50 }, { x: 50, y: 110 }, { x: -10, y: 50 },
+      ]
+
+      let queues, green, score, lives, running, over, frame
+      let best = Number(localStorage.getItem('trafficrush-best') || 0)
+      bestEl.textContent = best
+
+      function carXY(d, slot) {
+        // slot: 排队位置，0 最靠近路口
+        const off = 34 + slot * 26
+        if (d === 0) return { x: 44, y: 100 - off, rot: 0 }
+        if (d === 1) return { x: off, y: 44, rot: 90 }
+        if (d === 2) return { x: 56, y: off, rot: 180 }
+        return { x: 100 - off, y: 56, rot: 270 }
+      }
+
+      function makeCarEl() {
+        const el = document.createElement('div')
+        el.className = 'car'
+        el.textContent = '🚗'
+        cross.appendChild(el)
+        return el
+      }
+
+      function start() {
+        queues = [[], [], [], []]
+        green = 0
+        score = 0; lives = 5; frame = 0
+        running = true; over = false
+        scoreEl.textContent = 0; livesEl.textContent = '♥♥♥♥♥'
+        // 清除旧车 DOM
+        cross.querySelectorAll('.car,.light').forEach((e) => e.remove())
+        // 信号灯
+        for (let d = 0; d < 4; d++) {
+          const l = document.createElement('div')
+          l.className = 'light'
+          l.dataset.d = d
+          cross.appendChild(l)
+        }
+        setGreen(0)
+        overlay.classList.add('hidden')
+      }
+
+      function setGreen(d) {
+        green = d
+        padBtns.forEach((b, i) => b.classList.toggle('on', i === d))
+        cross.querySelectorAll('.light').forEach((l) => {
+          const dd = Number(l.dataset.d)
+          l.classList.toggle('green', dd === d)
+          if (dd === 0) { l.style.left = 'calc(50% - 9px)'; l.style.top = '8px' }
+          if (dd === 1) { l.style.right = '8px'; l.style.top = 'calc(50% - 9px)' }
+          if (dd === 2) { l.style.left = 'calc(50% - 9px)'; l.style.bottom = '8px' }
+          if (dd === 3) { l.style.left = '8px'; l.style.top = 'calc(50% - 9px)' }
+        })
+      }
+
+      padBtns.forEach((b) => b.addEventListener('click', () => {
+        if (running && !over) setGreen(Number(b.dataset.d))
+      }))
+      window.addEventListener('keydown', (e) => {
+        const idx = ['Digit1', 'Digit2', 'Digit3', 'Digit4'].indexOf(e.code)
+        if (idx >= 0 && running && !over) setGreen(idx)
+      })
+
+      function step() {
+        frame++
+        // 来车
+        const rate = Math.max(40, 110 - score * 2)
+        if (frame % rate === 0) {
+          const d = (Math.random() * 4) | 0
+          if (queues[d].length < 6) {
+            const car = { wait: 0, el: makeCarEl(), d, slot: queues[d].length }
+            queues[d].push(car)
+          }
+        }
+        // 绿灯放行：路口一辆车通过动画
+        const q = queues[green]
+        if (q.length) {
+          const car = q[0]
+          if (!car.leaving) {
+            car.leaving = true
+            const p = EXIT[green]
+            car.el.style.left = p.x + '%'
+            car.el.style.top = p.y + '%'
+            car.el.style.opacity = '0'
+            setTimeout(() => {
+              if (car.el.parentNode) car.el.remove()
+            }, 400)
+            q.shift()
+            score++
+            scoreEl.textContent = score
+            for (let i = 0; i < q.length; i++) q[i].slot = i
+          }
+        }
+        // 等待计时
+        for (let d = 0; d < 4; d++) {
+          for (const car of queues[d]) {
+            car.wait += 1 / 60
+            if (car.wait > 14) {
+              car.el.remove()
+              queues[d].splice(queues[d].indexOf(car), 1)
+              for (let i = 0; i < queues[d].length; i++) queues[d][i].slot = i
+              lives--
+              livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+              if (lives <= 0) {
+                running = false; over = true
+                if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('trafficrush-best', best) }
+                overlay.querySelector('h1').textContent = '🚗💥 司机们暴走了'
+                overlay.querySelector('p').innerHTML = '放行 <b style="color:#ffd23f">' + score + '</b> 辆 · 最佳 ' + best
+                ovBtn.textContent = '再来一班'
+                overlay.classList.remove('hidden')
+                return
+              }
+            }
+          }
+        }
+        // 渲染车辆位置
+        for (let d = 0; d < 4; d++) {
+          for (const car of queues[d]) {
+            const p = carXY(d, car.slot)
+            car.el.style.left = p.x + '%'
+            car.el.style.top = p.y + '%'
+            car.el.style.transform = 'rotate(' + p.rot + 'deg)'
+            if (car.wait > 10) car.el.style.opacity = String(0.4 + 0.6 * Math.abs(Math.sin(car.wait * 6)))
+            else car.el.style.opacity = '1'
+          }
+        }
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+      }
+
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      queues = [[], [], [], []]; green = 0; score = 0; lives = 5; frame = 0
+      running = false; over = false
+    })()
+  </script>
+</body>
+</html>

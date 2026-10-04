@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>保龄球之夜</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>总分<b id="score">0</b></span>
+      <span>第<b id="frame">1/3</b>局</span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="400" height="620"></canvas>
+    <div id="overlay">
+      <h1>🎳 保龄球之夜</h1>
+      <p>三步投球：点 1 定站位 → 点 2 卡角度 → 点 3 锁力度<br/>球撞瓶产生连锁碰撞<br/>3 局总计分</p>
+      <button id="ov-btn">开始投球</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const LANE_L = 70, LANE_R = W - 70
+      const PIN_ROWS = 4
+      const scoreEl = document.getElementById('score')
+      const frameEl = document.getElementById('frame')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let phase, standX, aim, aimDir, power, powerDir, ball, pins, frameNo, score, running, over, settleT
+      let best = Number(localStorage.getItem('bowling-best') || 0)
+      bestEl.textContent = best
+
+      function setupPins() {
+        pins = []
+        const gap = 30
+        for (let r = 0; r < PIN_ROWS; r++)
+          for (let c = 0; c <= r; c++) {
+            pins.push({
+              x: W / 2 + (c - r / 2) * gap,
+              y: 110 + r * gap * 0.9,
+              up: true, vx: 0, vy: 0,
+            })
+          }
+      }
+
+      function newThrow() {
+        phase = 'stand'
+        standX = W / 2
+        aim = 0; aimDir = 1
+        power = 0; powerDir = 1
+        ball = null
+      }
+
+      function start() {
+        frameNo = 1; score = 0
+        running = true; over = false
+        scoreEl.textContent = 0; frameEl.textContent = '1/3'
+        setupPins()
+        newThrow()
+        overlay.classList.add('hidden')
+      }
+
+      function tap() {
+        if (!running || over) return
+        if (phase === 'stand') { phase = 'aim'; return }
+        if (phase === 'aim') { phase = 'power'; return }
+        if (phase === 'power') {
+          const v = 6 + power / 100 * 7
+          ball = { x: standX, y: H - 80, vx: Math.sin(aim) * v * 0.35, vy: -v, done: false }
+          phase = 'roll'
+        }
+      }
+
+      function end() {
+        running = false; over = true
+        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('bowling-best', best) }
+        overlay.querySelector('h1').textContent = '🏁 比赛结束'
+        overlay.querySelector('p').innerHTML = '三局总分 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function nextFrame() {
+        if (frameNo >= 3) return end()
+        frameNo++
+        frameEl.textContent = frameNo + '/3'
+        setupPins()
+        newThrow()
+      }
+
+      function step() {
+        if (phase === 'aim') {
+          aim += aimDir * 0.014
+          if (aim > 0.5) { aim = 0.5; aimDir = -1 }
+          if (aim < -0.5) { aim = -0.5; aimDir = 1 }
+        }
+        if (phase === 'power') {
+          power += powerDir * 2.4
+          if (power >= 100) { power = 100; powerDir = -1 }
+          if (power <= 0) { power = 0; powerDir = 1 }
+        }
+        if (phase === 'roll' && ball) {
+          ball.x += ball.vx
+          ball.y += ball.vy
+          if (ball.x < LANE_L + 10 || ball.x > LANE_R - 10) ball.vx *= -1
+          if (ball.y < 70) {
+            // 到瓶区
+            for (const p of pins) {
+              if (!p.up) continue
+              const d = Math.hypot(p.x - ball.x, p.y - ball.y)
+              if (d < 26) {
+                p.up = false
+                p.vx = (p.x - ball.x) / 26 * 4 + (Math.random() - 0.5) * 2
+                p.vy = (p.y - ball.y) / 26 * 4 + 1
+                // 连锁
+                for (const q of pins) {
+                  if (!q.up) continue
+                  const dq = Math.hypot(q.x - p.x, q.y - p.y)
+                  if (dq < 34) {
+                    q.up = false
+                    q.vx = (q.x - p.x) / 34 * 3 + (Math.random() - 0.5) * 2
+                    q.vy = (q.y - p.y) / 34 * 3 + 1
+                  }
+                }
+              }
+            }
+            ball.done = true
+            settleT = 40
+            phase = 'settle'
+          }
+        }
+        if (phase === 'settle') {
+          for (const p of pins) {
+            if (!p.up) { p.x += p.vx; p.y += p.vy; p.vx *= 0.9; p.vy *= 0.9 }
+          }
+          settleT--
+          if (settleT <= 0) {
+            const knocked = pins.filter((p) => !p.up).length
+            score += knocked
+            scoreEl.textContent = score
+            nextFrame()
+          }
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        // 车道
+        ctx.fillStyle = '#1c2a52'
+        ctx.fillRect(LANE_L, 0, LANE_R - LANE_L, H)
+        ctx.fillStyle = 'rgba(255,255,255,0.06)'
+        for (let y = 0; y < H; y += 60) ctx.fillRect(LANE_L + 6, y, LANE_R - LANE_L - 12, 30)
+        // 瓶
+        ctx.font = '24px sans-serif'
+        for (const p of pins) {
+          ctx.globalAlpha = p.up ? 1 : 0.35
+          ctx.fillText('🎳', p.x - 12, p.y + 8)
+        }
+        ctx.globalAlpha = 1
+        // 球
+        if (ball) {
+          ctx.fillStyle = '#ff4d5e'
+          ctx.beginPath(); ctx.arc(ball.x, ball.y, 13, 0, Math.PI * 2); ctx.fill()
+          ctx.fillStyle = '#a8323e'
+          ctx.beginPath(); ctx.arc(ball.x - 3, ball.y - 3, 4, 0, Math.PI * 2); ctx.fill()
+        }
+        // 站位指示
+        if (phase === 'stand' || phase === 'aim' || phase === 'power') {
+          ctx.fillStyle = '#5d84ff'
+          ctx.beginPath(); ctx.arc(standX, H - 80, 13, 0, Math.PI * 2); ctx.fill()
+        }
+        if (phase === 'aim') {
+          ctx.strokeStyle = '#ffd23f'
+          ctx.lineWidth = 3
+          ctx.beginPath()
+          ctx.moveTo(standX, H - 80)
+          ctx.lineTo(standX + Math.sin(aim) * 240, H - 80 - Math.cos(aim) * 240)
+          ctx.stroke()
+        }
+        if (phase === 'power') {
+          ctx.fillStyle = '#2a2e3d'
+          ctx.fillRect(W / 2 - 70, H - 40, 140, 14)
+          ctx.fillStyle = power > 88 ? '#ff4d5e' : '#ffd23f'
+          ctx.fillRect(W / 2 - 70, H - 40, 140 * power / 100, 14)
+        }
+        // 步骤提示
+        ctx.fillStyle = '#8b93a7'
+        ctx.font = '700 13px sans-serif'
+        const tips = { stand: '① 点击调整站位', aim: '② 点击锁定角度', power: '③ 点击锁定力度', roll: '…', settle: '结算中…' }
+        ctx.fillText(tips[phase] || '', 12, H - 8)
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault()
+          if (!running && !overlay.classList.contains('hidden')) start()
+          else tap()
+        }
+        if (e.code === 'ArrowLeft' && phase === 'stand') standX = Math.max(LANE_L + 20, standX - 16)
+        if (e.code === 'ArrowRight' && phase === 'stand') standX = Math.min(LANE_R - 20, standX + 16)
+      })
+      cv.addEventListener('pointerdown', (e) => {
+        e.preventDefault()
+        if (phase === 'stand') {
+          const r = cv.getBoundingClientRect()
+          standX = Math.max(LANE_L + 20, Math.min(LANE_R - 20, (e.clientX - r.left) * (W / r.width)))
+          return
+        }
+        tap()
+      })
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      phase = 'stand'; standX = W / 2; aim = 0; aimDir = 1; power = 0; powerDir = 1
+      ball = null; frameNo = 1; score = 0; running = false; over = false; settleT = 0
+      setupPins()
+    })()
+  </script>
+</body>
+</html>

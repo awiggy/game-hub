@@ -1,0 +1,17 @@
+{
+  "id": "trafficrush",
+  "name": "峰值路口",
+  "emoji": "🚦",
+  "categories": ["simulation", "strategy"],
+  "tags": ["模拟", "调度", "策略"],
+  "summary": "十字路口的红绿灯由你指挥：切换绿灯放行车辆，别让任何方向等炸了！",
+  "description": "交通指挥模拟。东南西北四个方向不断来车排队，点击方向按钮（或按 1-4）切换绿灯放行。通过一辆 +1 分，车辆等待超时会流失并扣 1 心，5 心耗尽结束。",
+  "howToPlay": "点方向按钮 / 按 1-4 切换绿灯；绿灯方向车辆依次通过。",
+  "entry": "trafficrush/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

@@ -1,0 +1,17 @@
+{
+  "id": "rushhour",
+  "name": "汽车华容道",
+  "emoji": "🚙",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["益智", "滑块", "思考"],
+  "summary": "车群中杀出一条路：滑动车辆给红色小车让道，送它冲出出口！",
+  "description": "经典 Rush Hour 玩法。6×6 停车场里横竖停满车辆，车辆只能沿自身方向前后滑动。点击选中一辆车，用方向按钮移动，帮助红色小车到达右侧出口。共 4 关。",
+  "howToPlay": "点击选车 → 方向按钮滑动（车辆只能沿自身方向移动）；红色车到右缘出口过关。",
+  "entry": "rushhour/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

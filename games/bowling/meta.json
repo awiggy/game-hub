@@ -1,0 +1,17 @@
+{
+  "id": "bowling",
+  "name": "保龄球之夜",
+  "emoji": "🎳",
+  "categories": ["sports", "arcade"],
+  "tags": ["体育", "瞄准", "物理"],
+  "summary": "定站位、卡角度、锁力度，一球滚出去撞散十个瓶，三局拼总分！",
+  "description": "三段式保龄球：先左右调整站位，再卡准摆动的瞄准角度，最后锁定力度条掷球。球沿车道滚动并轻微弯钩，撞散木瓶。共 3 局，每局清瓶数量计分。",
+  "howToPlay": "点三次完成：站位 → 角度（摆动中点击锁定）→ 力度（摆动中点击锁定）。",
+  "entry": "bowling/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}

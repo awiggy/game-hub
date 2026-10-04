@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>汽车华容道</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:min(88vw,420px); display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { width:min(88vw,420px); aspect-ratio:1; position:relative; background:#1a1d29;
+      border:3px solid #2a2e3d; border-radius:12px; }
+    #board .exit { position:absolute; right:-3px; top:calc(33.33% + 2px); bottom:calc(50% - 3px);
+      width:6px; background:var(--yellow); border-radius:3px; box-shadow:0 0 12px var(--yellow); }
+    .car { position:absolute; border-radius:8px; border:2px solid rgba(0,0,0,.4); display:flex;
+      align-items:center; justify-content:center; font-size:18px; cursor:pointer; user-select:none; transition:all .15s; }
+    .car.sel { outline:3px solid var(--yellow); }
+    .car.red { background:#ff4d5e; }
+    #pads { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; width:min(88vw,420px); }
+    #pads button {
+      font-family:inherit; font-weight:900; font-size:16px; padding:12px 0; color:#eef1f6;
+      background:#1a1d29; border:2px solid #2a2e3d; border-radius:10px; cursor:pointer;
+    }
+    #pads button:not(:disabled):active { background:var(--blue); }
+    #pads button:disabled { opacity:.3; }
+    #msg { font-size:13px; font-weight:700; color:#8b93a7; min-height:18px; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>关卡<b id="lv">1/4</b></span>
+      <span>步数<b id="moves">0</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <div id="board"><div class="exit"></div></div>
+    <div id="pads">
+      <button data-m="l">←</button>
+      <button data-m="u">↑</button>
+      <button data-m="d">↓</button>
+      <button data-m="r">→</button>
+    </div>
+    <div id="msg">点击车辆选中，再用方向按钮滑动</div>
+  </div>
+  <div id="overlay">
+    <h1>🚙 汽车华容道</h1>
+    <p>车辆只能沿自身横竖方向滑动<br/>点击选车 → 方向按钮移动<br/>把红色小车送到右侧出口</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+  <script>
+    (() => {
+      const N = 6
+      // 车辆: [行, 列, 长度, 方向 h/v]；红车固定在第 2 行
+      const LEVELS = [
+        { cars: [[2,0,2,'h'],[0,1,3,'v'],[1,3,3,'h'],[4,0,2,'v'],[3,4,3,'h'],[0,5,2,'v'],[5,2,2,'h']], red: 0 },
+        { cars: [[2,0,2,'h'],[0,0,2,'h'],[0,4,2,'v'],[1,2,3,'v'],[3,1,2,'v'],[4,3,3,'h'],[5,0,3,'h'],[3,5,2,'v']], red: 0 },
+        { cars: [[2,0,3,'h'],[0,1,2,'h'],[0,3,3,'v'],[1,5,2,'v'],[3,0,2,'v'],[4,1,3,'h'],[3,4,2,'h'],[5,4,2,'v'],[0,0,1,'v']], red: 0 },
+        { cars: [[2,0,2,'h'],[0,0,3,'v'],[0,2,2,'h'],[1,4,3,'v'],[3,2,2,'v'],[3,0,2,'h'],[4,4,2,'h'],[5,1,3,'h'],[1,1,2,'v'],[0,5,2,'v']], red: 0 },
+      ]
+      const boardEl = document.getElementById('board')
+      const lvEl = document.getElementById('lv')
+      const movesEl = document.getElementById('moves')
+      const bestEl = document.getElementById('best')
+      const msgEl = document.getElementById('msg')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let level, cars, sel, moves, totalMoves, running, over
+      let best = Number(localStorage.getItem('rushhour-best') || 0)
+      if (best) bestEl.textContent = best
+
+      function load(n) {
+        level = n
+        cars = LEVELS[n].cars.map((c, i) => ({ r: c[0], c: c[1], len: c[2], d: c[3], red: i === LEVELS[n].red }))
+        sel = -1
+        moves = 0
+        lvEl.textContent = (n + 1) + '/4'
+        msgEl.textContent = '点击车辆选中，再用方向按钮滑动'
+        render()
+      }
+
+      function start() {
+        totalMoves = 0
+        running = true; over = false
+        overlay.classList.add('hidden')
+        load(0)
+      }
+
+      function occupy(exclude) {
+        const set = new Set()
+        cars.forEach((car, i) => {
+          if (i === exclude) return
+          for (let k = 0; k < car.len; k++) {
+            set.add(car.d === 'h' ? car.r + ',' + (car.c + k) : (car.r + k) + ',' + car.c)
+          }
+        })
+        return set
+      }
+
+      function canPlace(car, r, c) {
+        const occ = occupy(cars.indexOf(car))
+        for (let k = 0; k < car.len; k++) {
+          const rr = car.d === 'h' ? r : r + k
+          const cc = car.d === 'h' ? c + k : c
+          if (rr < 0 || rr >= N || cc < 0 || cc >= N) return false
+          if (occ.has(rr + ',' + cc)) return false
+        }
+        return true
+      }
+
+      function move(m) {
+        if (!running || over || sel === -1) return
+        const car = cars[sel]
+        const [dr, dc] = { l: [0, -1], r: [0, 1], u: [-1, 0], d: [1, 0] }[m]
+        if (car.d === 'h' && dr !== 0) { msgEl.textContent = '横车只能左右移'; return }
+        if (car.d === 'v' && dc !== 0) { msgEl.textContent = '竖车只能上下移'; return }
+        let moved = false
+        // 单步移动（若目标格为空）
+        const nr = car.r + dr, nc = car.c + dc
+        if (canPlace(car, nr, nc)) {
+          car.r = nr; car.c = nc
+          moved = true
+        }
+        if (!moved) { msgEl.textContent = '移不动'; return }
+        moves++; totalMoves++
+        movesEl.textContent = moves
+        msgEl.textContent = ''
+        render()
+        // 红车到右缘
+        if (car.red && car.c + car.len === N) {
+          running = false; over = true
+          const score = Math.max(100, 1600 - totalMoves * 10)
+          if (!best || score > best) { best = score; bestEl.textContent = best; localStorage.setItem('rushhour-best', best) }
+          if (level === LEVELS.length - 1) {
+            overlay.querySelector('h1').textContent = '🚙 通关！'
+            overlay.querySelector('p').innerHTML = '总步数 ' + totalMoves + ' · 得分 <b style="color:#ffd23f">' + score + '</b>'
+            ovBtn.textContent = '再来一局'
+            overlay.classList.remove('hidden')
+          } else {
+            msgEl.textContent = '✓ 过关！下一关…'
+            setTimeout(() => load(level + 1), 700)
+            running = true; over = false
+          }
+        }
+      }
+
+      function render() {
+        boardEl.querySelectorAll('.car').forEach((c) => c.remove())
+        const cell = 100 / N
+        cars.forEach((car, i) => {
+          const el = document.createElement('div')
+          el.className = 'car' + (car.red ? ' red' : '') + (i === sel ? ' sel' : '')
+          el.style.background = car.red ? '' : [' #365ff5','#9564d4','#208569','#bb861c','#168a9b'][i % 5]
+          if (car.d === 'h') {
+            el.style.left = car.c * cell + '%'
+            el.style.top = (car.r * cell + 1) + '%'
+            el.style.width = car.len * cell - 1 + '%'
+            el.style.height = cell - 2 + '%'
+          } else {
+            el.style.left = car.c * cell + 1 + '%'
+            el.style.top = car.r * cell + '%'
+            el.style.width = cell - 2 + '%'
+            el.style.height = car.len * cell - 1 + '%'
+          }
+          el.onclick = () => { sel = i; msgEl.textContent = ''; render() }
+          boardEl.appendChild(el)
+        })
+      }
+
+      document.querySelectorAll('#pads button').forEach((b) => {
+        b.onclick = () => move(b.dataset.m)
+      })
+      window.addEventListener('keydown', (e) => {
+        const map = { ArrowLeft: 'l', ArrowRight: 'r', ArrowUp: 'u', ArrowDown: 'd' }
+        if (map[e.code]) { e.preventDefault(); move(map[e.code]) }
+      })
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return Math.max(100, 1600 - totalMoves * 10) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      cars = LEVELS[0].cars.map((c, i) => ({ r: c[0], c: c[1], len: c[2], d: c[3], red: i === 0 }))
+      level = 0; sel = -1; moves = 0; totalMoves = 0; running = false; over = false
+      render()
+    })()
+  </script>
+</body>
+</html>

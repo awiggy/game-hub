@@ -1,0 +1,17 @@
+{
+  "id": "jumpjump",
+  "name": "跳一跳",
+  "emoji": "🐸",
+  "categories": ["casual", "arcade"],
+  "tags": ["休闲", "蓄力", "手感"],
+  "summary": "按住蓄力松手起跳，跳上一个个平台，落在正中心还有连击加成！",
+  "description": "经典蓄力跳跳玩法。按住屏幕或空格蓄力（小人对压力越蹲越低），松手向前跳出。落在平台边缘 +1 分，落在正中心 +2 分并连击翻倍加成，没跳上平台即结束。",
+  "howToPlay": "按住空格 / 屏幕蓄力，松手起跳；落在平台中心有连击加成。",
+  "entry": "jumpjump/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-09-28",
+  "featured": false,
+  "plays": 0
+}
