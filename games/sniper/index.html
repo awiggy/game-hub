@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>狙击时刻</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>命中<b id="score">0/20</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="520" height="560"></canvas>
+    <div id="overlay">
+      <h1>🎯 狙击时刻</h1>
+      <p>准星沿轨迹自动巡弋，无法直接控制<br/>靶标随机亮起，倒计时结束就消失<br/>预判轨迹，让准星扫过靶标时开枪</p>
+      <button id="ov-btn">进入狙击位</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const scoreEl = document.getElementById('score')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let crossX, crossY, targets, shots, hits, flashT, flashMsg, running, over, frame
+      let best = Number(localStorage.getItem('sniper-best') || 0)
+      bestEl.textContent = best
+
+      function start() {
+        shots = 20; hits = 0; targets = []
+        flashT = 0; flashMsg = ''
+        running = true; over = false; frame = 0
+        scoreEl.textContent = '0/20'
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (hits > best) { best = hits; bestEl.textContent = best; localStorage.setItem('sniper-best', best) }
+        overlay.querySelector('h1').textContent = '🏁 任务结束'
+        overlay.querySelector('p').innerHTML = '命中 <b style="color:#ffd23f">' + hits + '</b> / 20 · 最佳 ' + best
+        ovBtn.textContent = '再来一轮'
+        overlay.classList.remove('hidden')
+      }
+
+      function step() {
+        frame++
+        // 准星利萨如轨迹
+        crossX = W / 2 + Math.sin(frame / 43) * (W / 2 - 40)
+        crossY = H / 2 + Math.sin(frame / 31 + 1.2) * (H / 2 - 40)
+        // 靶标生成与倒计时
+        if (frame % Math.max(30, 70 - hits * 2) === 0 && targets.length < 3) {
+          targets.push({
+            x: 50 + Math.random() * (W - 100),
+            y: 50 + Math.random() * (H - 100),
+            r: 26,
+            life: 110,
+            e: Math.random() < 0.2 ? '🎁' : '🎯',
+          })
+        }
+        for (let i = targets.length - 1; i >= 0; i--) {
+          targets[i].life--
+          if (targets[i].life <= 0) targets.splice(i, 1)
+        }
+        if (flashT > 0) flashT--
+      }
+
+      function shoot() {
+        if (!running || over || shots <= 0) return
+        shots--
+        let hitIdx = -1
+        for (let i = 0; i < targets.length; i++) {
+          if (Math.hypot(targets[i].x - crossX, targets[i].y - crossY) < targets[i].r) { hitIdx = i; break }
+        }
+        if (hitIdx >= 0) {
+          const bonus = targets[hitIdx].e === '🎁' ? 2 : 1
+          hits += bonus
+          flashMsg = bonus > 1 ? '🎁 双倍命中！' : '命中！'
+          targets.splice(hitIdx, 1)
+        } else flashMsg = '脱靶…'
+        flashT = 30
+        scoreEl.textContent = hits + '/20'
+        if (shots <= 0) end()
+      }
+
+      function draw() {
+        ctx.fillStyle = '#14161f'
+        ctx.fillRect(0, 0, W, H)
+        // 地平线背景
+        ctx.fillStyle = '#1a1d29'
+        ctx.fillRect(0, H - 70, W, 70)
+        ctx.font = '26px sans-serif'
+        for (const t of targets) {
+          ctx.globalAlpha = t.life < 30 ? 0.5 + 0.5 * Math.sin(t.life * 0.5) : 1
+          ctx.fillText(t.e, t.x - 13, t.y + 9)
+          // 倒计时环
+          ctx.strokeStyle = '#5d84ff'
+          ctx.beginPath()
+          ctx.arc(t.x, t.y, t.r, -Math.PI / 2, -Math.PI / 2 + (t.life / 110) * Math.PI * 2)
+          ctx.stroke()
+          ctx.globalAlpha = 1
+        }
+        // 准星
+        if (running && !over) {
+          ctx.strokeStyle = '#ff4d5e'
+          ctx.lineWidth = 2
+          ctx.beginPath(); ctx.arc(crossX, crossY, 14, 0, Math.PI * 2); ctx.stroke()
+          ctx.beginPath(); ctx.moveTo(crossX - 22, crossY); ctx.lineTo(crossX + 22, crossY); ctx.stroke()
+          ctx.beginPath(); ctx.moveTo(crossX, crossY - 22); ctx.lineTo(crossX, crossY + 22); ctx.stroke()
+        }
+        if (flashT > 0) {
+          ctx.fillStyle = flashMsg.includes('命中') && !flashMsg.includes('脱') ? '#22b573' : '#ffd23f'
+          ctx.font = '900 20px sans-serif'
+          ctx.textAlign = 'center'
+          ctx.fillText(flashMsg, W / 2, 40)
+          ctx.textAlign = 'left'
+        }
+        ctx.fillStyle = '#8b93a7'
+        ctx.font = '700 12px sans-serif'
+        ctx.fillText('剩余子弹 ' + shots, 14, H - 12)
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      cv.addEventListener('pointerdown', (e) => { e.preventDefault(); shoot() })
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault()
+          if (!running && !overlay.classList.contains('hidden')) start()
+          else shoot()
+        }
+      })
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return hits },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      crossX = W / 2; crossY = H / 2; targets = []
+      shots = 20; hits = 0; flashT = 0; flashMsg = ''
+      running = false; over = false; frame = 0
+    })()
+  </script>
+</body>
+</html>

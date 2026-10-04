@@ -1,0 +1,17 @@
+{
+  "id": "sniper",
+  "name": "狙击时刻",
+  "emoji": "🎯",
+  "categories": ["shooter", "action"],
+  "tags": ["射击", "时机", "预判"],
+  "summary": "准星自动巡弋不受控，预判它的轨迹，在目标亮起的瞬间扣扳机！",
+  "description": "反向瞄准射击。准星沿正弦轨迹自动巡弋（你无法直接控制），靶标在画面各处随机亮起并倒计时消失；点击开枪，命中判定=开枪瞬间准星在靶标圆内。20 发子弹，命中数就是成绩。",
+  "howToPlay": "点击开枪；准星自动巡弋，预判轨迹让它在靶标上时开枪。",
+  "entry": "sniper/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

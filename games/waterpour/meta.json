@@ -1,0 +1,17 @@
+{
+  "id": "waterpour",
+  "name": "倒水谜题",
+  "emoji": "🫗",
+  "categories": ["puzzle", "strategy"],
+  "tags": ["解谜", "逻辑", "经典"],
+  "summary": "三只壶容量不同，倒来倒去精确量出目标水量，经典逻辑谜题！",
+  "description": "经典倒水问题。三只容量不同的水壶，可把一只壶的水倒进另一只（倒满或倒空为止），目标是让某只壶恰好装着目标水量。共三关，步数越少得分越高。",
+  "howToPlay": "点源壶再点目标壶完成倾倒；任一壶恰好等于目标水量即过关。",
+  "entry": "waterpour/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

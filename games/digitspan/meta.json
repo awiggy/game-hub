@@ -1,0 +1,17 @@
+{
+  "id": "digitspan",
+  "name": "数字记忆",
+  "emoji": "🔢",
+  "categories": ["puzzle", "casual"],
+  "tags": ["记忆", "数字", "挑战"],
+  "summary": "闪现一串数字凭记忆敲回去，每次多一位，你的数字记忆上限是几位？",
+  "description": "数字广度测试。屏幕依次闪现一串数字（每轮多一位），闪完后用数字键盘按原顺序输入。答对进入更长序列，答错扣 1 命（3 命）。通过轮数就是成绩。",
+  "howToPlay": "记住闪现的数字顺序，闪完后用键盘按序输入；答错扣命。",
+  "entry": "digitspan/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

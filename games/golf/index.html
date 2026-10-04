@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>迷你高尔夫</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>本洞杆数<b id="strokes">0</b></span>
+      <span>总杆<b id="total">0</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <canvas id="cv" width="480" height="600"></canvas>
+    <div id="overlay">
+      <h1>⛳ 迷你高尔夫</h1>
+      <p>从球上向后拖拽瞄准，松手击球<br/>球会摩擦减速、撞墙反弹<br/>三个球道，总杆数越少越好</p>
+      <button id="ov-btn">开球</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const R = 9, HOLE_R = 13
+      const strokesEl = document.getElementById('strokes')
+      const totalEl = document.getElementById('total')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      // 球道：边界内墙矩形 [x,y,w,h]
+      const COURSES = [
+        { start: [90, H - 80], hole: [W - 80, 80], walls: [[170, 150, 20, 260]] },
+        { start: [70, H - 80], hole: [W - 70, 70], walls: [[110, 220, 260, 20], [230, 60, 20, 160]] },
+        { start: [W / 2, H - 70], hole: [W / 2, 70], walls: [[60, 260, 150, 20], [W - 210, 260, 150, 20], [200, 120, 80, 20]] },
+      ]
+      let strokesElVal = 0
+
+      let course, ball, walls, strokes, total, running, over, aiming, aim, doneT
+      let best = Number(localStorage.getItem('golf-best') || 0)
+      if (best) bestEl.textContent = best
+
+      function load(nv) {
+        course = COURSES[nv]
+        walls = course.walls
+        ball = { x: course.start[0], y: course.start[1], vx: 0, vy: 0 }
+        strokes = 0
+        strokesElVal = 0
+        strokesEl.textContent = 0
+        aiming = false; aim = null
+      }
+
+      function start() {
+        total = 0
+        running = true; over = false
+        totalEl.textContent = 0
+        overlay.classList.add('hidden')
+        load(0)
+      }
+
+      function end() {
+        running = false; over = true
+        if (!best || total < best) { best = total; bestEl.textContent = best; localStorage.setItem('golf-best', best) }
+        overlay.querySelector('h1').textContent = '🏁 全场结束'
+        overlay.querySelector('p').innerHTML = '总杆数 <b style="color:#ffd23f">' + total + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一轮'
+        overlay.classList.remove('hidden')
+      }
+
+      function step() {
+        if (!ball) return
+        ball.x += ball.vx
+        ball.y += ball.vy
+        ball.vx *= 0.985
+        ball.vy *= 0.985
+        // 外墙
+        if (ball.x < R) { ball.x = R; ball.vx = Math.abs(ball.vx) * 0.8 }
+        if (ball.x > W - R) { ball.x = W - R; ball.vx = -Math.abs(ball.vx) * 0.8 }
+        if (ball.y < R) { ball.y = R; ball.vy = Math.abs(ball.vy) * 0.8 }
+        if (ball.y > H - R) { ball.y = H - R; ball.vy = -Math.abs(ball.vy) * 0.8 }
+        // 内墙反弹
+        for (const [wx, wy, ww, wh] of walls) {
+          if (ball.x + R > wx && ball.x - R < wx + ww && ball.y + R > wy && ball.y - R < wy + wh) {
+            // 找最小穿透方向
+            const overlapL = ball.x + R - wx, overlapR = wx + ww - (ball.x - R)
+            const overlapT = ball.y + R - wy, overlapB = wy + wh - (ball.y - R)
+            const m = Math.min(overlapL, overlapR, overlapT, overlapB)
+            if (m === overlapL) { ball.x = wx - R; ball.vx = -Math.abs(ball.vx) * 0.8 }
+            else if (m === overlapR) { ball.x = wx + ww + R; ball.vx = Math.abs(ball.vx) * 0.8 }
+            else if (m === overlapT) { ball.y = wy - R; ball.vy = -Math.abs(ball.vy) * 0.8 }
+            else { ball.y = wy + wh + R; ball.vy = Math.abs(ball.vy) * 0.8 }
+          }
+        }
+        // 进洞
+        const dx = ball.x - course.hole[0], dy = ball.y - course.hole[1]
+        if (Math.hypot(dx, dy) < HOLE_R && Math.hypot(ball.vx, ball.vy) < 5) {
+          total += strokes
+          totalEl.textContent = total
+          if (course === COURSES[COURSES.length - 1]) return end()
+          msg('进洞！下一洞…')
+          load(COURSES.indexOf(course) + 1)
+        }
+        // 停止
+        if (Math.hypot(ball.vx, ball.vy) < 0.05) { ball.vx = 0; ball.vy = 0 }
+      }
+
+      function msg(t) {
+        bestEl.textContent = best + ' · ' + t
+        setTimeout(() => { bestEl.textContent = best }, 700)
+      }
+
+      function draw() {
+        ctx.fillStyle = '#122412'
+        ctx.fillRect(0, 0, W, H)
+        // 果岭纹理
+        ctx.fillStyle = 'rgba(255,255,255,0.03)'
+        for (let y = 0; y < H; y += 36) ctx.fillRect(0, y, W, 18)
+        // 墙
+        ctx.fillStyle = '#3a4152'
+        for (const [wx, wy, ww, wh] of walls) {
+          ctx.beginPath(); ctx.roundRect(wx, wy, ww, wh, 6); ctx.fill()
+        }
+        // 洞
+        ctx.fillStyle = '#0a0b10'
+        ctx.beginPath(); ctx.arc(course.hole[0], course.hole[1], HOLE_R, 0, Math.PI * 2); ctx.fill()
+        ctx.strokeStyle = '#eef1f6'
+        ctx.lineWidth = 2
+        ctx.beginPath(); ctx.arc(course.hole[0], course.hole[1], HOLE_R, 0, Math.PI * 2); ctx.stroke()
+        ctx.fillStyle = '#ffd23f'
+        ctx.font = '14px sans-serif'
+        ctx.fillText('🚩', course.hole[0] - 6, course.hole[1] - HOLE_R - 2)
+        // 球
+        ctx.fillStyle = '#eef1f6'
+        ctx.beginPath(); ctx.arc(ball.x, ball.y, R, 0, Math.PI * 2); ctx.fill()
+        ctx.fillStyle = '#c9d4f5'
+        ctx.beginPath(); ctx.arc(ball.x - 3, ball.y - 3, 3, 0, Math.PI * 2); ctx.fill()
+        // 瞄准线
+        if (aiming && aim) {
+          ctx.strokeStyle = 'rgba(255,210,63,0.8)'
+          ctx.lineWidth = 3
+          ctx.setLineDash([8, 6])
+          ctx.beginPath()
+          ctx.moveTo(ball.x, ball.y)
+          ctx.lineTo(ball.x - aim.dx * 3, ball.y - aim.dy * 3)
+          ctx.stroke()
+          ctx.setLineDash([])
+        }
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      function pos(e) {
+        const r = cv.getBoundingClientRect()
+        return { x: (e.clientX - r.left) * (W / r.width), y: (e.clientY - r.top) * (H / r.height) }
+      }
+
+      cv.addEventListener('pointerdown', (e) => {
+        if (!running || over) return
+        const p = pos(e)
+        if (Math.hypot(p.x - ball.x, p.y - ball.y) < 26 && !Math.hypot(ball.vx, ball.vy)) {
+          aiming = true; aim = { dx: 0, dy: 0 }
+        }
+      })
+      cv.addEventListener('pointermove', (e) => {
+        if (!aiming) return
+        const p = pos(e)
+        const dx = ball.x - p.x, dy = ball.y - p.y
+        const d = Math.hypot(dx, dy)
+        const pw = Math.min(11, d / 9)
+        aim = d > 4 ? { dx: dx / d * pw, dy: dy / d * pw } : { dx: 0, dy: 0 }
+      })
+      window.addEventListener('pointerup', () => {
+        if (!aiming) return
+        aiming = false
+        if (aim && (aim.dx || aim.dy)) {
+          ball.vx = aim.dx
+          ball.vy = aim.dy
+          strokes++
+          strokesElVal = strokes
+          strokesEl.textContent = strokes
+        }
+        aim = null
+      })
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return Math.max(0, 30 - total) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      course = COURSES[0]; walls = course.walls
+      ball = { x: course.start[0], y: course.start[1], vx: 0, vy: 0 }
+      strokes = 0; total = 0; running = false; over = false
+      aiming = false; aim = null; doneT = 0
+    })()
+  </script>
+</body>
+</html>

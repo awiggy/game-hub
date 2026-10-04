@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>猜词五连</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,420px); position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { display:flex; flex-direction:column; gap:5px; }
+    .row { display:flex; gap:5px; }
+    .tile {
+      width:56px; height:56px; border:2px solid #2a3350; border-radius:8px;
+      display:grid; place-items:center; font-size:26px; font-weight:900; text-transform:uppercase;
+    }
+    .tile.g { background:#22b573; border-color:#0f7a4a; }
+    .tile.y { background:#c9a227; border-color:#a3831d; }
+    .tile.b { background:#2a2e3d; border-color:#2a2e3d; }
+    #keys { display:grid; grid-template-columns:repeat(6,1fr); gap:5px; width:100%; }
+    #keys button {
+      height:40px; font-family:inherit; font-size:13px; font-weight:900; color:#eef1f6;
+      background:#1a1d29; border:2px solid #2a2e3d; border-radius:8px; cursor:pointer;
+    }
+    #keys button:disabled { opacity:.3; }
+    #keys button.enter { grid-column:span 2; background:var(--blue); border-color:#fff; }
+    #keys button.del { grid-column:span 1; }
+    #keys button.g { background:#22b573; }
+    #keys button.y { background:#c9a227; }
+    #keys button.b { background:#2a2e3d; opacity:.5; }
+    #msg { font-size:13px; font-weight:700; color:#8b93a7; min-height:18px; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>解开<b id="score">0</b>词</span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="board"></div>
+    <div id="msg">输入 5 字母单词并提交</div>
+    <div id="keys"></div>
+  </div>
+  <div id="overlay">
+    <h1>🟩 猜词五连</h1>
+    <p>六次机会猜 5 字母单词<br/>绿=位置对 · 黄=有此字母 · 灰=没有<br/>解开越多分越高</p>
+    <button id="ov-btn">开始猜词</button>
+  </div>
+  <script>
+    (() => {
+      const WORDS = ['apple', 'beach', 'brain', 'candy', 'dream', 'eagle', 'flame', 'ghost', 'heart', 'ivory',
+        'joker', 'koala', 'lemon', 'medal', 'noble', 'ocean', 'piano', 'quilt', 'raven', 'solar',
+        'tiger', 'ultra', 'vivid', 'whale', 'zebra', 'bread', 'chess', 'dance', 'earth', 'fruit']
+      const boardEl = document.getElementById('board')
+      const keysEl = document.getElementById('keys')
+      const msgEl = document.getElementById('msg')
+      const scoreEl = document.getElementById('score')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let answer, rows, cur, rowIdx, solved, running, over
+      let best = Number(localStorage.getItem('wordle-best') || 0)
+      bestEl.textContent = best
+
+      const keyBtns = {}
+      const layout = 'qwertyuiop|asdfghjkl|⏎zxcvbnm⌫'.split('|')
+      layout.forEach((row) => {
+        for (const ch of row) {
+          const b = document.createElement('button')
+          if (ch === '⏎') { b.textContent = '✓ 提交'; b.className = 'enter' }
+          else if (ch === '⌫') { b.textContent = '⌫'; b.className = 'del' }
+          else b.textContent = ch.toUpperCase()
+          b.onclick = () => key(ch)
+          keysEl.appendChild(b)
+          if (ch !== '⏎' && ch !== '⌫') keyBtns[ch] = b
+        }
+      })
+
+      function buildBoard() {
+        boardEl.innerHTML = ''
+        for (let r = 0; r < 6; r++) {
+          const row = document.createElement('div')
+          row.className = 'row'
+          for (let c = 0; c < 5; c++) {
+            const t = document.createElement('div')
+            t.className = 'tile'
+            row.appendChild(t)
+          }
+          boardEl.appendChild(row)
+        }
+      }
+
+      function start() {
+        solved = 0
+        running = true; over = false
+        scoreEl.textContent = 0
+        overlay.classList.add('hidden')
+        newWord()
+      }
+
+      function newWord() {
+        answer = WORDS[(Math.random() * WORDS.length) | 0]
+        rows = Array.from({ length: 6 }, () => Array(5).fill(''))
+        cur = 0; rowIdx = 0
+        buildBoard()
+        Object.values(keyBtns).forEach((b) => { b.disabled = false; b.className = b.className.split(' ').filter((c) => !['g','y','b'].includes(c)).join(' ') })
+        msgEl.textContent = '输入 5 字母单词并提交'
+      }
+
+      function end(win) {
+        running = false; over = true
+        if (win) {
+          solved++
+          scoreEl.textContent = solved
+          if (solved > best) { best = solved; bestEl.textContent = best; localStorage.setItem('wordle-best', best) }
+        }
+        overlay.querySelector('h1').textContent = win ? '🎉 猜中了' : '😵 机会用完'
+        overlay.querySelector('p').innerHTML =
+          '答案 <b style="color:#ffd23f">' + answer.toUpperCase() + '</b> · 解开 ' + solved + ' 词 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function key(ch) {
+        if (!running || over) return
+        if (ch === '⌫') {
+          if (cur > 0) { cur--; rows[rowIdx][cur] = '' }
+        } else if (ch === '⏎') {
+          if (cur !== 5) { msgEl.textContent = '要填满 5 个字母'; return }
+          return submit()
+        } else if (cur < 5) {
+          rows[rowIdx][cur] = ch
+          cur++
+        }
+        // 刷新当前行
+        const tiles = boardEl.children[rowIdx].children
+        for (let i = 0; i < 5; i++) tiles[i].textContent = rows[rowIdx][i].toUpperCase()
+      }
+
+      function submit() {
+        const guess = rows[rowIdx].join('')
+        // 反馈
+        const result = Array(5).fill('b')
+        const pool = answer.split('')
+        for (let i = 0; i < 5; i++) {
+          if (guess[i] === answer[i]) { result[i] = 'g'; pool[pool.indexOf(guess[i])] = null }
+        }
+        for (let i = 0; i < 5; i++) {
+          if (result[i] === 'g') continue
+          const at = pool.indexOf(guess[i])
+          if (at >= 0) { result[i] = 'y'; pool[at] = null }
+        }
+        // 上色
+        const tiles = boardEl.children[rowIdx].children
+        for (let i = 0; i < 5; i++) tiles[i].classList.add(result[i])
+        // 键盘染色（只升不降）
+        for (let i = 0; i < 5; i++) {
+          const b = keyBtns[guess[i]]
+          if (!b) continue
+          const cur2 = b.classList.contains('g') ? 3 : b.classList.contains('y') ? 2 : b.classList.contains('b') ? 1 : 0
+          const nw = result[i] === 'g' ? 3 : result[i] === 'y' ? 2 : 1
+          if (nw > cur2) { b.classList.remove('g', 'y', 'b'); b.classList.add(result[i]) }
+        }
+        if (guess === answer) {
+          msgEl.textContent = '🎉 猜中！'
+          setTimeout(() => end(true), 800)
+          return
+        }
+        rowIdx++
+        cur = 0
+        if (rowIdx >= 6) end(false)
+        else msgEl.textContent = '继续推理…'
+      }
+
+      window.addEventListener('keydown', (e) => {
+        const ch = e.key.toLowerCase()
+        if (ch === 'enter' || ch === ' ') { e.preventDefault(); key('⏎'); return }
+        if (ch === 'backspace') { key('⌫'); return }
+        if (/^[a-z]$/.test(ch)) key(ch)
+      })
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return solved },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      answer = 'apple'; rows = Array.from({ length: 6 }, () => Array(5).fill(''))
+      cur = 0; rowIdx = 0; solved = 0; running = false; over = false
+    })()
+  </script>
+</body>
+</html>

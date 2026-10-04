@@ -1,0 +1,17 @@
+{
+  "id": "golf",
+  "name": "迷你高尔夫",
+  "emoji": "⛳",
+  "categories": ["sports", "arcade"],
+  "tags": ["体育", "物理", "精准"],
+  "summary": "拖拽瞄准击球入洞：墙会反弹、沙坑会减速，三洞打出最低杆数！",
+  "description": "迷你高尔夫物理推杆。从球上向反方向拖拽设定力度与方向（弹弓式），松手击球；球带摩擦滚动、撞墙反弹。避开障碍墙，把球送进洞杯。三个球道各计杆数，总杆数越少越好。",
+  "howToPlay": "从球位置向后拖拽瞄准，松手击球；杆数越少越好。",
+  "entry": "golf/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

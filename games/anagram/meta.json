@@ -1,0 +1,17 @@
+{
+  "id": "anagram",
+  "name": "拼词大师",
+  "emoji": "🔠",
+  "categories": ["puzzle", "casual"],
+  "tags": ["词汇", "重组", "益智"],
+  "summary": "打乱的字母块里拼出隐藏单词，看提示抢时间，越快分越高！",
+  "description": "字母重组游戏。乱序字母块点击依次拼出与提示对应的单词，拼错可撤销重拼。每题限时 20 秒，拼对按剩余时间得分；共 8 题，累计得分结算。",
+  "howToPlay": "按正确顺序点击字母块拼出提示对应的单词；⌫ 撤销。",
+  "entry": "anagram/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

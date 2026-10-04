@@ -1,0 +1,17 @@
+{
+  "id": "cookieidler",
+  "name": "饼干工坊",
+  "emoji": "🍪",
+  "categories": ["casual", "simulation"],
+  "tags": ["挂机", "经营", "放置"],
+  "summary": "点饼干赚饼干，雇帮手自动生产，60 秒看你的饼干帝国滚多大！",
+  "description": "放置挂机玩法。点击大饼干手动生产，赚到的饼干可以雇三种帮手（学徒/烤箱/工厂）实现自动产出，产出互相滚雪球。60 秒结算总产量，看看你的经营效率。",
+  "howToPlay": "疯狂点大饼干攒饼干，买帮手实现自动产出。",
+  "entry": "cookieidler/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

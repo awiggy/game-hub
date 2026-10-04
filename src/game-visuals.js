@@ -73,6 +73,16 @@ const ICONS = {
   tightrope: "flag",
   pyramid: "card",
   moonlander: "rocket",
+  wordsearch: "grid",
+  digitspan: "grid",
+  sniper: "target",
+  anagram: "music",
+  golf: "ball",
+  waterpour: "puzzle",
+  cookieidler: "house",
+  shellgame: "game",
+  wordle: "grid",
+  billiards: "ball",
 };
 export function visualFor(game) {
   return {

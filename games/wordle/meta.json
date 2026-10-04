@@ -1,0 +1,17 @@
+{
+  "id": "wordle",
+  "name": "猜词五连",
+  "emoji": "🟩",
+  "categories": ["puzzle", "casual"],
+  "tags": ["词汇", "推理", "经典"],
+  "summary": "六次机会猜出五个字母的单词：绿=位置对，黄=有此字母，灰=没有！",
+  "description": "Wordle 玩法。猜一个 5 字母英文单词，每次猜测后给反馈：绿色=字母和位置都对，黄色=单词里有但位置不对，灰色=没有此字母。六次内猜中即胜，解开越多分越高。",
+  "howToPlay": "点字母键拼 5 字母单词并提交；根据绿黄灰反馈推理。",
+  "entry": "wordle/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

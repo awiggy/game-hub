@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>桌球小将</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:6px solid #5a3a22; border-radius:12px; background:#0d3b1e; max-width:92vw; max-height:74vh; }
+    #overlay { position:absolute; inset:0; border-radius:12px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>杆数<b id="strokes">0</b></span>
+      <span>剩球<b id="left">8</b></span>
+      <span>BEST<b id="best">—</b></span>
+    </div>
+    <canvas id="cv" width="560" height="360"></canvas>
+    <div id="overlay">
+      <h1>🎱 桌球小将</h1>
+      <p>从白球向后拖拽瞄准，松手出杆<br/>彩球互相碰撞反弹，撞进四角袋<br/>8 颗清台，杆数越少越好</p>
+      <button id="ov-btn">开始清台</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const R = 9
+      const PADS = [[10, 10], [W - 10, 10], [10, H - 10], [W - 10, H - 10]]
+      const COLORS = ['#ff4d5e', '#f5a623', '#ffd23f', '#22b573', '#2f55e4', '#8a5cf6', '#00b8a9', '#ff7ab8']
+      const strokesEl = document.getElementById('strokes')
+      const leftEl = document.getElementById('left')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      let white, balls, strokes, running, over, aiming, aim
+      let best = Number(localStorage.getItem('billiards-best') || 0)
+      if (best) bestEl.textContent = best
+
+      function setup() {
+        white = { x: 120, y: H / 2, vx: 0, vy: 0, c: '#eef1f6' }
+        balls = []
+        // 三角排列
+        let k = 0
+        for (let col = 0; col < 4; col++)
+          for (let row = 0; row <= col; row++) {
+            if (k >= 8) break
+            balls.push({
+              x: W - 180 + col * 22,
+              y: H / 2 - col * 11 + row * 22,
+              vx: 0, vy: 0, c: COLORS[k],
+            })
+            k++
+          }
+        strokes = 0
+        strokesEl.textContent = 0
+        leftEl.textContent = balls.length
+      }
+
+      function start() {
+        running = true; over = false
+        overlay.classList.add('hidden')
+        setup()
+      }
+
+      function end() {
+        running = false; over = true
+        if (!best || strokes < best) { best = strokes; bestEl.textContent = best; localStorage.setItem('billiards-best', best) }
+        overlay.querySelector('h1').textContent = '🎱 清台完成'
+        overlay.querySelector('p').innerHTML = '总杆数 <b style="color:#ffd23f">' + strokes + '</b> · 最佳 ' + (best || '—')
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      function pocketDist(x, y) {
+        return Math.min(...PADS.map(([px, py]) => Math.hypot(px - x, py - y)))
+      }
+
+      function step() {
+        const all = [white, ...balls]
+        for (const b of all) {
+          b.x += b.vx
+          b.y += b.vy
+          b.vx *= 0.99
+          b.vy *= 0.99
+          // 库边
+          if (b.x < R + 6) { b.x = R + 6; b.vx = Math.abs(b.vx) * 0.85 }
+          if (b.x > W - R - 6) { b.x = W - R - 6; b.vx = -Math.abs(b.vx) * 0.85 }
+          if (b.y < R + 6) { b.y = R + 6; b.vy = Math.abs(b.vy) * 0.85 }
+          if (b.y > H - R - 6) { b.y = H - R - 6; b.vy = -Math.abs(b.vy) * 0.85 }
+          // 进袋（角袋）
+          if (b !== white && pocketDist(b.x, b.y) < 16) {
+            balls.splice(balls.indexOf(b), 1)
+            leftEl.textContent = balls.length
+            if (!balls.length) setTimeout(end, 500)
+            continue
+          }
+          if (Math.hypot(b.vx, b.vy) < 0.04) { b.vx = 0; b.vy = 0 }
+        }
+        // 球间碰撞
+        for (let i = 0; i < all.length; i++)
+          for (let j = i + 1; j < all.length; j++) {
+            const a = all[i], b = all[j]
+            const dx = b.x - a.x, dy = b.y - a.y
+            const d = Math.hypot(dx, dy)
+            if (d < R * 2 && d > 0) {
+              const nx = dx / d, ny = dy / d
+              const overlap = R * 2 - d
+              a.x -= nx * overlap / 2; a.y -= ny * overlap / 2
+              b.x += nx * overlap / 2; b.y += ny * overlap / 2
+              const p = (a.vx * nx + a.vy * ny) - (b.vx * nx + b.vy * ny)
+              if (p > 0) {
+                a.vx -= p * nx; a.vy -= p * ny
+                b.vx += p * nx; b.vy += p * ny
+              }
+            }
+          }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#0d3b1e'
+        ctx.fillRect(0, 0, W, H)
+        ctx.fillStyle = 'rgba(0,0,0,0.12)'
+        for (let x = 0; x < W; x += 30) ctx.fillRect(x, 0, 15, H)
+        // 袋口
+        for (const [px, py] of PADS) {
+          ctx.fillStyle = '#0a0b10'
+          ctx.beginPath(); ctx.arc(px, py, 15, 0, Math.PI * 2); ctx.fill()
+        }
+        // 彩球
+        ctx.font = '11px sans-serif'
+        for (const b of balls) {
+          ctx.fillStyle = b.c
+          ctx.beginPath(); ctx.arc(b.x, b.y, R, 0, Math.PI * 2); ctx.fill()
+          ctx.fillStyle = 'rgba(255,255,255,0.5)'
+          ctx.beginPath(); ctx.arc(b.x - 3, b.y - 3, 3, 0, Math.PI * 2); ctx.fill()
+        }
+        // 白球
+        ctx.fillStyle = '#eef1f6'
+        ctx.beginPath(); ctx.arc(white.x, white.y, R, 0, Math.PI * 2); ctx.fill()
+        // 瞄准线
+        if (aiming && aim) {
+          ctx.strokeStyle = 'rgba(255,255,255,0.5)'
+          ctx.setLineDash([6, 6])
+          ctx.beginPath()
+          ctx.moveTo(white.x, white.y)
+          ctx.lineTo(white.x + aim.dx * 6, white.y + aim.dy * 6)
+          ctx.stroke()
+          ctx.setLineDash([])
+        }
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      function pos(e) {
+        const r = cv.getBoundingClientRect()
+        return { x: (e.clientX - r.left) * (W / r.width), y: (e.clientY - r.top) * (H / r.height) }
+      }
+
+      cv.addEventListener('pointerdown', (e) => {
+        if (!running || over) return
+        const p = pos(e)
+        if (Math.hypot(p.x - white.x, p.y - white.y) < 30 && !Math.hypot(white.vx, white.vy)) {
+          aiming = true; aim = { dx: 0, dy: 0 }
+        }
+      })
+      cv.addEventListener('pointermove', (e) => {
+        if (!aiming) return
+        const p = pos(e)
+        const dx = white.x - p.x, dy = white.y - p.y
+        const d = Math.hypot(dx, dy)
+        const pw = Math.min(10, d / 12)
+        aim = d > 4 ? { dx: dx / d * pw, dy: dy / d * pw } : { dx: 0, dy: 0 }
+      })
+      window.addEventListener('pointerup', () => {
+        if (!aiming) return
+        aiming = false
+        if (aim && (aim.dx || aim.dy)) {
+          white.vx = aim.dx
+          white.vy = aim.dy
+          strokes++
+          strokesEl.textContent = strokes
+        }
+        aim = null
+      })
+      ovBtn.addEventListener('click', start)
+      loop()
+
+      window.__hub = {
+        get score() { return Math.max(0, 40 - strokes) },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      white = { x: 120, y: H / 2, vx: 0, vy: 0, c: '#eef1f6' }
+      balls = []; strokes = 0; running = false; over = false
+      aiming = false; aim = null
+      setup()
+    })()
+  </script>
+</body>
+</html>

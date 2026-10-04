@@ -1,0 +1,17 @@
+{
+  "id": "billiards",
+  "name": "桌球小将",
+  "emoji": "🎱",
+  "categories": ["sports", "arcade"],
+  "tags": ["体育", "物理", "精准"],
+  "summary": "拖拽白球瞄准出杆，把彩球一颗颗撞进袋口，用最少的杆数清台！",
+  "description": "简化桌球。从白球向后拖拽瞄准出杆，白球撞击彩球产生物理碰撞，把彩球撞进四个角袋。8 颗彩球清台结束，总杆数越少分越高。彩球会互相碰撞反弹。",
+  "howToPlay": "从白球向后拖拽瞄准，松手出杆；把所有彩球撞进袋口。",
+  "entry": "billiards/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

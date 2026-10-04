@@ -1,0 +1,17 @@
+{
+  "id": "shellgame",
+  "name": "三仙归洞",
+  "emoji": "🥤",
+  "categories": ["casual", "puzzle"],
+  "tags": ["观察", "追踪", "休闲"],
+  "summary": "小球扣在杯下，三个杯子眼花缭乱地换位，你能盯住它在哪吗？",
+  "description": "经典三杯猜球游戏。小球扣在一只杯下，杯子进行多轮高速换位动画，结束后点击你认为藏着球的杯子。答对连对加分并加快换位速度，答错游戏结束。",
+  "howToPlay": "盯住藏球的杯子，换位结束后点击它。",
+  "entry": "shellgame/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

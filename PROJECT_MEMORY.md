@@ -1,6 +1,6 @@
 # 项目记忆
 
-更新日期：2026-10-04（第二批）
+更新日期：2026-10-04（第三批）
 
 ## 产品边界
 
@@ -75,3 +75,13 @@
 - `npm run check` 80 款全过；`npm run build` 通过；游戏库确认 80 张卡片。
 - 浏览器抽测通过：`hangman`（5 次字母点击全部正确落点并判定，本局单词 music 恰好全 miss 属正常随机）、`ballsort`（同色顶管合法倒装 moves=1）；`bigfish/rhymtap/schulte/tightrope/pyramid/moonlander` 为静态检查，深度玩法验收待补。
 - 提交推送 `main` 触发 Pages 自动部署，线上冒烟待验证。
+
+## 扩充到 90 款（2026-10-04 第三批）
+
+- 用户要求再新增 10 款，货架从 80 款扩至 90 款。
+- 新增：`wordsearch` 单词搜索（10×10 横纵藏词）、`digitspan` 数字记忆（数字广度逐轮加长）、`sniper` 狙击时刻（准星自动巡弋+预判射击）、`anagram` 拼词大师（字母重组限时）、`golf` 迷你高尔夫（弹弓式拖拽+摩擦反弹物理）、`waterpour` 倒水谜题（经典量水问题三关）、`cookieidler` 饼干工坊（放置挂机+自动产出滚雪球）、`shellgame` 三仙归洞（换位追踪）、`wordle` 猜词五连（绿黄灰反馈）、`billiards` 桌球小将（拖拽出杆+球间碰撞物理）。
+- 全部遵守约定：单文件、`__hub` 钩子、键盘+触屏、本地最高分、Canvas 先初始化状态再启动绘制循环。
+- `src/game-visuals.js` ICONS 表增量补充 10 个图标。
+- `npm run check` 90 款全过；`npm run build` 通过；游戏库确认 90 张卡片。
+- 浏览器抽测通过：`wordle`（逐键输入+绿黄灰反馈渲染正确，注意 cua.type 不触发 window keydown，验证需用 cua.keypress 逐键）、`shellgame`（换位动画→点击→揭晓→计分闭环完整）。
+- 其余 8 款为静态检查，深度玩法验收待补（与之前两批累计 24 款待验收合计，见前两批记录）。

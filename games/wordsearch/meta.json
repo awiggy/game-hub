@@ -1,0 +1,17 @@
+{
+  "id": "wordsearch",
+  "name": "单词搜索",
+  "emoji": "🔎",
+  "categories": ["puzzle", "casual"],
+  "tags": ["解谜", "找词", "观察"],
+  "summary": "字母海里藏着 5 个英文单词，横向纵向都有，全部找出来！",
+  "description": "经典单词搜索。10×10 字母矩阵中横向或纵向藏着 5 个单词，先点单词首字母再点尾字母选中；右侧词单实时勾销。全部找到即胜利，用时越短分越高。",
+  "howToPlay": "先点单词首字母，再点同一直线上的尾字母；共 5 词。",
+  "entry": "wordsearch/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-04",
+  "featured": false,
+  "plays": 0
+}

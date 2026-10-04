@@ -1,5 +1,29 @@
 [
   {
+    "id": "anagram",
+    "name": "拼词大师",
+    "emoji": "🔠",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "词汇",
+      "重组",
+      "益智"
+    ],
+    "summary": "打乱的字母块里拼出隐藏单词，看提示抢时间，越快分越高！",
+    "description": "字母重组游戏。乱序字母块点击依次拼出与提示对应的单词，拼错可撤销重拼。每题限时 20 秒，拼对按剩余时间得分；共 8 题，累计得分结算。",
+    "howToPlay": "按正确顺序点击字母块拼出提示对应的单词；⌫ 撤销。",
+    "entry": "anagram/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "ballsort",
     "name": "彩球分装",
     "emoji": "🧪",
@@ -48,6 +72,30 @@
     "plays": 0
   },
   {
+    "id": "billiards",
+    "name": "桌球小将",
+    "emoji": "🎱",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "tags": [
+      "体育",
+      "物理",
+      "精准"
+    ],
+    "summary": "拖拽白球瞄准出杆，把彩球一颗颗撞进袋口，用最少的杆数清台！",
+    "description": "简化桌球。从白球向后拖拽瞄准出杆，白球撞击彩球产生物理碰撞，把彩球撞进四个角袋。8 颗彩球清台结束，总杆数越少分越高。彩球会互相碰撞反弹。",
+    "howToPlay": "从白球向后拖拽瞄准，松手出杆；把所有彩球撞进袋口。",
+    "entry": "billiards/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "connect4",
     "name": "四子连线",
     "emoji": "🔴",
@@ -64,6 +112,78 @@
     "description": "经典 Connect Four。点击列把棋子投入竖井（落在最底空位），先在横、竖、斜任意方向连成四子者获胜。AI 会抓住制胜点、封堵你的连势，也会抢占中心。",
     "howToPlay": "点击某一列投子；先连成四子者胜。",
     "entry": "connect4/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "cookieidler",
+    "name": "饼干工坊",
+    "emoji": "🍪",
+    "categories": [
+      "casual",
+      "simulation"
+    ],
+    "tags": [
+      "挂机",
+      "经营",
+      "放置"
+    ],
+    "summary": "点饼干赚饼干，雇帮手自动生产，60 秒看你的饼干帝国滚多大！",
+    "description": "放置挂机玩法。点击大饼干手动生产，赚到的饼干可以雇三种帮手（学徒/烤箱/工厂）实现自动产出，产出互相滚雪球。60 秒结算总产量，看看你的经营效率。",
+    "howToPlay": "疯狂点大饼干攒饼干，买帮手实现自动产出。",
+    "entry": "cookieidler/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "digitspan",
+    "name": "数字记忆",
+    "emoji": "🔢",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "记忆",
+      "数字",
+      "挑战"
+    ],
+    "summary": "闪现一串数字凭记忆敲回去，每次多一位，你的数字记忆上限是几位？",
+    "description": "数字广度测试。屏幕依次闪现一串数字（每轮多一位），闪完后用数字键盘按原顺序输入。答对进入更长序列，答错扣 1 命（3 命）。通过轮数就是成绩。",
+    "howToPlay": "记住闪现的数字顺序，闪完后用键盘按序输入；答错扣命。",
+    "entry": "digitspan/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "golf",
+    "name": "迷你高尔夫",
+    "emoji": "⛳",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "tags": [
+      "体育",
+      "物理",
+      "精准"
+    ],
+    "summary": "拖拽瞄准击球入洞：墙会反弹、沙坑会减速，三洞打出最低杆数！",
+    "description": "迷你高尔夫物理推杆。从球上向反方向拖拽设定力度与方向（弹弓式），松手击球；球带摩擦滚动、撞墙反弹。避开障碍墙，把球送进洞杯。三个球道各计杆数，总杆数越少越好。",
+    "howToPlay": "从球位置向后拖拽瞄准，松手击球；杆数越少越好。",
+    "entry": "golf/index.html",
     "platform": "浏览器",
     "playMode": "online",
     "price": "免费",
@@ -216,6 +336,54 @@
     "plays": 0
   },
   {
+    "id": "shellgame",
+    "name": "三仙归洞",
+    "emoji": "🥤",
+    "categories": [
+      "casual",
+      "puzzle"
+    ],
+    "tags": [
+      "观察",
+      "追踪",
+      "休闲"
+    ],
+    "summary": "小球扣在杯下，三个杯子眼花缭乱地换位，你能盯住它在哪吗？",
+    "description": "经典三杯猜球游戏。小球扣在一只杯下，杯子进行多轮高速换位动画，结束后点击你认为藏着球的杯子。答对连对加分并加快换位速度，答错游戏结束。",
+    "howToPlay": "盯住藏球的杯子，换位结束后点击它。",
+    "entry": "shellgame/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "sniper",
+    "name": "狙击时刻",
+    "emoji": "🎯",
+    "categories": [
+      "shooter",
+      "action"
+    ],
+    "tags": [
+      "射击",
+      "时机",
+      "预判"
+    ],
+    "summary": "准星自动巡弋不受控，预判它的轨迹，在目标亮起的瞬间扣扳机！",
+    "description": "反向瞄准射击。准星沿正弦轨迹自动巡弋（你无法直接控制），靶标在画面各处随机亮起并倒计时消失；点击开枪，命中判定=开枪瞬间准星在靶标圆内。20 发子弹，命中数就是成绩。",
+    "howToPlay": "点击开枪；准星自动巡弋，预判轨迹让它在靶标上时开枪。",
+    "entry": "sniper/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "tightrope",
     "name": "走钢丝",
     "emoji": "🎪",
@@ -232,6 +400,78 @@
     "description": "高空走钢丝平衡挑战。重心会随机漂移且越来越颠，点击左右（或按 ← →）施加反方向力保持直立；倾斜超出边界即坠下。生存时长就是成绩，走得越远加成越多。",
     "howToPlay": "点左/右（或 ← →）纠正倾斜；指针离开立柱即坠落。",
     "entry": "tightrope/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "waterpour",
+    "name": "倒水谜题",
+    "emoji": "🫗",
+    "categories": [
+      "puzzle",
+      "strategy"
+    ],
+    "tags": [
+      "解谜",
+      "逻辑",
+      "经典"
+    ],
+    "summary": "三只壶容量不同，倒来倒去精确量出目标水量，经典逻辑谜题！",
+    "description": "经典倒水问题。三只容量不同的水壶，可把一只壶的水倒进另一只（倒满或倒空为止），目标是让某只壶恰好装着目标水量。共三关，步数越少得分越高。",
+    "howToPlay": "点源壶再点目标壶完成倾倒；任一壶恰好等于目标水量即过关。",
+    "entry": "waterpour/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "wordle",
+    "name": "猜词五连",
+    "emoji": "🟩",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "词汇",
+      "推理",
+      "经典"
+    ],
+    "summary": "六次机会猜出五个字母的单词：绿=位置对，黄=有此字母，灰=没有！",
+    "description": "Wordle 玩法。猜一个 5 字母英文单词，每次猜测后给反馈：绿色=字母和位置都对，黄色=单词里有但位置不对，灰色=没有此字母。六次内猜中即胜，解开越多分越高。",
+    "howToPlay": "点字母键拼 5 字母单词并提交；根据绿黄灰反馈推理。",
+    "entry": "wordle/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-04",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "wordsearch",
+    "name": "单词搜索",
+    "emoji": "🔎",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "tags": [
+      "解谜",
+      "找词",
+      "观察"
+    ],
+    "summary": "字母海里藏着 5 个英文单词，横向纵向都有，全部找出来！",
+    "description": "经典单词搜索。10×10 字母矩阵中横向或纵向藏着 5 个单词，先点单词首字母再点尾字母选中；右侧词单实时勾销。全部找到即胜利，用时越短分越高。",
+    "howToPlay": "先点单词首字母，再点同一直线上的尾字母；共 5 词。",
+    "entry": "wordsearch/index.html",
     "platform": "浏览器",
     "playMode": "online",
     "price": "免费",

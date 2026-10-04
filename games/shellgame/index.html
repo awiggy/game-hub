@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>三仙归洞</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:14px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #stage { position:relative; width:100%; height:170px; background:#1a1d29; border:3px solid #2a2e3d; border-radius:14px; overflow:hidden; }
+    #ball { position:absolute; font-size:30px; transform:translate(-50%,-50%); transition:left .3s; z-index:0; }
+    .cup { position:absolute; top:26px; font-size:64px; transform:translateX(-50%); transition:left .3s; cursor:pointer; z-index:1; }
+    .cup:hover { filter:brightness(1.2); }
+    #msg { font-size:15px; font-weight:900; min-height:22px; text-align:center; }
+    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>连胜<b id="score">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="stage">
+      <div id="ball">🔴</div>
+      <div class="cup" data-i="0">🥤</div>
+      <div class="cup" data-i="1">🥤</div>
+      <div class="cup" data-i="2">🥤</div>
+    </div>
+    <div id="msg">点击开始，盯住藏球的杯子</div>
+  </div>
+  <div id="overlay">
+    <h1>🥤 三仙归洞</h1>
+    <p>小球扣在杯下，杯子高速换位<br/>换位结束点出藏球的杯子<br/>连对加分提速，猜错即终</p>
+    <button id="ov-btn">开始游戏</button>
+  </div>
+  <script>
+    (() => {
+      const stage = document.getElementById('stage')
+      const ballEl = document.getElementById('ball')
+      const cups = [...stage.querySelectorAll('.cup')]
+      const msgEl = document.getElementById('msg')
+      const scoreEl = document.getElementById('score')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const XS = [25, 50, 75]
+      let ballAt, swaps, speed, streak, running, over
+      let best = Number(localStorage.getItem('shellgame-best') || 0)
+      bestEl.textContent = best
+
+      function layout(order) {
+        order.forEach((cupIdx, slot) => {
+          cups[cupIdx].style.left = XS[slot] + '%'
+          cups[cupIdx].dataset.slot = slot
+        })
+        ballEl.style.left = XS[order.indexOf(0) === -1 ? 0 : order.indexOf(0)] + '%'
+      }
+
+      function start() {
+        streak = 0
+        running = true; over = false
+        scoreEl.textContent = 0
+        overlay.classList.add('hidden')
+        nextRound()
+      }
+
+      function nextRound() {
+        // order[slot] = 杯编号；ball 在杯 0 下
+        const order = [0, 1, 2]
+        layout(order)
+        ballAt = 0 // 藏在杯 0 下
+        speed = Math.max(240, 620 - streak * 30)
+        swaps = 4 + Math.min(8, streak)
+        msgEl.textContent = '盯住它！'
+        // 揭示一瞬
+        ballEl.style.opacity = 1
+        setTimeout(() => { ballEl.style.opacity = 0 }, 600)
+        // 换位
+        let n = 0
+        const doSwap = () => {
+          if (n >= swaps) {
+            msgEl.textContent = '球在哪个杯下？点击杯子'
+            enable(true)
+            return
+          }
+          const a = (Math.random() * 3) | 0
+          let b = (Math.random() * 3) | 0
+          if (b === a) b = (b + 1) % 3
+          const sa = order.indexOf(a) // a 杯所在槽位
+          const sb = order.indexOf(b)
+          ;[order[sa], order[sb]] = [order[sb], order[sa]]
+          layout(order)
+          n++
+          setTimeout(doSwap, speed)
+        }
+        enable(false)
+        setTimeout(doSwap, 750)
+      }
+
+      function enable(v) {
+        cups.forEach((c) => (c.style.pointerEvents = v ? 'auto' : 'none'))
+      }
+
+      function end() {
+        running = false; over = true
+        if (streak > best) { best = streak; bestEl.textContent = best; localStorage.setItem('shellgame-best', best) }
+        overlay.querySelector('h1').textContent = '😵 看走眼了'
+        overlay.querySelector('p').innerHTML = '连胜 <b style="color:#ffd23f">' + streak + '</b> 轮 · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      cups.forEach((c) => c.addEventListener('pointerdown', () => {
+        if (!running || over || c.style.pointerEvents === 'none') return
+        enable(false)
+        const slot = Number(c.dataset.slot)
+        const cupIdx = order().indexOf(slot)
+        // 揭晓
+        ballEl.style.left = XS[slot] + '%'
+        ballEl.style.top = '60px'
+        ballEl.style.opacity = 1
+        if (cupIdx === ballAt) {
+          streak++
+          scoreEl.textContent = streak
+          msgEl.textContent = '✓ 猜对了！'
+          setTimeout(nextRound, 900)
+        } else {
+          msgEl.textContent = '✗ 球在另一个杯下'
+          setTimeout(end, 900)
+        }
+      }))
+      // 辅助：当前 order（slot→cupIdx）从 DOM 读
+      function order() {
+        return cups.map((c) => Number(c.dataset.slot))
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return streak },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      ballAt = 0; swaps = 4; speed = 600; streak = 0; running = false; over = false
+      layout([0, 1, 2])
+    })()
+  </script>
+</body>
+</html>
