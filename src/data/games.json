@@ -120,6 +120,54 @@
     "plays": 0
   },
   {
+    "id": "chess",
+    "name": "国际象棋",
+    "emoji": "♞",
+    "categories": [
+      "card",
+      "strategy"
+    ],
+    "tags": [
+      "棋牌",
+      "对战",
+      "思考"
+    ],
+    "summary": "8×8 棋盘与 AI 对弈：全棋种移动、王车易位、将军将死判定，三步深搜索 AI！",
+    "description": "经典国际象棋（简化版：无吃过路兵）。你执白先行，支持全部棋种移动、王车易位与升变（自动升后）；AI 采用三步深度搜索，会算子、会护王。将死对方获胜，被将死或无子可动判负/和。",
+    "howToPlay": "点击白子选中 → 点击绿色目标格走子；将死黑王获胜。",
+    "entry": "chess/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
+    "id": "doudizhu",
+    "name": "欢乐斗地主",
+    "emoji": "🎴",
+    "categories": [
+      "card",
+      "strategy"
+    ],
+    "tags": [
+      "棋牌",
+      "对战",
+      "经典"
+    ],
+    "summary": "叫地主抢底牌，单张对子顺子飞机炸弹全牌型支持，与两个 AI 斗智斗勇！",
+    "description": "经典斗地主（简化计分版）。54 张牌三人各 17 张，叫分最高者当地主拿 3 张底牌；支持单张/对子/三张/三带一/三带二/顺子/连对/飞机/炸弹/王炸全部牌型。地主先出，先出完手牌者获胜（地主一家对两家农民）。",
+    "howToPlay": "叫分决定地主 → 点击选牌 → 出牌压制对手或不要；先出完手牌的一方获胜。",
+    "entry": "doudizhu/index.html",
+    "platform": "浏览器",
+    "playMode": "online",
+    "price": "免费",
+    "createdAt": "2026-10-05",
+    "featured": false,
+    "plays": 0
+  },
+  {
     "id": "flagquiz",
     "name": "国旗问答",
     "emoji": "🌏",

@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>国际象棋</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6;
+      font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center;
+      touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    #board { width:100%; aspect-ratio:1; display:grid; grid-template-columns:repeat(8,1fr);
+      grid-template-rows:repeat(8,1fr); border:3px solid #2a2e3d; border-radius:10px; overflow:hidden; }
+    .sq { display:grid; place-items:center; font-size:min(6.4vw,34px); cursor:default; user-select:none; line-height:1; }
+    .sq.light { background:#e8ddc7; }
+    .sq.dark { background:#a3865d; }
+    .sq.sel { box-shadow:inset 0 0 0 3px var(--yellow); }
+    .sq.can { cursor:pointer; }
+    .sq.can::after { content:''; position:absolute; width:24%; aspect-ratio:1; border-radius:50%;
+      background:rgba(34,181,115,.55); }
+    .sq.cap::after { content:''; position:absolute; width:66%; aspect-ratio:1; border-radius:50%;
+      border:4px solid rgba(255,77,94,.7); }
+    .sq.check { background:#c0392b; }
+    #msg { font-size:14px; font-weight:900; min-height:20px; text-align:center; }
+    #overlay { position:absolute; inset:0; background:rgba(15,17,24,.92); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>你(白) <b id="me">0</b> 胜</span>
+      <span id="turn">白方回合</span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="board"></div>
+    <div id="msg">点击白子选中，再点目标格</div>
+  </div>
+  <div id="overlay">
+    <h1>♞ 国际象棋</h1>
+    <p>你执白先行，全棋种移动 + 王车易位<br/>升变自动升后 · AI 三步深搜索<br/>将死黑王获胜</p>
+    <button id="ov-btn">开始对局</button>
+  </div>
+  <script>
+    (() => {
+      const N = 8
+      const GLYPH = {
+        wk: '♔', wq: '♕', wr: '♖', wb: '♗', wn: '♘', wp: '♙',
+        bk: '♚', bq: '♛', br: '♜', bb: '♝', bn: '♞', bp: '♟',
+      }
+      const boardEl = document.getElementById('board')
+      const turnEl = document.getElementById('turn')
+      const msgEl = document.getElementById('msg')
+      const meEl = document.getElementById('me')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      // 棋盘：64 数组，null 或 {t:'wp', moved:bool}
+      let bd, turn, sel, castled, over, wins, running, thinking
+      let best = Number(localStorage.getItem('chess-best') || 0)
+      bestEl.textContent = best
+      const cellEls = []
+      for (let i = 0; i < 64; i++) {
+        const el = document.createElement('div')
+        el.className = 'sq ' + (((i / 8) | 0) + i) % 2 === 0 ? 'sq light' : 'sq dark'
+        el.onclick = () => click(i)
+        boardEl.appendChild(el)
+        cellEls.push(el)
+      }
+
+      const inB = (r, c) => r >= 0 && r < 8 && c >= 0 && c < 8
+      const colorOf = (p) => p ? p.t[0] : null
+
+      function startBoard() {
+        bd = Array(64).fill(null)
+        const back = ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']
+        back.forEach((t, c) => {
+          bd[c] = { t: 'b' + t, moved: false }
+          bd[8 + c] = { t: 'bp', moved: false }
+          bd[48 + c] = { t: 'wp', moved: false }
+          bd[56 + c] = { t: 'w' + t, moved: false }
+        })
+      }
+
+      function start() {
+        startBoard()
+        turn = 'w'; sel = -1; castled = castled || 0
+        over = false; running = true; thinking = false
+        meEl.textContent = wins
+        msgEl.textContent = '你执白先行'
+        turnEl.textContent = '白方回合'
+        overlay.classList.add('hidden')
+        render()
+      }
+
+      // ---------- 走法生成 ----------
+      function pseudo(bd2, i, attacksOnly) {
+        const p = bd2[i]
+        if (!p) return []
+        const r = (i / 8) | 0, c = i % 8, me = p.t[0]
+        const out = []
+        const push = (rr, cc) => { if (inB(rr, cc)) out.push(rr * 8 + cc) }
+        const slide = (dirs) => {
+          for (const [dr, dc] of dirs) {
+            let rr = r + dr, cc = c + dc
+            while (inB(rr, cc)) {
+              const q = bd2[rr * 8 + cc]
+              if (!q) { if (!attacksOnly || true) out.push(rr * 8 + cc) }
+              else { out.push(rr * 8 + cc); break }
+              rr += dr; cc += dc
+            }
+          }
+        }
+        const t = p.t[1]
+        if (t === 'p') {
+          const dir = me === 'w' ? -1 : 1
+          const startRow = me === 'w' ? 6 : 1
+          push(r + dir, c)
+          if (r === startRow && !bd2[(r + dir) * 8 + c]) push(r + dir * 2, c)
+          for (const dc of [-1, 1]) {
+            const rr = r + dir, cc = c + dc
+            if (inB(rr, cc)) out.push(rr * 8 + cc)
+          }
+          // attacksOnly 时排除前进格
+          if (attacksOnly) return out.filter((j) => Math.abs((j % 8) - c) === 1)
+          return out.filter((j) => {
+            const q = bd2[j]
+            if (j % 8 === c) return !q // 直进须空
+            return q && q.t[0] !== me // 斜吃须敌子
+          })
+        }
+        if (t === 'n') {
+          for (const [dr, dc] of [[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1],[-1,2]]) {
+            const rr = r + dr, cc = c + dc
+            if (!inB(rr, cc)) continue
+            const q = bd2[rr * 8 + cc]
+            if (!q || q.t[0] !== me) out.push(rr * 8 + cc)
+          }
+          return out
+        }
+        if (t === 'k') {
+          for (let dr = -1; dr <= 1; dr++)
+            for (let dc = -1; dc <= 1; dc++) {
+              if (!dr && !dc) continue
+              const rr = r + dr, cc = c + dc
+              if (!inB(rr, cc)) continue
+              const q = bd2[rr * 8 + cc]
+              if (!q || q.t[0] !== me) out.push(rr * 8 + cc)
+            }
+          // 王车易位
+          if (!p.moved && !attacksOnly) {
+            const row = me === 'w' ? 7 : 0
+            if (i === row * 8 + 4) {
+              // 短易位
+              const rk = bd2[row * 8 + 7]
+              if (rk && rk.t === me + 'r' && !rk.moved &&
+                  !bd2[row * 8 + 5] && !bd2[row * 8 + 6] &&
+                  !attacked(bd2, row * 8 + 4, me === 'w' ? 'b' : 'w') &&
+                  !attacked(bd2, row * 8 + 5, me === 'w' ? 'b' : 'w') &&
+                  !attacked(bd2, row * 8 + 6, me === 'w' ? 'b' : 'w'))
+                out.push(row * 8 + 6)
+              // 长易位
+              const rq = bd2[row * 8]
+              if (rq && rq.t === me + 'r' && !rq.moved &&
+                  !bd2[row * 8 + 1] && !bd2[row * 8 + 2] && !bd2[row * 8 + 3] &&
+                  !attacked(bd2, row * 8 + 4, me === 'w' ? 'b' : 'w') &&
+                  !attacked(bd2, row * 8 + 3, me === 'w' ? 'b' : 'w') &&
+                  !attacked(bd2, row * 8 + 2, me === 'w' ? 'b' : 'w'))
+                out.push(row * 8 + 2)
+            }
+          }
+          return out
+        }
+        if (t === 'b') slide([[-1,-1],[-1,1],[1,-1],[1,1]])
+        if (t === 'r') slide([[-1,0],[1,0],[0,-1],[0,1]])
+        if (t === 'q') slide([[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]])
+        return out.filter((j) => {
+          const q = bd2[j]
+          return !q || q.t[0] !== me
+        })
+      }
+
+      function attacked(bd2, i, by) {
+        for (let j = 0; j < 64; j++) {
+          const p = bd2[j]
+          if (p && p.t[0] === by) {
+            if (pseudo(bd2, j, true).includes(i)) return true
+          }
+        }
+        return false
+      }
+
+      function kingSq(bd2, c) {
+        for (let i = 0; i < 64; i++) {
+          const p = bd2[i]
+          if (p && p.t === c + 'k') return i
+        }
+        return -1
+      }
+
+      function applyMove(bd2, from, to) {
+        const nb = bd2.map((p) => p ? { ...p } : null)
+        const p = nb[from]
+        // 王车易位：王走两格 → 同时挪车
+        if (p.t[1] === 'k' && Math.abs((to % 8) - (from % 8)) === 2) {
+          const row = from % 8 === 4 && (from / 8 | 0) === (p.t[0] === 'w' ? 7 : 0) ? from : from
+          const rr = (from / 8) | 0
+          if (to % 8 === 6) { nb[rr * 8 + 5] = nb[rr * 8 + 7]; nb[rr * 8 + 7] = null }
+          else { nb[rr * 8 + 3] = nb[rr * 8]; nb[rr * 8] = null }
+        }
+        nb[to] = { ...p, moved: true }
+        // 升变
+        if (p.t[1] === 'p' && ((p.t[0] === 'w' && (to / 8 | 0) === 0) || (p.t[0] === 'b' && (to / 8 | 0) === 7)))
+          nb[to] = { t: p.t[0] + 'q', moved: true }
+        nb[from] = null
+        return nb
+      }
+
+      function legalMoves(bd2, i) {
+        const p = bd2[i]
+        if (!p) return []
+        const me = p.t[0]
+        return pseudo(bd2, i, false).filter((j) => {
+          const nb = applyMove(bd2, i, j)
+          return !attacked(nb, kingSq(nb, me), me === 'w' ? 'b' : 'w')
+        })
+      }
+
+      // ---------- AI ----------
+      const VAL = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 }
+      function evalBd(bd2) {
+        let s = 0
+        for (let i = 0; i < 64; i++) {
+          const p = bd2[i]
+          if (!p) continue
+          let v = VAL[p.t[1]]
+          const r = (i / 8) | 0, c = i % 8
+          // 中心控制小奖励
+          if ((r === 3 || r === 4) && (c === 3 || c === 4)) v += 12
+          s += p.t[0] === 'w' ? v : -v
+        }
+        return s + Math.random() * 6
+      }
+      function negamax(bd2, depth, alpha, beta, color) {
+        if (depth === 0) return color === 'w' ? evalBd(bd2) : -evalBd(bd2)
+        let moves = []
+        for (let i = 0; i < 64; i++) {
+          const p = bd2[i]
+          if (p && p.t[0] === color) for (const j of legalMoves(bd2, i)) moves.push([i, j])
+        }
+        if (!moves.length) {
+          const k = kingSq(bd2, color)
+          return attacked(bd2, k, color === 'w' ? 'b' : 'w') ? -99999 + (3 - depth) : 0
+        }
+        moves.sort((a, b) => (bd2[b[1]] ? VAL[bd2[b[1]].t[1]] : 0) - (bd2[a[1]] ? VAL[bd2[a[1]].t[1]] : 0))
+        let bestV = -1e9
+        for (const [f, t] of moves) {
+          const nb = applyMove(bd2, f, t)
+          const v = -negamax(nb, depth - 1, -beta, -alpha, color === 'w' ? 'b' : 'w')
+          if (v > bestV) bestV = v
+          if (v > alpha) alpha = v
+          if (alpha >= beta) break
+        }
+        return bestV
+      }
+
+      function aiMove() {
+        if (over) return
+        let moves = []
+        for (let i = 0; i < 64; i++) {
+          const p = bd[i]
+          if (p && p.t[0] === 'b') for (const j of legalMoves(bd, i)) moves.push([i, j])
+        }
+        if (!moves.length) return afterMove()
+        let bestV = -1e9, bestM = moves[0]
+        for (const [f, t] of moves) {
+          const nb = applyMove(bd, f, t)
+          const v = -negamax(nb, 2, -1e9, 1e9, 'w')
+          if (v > bestV) { bestV = v; bestM = [f, t] }
+        }
+        doMove(bestM[0], bestM[1])
+      }
+
+      // ---------- 状态 ----------
+      function afterMove() {
+        render()
+        const color = turn
+        const k = kingSq(bd, color)
+        const inCheck = attacked(bd, k, color === 'w' ? 'b' : 'w')
+        let any = false
+        for (let i = 0; i < 64 && !any; i++) {
+          const p = bd[i]
+          if (p && p.t[0] === color) if (legalMoves(bd, i).length) any = true
+        }
+        if (!any) {
+          running = false; over = true
+          const playerWin = color === 'b' // 黑被将死 → 白胜
+          if (playerWin) {
+            wins = (wins || 0) + 1
+            meEl.textContent = wins
+            if (wins > best) { best = wins; bestEl.textContent = best; localStorage.setItem('chess-best', best) }
+          }
+          overlay.querySelector('h1').textContent = inCheck ? (playerWin ? '🏆 将死，你赢了' : '😵 你被将死') : '🤝 逼和（和棋）'
+          overlay.querySelector('p').innerHTML = '胜场 <b style="color:#ffd23f">' + wins + '</b> · 最佳 ' + best
+          ovBtn.textContent = '再来一局'
+          overlay.classList.remove('hidden')
+          return
+        }
+        turnEl.textContent = color === 'w' ? '白方回合' + (inCheck ? ' · 将军！' : '') : '黑方回合' + (inCheck ? ' · 将军！' : '')
+        if (color === 'b') {
+          turn = 'w'
+          msgEl.textContent = inCheck ? '黑王被将军，但脱险了' : '轮到你'
+          render()
+        }
+      }
+
+      function doMove(from, to) {
+        bd = applyMove(bd, from, to)
+        turn = turn === 'w' ? 'b' : 'w'
+        afterMove()
+      }
+
+      function click(i) {
+        if (!running || over || turn !== 'w' || thinking) return
+        const p = bd[i]
+        if (sel === -1) {
+          if (p && p.t[0] === 'w' && legalMoves(bd, i).length) { sel = i; render(); }
+          return
+        }
+        if (i === sel) { sel = -1; render(); return }
+        if (legalMoves(bd, sel).includes(i)) {
+          doMove(sel, i)
+          if (over) return
+          // AI 回合
+          thinking = true
+          turn = 'b'
+          msgEl.textContent = 'AI 思考中…'
+          render()
+          setTimeout(() => { thinking = false; aiMove() }, 300)
+        } else {
+          if (p && p.t[0] === 'w') { sel = i; render() }
+          else { sel = -1; msgEl.textContent = '不能走这一步'; render() }
+        }
+      }
+
+      function render() {
+        const k = kingSq(bd, 'w')
+        const inCheck = turn === 'w' && k >= 0 && attacked(bd, k, 'b')
+        for (let i = 0; i < 64; i++) {
+          const el = cellEls[i]
+          const light = (((i / 8) | 0) + i) % 2 === 0
+          let cls = 'sq ' + (light ? 'light' : 'dark')
+          if (i === sel) cls += ' sel'
+          if (running && !over && inCheck && i === k) cls += ' check'
+          if (sel >= 0 && running && !over) {
+            const moves = legalMoves(bd, sel)
+            if (moves.includes(i)) cls += bd[i] ? ' cap' : ' can'
+          }
+          el.className = cls
+          el.style.position = 'relative'
+          el.textContent = bd[i] ? GLYPH[bd[i].t] : ''
+          el.style.color = bd[i] && bd[i].t[0] === 'w' ? '#fff' : '#14161f'
+          el.style.textShadow = bd[i] && bd[i].t[0] === 'w' ? '0 1px 2px rgba(0,0,0,.8)' : 'none'
+        }
+      }
+
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return wins || 0 },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      startBoard()
+      turn = 'w'; sel = -1; castled = 0; over = false; wins = 0
+      running = false; thinking = false
+      render()
+    })()
+  </script>
+</body>
+</html>

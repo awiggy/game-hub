@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>欢乐斗地主</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6;
+      font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center;
+      touch-action:manipulation; overflow:hidden; }
+    #wrap { width:min(94vw,560px); height:min(94vh,620px); position:relative;
+      display:flex; flex-direction:column; }
+    #top { display:flex; justify-content:space-between; padding:6px 12px; font-size:12px; font-weight:700; color:#8b93a7; }
+    #top b { color:var(--yellow); }
+    #center { flex:1; position:relative; min-height:130px; }
+    .seat { position:absolute; text-align:center; font-size:11px; font-weight:700; color:#8b93a7; width:120px; }
+    .seat .cards { display:flex; gap:2px; justify-content:center; flex-wrap:wrap; }
+    .seat .name { margin-bottom:4px; }
+    .seat .lord { color:var(--yellow); }
+    #seatL { left:8px; top:8px; }
+    #seatR { right:8px; top:8px; }
+    .minicard { width:22px; height:30px; background:#fff; color:#14161f; border-radius:3px;
+      display:grid; place-items:center; font-size:11px; font-weight:900; }
+    .minicard.red { color:#d22; }
+    .minicard.back { background:#2f55e4; }
+    #playArea { position:absolute; left:0; right:0; top:38%; text-align:center; }
+    .played { display:flex; gap:3px; justify-content:center; min-height:40px; flex-wrap:wrap; }
+    .played .pc { width:30px; height:42px; background:#fff; color:#14161f; border-radius:4px;
+      display:grid; place-items:center; font-size:14px; font-weight:900; }
+    .played .pc.red { color:#d22; }
+    .pass { color:#8b93a7; font-size:13px; font-weight:900; }
+    #bottom { padding:4px 8px 8px; }
+    #hand { display:flex; justify-content:center; gap:0; min-height:74px; align-items:flex-end;
+      padding-bottom:4px; flex-wrap:nowrap; }
+    .card {
+      width:44px; height:62px; background:#fff; color:#14161f; border-radius:5px;
+      margin:0 -8px; border:2px solid #2a3350; cursor:pointer; user-select:none;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      font-size:15px; font-weight:900; line-height:1.05; transition:transform .12s;
+    }
+    .card.red { color:#d22; }
+    .card.sel { transform:translateY(-14px); border-color:var(--yellow); }
+    #acts { display:flex; justify-content:center; gap:10px; margin-top:8px; min-height:40px; }
+    #acts button, #bidBox button {
+      font-family:inherit; font-weight:900; font-size:14px; color:#eef1f6;
+      background:var(--blue); border:2px solid #fff; border-radius:10px; padding:9px 22px; cursor:pointer;
+    }
+    #acts button:disabled { opacity:.35; cursor:not-allowed; }
+    #acts button.alt { background:#22b573; }
+    #bidBox { text-align:center; }
+    #bidBox button { margin:0 4px; }
+    #msg { text-align:center; font-size:14px; font-weight:900; min-height:20px; color:var(--yellow); }
+    #overlay { position:absolute; inset:0; background:rgba(15,17,24,.92); z-index:5;
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="top">
+      <span>底牌<b id="kitty">？</b></span>
+      <span>身份<b id="role">-</b></span>
+      <span>胜场<b id="score">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <div id="center">
+      <div class="seat" id="seatL"><div class="name" id="nameL">AI 左</div><div class="cards" id="cardsL"></div></div>
+      <div class="seat" id="seatR"><div class="name" id="nameR">AI 右</div><div class="cards" id="cardsR"></div></div>
+      <div id="playArea">
+        <div class="played" id="playedL"></div>
+        <div class="played" id="playedC"></div>
+        <div class="played" id="playedR"></div>
+      </div>
+    </div>
+    <div id="msg">点击「开始游戏」</div>
+    <div id="bidBox"></div>
+    <div id="bottom">
+      <div id="hand"></div>
+      <div id="acts">
+        <button id="passBtn">不要</button>
+        <button id="playBtn" class="alt">出牌</button>
+        <button id="hintBtn">提示</button>
+      </div>
+    </div>
+    <div id="overlay">
+      <h1>🎴 欢乐斗地主</h1>
+      <p>叫分最高者当地主，拿 3 张底牌<br/>先出完手牌的一方获胜<br/>支持顺子 / 连对 / 飞机 / 炸弹 / 王炸</p>
+      <button id="ov-btn">开始游戏</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      // ---------- 牌 ----------
+      const RANKS = [
+        { v: 3, l: '3' }, { v: 4, l: '4' }, { v: 5, l: '5' }, { v: 6, l: '6' }, { v: 7, l: '7' },
+        { v: 8, l: '8' }, { v: 9, l: '9' }, { v: 10, l: '10' }, { v: 11, l: 'J' }, { v: 12, l: 'Q' },
+        { v: 13, l: 'K' }, { v: 14, l: 'A' }, { v: 16, l: '2' }, { v: 18, l: '小王', j: 1 }, { v: 19, l: '大王', j: 1 },
+      ]
+      const SUITS = ['♠', '♥', '♣', '♦']
+      const RED = { '♥': 1, '♦': 1 }
+      function deck() {
+        const d = []
+        for (const r of RANKS) {
+          if (r.j) d.push({ v: r.v, l: r.l, s: '' })
+          else for (const s of SUITS) d.push({ v: r.v, l: r.l, s })
+        }
+        return d.sort(() => Math.random() - 0.5)
+      }
+      const byV = (h) => {
+        const m = new Map()
+        for (const c of h) m.set(c.v, (m.get(c.v) || 0) + 1)
+        return m
+      }
+      const vals = (h) => [...byV(h).keys()].sort((a, b) => a - b)
+
+      // ---------- 牌型识别 ----------
+      function comboType(cards) {
+        const n = cards.length
+        if (!n) return null
+        const m = byV(cards)
+        const vs = [...m.keys()].sort((a, b) => a - b)
+        const ones = [], pairs = [], tris = [], fours = []
+        for (const v of vs) {
+          const c = m.get(v)
+          if (c === 1) ones.push(v); else if (c === 2) pairs.push(v)
+          else if (c === 3) tris.push(v); else fours.push(v)
+        }
+        if (n === 2 && m.has(18) && m.has(19)) return { t: 'rocket', v: 100, len: 2, m: 1 }
+        if (fours.length === 1 && n === 4) return { t: 'bomb', v: fours[0], len: 4, m: 1 }
+        if (n === 1) return { t: 'single', v: vs[0], len: 1, m: 1 }
+        if (pairs.length === 1 && n === 2) return { t: 'pair', v: pairs[0], len: 2, m: 1 }
+        if (tris.length === 1 && n === 3) return { t: 'triple', v: tris[0], len: 3, m: 1 }
+        if (tris.length === 1 && n === 4 && ones.length === 1) return { t: 'triple1', v: tris[0], len: 4, m: 1 }
+        if (tris.length === 1 && n === 5 && pairs.length === 1) return { t: 'triple2', v: tris[0], len: 5, m: 1 }
+        if (ones.length === n && n >= 5 && vs[n - 1] <= 14 && vs[n - 1] - vs[0] === n - 1)
+          return { t: 'straight', v: vs[0], len: n, m: n }
+        if (pairs.length === n / 2 && n >= 6 && n % 2 === 0 && pairs[pairs.length - 1] <= 14 && pairs[pairs.length - 1] - pairs[0] === pairs.length - 1)
+          return { t: 'pairstr', v: pairs[0], len: n, m: n / 2 }
+        if (tris.length >= 2) {
+          let consec = tris[tris.length - 1] <= 14
+          for (let i = 1; i < tris.length; i++) if (tris[i] !== tris[i - 1] + 1) consec = false
+          if (consec) {
+            const k = tris.length
+            if (n === k * 3) return { t: 'plane', v: tris[0], len: n, m: k }
+            if (n === k * 4 && ones.length >= k) return { t: 'plane1', v: tris[0], len: n, m: k }
+            if (n === k * 5 && pairs.length >= k) return { t: 'plane2', v: tris[0], len: n, m: k }
+          }
+        }
+        return null
+      }
+      function beats(a, b) {
+        if (!b) return !!a
+        if (a.t === 'rocket') return true
+        if (b.t === 'rocket') return false
+        if (a.t === 'bomb') return b.t === 'bomb' ? a.v > b.v : true
+        if (b.t === 'bomb') return false
+        return a.t === b.t && a.len === b.len && a.v > b.v
+      }
+
+      // ---------- DOM ----------
+      const handEl = document.getElementById('hand')
+      const msgEl = document.getElementById('msg')
+      const playedEls = [
+        document.getElementById('playedC'),
+        document.getElementById('playedL'),
+        document.getElementById('playedR')]
+      const cardsEls = [null,
+        document.getElementById('cardsL'),
+        document.getElementById('cardsR')]
+      const nameEls = [null,
+        document.getElementById('nameL'),
+        document.getElementById('nameR')]
+      const kittyEl = document.getElementById('kitty')
+      const roleEl = document.getElementById('role')
+      const scoreEl = document.getElementById('score')
+      const bestEl = document.getElementById('best')
+      const passBtn = document.getElementById('passBtn')
+      const playBtn = document.getElementById('playBtn')
+      const hintBtn = document.getElementById('hintBtn')
+      const bidBox = document.getElementById('bidBox')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      const SEAT_NAMES = ['', 'AI 左', 'AI 右', '']
+
+      let hands, landlord, turn, cur, passCnt, lastBy
+      let selected, bottom, kittyShown
+      let wins, running, over
+      let best = Number(localStorage.getItem('doudizhu-best') || 0)
+      bestEl.textContent = best
+
+      function cardLabel(c) {
+        const red = RED[c.s]
+        return `<span class="${red ? 'red' : ''}">${c.l}</span><span class="${red ? 'red' : ''}" style="font-size:10px">${c.s}</span>`
+      }
+      function sortHand(h) {
+        h.sort((a, b) => b.v - a.v || (a.s < b.s ? -1 : 1))
+      }
+
+      function start() {
+        wins = wins || 0
+        running = true; over = false
+        scoreEl.textContent = wins
+        overlay.classList.add('hidden')
+        kittyEl.textContent = '？'
+        roleEl.textContent = '-'
+        // 发牌
+        const d = deck()
+        hands = [[], [], []]
+        for (let i = 0; i < 51; i++) hands[i % 3].push(d[i])
+        bottom = d.slice(51)
+        hands.forEach(sortHand)
+        selected = new Set()
+        cur = 0 // 0=玩家 1=AI左 2=AI右
+        passCnt = 0
+        lastBy = 0
+        kittyShown = false
+        playedEls[1].innerHTML = ''
+        playedEls[2].innerHTML = ''
+        playedEls[0].innerHTML = ''
+        // 叫分
+        msgEl.textContent = '叫分阶段'
+        bidBox.innerHTML = ''
+        rollBid()
+      }
+
+      // ---------- 叫分 ----------
+      let bidScore, bidWinner, bidTurn, bidStart
+      function handPower(h) {
+        let s = 0
+        for (const c of h) {
+          if (c.v === 19) s += 3
+          else if (c.v === 18) s += 2
+          else if (c.v === 16) s += 2
+        }
+        const m = byV(h)
+        for (const [, c] of m) if (c === 4) s += 3
+        return s
+      }
+      function rollBid() {
+        bidScore = 0; bidWinner = 0
+        bidTurn = (Math.random() * 3) | 0
+        bidStart = bidTurn
+        bidStep()
+      }
+      function bidStep() {
+        if (bidTurn === bidStart && bidScore > 0) return setLord(bidWinner)
+        // 全不叫 → 重新发牌
+        const idx = bidTurn
+        if (idx === 0) {
+          const avail = [0, 1, 2, 3].filter((b) => b > bidScore)
+          if (!avail.length) {
+            msgEl.textContent = '你不叫'
+            setTimeout(nextBidder, 700)
+            return
+          }
+          bidBox.innerHTML = ''
+          avail.forEach((b) => {
+            const btn = document.createElement('button')
+            btn.textContent = b === 0 ? '不叫' : b + ' 分'
+            btn.style.margin = '0 4px'
+            btn.onclick = () => playerBid(b)
+            bidBox.appendChild(btn)
+          })
+          msgEl.textContent = '请叫分'
+        } else {
+          const pw = handPower(hands[idx])
+          const b = pw >= 7 ? 3 : pw >= 5 ? 2 : pw >= 3 ? 1 : 0
+          if (b > bidScore) { bidScore = b; bidWinner = idx }
+          msgEl.textContent = SEAT_NAMES[idx] + (b ? ' 叫 ' + b + ' 分' : ' 不叫')
+          setTimeout(bidStep, 800)
+        }
+        if (idx !== 0) nextBidder()
+      }
+      function nextBidder() {
+        bidTurn = (bidTurn + 1) % 3
+        if (bidTurn === bidStart && bidScore === 0) {
+          msgEl.textContent = '全部不叫，重新发牌'
+          setTimeout(start, 900)
+          return
+        }
+        setTimeout(bidStep, 600)
+      }
+      function playerBid(b) {
+        if (b > bidScore) { bidScore = b; bidWinner = 0 }
+        bidBox.innerHTML = ''
+        if (bidTurn === bidStart && bidScore > 0) return setLord(0)
+        nextBidder()
+      }
+      function setLord(idx) {
+        landlord = idx
+        hands[idx].push(...bottom)
+        sortHand(hands[idx])
+        kittyShown = true
+        kittyEl.textContent = bottom.map((c) => c.l).join(' ')
+        roleEl.textContent = idx === 0 ? '你（地主）' : SEAT_NAMES[idx] + '（地主）'
+        nameEls[1].innerHTML = 'AI 左' + (landlord === 1 ? ' <span class="lord">👑地主</span>' : '')
+        nameEls[2].innerHTML = 'AI 右' + (landlord === 2 ? ' <span class="lord">👑地主</span>' : '')
+        msgEl.textContent = (idx === 0 ? '你' : SEAT_NAMES[idx]) + ' 成为地主！'
+        cur = landlord
+        passCnt = 0
+        lastBy = landlord
+        render()
+        if (cur !== 0) setTimeout(aiTurn, 900)
+        else enablePlay()
+      }
+
+      // ---------- 出牌 ----------
+      function render() {
+        // 玩家手牌
+        handEl.innerHTML = ''
+        const h = hands[0]
+        h.forEach((c, i) => {
+          const el = document.createElement('div')
+          el.className = 'card' + (RED[c.s] ? ' red' : '') + (selected.has(i) ? ' sel' : '')
+          el.innerHTML = cardLabel(c)
+          el.onclick = () => {
+            if (!running || over || cur !== 0) return
+            if (selected.has(i)) selected.delete(i)
+            else selected.add(i)
+            render()
+          }
+          handEl.appendChild(el)
+        })
+        // AI 手牌数
+        cardsEls[1].innerHTML = ''
+        cardsEls[2].innerHTML = ''
+        for (let i = 0; i < hands[1].length; i++) {
+          const el = document.createElement('div')
+          el.className = 'minicard back'
+          cardsEls[1].appendChild(el)
+        }
+        for (let i = 0; i < hands[2].length; i++) {
+          const el = document.createElement('div')
+          el.className = 'minicard back'
+          cardsEls[2].appendChild(el)
+        }
+        if (kittyShown) {
+          kittyEl.textContent = bottom.map((c) => c.l).join(' ')
+        }
+      }
+      function showPlay(idx, cards) {
+        const el = playedEls[idx]
+        el.innerHTML = ''
+        if (!cards) {
+          el.innerHTML = '<span class="pass">不要</span>'
+          return
+        }
+        sortHand(cards)
+        cards.forEach((c) => {
+          const d = document.createElement('div')
+          d.className = 'pc' + (RED[c.s] ? ' red' : '')
+          d.textContent = c.l
+          el.appendChild(d)
+        })
+      }
+
+      function enablePlay() {
+        passBtn.disabled = cur !== 0
+        playBtn.disabled = cur !== 0
+        hintBtn.disabled = cur !== 0
+        passBtn.textContent = '不要'
+        if (cur === 0 && !lastPlayCombo()) passBtn.disabled = true
+      }
+      function disablePlay() {
+        passBtn.disabled = true; playBtn.disabled = true; hintBtn.disabled = true
+      }
+
+      let lastPlayCombo = null
+      let lastPlayCards = null
+
+      function playerPass() {
+        if (!running || over || cur !== 0) return
+        if (!lastPlayCombo()) { msgEl.textContent = '你是自由出牌，必须出牌'; return }
+        showPlay(0, null)
+        msgEl.textContent = '你不要'
+        passCnt++
+        if (passCnt >= 2) {
+          lastPlayCombo = null
+          lastPlayCards = null
+          passCnt = 0
+          cur = lastBy
+          playedEls[1].innerHTML = ''
+          playedEls[2].innerHTML = ''
+          playedEls[0].innerHTML = ''
+          render(); enablePlay()
+          if (cur !== 0) setTimeout(aiTurn, 800)
+          return
+        }
+        cur = (cur + 1) % 3
+        render(); enablePlay()
+        if (cur !== 0) setTimeout(aiTurn, 800)
+      }
+
+      function playerPlay() {
+        if (!running || over || cur !== 0) return
+        const cards = hands[0].filter((_, i) => selected.has(i))
+        const combo = comboType(cards)
+        if (!combo) { msgEl.textContent = '所选牌不是有效牌型'; return }
+        const prev = lastPlayCombo && lastBy !== 0 ? lastPlayCombo : null
+        if (prev && !beats(combo, prev)) { msgEl.textContent = '压不过上家牌'; return }
+        hands[0] = hands[0].filter((_, i) => !selected.has(i))
+        showPlay(0, cards)
+        selected = new Set()
+        passCnt = 0
+        lastPlayCombo = combo
+        lastBy = 0
+        msgEl.textContent = ''
+        render()
+        if (!hands[0].length) return end(true)
+        cur = (cur + 1) % 3
+        disablePlay()
+        if (cur !== 0) setTimeout(aiTurn, 800)
+      }
+
+      // ---------- AI ----------
+      function genCombos(hand, prev) {
+        const m = byV(hand)
+        const vs = [...m.keys()].sort((a, b) => a - b)
+        const pick = (v, n) => hand.filter((c) => c.v === v).slice(0, n)
+        const out = []
+        const push = (t, cards) => { const c = comboType(cards); if (c && beats(c, prev)) out.push({ combo: c, cards }) }
+
+        if (!prev) {
+          // 自由出牌：最小单张 / 最小对 / 最小三
+          if (vs.length) push('single', pick(vs[0], 1))
+          for (const v of vs) if (m.get(v) >= 2) { push('pair', pick(v, 2)); break }
+          return out
+        }
+        const t = prev.t, len = prev.len, pv = prev.v
+        const sameLen = (need, count, minC, maxV) => {
+          for (let s = 3; s + need - 1 <= maxV; s++) {
+            if (s <= pv) continue
+            let ok = true
+            for (let k = 0; k < need; k++) if ((m.get(s + k) || 0) < count) { ok = false; break }
+            if (ok) {
+              const cards = []
+              for (let k = 0; k < need; k++) cards.push(...pick(s + k, count))
+              push(t, cards)
+            }
+          }
+        }
+        if (t === 'single') for (const v of vs) if (v > pv) push('single', pick(v, 1))
+        if (t === 'pair') for (const v of vs) if (v > pv && m.get(v) >= 2) push('pair', pick(v, 2))
+        if (t === 'triple') for (const v of vs) if (v > pv && m.get(v) >= 3) push('triple', pick(v, 3))
+        if (t === 'triple1' || t === 'triple2') {
+          for (const v of vs) {
+            if (v <= pv || m.get(v) < 3) continue
+            const wings = vs.filter((o) => o !== v)
+            for (const wv of wings) {
+              const cards = [...pick(v, 3), ...pick(wv, t === 'triple1' ? 1 : 2)]
+              if (cards.length === len) push(t, cards)
+            }
+          }
+        }
+        if (t === 'straight') sameLen(len / 1, 1, 1, 14)
+        if (t === 'pairstr') sameLen(len / 2, 2, 1, 14)
+        if (t === 'plane' || t === 'plane1' || t === 'plane2') sameLen(prev.m, 3, prev.m, 14)
+        // 炸弹 / 王炸 总是可以作为候选
+        for (const v of foursOf(hand)) push('bomb', pick(v, 4))
+        if (m.has(18) && m.has(19)) push('rocket', hand.filter((c) => c.v >= 18))
+        return out
+      }
+      function foursOf(hand) {
+        const m = byV(hand), out = []
+        for (const [v, c] of m) if (c === 4) out.push(v)
+        return out
+      }
+
+      function aiPlay(idx) {
+        const hand = hands[idx]
+        if (!hand.length) return
+        const prev = lastPlayCombo && lastBy !== idx ? lastPlayCombo : null
+        let cards = null
+        const cands = genCombos(hand, prev)
+        if (prev) {
+          // 压不过 → 不要
+          if (!cands.length) return showPass(idx)
+          cands.sort((a, b) => a.combo.v - b.combo.v)
+          cards = cands[0].cards
+        } else {
+          // 自由出牌：最少牌先走
+          if (hand.length === 1) cards = [hand[0]]
+          else {
+            const combo = comboType(hand)
+            // 一手能全出 → 直接出
+            if (combo) cards = [...hand]
+            else {
+              const c2 = genCombos(hand, null)
+              // 出最小的单张或对子
+              const m = byV(hand)
+              const vs = [...m.keys()].sort((a, b) => a - b)
+              let played = false
+              for (const v of vs) {
+                if (m.get(v) === 1) { cards = hand.filter((c) => c.v === v); played = true; break }
+              }
+              if (!played) {
+                for (const v of vs) {
+                  if (m.get(v) === 2 && v <= 14) { cards = hand.filter((c) => c.v === v); played = true; break }
+                }
+              }
+              if (!played) cards = [hand[hand.length - 1]]
+            }
+          }
+        }
+        if (!cards || !cards.length) return showPass(idx)
+        // 移除并显示
+        const set = new Set(cards)
+        hands[idx] = hand.filter((c) => !set.has(c))
+        showPlay(idx, cards)
+        passCnt = 0
+        lastPlayCombo = comboType(cards)
+        lastBy = idx
+        msgEl.textContent = ''
+        render()
+        if (!hands[idx].length) return end(idx === landlord ? 'landlord' : 'peasant')
+        nextTurn()
+      }
+      function showPass(idx) {
+        showPlay(idx, null)
+        passCnt++
+        msgEl.textContent = SEAT_NAMES[idx] + ' 不要'
+        if (passCnt >= 2) {
+          lastPlayCombo = null
+          passCnt = 0
+          cur = lastBy
+          playedEls[1].innerHTML = ''
+          playedEls[2].innerHTML = ''
+          playedEls[0].innerHTML = ''
+          render()
+          if (cur !== 0) setTimeout(aiTurn, 800)
+          else enablePlay()
+          return
+        }
+        nextTurn()
+      }
+      function nextTurn() {
+        cur = (cur + 1) % 3
+        if (cur === 0) { render(); enablePlay(); return }
+        render()
+        setTimeout(aiTurn, 800)
+      }
+      function aiTurn() {
+        if (!running || over) return
+        aiPlay(cur)
+      }
+
+      function end(win) {
+        running = false; over = true
+        const playerWin = win === true || win === 0 || (win === 'peasant' && landlord !== 0) || (win === 'landlord' && landlord === 0)
+        const w = playerWin
+        if (w) {
+          wins++
+          if (wins > best) { best = wins; bestEl.textContent = best; localStorage.setItem('doudizhu-best', best) }
+        }
+        overlay.querySelector('h1').textContent = w ? '🎉 你赢了' : '😢 你输了'
+        overlay.querySelector('p').innerHTML =
+          (landlord === 0 ? '地主身份' : '农民身份') + (w ? '获胜！' : '落败…') + '<br/>胜场 <b style="color:#ffd23f">' + wins + '</b> · 最佳 ' + best
+        ovBtn.textContent = '再来一局'
+        overlay.classList.remove('hidden')
+      }
+
+      passBtn.addEventListener('click', playerPass)
+      playBtn.addEventListener('click', () => {
+        msgEl.textContent = ''
+        playerPlay()
+      })
+      hintBtn.addEventListener('click', () => {
+        if (!running || over || cur !== 0) return
+        // 简单提示：自动选出一组可出的牌
+        const prev = lastPlayCombo && lastBy !== 0 ? lastPlayCombo : null
+        const cands = genCombos(hands[0], prev)
+        selected = new Set()
+        if (cands.length) {
+          const c = cands.sort((a, b) => a.combo.v - b.combo.v)[0]
+          const set = new Set(c.cards)
+          hands[0].forEach((card, i) => { if (set.has(card)) selected.add(i) })
+        } else if (!prev) {
+          selected.add(0)
+        }
+        render()
+      })
+      ovBtn.addEventListener('click', start)
+
+      window.__hub = {
+        get score() { return wins },
+        get over() { return over },
+        get started() { return running },
+      }
+
+      hands = [[], [], []]; bottom = []
+      landlord = 0; cur = 0; passCnt = 0; lastBy = 0
+      selected = new Set(); lastPlayCombo = null; lastPlayCards = null
+      wins = 0; running = false; over = false; kittyShown = false
+    })()
+  </script>
+</body>
+</html>
