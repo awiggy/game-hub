@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>丛林突击</title>
+  <style>
+    :root { --blue:#2f55e4; --yellow:#ffd23f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body { background:#0f1118; color:#eef1f6;
+      font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
+      display:flex; align-items:center; justify-content:center;
+      touch-action:none; overflow:hidden; }
+    #wrap { position:relative; }
+    #hud { position:absolute; top:-34px; left:4px; right:4px; display:flex; justify-content:space-between;
+      font-size:12px; font-weight:700; color:#8b93a7; }
+    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
+    canvas { display:block; border:3px solid #2a2e3d; border-radius:10px; background:#14161f; max-width:92vw; max-height:70vh; }
+    #pads { position:absolute; bottom:8px; left:10px; right:10px; display:flex; justify-content:space-between; }
+    #pads .grp { display:flex; gap:8px; }
+    #pads button { width:50px; height:44px; font-size:16px; font-weight:900; font-family:inherit;
+      color:#eef1f6; background:rgba(26,29,41,.85); border:2px solid #2a2e3d; border-radius:10px; }
+    #pads button.fire { background:rgba(122,36,48,.9); border-color:#fff; }
+    #overlay { position:absolute; inset:0; border-radius:10px; background:rgba(15,17,24,.88);
+      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
+    #overlay.hidden { display:none; }
+    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
+    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
+    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
+      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="hud">
+      <span>得分<b id="score">0</b></span>
+      <span>命<b id="lives">♥♥♥</b></span>
+      <span>关卡<b id="lv">1/2</b></span>
+      <span>击杀<b id="kills">0</b></span>
+      <span>BEST<b id="best">0</b></span>
+    </div>
+    <canvas id="cv" width="840" height="480"></canvas>
+    <div id="pads">
+      <div class="grp">
+        <button data-k="left">←</button>
+        <button data-k="right">→</button>
+      </div>
+      <div class="grp">
+        <button data-k="jump">⬆</button>
+        <button data-k="fire" class="fire">🔥</button>
+      </div>
+    </div>
+    <div id="overlay">
+      <h1>🪖 丛林突击</h1>
+      <p>← → 移动 · ↑ 跳跃 · J 按住连发<br/>敌军步兵与炮台会开火，掉坑扣命<br/>抵达终点旗帜过关 · 共两关</p>
+      <button id="ov-btn">开始突击</button>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const cv = document.getElementById('cv')
+      const ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height
+      const G = 0.42, JUMP = 10.6
+      const scoreEl = document.getElementById('score')
+      const livesEl = document.getElementById('lives')
+      const lvEl = document.getElementById('lv')
+      const killsEl = document.getElementById('kills')
+      const bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay')
+      const ovBtn = document.getElementById('ov-btn')
+
+      // 关卡：plats [x,y,w]（厚度 26）；gap 地面段不画；enemies {x, y, type, dir}
+      const LEVELS = [
+        { width: 2400, flag: 2300,
+          plats: [
+            [0, 430, 700, 0], [790, 430, 450, 0], [1300, 430, 580, 0], [1940, 430, 460, 0],
+            [240, 330, 140], [520, 250, 130], [900, 320, 150], [1180, 250, 140],
+            [1520, 330, 140], [1750, 250, 140], [2050, 330, 150],
+          ],
+          enemies: [
+            { x: 400, y: 430, type: 'walk', range: 120 },
+            { x: 620, y: 430, type: 'shoot', range: 0 },
+            { x: 950, y: 320, type: 'walk', range: 100 },
+            { x: 1250, y: 430, type: 'shoot', range: 0 },
+            { x: 1450, y: 430, type: 'walk', range: 130 },
+            { x: 1820, y: 250, type: 'shoot', range: 0 },
+            { x: 1900, y: 430, type: 'walk', range: 140 },
+            { x: 2120, y: 330, type: 'walk', range: 110 },
+          ] },
+        { width: 2800, flag: 2700,
+          plats: [
+            [0, 430, 600, 0], [680, 430, 420, 0], [1180, 430, 500, 0], [1740, 430, 580, 0], [2400, 430, 400, 0],
+            [200, 320, 130], [430, 240, 130], [760, 320, 130], [980, 240, 130],
+            [1300, 320, 140], [1560, 240, 130], [1880, 330, 150], [2150, 250, 140], [2380, 330, 130],
+          ],
+          enemies: [
+            { x: 350, y: 430, type: 'walk', range: 130 },
+            { x: 560, y: 240, type: 'shoot', range: 0 },
+            { x: 800, y: 430, type: 'walk', range: 120 },
+            { x: 1040, y: 240, type: 'shoot', range: 0 },
+            { x: 1300, y: 430, type: 'walk', range: 140 },
+            { x: 1380, y: 320, type: 'walk', range: 110 },
+            { x: 1650, y: 240, type: 'shoot', range: 0 },
+            { x: 1900, y: 430, type: 'walk', range: 150 },
+            { x: 1950, y: 330, type: 'shoot', range: 0 },
+            { x: 2220, y: 250, type: 'walk', range: 110 },
+            { x: 2500, y: 430, type: 'walk', range: 130 },
+          ] },
+      ]
+
+      let player, enemies, bullets, ebullets, parts, plats, flagX, level
+      let score, lives, kills, cam, running, over, frame, inv, keys, clearT
+      let best = Number(localStorage.getItem('junglegun-best') || 0)
+      bestEl.textContent = best
+
+      function load(nv) {
+        level = nv
+        const L = LEVELS[nv]
+        plats = L.plats.map((p) => ({ x: p[0], y: p[1], w: p[2], h: p[3] || 26 }))
+        flagX = L.flag
+        enemies = L.enemies.map((e) => ({
+          x: e.x, y: e.y, type: e.type,
+          x0: e.x, range: e.range || 0, dir: -1,
+          hp: 2, cd: 40 + Math.random() * 60, dead: false,
+        }))
+        bullets = []; ebullets = []; parts = []
+        player = { x: 40, y: 380, vx: 0, vy: 0, w: 18, h: 30, dir: 1, onGround: false, fireCd: 0 }
+        cam = 0
+        inv = 80; frame = 0
+        lvEl.textContent = (nv + 1) + '/2'
+      }
+
+      function start() {
+        score = score || 0
+        lives = lives || 3
+        kills = kills || 0
+        running = true; over = false
+        scoreEl.textContent = score; livesEl.textContent = '♥'.repeat(lives)
+        killsEl.textContent = kills
+        load(level || 0)
+        overlay.classList.add('hidden')
+      }
+
+      function end() {
+        running = false; over = true
+        if (kills > best) { best = kills; bestEl.textContent = best; localStorage.setItem('junglegun-best', best) }
+        overlay.querySelector('h1').textContent = '💥 全军覆没'
+        overlay.querySelector('p').innerHTML =
+          '击杀 <b style="color:#ffd23f">' + kills + '</b> · 得分 ' + score + ' · 最佳击杀 ' + best
+        ovBtn.textContent = '重新突击'
+        overlay.classList.remove('hidden')
+      }
+
+      function clearLevel() {
+        running = false; over = true
+        score += 500
+        scoreEl.textContent = score
+        if (kills > best) { best = kills; bestEl.textContent = best; localStorage.setItem('junglegun-best', best) }
+        overlay.querySelector('h1').textContent = '🏆 战役胜利'
+        overlay.querySelector('p').innerHTML =
+          '两关全部攻占！总击杀 <b style="color:#ffd23f">' + kills + '</b> · 总分 ' + score
+        ovBtn.textContent = '再来一场'
+      }
+
+      function solidAt(x, y, vy) {
+        for (const p of plats) {
+          if (x > p.x - 6 && x < p.x + p.w + 6 && y >= p.y - 4 && y <= p.y + 14 && vy >= 0) return p
+        }
+        return null
+      }
+
+      function die() {
+        lives--
+        livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+        if (lives <= 0) return end()
+        // 回到关卡起点
+        player.x = 40; player.y = 380; player.vx = 0; player.vy = 0
+        inv = 90
+      }
+
+      function hurt() {
+        if (inv > 0) return
+        lives--
+        livesEl.textContent = '♥'.repeat(Math.max(0, lives)) || '—'
+        if (lives <= 0) return end()
+        inv = 90
+      }
+
+      function boom(x, y) {
+        for (let i = 0; i < 8; i++)
+          parts.push({ x, y, vx: (Math.random() - 0.5) * 5, vy: -Math.random() * 4 - 1, t: 20 })
+      }
+
+      function step() {
+        frame++
+        if (inv > 0) inv--
+        const spd = 3.2
+        let vx = 0
+        if (keys.left) { vx -= spd; player.dir = -1 }
+        if (keys.right) { vx += spd; player.dir = 1 }
+        player.vx = vx
+        // 跳跃
+        if (keys.jump && player.onGround) { player.vy = -JUMP; player.onGround = false }
+        player.vy += G
+        if (player.vy > 13) player.vy = 13
+        // 水平
+        player.x += player.vx
+        player.x = Math.max(10, Math.min(player.x, LEVELS[level].width - 10))
+        // 垂直 + 落台
+        const prevY = player.y
+        player.y += player.vy
+        player.onGround = false
+        if (player.vy >= 0) {
+          const p = solidAt(player.x, player.y + player.h, player.vy + (player.y - prevY))
+          if (p && prevY + player.h <= p.y + 12) {
+            player.y = p.y - player.h
+            player.vy = 0
+            player.onGround = true
+          }
+        }
+        if (player.y > H + 30) {
+          boom(player.x, H - 20)
+          return die()
+        }
+        // 射击
+        if (player.fireCd > 0) player.fireCd--
+        if (keys.fire && player.fireCd <= 0) {
+          player.fireCd = 11
+          bullets.push({ x: player.x + player.dir * 16, y: player.y + 10, vx: player.dir * 10 })
+        }
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const b = bullets[i]
+          b.x += b.vx
+          if (b.x < cam - 20 || b.x > cam + W + 20) { bullets.splice(i, 1); continue }
+          for (const e of enemies) {
+            if (e.dead) continue
+            if (Math.abs(b.x - e.x) < 16 && Math.abs(b.y - (e.y - 16)) < 20) {
+              bullets.splice(i, 1)
+              e.hp--
+              boom(e.x, e.y - 16)
+              if (e.hp <= 0) {
+                e.dead = true
+                kills++
+                score += 100
+                killsEl.textContent = kills
+                scoreEl.textContent = score
+                boom(e.x, e.y - 16)
+              }
+              break
+            }
+          }
+        }
+        // 敌人
+        for (const e of enemies) {
+          if (e.dead) continue
+          const dist = player.x - e.x
+          // 同屏激活
+          if (Math.abs(dist) > W * 0.7) continue
+          if (e.type === 'walk') {
+            e.x += e.dir * 1.1
+            if (e.x > e.x0 + e.range) { e.x = e.x0 + e.range; e.dir = -1 }
+            if (e.x < e.x0 - e.range) { e.x = e.x0 - e.range; e.dir = 1 }
+          }
+          // 开火（朝玩家）
+          e.cd--
+          if (e.cd <= 0 && Math.abs(dist) < 380 && Math.abs(player.y - e.y) < 120) {
+            e.cd = e.type === 'shoot' ? 70 : 110
+            const dir = dist > 0 ? 1 : -1
+            ebullets.push({ x: e.x + dir * 12, y: e.y - 18, vx: dir * 4.2 })
+          }
+          // 碰撞玩家
+          if (inv <= 0 && Math.abs(dist) < 20 && Math.abs(player.y - e.y) < 30) hurt()
+        }
+        for (let i = ebullets.length - 1; i >= 0; i--) {
+          const b = ebullets[i]
+          b.x += b.vx
+          if (b.x < cam - 20 || b.x > cam + W + 20) { ebullets.splice(i, 1); continue }
+          if (inv <= 0 && Math.abs(b.x - player.x) < 14 && Math.abs(b.y - (player.y + 14)) < 14) {
+            ebullets.splice(i, 1)
+            hurt()
+          }
+        }
+        for (let i = parts.length - 1; i >= 0; i--) {
+          const p = parts[i]
+          p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.t--
+          if (p.t <= 0) parts.splice(i, 1)
+        }
+        // 摄像机
+        cam = Math.max(0, Math.min(player.x - W / 2, LEVELS[level].width - W))
+        // 旗帜
+        if (player.x > flagX) {
+          if (level === LEVELS.length - 1) return clearLevel()
+          const s = score, l = lives, k = kills
+          score = s; lives = l; kills = k
+          level++
+          load(level)
+          livesEl.textContent = '♥'.repeat(lives)
+          scoreEl.textContent = score
+          killsEl.textContent = kills
+        }
+      }
+
+      function draw() {
+        const L = LEVELS[level]
+        ctx.fillStyle = '#12203a'
+        ctx.fillRect(0, 0, W, H)
+        // 远山
+        ctx.fillStyle = '#182845'
+        for (let i = 0; i < 8; i++) {
+          const mx = ((i * 320) - cam * 0.3) % (W + 300) - 150
+          ctx.beginPath()
+          ctx.moveTo(mx, 430); ctx.lineTo(mx + 160, 200 + (i % 3) * 40); ctx.lineTo(mx + 320, 430)
+          ctx.fill()
+        }
+        // 平台
+        for (const p of plats) {
+          const sx = p.x - cam
+          if (sx + p.w < -20 || sx > W + 20) continue
+          ctx.fillStyle = '#5a3a22'
+          ctx.fillRect(sx, p.y, p.w, p.h + 40)
+          ctx.fillStyle = '#2e7d32'
+          ctx.fillRect(sx, p.y, p.w, 10)
+        }
+        // 旗帜
+        const fx = flagX - cam
+        if (fx > -30 && fx < W + 30) {
+          ctx.fillStyle = '#8b93a7'
+          ctx.fillRect(fx, 330, 4, 100)
+          ctx.fillStyle = '#ffd23f'
+          ctx.beginPath(); ctx.moveTo(fx + 4, 330); ctx.lineTo(fx + 40, 342); ctx.lineTo(fx + 4, 354); ctx.fill()
+        }
+        // 物品渲染顺序：敌人 → 玩家 → 子弹 → 粒子
+        ctx.font = '22px sans-serif'
+        for (const e of enemies) {
+          if (e.dead) continue
+          const sx = e.x - cam
+          if (sx < -30 || sx > W + 30) continue
+          ctx.fillText(e.type === 'shoot' ? '🤖' : '👹', sx - 12, e.y - 4)
+        }
+        if (running && !over && (inv <= 0 || (frame >> 2) % 2 === 0)) {
+          ctx.fillText('🪖', player.x - cam - 12, player.y + 4)
+          // 枪口
+          ctx.fillStyle = '#c9d4f5'
+          ctx.fillRect(player.x - cam + player.dir * 12, player.y + 6, player.dir * 10, 3)
+        }
+        ctx.fillStyle = '#ffd23f'
+        for (const b of bullets) ctx.fillRect(b.x - cam - 4, b.y - 2, 8, 4)
+        ctx.fillStyle = '#ff8896'
+        for (const b of ebullets) ctx.fillRect(b.x - cam - 4, b.y - 2, 8, 4)
+        ctx.fillStyle = '#ffb35c'
+        for (const p of parts) ctx.fillRect(p.x - cam - 2, p.y - 2, 4, 4)
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        if (running && !over) step()
+        draw()
+      }
+
+      // ---------- 输入 ----------
+      keys = { left: false, right: false, jump: false, fire: false }
+      const keyMap = {
+        ArrowLeft: 'left', KeyA: 'left',
+        ArrowRight: 'right', KeyD: 'right',
+        ArrowUp: 'jump', KeyW: 'jump', Space: 'jump',
+        KeyJ: 'fire',
+      }
+      window.addEventListener('keydown', (e) => {
+        if (keyMap[e.code]) { e.preventDefault(); keys[keyMap[e.code]] = true }
+      })
+      window.addEventListener('keyup', (e) => { if (keyMap[e.code]) keys[keyMap[e.code]] = false })
+      document.querySelectorAll('#pads button').forEach((b) => {
+        const k = b.dataset.k
+        const set = (v) => (e) => { e.preventDefault(); keys[k] = v }
+        b.addEventListener('pointerdown', set(true))
+        b.addEventListener('pointerup', set(false))
+        b.addEventListener('pointerleave', set(false))
+      })
+      ovBtn.addEventListener('click', start)
+
+      // 状态初始化（必须先于绘制循环启动）
+      player = { x: 40, y: 380, vx: 0, vy: 0, w: 18, h: 30, dir: 1, onGround: false, fireCd: 0 }
+      enemies = []; bullets = []; ebullets = []; parts = []
+      plats = []; flagX = 2300
+      score = 0; lives = 3; kills = 0; level = 0; cam = 0
+      inv = 0; frame = 0; keys = { left: false, right: false, jump: false, fire: false }
+      running = false; over = false; clearT = 0
+      load(0)
+      loop()
+
+      window.__hub = {
+        get score() { return score },
+        get over() { return over },
+        get started() { return running },
+      }
+    })()
+  </script>
+</body>
+</html>

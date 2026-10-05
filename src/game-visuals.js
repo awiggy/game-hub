@@ -103,6 +103,7 @@ const ICONS = {
   memorypath: "grid",
   bingo: "card",
   checkers: "card",
+  junglegun: "sword",
 };
 export function visualFor(game) {
   return {

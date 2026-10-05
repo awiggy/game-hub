@@ -1,0 +1,17 @@
+{
+  "id": "junglegun",
+  "name": "丛林突击",
+  "emoji": "🪖",
+  "categories": ["action", "shooter"],
+  "tags": ["横版", "跑轰", "街机"],
+  "summary": "魂斗罗风格横版跑轰：奔跑跳跃开枪，穿越丛林战场，消灭敌军抵达旗帜！",
+  "description": "横版跑轰射击。←→ 奔跑、跳跃、按住连发子弹，敌军步兵与炮台会朝你开火；掉进深坑或中弹扣命（3 条命）。抵达终点旗帜进入下一关，共两关，击杀越多分越高。",
+  "howToPlay": "← → 移动，↑ 跳跃，J 按住连发；手机用屏幕四按钮。抵达旗帜过关。",
+  "entry": "junglegun/index.html",
+  "platform": "浏览器",
+  "playMode": "online",
+  "price": "免费",
+  "createdAt": "2026-10-06",
+  "featured": false,
+  "plays": 0
+}
