@@ -55,7 +55,7 @@
       const cv = document.getElementById('cv')
       const ctx = cv.getContext('2d')
       const W = cv.width, H = cv.height
-      const G = 0.35
+      const G = 0.5
       const scoreEl = document.getElementById('score')
       const timeEl = document.getElementById('time')
       const bestEl = document.getElementById('best')
@@ -90,9 +90,12 @@
       }
 
       function shoot() {
-        const p = 0.5 + power / 100
-        ball.vx = 7.5 * p
-        ball.vy = -(9 + 3.5 * p)
+        // 运动学反解：力度映射期望落点，保证弹道物理可达筐口
+        const p = power / 100
+        const targetX = 230 + p * 180
+        const T = 42
+        ball.vx = (targetX - ball.x) / T
+        ball.vy = -((ball.y - hoop.y) / T + 0.5 * G * T)
         ball.fly = true
         ball.rim = false
       }
@@ -177,13 +180,16 @@
         // 球
         ctx.font = '20px sans-serif'
         ctx.fillText('🏀', ball.x - 10, ball.y + 8)
-        // 轨迹预览（未出手时）
+        // 轨迹预览（未出手时，与真实弹道同公式）
         if (!ball.fly && running && !over) {
-          const p = 0.5 + power / 100
-          let px = 70, py = H - 110
-          let vx = 7.5 * p, vy = -(9 + 3.5 * p)
+          const p = power / 100
+          const targetX = 230 + p * 180
+          const T = 42
+          let px = ball.x, py = ball.y
+          let vx = (targetX - ball.x) / T
+          let vy = -((ball.y - hoop.y) / T + 0.5 * G * T)
           ctx.fillStyle = 'rgba(255,210,63,0.35)'
-          for (let i = 0; i < 26; i++) {
+          for (let i = 0; i < 40; i++) {
             vy += G; px += vx; py += vy
             if (i % 2 === 0) ctx.fillRect(px, py, 3, 3)
           }
