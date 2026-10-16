@@ -10,9 +10,9 @@
 
 ## 项目预览
 
-[![GAME HUB 实际首页：113 款浏览器小游戏、10 个分类与游戏入口](docs/images/game-hub-home.png)](https://awiggy.github.io/game-hub/)
+[![GAME HUB 实际首页：107 款浏览器小游戏、10 个分类与游戏入口](docs/images/game-hub-home.png)](https://awiggy.github.io/game-hub/)
 
-2026-10-10 截取的线上游戏大厅。点击图片进入网站；这是真实运行界面，不是概念海报。
+2026-10-16 截取的线上游戏大厅。点击图片进入网站；这是真实运行界面，不是概念海报。
 
 ## 能做什么
 
