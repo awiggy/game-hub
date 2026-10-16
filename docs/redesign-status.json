@@ -4,9 +4,9 @@
     {
       "id": "junglegun",
       "name": "丛林突击",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "airhockey",
@@ -32,9 +32,9 @@
     {
       "id": "bomber",
       "name": "炸弹超人",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "checkers",
@@ -53,9 +53,9 @@
     {
       "id": "doudizhu",
       "name": "欢乐斗地主",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "flagquiz",
@@ -95,9 +95,9 @@
     {
       "id": "minipac",
       "name": "吃豆小人",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "onestroke",
@@ -144,9 +144,9 @@
     {
       "id": "tankbattle",
       "name": "像素坦克",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "anagram",
@@ -172,9 +172,9 @@
     {
       "id": "billiards",
       "name": "桌球小将",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "connect4",
@@ -354,9 +354,9 @@
     {
       "id": "lightbike",
       "name": "光轨对决",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "mathrun",
@@ -445,9 +445,9 @@
     {
       "id": "asteroids",
       "name": "星际小行星",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "basketball",
@@ -564,9 +564,9 @@
     {
       "id": "ninjadash",
       "name": "忍者酷跑",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "penalty",
@@ -732,9 +732,9 @@
     {
       "id": "planewar",
       "name": "雷霆打飞机",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "final-ten",
+      "verification": "docs/verification-final-ten-2026-10-17.md"
     },
     {
       "id": "snake",

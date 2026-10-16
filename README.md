@@ -38,7 +38,7 @@ npm run build    # registry → check → smoke → gameplay → 构建与目录
 ## 当前状态（2026-10-17 核对）
 
 - **线上首页、游戏库与注册表均为 107 款，覆盖 10 个分类**；数量来自 [自动生成的游戏注册表](src/data/games.json)，不计入 `archive/` 下架备份、`drafts/` 历史草稿或独立海报页面。
-- 累计 97 款完成卡通像素改造，10 款待改，见 [统一进度清单](docs/redesign-progress.md)；此前筛除 6 款重复或缺乏独立挑战的实现，原源码归档，旧链接转向保留游戏。见 [筛除清单与完整目录审查](docs/gameplay-audit-2026-10-16.md)。
+- 在架 107 款已全部完成卡通像素改造，0 款待改，见 [统一进度清单](docs/redesign-progress.md)；此前筛除 6 款重复或缺乏独立挑战的实现，原源码归档，旧链接转向保留游戏。见 [筛除清单与完整目录审查](docs/gameplay-audit-2026-10-16.md)。
 - 正式构建按 `registry → check → smoke → gameplay → build → redirects/catalog-check` 执行。冒烟使用模拟 DOM / Canvas 检查初始化错误，不能代替真实浏览器的玩法与触屏验收。
 - 当前在线版本可游玩；AI 生成后端、用户登录、发布与评论仍未实现。
 - 历史开发与验收记录见 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)；此前记录中的数量是当时快照，不代表当前库存。

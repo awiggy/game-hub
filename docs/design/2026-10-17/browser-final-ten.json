@@ -1,0 +1,46 @@
+{
+  "results": [
+    {
+      "id": "junglegun",
+      "pass": true
+    },
+    {
+      "id": "bomber",
+      "pass": true
+    },
+    {
+      "id": "doudizhu",
+      "pass": true
+    },
+    {
+      "id": "minipac",
+      "pass": true
+    },
+    {
+      "id": "tankbattle",
+      "pass": true
+    },
+    {
+      "id": "billiards",
+      "pass": true
+    },
+    {
+      "id": "lightbike",
+      "pass": true
+    },
+    {
+      "id": "asteroids",
+      "pass": true
+    },
+    {
+      "id": "ninjadash",
+      "pass": true
+    },
+    {
+      "id": "planewar",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "layout": []
+}

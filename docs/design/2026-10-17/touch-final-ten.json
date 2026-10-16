@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "junglegun",
+    "bomber",
+    "doudizhu",
+    "minipac",
+    "tankbattle",
+    "billiards",
+    "lightbike",
+    "asteroids",
+    "ninjadash",
+    "planewar"
+  ],
+  "errors": []
+}
