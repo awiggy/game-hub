@@ -64,6 +64,7 @@
       const later = (fn, ms) => timers.push(setTimeout(fn, ms))
 
       function start() {
+        clearTimers()
         level = 1; lives = 3
         running = true; over = false
         lvEl.textContent = 1; livesEl.textContent = '♥♥♥'
@@ -127,6 +128,7 @@
           cellEls[i].classList.add('good')
           if (picked.size === targets.size) {
             phase = 'wait'
+            level++
             msgEl.textContent = '✓ 全对！下一关…'
             later(nextLevel, 800)
           }

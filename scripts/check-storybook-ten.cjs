@@ -13,6 +13,8 @@ function game(id,fields,functions){
  sandbox.advance=ms=>{const end=now+ms;let count=0;while(true){const entry=[...timers].filter(([,t])=>t.at<=end).sort((a,b)=>a[1].at-b[1].at)[0];if(!entry)break;if(++count>20000)throw Error('timer loop');const[id,t]=entry;now=t.at;if(t.repeat)t.at+=t.ms;else timers.delete(id);t.fn()}now=end};return sandbox;
 }
 
+module.exports = { game };
+if (require.main === module) {
 const balls=game('ballsort',['tubes','level','over','busy','moves','totalMoves','generationSolution'],['start','genLevel','click']);
 for(let trial=0;trial<30;trial++){const tubes=balls.test.genLevel(3+trial%3),copy=tubes.map(t=>Array.from(t));assert.ok(copy.some(t=>new Set(t).size>1),'real mixed colors');for(const[from,to]of balls.test.get().generationSolution){assert.ok(copy[from].length&&copy[to].length<4);assert.ok(!copy[to].length||copy[to].at(-1)===copy[from].at(-1));copy[to].push(copy[from].pop())}assert.ok(copy.every(t=>!t.length||t.length===4&&new Set(t).size===1))}
 balls.test.start();for(let lv=0;lv<3;lv++){const route=Array.from(balls.test.get().generationSolution,p=>Array.from(p));for(const[from,to]of route){if(balls.test.get().busy||balls.test.get().over)break;balls.test.click(from);balls.test.click(to)}assert.ok(balls.test.get().busy||balls.test.get().over);balls.advance(710)}assert.equal(balls.test.get().over,true);console.log('PASS ballsort 30 mixed solvable generations and all three stages');
@@ -37,3 +39,5 @@ const fish=game('bigfish',['px','py','tx','ty','size','fishes','score','lives','
 
 const chick=game('crossy',['rows','prow','pcol','maxRow','over'],['start','tryMove','step']);chick.test.start();chick.test.tryMove(-1,0);assert.equal(chick.test.get().prow,0);chick.test.set({rows:[{type:'grass',trees:[]},{type:'grass',trees:[5]}]});chick.test.tryMove(1,0);chick.test.tryMove(0,1);assert.equal(chick.test.get().pcol,4);assert.equal(chick.test.get().maxRow,1);chick.test.set({rows:[{type:'grass',trees:[]},{type:'road',dir:1,speed:0,w:500,cars:[{x:150,len:78,e:'🚗'}]}]});chick.test.step();assert.equal(chick.test.get().over,true);console.log('PASS crossy boundaries, blocked hedge, row score and car collision');
 
+
+}

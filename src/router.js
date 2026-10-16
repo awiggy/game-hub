@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import retiredGames from './data/retired-games.json'
 import HomePage from './pages/HomePage.vue'
 import LibraryPage from './pages/LibraryPage.vue'
 import GameDetailPage from './pages/GameDetailPage.vue'
@@ -16,6 +17,12 @@ const router = createRouter({
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
   scrollBehavior: () => ({ top: 0 }),
+})
+
+// Preserve bookmarked detail URLs when a game leaves the active catalog.
+router.beforeEach((to) => {
+  const retired = to.name === 'game' && retiredGames.find((game) => game.id === to.params.id)
+  if (retired) return { name: 'game', params: { id: retired.replacement }, query: to.query, replace: true }
 })
 
 router.afterEach((to) => {

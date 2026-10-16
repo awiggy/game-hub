@@ -29,7 +29,7 @@ const DEMO_MAP = {
   action: "breakout",
   shooter: "planewar",
   strategy: "minesweeper",
-  racing: "racedodge",
+  racing: "skiing",
   simulation: "2048",
   sports: "breakout",
 };

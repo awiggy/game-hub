@@ -1,0 +1,44 @@
+[
+  {
+    "id": "racedodge",
+    "name": "极速避让",
+    "replacement": "skiing",
+    "reason": "同为持续前进、左右躲障碍、距离计分；三车道与自由横移有区别，但本轮优先保留完成像素改造、操作更细腻的滑雪。",
+    "retiredAt": "2026-10-16"
+  },
+  {
+    "id": "tabletennis",
+    "name": "乒乓快打",
+    "replacement": "airhockey",
+    "reason": "同为移动球拍接球、击穿 AI 防线；乒乓仅单轴移动与三命计分，保留可在半场二维移动、五球决胜的冰球。",
+    "retiredAt": "2026-10-16"
+  },
+  {
+    "id": "digitspan",
+    "name": "数字记忆",
+    "replacement": "simon",
+    "reason": "核心均为观看序列、按原顺序复述、逐轮加长；数字输入与颜色点击有呈现差异，本轮保留渐进色序挑战。",
+    "retiredAt": "2026-10-16"
+  },
+  {
+    "id": "memorypath",
+    "name": "记忆路线",
+    "replacement": "simon",
+    "reason": "与色序重复顺序记忆；当前实现还会持续标出下一个正确格，通关不增加关卡，路线记忆的独立挑战未成立。",
+    "retiredAt": "2026-10-16"
+  },
+  {
+    "id": "numchain",
+    "name": "连数字走格",
+    "replacement": "schulte",
+    "reason": "同属按序找数字；新增相邻限制却未配套生成连续路径，随机棋盘可能从 1 到 2 就无合法步，保留可完整完成的舒尔特方格。",
+    "retiredAt": "2026-10-16"
+  },
+  {
+    "id": "picrotate",
+    "name": "旋转拼图",
+    "replacement": "pipeconnect",
+    "reason": "同为点击旋转格子；当前只是九个独立符号逐个转正，正向格还直接变色提示，不存在拼成整体图案的约束，保留有连通路径推理的接水管。",
+    "retiredAt": "2026-10-16"
+  }
+]
