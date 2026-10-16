@@ -47,9 +47,41 @@
       border: 2px solid #fff; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
       font-size: 16px; font-weight: 700; padding: 10px 32px; border-radius: 8px; cursor: pointer;
     }
+
+    /* Crafted pixel edition: the playable pieces, not just the surrounding UI. */
+    :root{--ink:#48533d;--accent:#4e854d;--paper:#fff9e7;--edge:#6f9250;--page:#edf2d9}
+    body{background:var(--page);color:var(--ink);background-image:radial-gradient(#ffffff70 1px,transparent 1px);background-size:12px 12px;overflow:auto;min-height:100%;height:auto;padding:24px 12px;gap:10px}
+    body::before{content:'';position:fixed;inset:0;box-shadow:inset 0 0 100px #ffffff70;pointer-events:none;z-index:-1}
+    button{font-family:inherit;touch-action:manipulation}button:focus-visible{outline:3px solid #d26c48;outline-offset:3px}
+    #wrap{flex-shrink:0;max-width:100%}
+    #hud,#bar{position:static;color:var(--ink);letter-spacing:0;font-size:11px;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 4px}
+    #hud b,#bar b{color:var(--accent);font-size:17px}canvas{image-rendering:pixelated;border:4px solid var(--edge);border-radius:8px;box-shadow:0 5px 0 color-mix(in srgb,var(--edge),transparent 55%);background:var(--paper);max-width:100%;object-fit:contain}
+    #overlay{z-index:20;background:color-mix(in srgb,var(--paper) 96%,transparent);color:var(--ink);border-radius:12px;gap:12px;padding:22px}
+    #overlay::before{content:'';width:90px;height:90px;background:var(--mascot) center/contain no-repeat;image-rendering:pixelated}
+    #overlay h1,#overlay h2{font-size:25px;letter-spacing:1px;text-shadow:none;color:var(--ink)}
+    #overlay p{color:var(--ink);font-size:13px;line-height:1.9;max-width:340px}#overlay p b{color:var(--accent)!important}
+    #overlay button,#new-game,#bar button,#pads button,.up,.garden-controls button{background:var(--accent);color:#fffaf0;border:2px solid var(--ink);box-shadow:0 3px 0 #0002;border-radius:7px;font-weight:800;cursor:pointer}
+    #overlay button:hover{filter:brightness(1.1)}#overlay.hidden{display:none}
+    .pixel-sprite{display:block;width:100%;height:100%;image-rendering:pixelated;pointer-events:none}
+    .scene-title{width:100%;display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:5px}
+    .scene-title strong{font-size:23px;letter-spacing:1px;display:block}.scene-title small{display:block;font-size:11px;line-height:1.8;letter-spacing:1px;color:var(--accent)}
+    .scene-title svg{width:54px;height:54px;flex-shrink:0}.play-note{font-size:11px;text-align:center;color:var(--ink);line-height:1.7;margin-top:9px}
+    .landscape{height:92px;position:relative;overflow:hidden;border-radius:10px 10px 0 0;background:linear-gradient(#a9dfdf 0 63%,#b7d878 63% 71%,#82b65e 71%);border:3px solid var(--edge);border-bottom:0}
+    .landscape::before{content:'';position:absolute;left:15%;top:18px;width:40px;height:8px;background:#fffcec;box-shadow:8px -6px #fffcec,170px 5px #fffcec,178px -1px #fffcec}
+    .landscape svg{position:absolute;bottom:0;width:76px;height:76px}.landscape svg:nth-child(2){left:2%;width:52px;height:52px}.landscape svg:nth-child(3){right:4%;width:44px;height:44px}.landscape svg:nth-child(4){right:15%;width:32px;height:32px}
+    @media(max-width:480px){body{padding:14px 10px}.scene-title strong{font-size:20px}#hud b,#bar b{font-size:15px}.landscape{height:74px}.scene-title svg{width:44px;height:44px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+:root{--page:#f9e7e0;--ink:#805a58;--accent:#be776f;--edge:#c99388;--paper:#fff6e4;--mascot:url("data:image/svg+xml,%3Csvg%20aria-hidden%3D%22true%22%20viewBox%3D%220%200%2032%2032%22%20class%3D%22pixel-sprite%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20x%3D%228%22%20y%3D%221%22%20width%3D%226%22%20height%3D%2212%22%20fill%3D%22%238c7974%22%2F%3E%3Crect%20x%3D%2219%22%20y%3D%220%22%20width%3D%226%22%20height%3D%2213%22%20fill%3D%22%238c7974%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%222%22%20width%3D%224%22%20height%3D%2211%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%221%22%20width%3D%224%22%20height%3D%2212%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%224%22%20width%3D%222%22%20height%3D%227%22%20fill%3D%22%23e7a09b%22%2F%3E%3Crect%20x%3D%2221%22%20y%3D%223%22%20width%3D%222%22%20height%3D%228%22%20fill%3D%22%23e7a09b%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%2211%22%20width%3D%2219%22%20height%3D%2220%22%20fill%3D%22%238c7974%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2214%22%20width%3D%2225%22%20height%3D%2214%22%20fill%3D%22%238c7974%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2211%22%20width%3D%2215%22%20height%3D%2218%22%20fill%3D%22%23f9eacb%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2214%22%20width%3D%2221%22%20height%3D%2212%22%20fill%3D%22%23f9eacb%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2210%22%20width%3D%2215%22%20height%3D%227%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%2214%22%20width%3D%224%22%20height%3D%227%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2221%22%20width%3D%2210%22%20height%3D%228%22%20fill%3D%22%23fffdf2%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2224%22%20width%3D%2216%22%20height%3D%222%22%20fill%3D%22%23fffdf2%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2216%22%20width%3D%222%22%20height%3D%223%22%20fill%3D%22%23332f36%22%2F%3E%3Crect%20x%3D%2219%22%20y%3D%2216%22%20width%3D%222%22%20height%3D%223%22%20fill%3D%22%23332f36%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2216%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23fffdf0%22%2F%3E%3Crect%20x%3D%2219%22%20y%3D%2216%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23fffdf0%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2220%22%20width%3D%223%22%20height%3D%222%22%20fill%3D%22%23f4998a%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2220%22%20width%3D%223%22%20height%3D%222%22%20fill%3D%22%23f4998a%22%2F%3E%3Crect%20x%3D%2215%22%20y%3D%2220%22%20width%3D%222%22%20height%3D%221%22%20fill%3D%22%238f4d48%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2224%22%20width%3D%226%22%20height%3D%222%22%20fill%3D%22%238a534b%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2224%22%20width%3D%222%22%20height%3D%223%22%20fill%3D%22%23fff8e4%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2226%22%20width%3D%225%22%20height%3D%224%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2226%22%20width%3D%224%22%20height%3D%224%22%20fill%3D%22%23fffbed%22%2F%3E%3C%2Fsvg%3E")}
+.scene-title,#bar{width:min(390px,94vw)}#board{width:min(390px,94vw);gap:9px;padding:12px;background:#e9cbbb;border:3px solid #c99388;border-radius:10px;box-shadow:0 5px #c9938855}.card{aspect-ratio:1;position:relative;background:repeating-conic-gradient(#eaa799 0% 25%,#f5c4ae 0% 50%) 0 0/12px 12px;border:3px solid #fff5dc;border-radius:7px;box-shadow:0 3px #b47c6b;color:transparent;overflow:hidden}.card::after{content:"✿";position:absolute;font-size:27px;color:#fff6d7;text-shadow:0 2px #c08a73}.card svg{width:86%;height:86%;visibility:hidden}.card.open,.card.matched{background:#fff4d7;border-color:#fef9e9}.card.open svg,.card.matched svg{visibility:visible}.card.open::after,.card.matched::after{display:none}.card.matched{background:#e8efc9;border-color:#b7c997;box-shadow:0 3px #91a678}.card.matched::before{content:"✓";position:absolute;right:4px;top:1px;font-size:12px;color:#4e804b}.card:hover{transform:translateY(-2px)}
+
+/* Compact landscape retains readable boards beside their controls. */
+@media(min-width:600px) and (max-height:550px){body{padding:12px;gap:8px}.play-note{margin:0}body{display:grid;grid-template-columns:210px auto;grid-template-rows:1fr auto 1fr;gap:8px 24px;align-items:center;justify-content:center;height:100dvh;padding:14px}.scene-title{grid-column:1;align-self:end;width:210px}#bar{grid-column:1;width:210px;justify-content:flex-start;gap:14px}#board{grid-column:2;grid-row:1/4;width:min(340px,calc(100dvh - 32px));height:auto}.play-note{grid-column:1;align-self:start;width:210px}}
+@media(max-width:480px){body{padding:12px 10px}.play-note{margin-top:3px;font-size:10px}.scene-title{margin-bottom:0}.scene-title small{letter-spacing:.5px}}
   </style>
 </head>
 <body>
+  <header class="scene-title"><div><small>PICNIC PALS · 记忆翻牌</small><strong>野餐翻翻乐</strong></div><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="8" y="1" width="6" height="12" fill="#8c7974"/><rect x="19" y="0" width="6" height="13" fill="#8c7974"/><rect x="9" y="2" width="4" height="11" fill="#fffbed"/><rect x="20" y="1" width="4" height="12" fill="#fffbed"/><rect x="10" y="4" width="2" height="7" fill="#e7a09b"/><rect x="21" y="3" width="2" height="8" fill="#e7a09b"/><rect x="7" y="11" width="19" height="20" fill="#8c7974"/><rect x="4" y="14" width="25" height="14" fill="#8c7974"/><rect x="9" y="11" width="15" height="18" fill="#f9eacb"/><rect x="6" y="14" width="21" height="12" fill="#f9eacb"/><rect x="9" y="10" width="15" height="7" fill="#fffbed"/><rect x="7" y="14" width="4" height="7" fill="#fffbed"/><rect x="12" y="21" width="10" height="8" fill="#fffdf2"/><rect x="9" y="24" width="16" height="2" fill="#fffdf2"/><rect x="11" y="16" width="2" height="3" fill="#332f36"/><rect x="19" y="16" width="2" height="3" fill="#332f36"/><rect x="11" y="16" width="1" height="1" fill="#fffdf0"/><rect x="19" y="16" width="1" height="1" fill="#fffdf0"/><rect x="9" y="20" width="3" height="2" fill="#f4998a"/><rect x="20" y="20" width="3" height="2" fill="#f4998a"/><rect x="15" y="20" width="2" height="1" fill="#8f4d48"/><rect x="14" y="24" width="6" height="2" fill="#8a534b"/><rect x="16" y="24" width="2" height="3" fill="#fff8e4"/><rect x="3" y="26" width="5" height="4" fill="#fffbed"/><rect x="26" y="26" width="4" height="4" fill="#fffbed"/></svg></header>
   <div id="bar">
     <span>步数<b id="moves">0</b></span>
     <span>配对<b id="pairs">0/8</b></span>
@@ -63,9 +95,57 @@
     <button id="ov-btn">开始游戏</button>
   </div>
 
+  <p class="play-note">翻开两张牌，找到相同的小伙伴 · 配成一对会留下绿色小勾</p>
   <script>
     (() => {
-      const EMOJIS = ['🎮', '🚀', '🧩', '⚽', '🎲', '🕹️', '🎯', '🍬']
+
+      function pixels(kind) {
+        const a=[]; const r=(x,y,w,h,c)=>a.push([x,y,w,h,c]);
+        const face=(x,y)=>{r(x,y,2,3,'#332f36');r(x+8,y,2,3,'#332f36');r(x,y,1,1,'#fffdf0');r(x+8,y,1,1,'#fffdf0');r(x-2,y+4,3,2,'#f4998a');r(x+9,y+4,3,2,'#f4998a');r(x+4,y+4,2,1,'#8f4d48');};
+        const round=(x,y,w,h,c)=>{r(x+3,y,w-6,h,c);r(x,y+3,w,h-6,c)};
+        if(kind==='apple'||kind==='orange'||kind==='berry') {
+          const p=kind==='apple'?['#8e3540','#d84b4e','#ff765f','#ffbea0']:kind==='orange'?['#ae5c2c','#ef9c34','#ffc650','#ffed9a']:['#48447d','#6f6fc1','#9d9ce3','#d2d1ff'];
+          round(4,9,24,20,p[0]);round(6,10,20,17,p[1]);r(8,11,15,11,p[2]);r(8,13,4,5,p[3]);r(10,11,5,2,p[3]);r(13,6,3,6,'#72533e');r(16,4,9,4,'#3c7949');r(17,4,6,2,'#9bcd55');face(10,19);
+        } else if(kind==='carrot'||kind==='sprout') {
+          r(14,6,3,11,'#37774b');r(7,5,8,4,'#387d43');r(9,3,6,4,'#84bd50');r(17,4,8,4,'#3c8e46');r(18,2,6,3,'#b0d767');
+          if(kind==='carrot'){r(9,13,15,5,'#ad552b');r(10,18,12,5,'#ad552b');r(12,23,8,4,'#ad552b');r(14,27,4,3,'#ad552b');r(10,14,12,4,'#ffb04b');r(11,18,9,5,'#f88132');r(13,23,5,4,'#f88132');r(11,15,3,5,'#ffda75');r(18,19,3,1,'#ba5c32');r(13,24,3,1,'#ba5c32');}
+          else {r(5,23,22,4,'#654830');r(8,21,16,3,'#9d6c42');r(14,14,3,8,'#3c8747');}
+        } else if(kind==='flower') {
+          r(15,13,3,17,'#3c8b58');r(8,20,8,4,'#82be5f');r(18,23,8,4,'#58a657');
+          round(10,2,12,20,'#e5bc88');round(5,7,22,10,'#e5bc88');round(11,2,10,18,'#fffbea');round(5,8,22,8,'#fffbea');r(12,8,9,8,'#e9a82d');r(13,8,6,5,'#ffd95c');r(14,9,3,2,'#fff5ac');
+        } else if(kind==='mushroom') {
+          r(11,16,11,13,'#af784d');r(12,16,9,11,'#ffe6b2');r(12,18,3,6,'#fff6da');r(6,8,21,11,'#9c3d43');r(10,4,13,5,'#9c3d43');r(4,13,25,7,'#9c3d43');r(7,9,19,8,'#e97564');r(10,5,13,9,'#f69b7e');r(5,14,23,3,'#e97564');r(10,8,4,4,'#fff0cf');r(20,12,5,4,'#fff0cf');face(12,22);
+        } else if(kind==='mole'||kind==='goldmole'||kind==='bunny') {
+          const bunny=kind==='bunny',gold=kind==='goldmole'; const dark=bunny?'#8c7974':gold?'#9c6327':'#704c46'; const base=bunny?'#f9eacb':gold?'#efb648':'#b38360';const light=bunny?'#fffbed':gold?'#ffe08a':'#dbac7a';
+          if(bunny){r(8,1,6,12,dark);r(19,0,6,13,dark);r(9,2,4,11,light);r(20,1,4,12,light);r(10,4,2,7,'#e7a09b');r(21,3,2,8,'#e7a09b');}
+          else{round(4,5,8,9,dark);round(21,5,8,9,dark);r(6,7,4,5,'#e7a09b');r(23,7,4,5,'#e7a09b');}
+          round(4,11,25,20,dark);round(6,11,21,18,base);r(9,10,15,7,light);r(7,14,4,7,light);round(9,21,16,8,bunny?'#fffdf2':'#f8ddb0');face(11,16);r(14,24,6,2,'#8a534b');r(16,24,2,3,'#fff8e4');r(3,26,5,4,light);r(26,26,4,4,light);
+        } else if(kind==='chick') {
+          r(4,13,6,9,'#9a6129');r(7,8,18,18,'#9a6129');r(11,5,12,4,'#9a6129');r(8,10,17,14,'#ffca42');r(11,7,12,14,'#ffe777');r(12,8,9,6,'#fff2ac');r(6,16,10,7,'#f2a32d');r(6,16,8,3,'#ffda5b');r(19,10,6,8,'#fffbed');r(22,12,3,5,'#3f3831');r(22,12,1,1,'#fff');r(25,17,6,3,'#b9582c');r(25,17,5,1,'#ffad3b');r(19,20,4,2,'#f99059');r(11,26,3,3,'#c87c33');r(20,25,3,3,'#c87c33');r(11,3,3,4,'#c89c38');
+        } else if(kind==='grape') {
+          r(15,3,3,6,'#72513d');r(18,3,9,4,'#599657');
+          for(const [x,y] of [[7,8],[17,8],[5,15],[14,15],[22,15],[10,22],[18,22]]){round(x,y,8,8,'#624274');round(x+1,y,6,6,'#a27bd0');r(x+2,y+1,2,2,'#e4bcf4');}
+        } else if(kind==='melon') {
+          r(4,9,24,13,'#326d52');r(7,22,18,4,'#326d52');r(11,26,10,3,'#326d52');r(5,9,22,12,'#a6d46c');r(8,21,16,3,'#a6d46c');r(6,9,20,9,'#f9807c');r(9,18,14,3,'#f9807c');r(12,21,8,2,'#f9807c');r(7,10,18,2,'#ffb0a0');for(const [x,y] of [[10,14],[16,12],[21,15],[15,18]])r(x,y,1,2,'#673f48');
+        } else if(kind==='flag') {
+          r(10,3,3,25,'#695447');r(13,4,14,10,'#9e4b4c');r(13,4,11,7,'#f47768');r(14,5,7,2,'#ffbea2');r(7,27,13,2,'#486a4a');
+        } else if(kind==='mine') {
+          r(14,2,4,28,'#47606b');r(2,14,28,4,'#47606b');r(6,6,20,20,'#47606b');round(7,7,18,18,'#6e8e97');r(10,9,6,4,'#c1d9cf');face(11,16);
+        } else if(kind==='crate') {
+          r(2,4,28,26,'#865637');r(4,5,24,22,'#d29b58');r(6,8,20,17,'#b77b46');r(7,9,18,3,'#e8b56b');r(7,16,18,2,'#e8b56b');r(4,5,3,22,'#f3c986');r(25,5,3,22,'#ad713f');r(5,5,22,3,'#ffe0a0');r(5,24,22,3,'#e4b06a');r(6,6,2,2,'#805b3d');r(24,25,2,2,'#805b3d');r(14,13,6,5,'#f1a13f');r(15,18,3,3,'#f1a13f');r(15,10,2,4,'#5f974f');r(17,10,4,2,'#9dc968');
+        } else if(kind==='hedge') {
+          r(1,5,30,27,'#376e4c');r(2,3,28,25,'#4b9550');r(5,1,22,26,'#75b44f');r(8,2,12,5,'#b9d663');r(4,8,8,5,'#a3ce5a');r(18,5,10,5,'#92c250');r(7,16,12,6,'#8fc352');r(21,16,8,6,'#447e45');r(4,24,11,4,'#467d43');r(21,11,3,3,'#d0e478');r(13,10,3,3,'#c0db69');r(15,25,8,3,'#64a34a');
+        } else if(kind==='barn') {
+          for(let i=0;i<6;i++)r(15-i*2,2+i*2,2+i*4,3,'#5c656c');r(6,14,23,17,'#9d4843');r(7,14,20,15,'#df775c');for(let i=9;i<27;i+=4)r(i,15,1,14,'#f59973');r(5,14,25,2,'#ffecbc');r(12,20,11,11,'#ffe8b4');r(14,21,7,10,'#975645');r(17,21,1,10,'#ffdb9e');r(14,23,7,1,'#ffdb9e');r(15,12,6,6,'#ffecbc');r(16,13,4,4,'#6aa7b5');
+        } else if(kind==='cookie') {
+          round(4,4,24,24,'#986334');round(5,4,22,21,'#e6ac57');r(8,6,16,13,'#f9ce7b');r(9,7,9,2,'#ffe6a3');for(const [x,y] of [[10,11],[21,10],[17,18],[8,21]]){r(x,y,3,3,'#8f5a41');r(x,y,2,1,'#bc8650');}
+        }
+        return a;
+      }
+      function sprite(kind) {return '<svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">'+pixels(kind).map(([x,y,w,h,c])=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+c+'"/>').join('')+'</svg>';}
+      function paint(kind,x,y,size) {const u=size/32;for(const [a,b,w,h,c] of pixels(kind)){ctx.fillStyle=c;ctx.fillRect(Math.round(x+a*u),Math.round(y+b*u),Math.ceil(w*u),Math.ceil(h*u));}}
+
+      const EMOJIS = ['apple', 'chick', 'bunny', 'carrot', 'flower', 'berry', 'mushroom', 'mole']
       const boardEl = document.getElementById('board')
       const movesEl = document.getElementById('moves')
       const pairsEl = document.getElementById('pairs')
@@ -74,6 +154,7 @@
       const overlay = document.getElementById('overlay')
       const ovBtn = document.getElementById('ov-btn')
 
+      let flipTimer = 0
       let deck, open, lock, matched, moves, seconds, timer, over
       let best = Number(localStorage.getItem('memory-best') || 0)
       if (best) bestEl.textContent = best
@@ -86,7 +167,8 @@
         movesEl.textContent = 0
         pairsEl.textContent = '0/8'
         timeEl.textContent = '0s'
-        clearInterval(timer)
+        clearInterval(timer); clearTimeout(flipTimer)
+        timer = setInterval(() => { if (!over && (moves > 0 || open.length > 0)) { seconds++; timeEl.textContent = seconds + 's' } }, 1000)
         overlay.classList.add('hidden')
         render()
       }
@@ -96,7 +178,8 @@
         deck.forEach((card, i) => {
           const el = document.createElement('button')
           el.className = 'card'
-          el.textContent = card.e
+          el.innerHTML = sprite(card.e)
+          el.setAttribute('aria-label', card.open ? ({apple:'苹果',chick:'小鸟',bunny:'兔子',carrot:'胡萝卜',flower:'花朵',berry:'蓝莓',mushroom:'蘑菇',mole:'地鼠'}[card.e]) + (card.matched ? '，已配对' : '') : '未翻开的牌 ' + (i + 1))
           if (card.open) el.classList.add(card.matched ? 'matched' : 'open')
           el.addEventListener('click', () => flip(i))
           boardEl.appendChild(el)
@@ -122,7 +205,7 @@
           if (matched === 8) win()
         } else {
           lock = true
-          setTimeout(() => {
+          flipTimer = setTimeout(() => {
             deck[a].open = deck[b].open = false
             open = []
             lock = false
@@ -153,13 +236,6 @@
       }
 
       startGame()
-      clearInterval(timer)
-      timer = setInterval(() => {
-        if (!over && (moves > 0 || open.length > 0)) {
-          seconds++
-          timeEl.textContent = seconds + 's'
-        }
-      }, 1000)
     })()
   </script>
 </body>

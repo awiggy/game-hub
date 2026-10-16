@@ -2,11 +2,18 @@
   "id": "sokoban",
   "name": "像素推箱子",
   "emoji": "📦",
-  "categories": ["puzzle", "strategy"],
-  "tags": ["益智", "经典", "思考"],
-  "summary": "把箱子一格一格推到目标点上，一步走错满盘皆输的经典谜题！",
-  "description": "经典推箱子。方向键移动小人，将所有箱子推到发光的目标点上即过关，共 5 关。箱子只能推不能拉，步数越少得分越高。",
-  "howToPlay": "方向键 / WASD / 滑动移动；把箱子推到 ✦ 目标点上。",
+  "categories": [
+    "puzzle",
+    "strategy"
+  ],
+  "tags": [
+    "益智",
+    "经典",
+    "思考"
+  ],
+  "summary": "帮小兔把胡萝卜木箱送到花朵上，五关花园谜题，支持撤销与本关重试。",
+  "description": "方向键、按钮或滑动控制小兔，把所有胡萝卜木箱推到花朵目标上。箱子只能推不能拉，共 5 关；支持撤销和重试当前关，移动越少得分越高。",
+  "howToPlay": "方向键 / WASD / 屏幕方向按钮 / 滑动移动；把木箱推到花朵上，推错可撤销或本关重试。",
   "entry": "sokoban/index.html",
   "platform": "浏览器",
   "playMode": "online",

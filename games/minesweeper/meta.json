@@ -2,10 +2,17 @@
   "id": "minesweeper",
   "name": "经典扫雷",
   "emoji": "💣",
-  "categories": ["puzzle", "strategy"],
-  "tags": ["单人", "HTML5", "益智"],
+  "categories": [
+    "puzzle",
+    "strategy"
+  ],
+  "tags": [
+    "单人",
+    "HTML5",
+    "益智"
+  ],
   "summary": "9×9 雷区藏着 10 颗地雷，用数字推理排雷插旗，全靠逻辑一次通关！",
-  "description": "Windows 经典扫雷复刻。9×9 雷区 10 颗雷，首次点击保证安全；数字表示周围雷数，推理出所有安全格即获胜，也可以插旗标记疑雷。计时挑战，最好成绩本地保存。",
+  "description": "四叶草田主题的经典扫雷。9×9 草地藏着 10 颗雷，第一次点击及其周围必安全；数字表示周围地雷数量，支持右键或旗标按钮标记。",
   "howToPlay": "左键 / 点击翻开格子；右键或开启🚩模式后点击插旗；翻开所有安全格即胜利。",
   "entry": "minesweeper/index.html",
   "platform": "浏览器",

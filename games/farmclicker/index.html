@@ -52,17 +52,52 @@
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700;
       padding:10px 32px; border-radius:8px; cursor:pointer;
     }
+
+    /* Crafted pixel edition: the playable pieces, not just the surrounding UI. */
+    :root{--ink:#48533d;--accent:#4e854d;--paper:#fff9e7;--edge:#6f9250;--page:#edf2d9}
+    body{background:var(--page);color:var(--ink);background-image:radial-gradient(#ffffff70 1px,transparent 1px);background-size:12px 12px;overflow:auto;min-height:100%;height:auto;padding:24px 12px;gap:10px}
+    body::before{content:'';position:fixed;inset:0;box-shadow:inset 0 0 100px #ffffff70;pointer-events:none;z-index:-1}
+    button{font-family:inherit;touch-action:manipulation}button:focus-visible{outline:3px solid #d26c48;outline-offset:3px}
+    #wrap{flex-shrink:0;max-width:100%}
+    #hud,#bar{position:static;color:var(--ink);letter-spacing:0;font-size:11px;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 4px}
+    #hud b,#bar b{color:var(--accent);font-size:17px}canvas{image-rendering:pixelated;border:4px solid var(--edge);border-radius:8px;box-shadow:0 5px 0 color-mix(in srgb,var(--edge),transparent 55%);background:var(--paper);max-width:100%;object-fit:contain}
+    #overlay{z-index:20;background:color-mix(in srgb,var(--paper) 96%,transparent);color:var(--ink);border-radius:12px;gap:12px;padding:22px}
+    #overlay::before{content:'';width:90px;height:90px;background:var(--mascot) center/contain no-repeat;image-rendering:pixelated}
+    #overlay h1,#overlay h2{font-size:25px;letter-spacing:1px;text-shadow:none;color:var(--ink)}
+    #overlay p{color:var(--ink);font-size:13px;line-height:1.9;max-width:340px}#overlay p b{color:var(--accent)!important}
+    #overlay button,#new-game,#bar button,#pads button,.up,.garden-controls button{background:var(--accent);color:#fffaf0;border:2px solid var(--ink);box-shadow:0 3px 0 #0002;border-radius:7px;font-weight:800;cursor:pointer}
+    #overlay button:hover{filter:brightness(1.1)}#overlay.hidden{display:none}
+    .pixel-sprite{display:block;width:100%;height:100%;image-rendering:pixelated;pointer-events:none}
+    .scene-title{width:100%;display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:5px}
+    .scene-title strong{font-size:23px;letter-spacing:1px;display:block}.scene-title small{display:block;font-size:11px;line-height:1.8;letter-spacing:1px;color:var(--accent)}
+    .scene-title svg{width:54px;height:54px;flex-shrink:0}.play-note{font-size:11px;text-align:center;color:var(--ink);line-height:1.7;margin-top:9px}
+    .landscape{height:92px;position:relative;overflow:hidden;border-radius:10px 10px 0 0;background:linear-gradient(#a9dfdf 0 63%,#b7d878 63% 71%,#82b65e 71%);border:3px solid var(--edge);border-bottom:0}
+    .landscape::before{content:'';position:absolute;left:15%;top:18px;width:40px;height:8px;background:#fffcec;box-shadow:8px -6px #fffcec,170px 5px #fffcec,178px -1px #fffcec}
+    .landscape svg{position:absolute;bottom:0;width:76px;height:76px}.landscape svg:nth-child(2){left:2%;width:52px;height:52px}.landscape svg:nth-child(3){right:4%;width:44px;height:44px}.landscape svg:nth-child(4){right:15%;width:32px;height:32px}
+    @media(max-width:480px){body{padding:14px 10px}.scene-title strong{font-size:20px}#hud b,#bar b{font-size:15px}.landscape{height:74px}.scene-title svg{width:44px;height:44px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+:root{--page:#edf1d5;--ink:#5f6541;--accent:#70914c;--edge:#829a58;--paper:#fff6df;--mascot:url("data:image/svg+xml,%3Csvg%20aria-hidden%3D%22true%22%20viewBox%3D%220%200%2032%2032%22%20class%3D%22pixel-sprite%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20x%3D%2214%22%20y%3D%226%22%20width%3D%223%22%20height%3D%2211%22%20fill%3D%22%2337774b%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%225%22%20width%3D%228%22%20height%3D%224%22%20fill%3D%22%23387d43%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%223%22%20width%3D%226%22%20height%3D%224%22%20fill%3D%22%2384bd50%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%224%22%20width%3D%228%22%20height%3D%224%22%20fill%3D%22%233c8e46%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%222%22%20width%3D%226%22%20height%3D%223%22%20fill%3D%22%23b0d767%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2213%22%20width%3D%2215%22%20height%3D%225%22%20fill%3D%22%23ad552b%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2218%22%20width%3D%2212%22%20height%3D%225%22%20fill%3D%22%23ad552b%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2223%22%20width%3D%228%22%20height%3D%224%22%20fill%3D%22%23ad552b%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2227%22%20width%3D%224%22%20height%3D%223%22%20fill%3D%22%23ad552b%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2214%22%20width%3D%2212%22%20height%3D%224%22%20fill%3D%22%23ffb04b%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2218%22%20width%3D%229%22%20height%3D%225%22%20fill%3D%22%23f88132%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%2223%22%20width%3D%225%22%20height%3D%224%22%20fill%3D%22%23f88132%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2215%22%20width%3D%223%22%20height%3D%225%22%20fill%3D%22%23ffda75%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2219%22%20width%3D%223%22%20height%3D%221%22%20fill%3D%22%23ba5c32%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%2224%22%20width%3D%223%22%20height%3D%221%22%20fill%3D%22%23ba5c32%22%2F%3E%3C%2Fsvg%3E")}
+#wrap{width:min(440px,94vw)}#farm{background:#90b467;border:4px solid #71924e;padding:12px;gap:10px;box-shadow:0 5px #749551;border-radius:0 0 10px 10px;margin-top:-12px}.plot{position:relative;aspect-ratio:1.1;border:3px solid #875d3e;border-top-color:#bc8c5c;border-left-color:#bc8c5c;background:repeating-linear-gradient(0deg,#9a6c46 0 10px,#ad7c50 10px 13px);border-radius:7px;box-shadow:0 3px #638347;overflow:hidden;padding:5px}.plot svg{width:62%;height:68%}.plot .t{font-size:11px;color:#fff3c5;text-shadow:1px 1px #79573d}.plot.empty svg{opacity:.5}.plot.ripe{border-color:#f5d477;background:repeating-linear-gradient(0deg,#a7764a 0 10px,#bd8c58 10px 13px)}.plot.ripe svg{animation:harvest-bob 1.5s ease-in-out infinite}@keyframes harvest-bob{50%{transform:translateY(-3px)}}.up{background:#fff2ce;color:#6b7143;border-color:#a0b27a;padding:9px 5px}.up small{font-size:10px}.up:disabled{opacity:.65}.landscape svg:first-child{left:38%;width:100px;height:100px}.landscape{height:110px;margin-bottom:0}#bar-out{background:#dce4bd;border-color:#a1b477;height:10px}#bar-in{background:#dfac58}.farm-hint{font-size:11px;text-align:center;min-height:18px;color:#70653e}body{flex-direction:column}
+
+/* Compact landscape retains readable boards beside their controls. */
+@media(min-width:600px) and (max-height:550px){body{padding:12px;gap:8px}.play-note{margin:0}#wrap{width:min(710px,96vw);display:grid;grid-template-columns:240px 330px;gap:8px 20px;align-items:center;justify-content:center}.scene-title{grid-column:1;grid-row:1}#hud{grid-column:1;grid-row:2}#bar-out{grid-column:1;grid-row:3}#ups{grid-column:1;grid-row:4;flex-direction:column}.landscape{grid-column:2;grid-row:1/3;height:65px;align-self:end}#farm{grid-column:2;grid-row:3/5;margin-top:-8px;padding:10px;gap:8px}.plot{aspect-ratio:1.25}#garden-hint{grid-column:2;grid-row:5;margin:0}.landscape svg:first-child{height:75px;width:75px}.up{padding:6px}.scene-title strong{font-size:20px}}
+@media(max-width:480px){body{padding:12px 10px}.play-note{margin-top:3px;font-size:10px}.scene-title{margin-bottom:0}.scene-title small{letter-spacing:.5px}}
+@media(max-width:480px){.landscape{height:85px}#wrap{gap:10px}.landscape svg:first-child{height:85px;width:85px}#farm{margin-top:-10px}.plot{aspect-ratio:1.15}#hud{padding:5px 4px}}
   </style>
 </head>
 <body>
   <div id="wrap">
+<header class="scene-title"><div><small>LITTLE CARROT FARM · 摸鱼农场</small><strong>兔兔的胡萝卜农场</strong></div><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="14" y="6" width="3" height="11" fill="#37774b"/><rect x="7" y="5" width="8" height="4" fill="#387d43"/><rect x="9" y="3" width="6" height="4" fill="#84bd50"/><rect x="17" y="4" width="8" height="4" fill="#3c8e46"/><rect x="18" y="2" width="6" height="3" fill="#b0d767"/><rect x="9" y="13" width="15" height="5" fill="#ad552b"/><rect x="10" y="18" width="12" height="5" fill="#ad552b"/><rect x="12" y="23" width="8" height="4" fill="#ad552b"/><rect x="14" y="27" width="4" height="3" fill="#ad552b"/><rect x="10" y="14" width="12" height="4" fill="#ffb04b"/><rect x="11" y="18" width="9" height="5" fill="#f88132"/><rect x="13" y="23" width="5" height="4" fill="#f88132"/><rect x="11" y="15" width="3" height="5" fill="#ffda75"/><rect x="18" y="19" width="3" height="1" fill="#ba5c32"/><rect x="13" y="24" width="3" height="1" fill="#ba5c32"/></svg></header>
     <div id="hud">
       <span>金币<b id="coins">2</b></span>
       <span>累计<b id="earned">0</b>/500</span>
       <span>BEST<b id="best">0</b></span>
     </div>
     <div id="bar-out"><div id="bar-in"></div></div>
+<div class="landscape" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="15" y="2" width="2" height="3" fill="#5c656c"/><rect x="13" y="4" width="6" height="3" fill="#5c656c"/><rect x="11" y="6" width="10" height="3" fill="#5c656c"/><rect x="9" y="8" width="14" height="3" fill="#5c656c"/><rect x="7" y="10" width="18" height="3" fill="#5c656c"/><rect x="5" y="12" width="22" height="3" fill="#5c656c"/><rect x="6" y="14" width="23" height="17" fill="#9d4843"/><rect x="7" y="14" width="20" height="15" fill="#df775c"/><rect x="9" y="15" width="1" height="14" fill="#f59973"/><rect x="13" y="15" width="1" height="14" fill="#f59973"/><rect x="17" y="15" width="1" height="14" fill="#f59973"/><rect x="21" y="15" width="1" height="14" fill="#f59973"/><rect x="25" y="15" width="1" height="14" fill="#f59973"/><rect x="5" y="14" width="25" height="2" fill="#ffecbc"/><rect x="12" y="20" width="11" height="11" fill="#ffe8b4"/><rect x="14" y="21" width="7" height="10" fill="#975645"/><rect x="17" y="21" width="1" height="10" fill="#ffdb9e"/><rect x="14" y="23" width="7" height="1" fill="#ffdb9e"/><rect x="15" y="12" width="6" height="6" fill="#ffecbc"/><rect x="16" y="13" width="4" height="4" fill="#6aa7b5"/></svg><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="1" y="5" width="30" height="27" fill="#376e4c"/><rect x="2" y="3" width="28" height="25" fill="#4b9550"/><rect x="5" y="1" width="22" height="26" fill="#75b44f"/><rect x="8" y="2" width="12" height="5" fill="#b9d663"/><rect x="4" y="8" width="8" height="5" fill="#a3ce5a"/><rect x="18" y="5" width="10" height="5" fill="#92c250"/><rect x="7" y="16" width="12" height="6" fill="#8fc352"/><rect x="21" y="16" width="8" height="6" fill="#447e45"/><rect x="4" y="24" width="11" height="4" fill="#467d43"/><rect x="21" y="11" width="3" height="3" fill="#d0e478"/><rect x="13" y="10" width="3" height="3" fill="#c0db69"/><rect x="15" y="25" width="8" height="3" fill="#64a34a"/></svg><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="8" y="1" width="6" height="12" fill="#8c7974"/><rect x="19" y="0" width="6" height="13" fill="#8c7974"/><rect x="9" y="2" width="4" height="11" fill="#fffbed"/><rect x="20" y="1" width="4" height="12" fill="#fffbed"/><rect x="10" y="4" width="2" height="7" fill="#e7a09b"/><rect x="21" y="3" width="2" height="8" fill="#e7a09b"/><rect x="7" y="11" width="19" height="20" fill="#8c7974"/><rect x="4" y="14" width="25" height="14" fill="#8c7974"/><rect x="9" y="11" width="15" height="18" fill="#f9eacb"/><rect x="6" y="14" width="21" height="12" fill="#f9eacb"/><rect x="9" y="10" width="15" height="7" fill="#fffbed"/><rect x="7" y="14" width="4" height="7" fill="#fffbed"/><rect x="12" y="21" width="10" height="8" fill="#fffdf2"/><rect x="9" y="24" width="16" height="2" fill="#fffdf2"/><rect x="11" y="16" width="2" height="3" fill="#332f36"/><rect x="19" y="16" width="2" height="3" fill="#332f36"/><rect x="11" y="16" width="1" height="1" fill="#fffdf0"/><rect x="19" y="16" width="1" height="1" fill="#fffdf0"/><rect x="9" y="20" width="3" height="2" fill="#f4998a"/><rect x="20" y="20" width="3" height="2" fill="#f4998a"/><rect x="15" y="20" width="2" height="1" fill="#8f4d48"/><rect x="14" y="24" width="6" height="2" fill="#8a534b"/><rect x="16" y="24" width="2" height="3" fill="#fff8e4"/><rect x="3" y="26" width="5" height="4" fill="#fffbed"/><rect x="26" y="26" width="4" height="4" fill="#fffbed"/></svg><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="15" y="13" width="3" height="17" fill="#3c8b58"/><rect x="8" y="20" width="8" height="4" fill="#82be5f"/><rect x="18" y="23" width="8" height="4" fill="#58a657"/><rect x="13" y="2" width="6" height="20" fill="#e5bc88"/><rect x="10" y="5" width="12" height="14" fill="#e5bc88"/><rect x="8" y="7" width="16" height="10" fill="#e5bc88"/><rect x="5" y="10" width="22" height="4" fill="#e5bc88"/><rect x="14" y="2" width="4" height="18" fill="#fffbea"/><rect x="11" y="5" width="10" height="12" fill="#fffbea"/><rect x="8" y="8" width="16" height="8" fill="#fffbea"/><rect x="5" y="11" width="22" height="2" fill="#fffbea"/><rect x="12" y="8" width="9" height="8" fill="#e9a82d"/><rect x="13" y="8" width="6" height="5" fill="#ffd95c"/><rect x="14" y="9" width="3" height="2" fill="#fff5ac"/></svg></div>
     <div id="farm"></div>
+    <p id="garden-hint" class="farm-hint" aria-live="polite">种一颗种子，等一颗胡萝卜。目标：累计 500 金币</p>
     <div id="ups">
       <button class="up" id="up-speed">🚿 生长提速<br/><small></small></button>
       <button class="up" id="up-price">💰 售价+1<br/><small></small></button>
@@ -75,6 +110,53 @@
   </div>
   <script>
     (() => {
+
+      function pixels(kind) {
+        const a=[]; const r=(x,y,w,h,c)=>a.push([x,y,w,h,c]);
+        const face=(x,y)=>{r(x,y,2,3,'#332f36');r(x+8,y,2,3,'#332f36');r(x,y,1,1,'#fffdf0');r(x+8,y,1,1,'#fffdf0');r(x-2,y+4,3,2,'#f4998a');r(x+9,y+4,3,2,'#f4998a');r(x+4,y+4,2,1,'#8f4d48');};
+        const round=(x,y,w,h,c)=>{r(x+3,y,w-6,h,c);r(x,y+3,w,h-6,c)};
+        if(kind==='apple'||kind==='orange'||kind==='berry') {
+          const p=kind==='apple'?['#8e3540','#d84b4e','#ff765f','#ffbea0']:kind==='orange'?['#ae5c2c','#ef9c34','#ffc650','#ffed9a']:['#48447d','#6f6fc1','#9d9ce3','#d2d1ff'];
+          round(4,9,24,20,p[0]);round(6,10,20,17,p[1]);r(8,11,15,11,p[2]);r(8,13,4,5,p[3]);r(10,11,5,2,p[3]);r(13,6,3,6,'#72533e');r(16,4,9,4,'#3c7949');r(17,4,6,2,'#9bcd55');face(10,19);
+        } else if(kind==='carrot'||kind==='sprout') {
+          r(14,6,3,11,'#37774b');r(7,5,8,4,'#387d43');r(9,3,6,4,'#84bd50');r(17,4,8,4,'#3c8e46');r(18,2,6,3,'#b0d767');
+          if(kind==='carrot'){r(9,13,15,5,'#ad552b');r(10,18,12,5,'#ad552b');r(12,23,8,4,'#ad552b');r(14,27,4,3,'#ad552b');r(10,14,12,4,'#ffb04b');r(11,18,9,5,'#f88132');r(13,23,5,4,'#f88132');r(11,15,3,5,'#ffda75');r(18,19,3,1,'#ba5c32');r(13,24,3,1,'#ba5c32');}
+          else {r(5,23,22,4,'#654830');r(8,21,16,3,'#9d6c42');r(14,14,3,8,'#3c8747');}
+        } else if(kind==='flower') {
+          r(15,13,3,17,'#3c8b58');r(8,20,8,4,'#82be5f');r(18,23,8,4,'#58a657');
+          round(10,2,12,20,'#e5bc88');round(5,7,22,10,'#e5bc88');round(11,2,10,18,'#fffbea');round(5,8,22,8,'#fffbea');r(12,8,9,8,'#e9a82d');r(13,8,6,5,'#ffd95c');r(14,9,3,2,'#fff5ac');
+        } else if(kind==='mushroom') {
+          r(11,16,11,13,'#af784d');r(12,16,9,11,'#ffe6b2');r(12,18,3,6,'#fff6da');r(6,8,21,11,'#9c3d43');r(10,4,13,5,'#9c3d43');r(4,13,25,7,'#9c3d43');r(7,9,19,8,'#e97564');r(10,5,13,9,'#f69b7e');r(5,14,23,3,'#e97564');r(10,8,4,4,'#fff0cf');r(20,12,5,4,'#fff0cf');face(12,22);
+        } else if(kind==='mole'||kind==='goldmole'||kind==='bunny') {
+          const bunny=kind==='bunny',gold=kind==='goldmole'; const dark=bunny?'#8c7974':gold?'#9c6327':'#704c46'; const base=bunny?'#f9eacb':gold?'#efb648':'#b38360';const light=bunny?'#fffbed':gold?'#ffe08a':'#dbac7a';
+          if(bunny){r(8,1,6,12,dark);r(19,0,6,13,dark);r(9,2,4,11,light);r(20,1,4,12,light);r(10,4,2,7,'#e7a09b');r(21,3,2,8,'#e7a09b');}
+          else{round(4,5,8,9,dark);round(21,5,8,9,dark);r(6,7,4,5,'#e7a09b');r(23,7,4,5,'#e7a09b');}
+          round(4,11,25,20,dark);round(6,11,21,18,base);r(9,10,15,7,light);r(7,14,4,7,light);round(9,21,16,8,bunny?'#fffdf2':'#f8ddb0');face(11,16);r(14,24,6,2,'#8a534b');r(16,24,2,3,'#fff8e4');r(3,26,5,4,light);r(26,26,4,4,light);
+        } else if(kind==='chick') {
+          r(4,13,6,9,'#9a6129');r(7,8,18,18,'#9a6129');r(11,5,12,4,'#9a6129');r(8,10,17,14,'#ffca42');r(11,7,12,14,'#ffe777');r(12,8,9,6,'#fff2ac');r(6,16,10,7,'#f2a32d');r(6,16,8,3,'#ffda5b');r(19,10,6,8,'#fffbed');r(22,12,3,5,'#3f3831');r(22,12,1,1,'#fff');r(25,17,6,3,'#b9582c');r(25,17,5,1,'#ffad3b');r(19,20,4,2,'#f99059');r(11,26,3,3,'#c87c33');r(20,25,3,3,'#c87c33');r(11,3,3,4,'#c89c38');
+        } else if(kind==='grape') {
+          r(15,3,3,6,'#72513d');r(18,3,9,4,'#599657');
+          for(const [x,y] of [[7,8],[17,8],[5,15],[14,15],[22,15],[10,22],[18,22]]){round(x,y,8,8,'#624274');round(x+1,y,6,6,'#a27bd0');r(x+2,y+1,2,2,'#e4bcf4');}
+        } else if(kind==='melon') {
+          r(4,9,24,13,'#326d52');r(7,22,18,4,'#326d52');r(11,26,10,3,'#326d52');r(5,9,22,12,'#a6d46c');r(8,21,16,3,'#a6d46c');r(6,9,20,9,'#f9807c');r(9,18,14,3,'#f9807c');r(12,21,8,2,'#f9807c');r(7,10,18,2,'#ffb0a0');for(const [x,y] of [[10,14],[16,12],[21,15],[15,18]])r(x,y,1,2,'#673f48');
+        } else if(kind==='flag') {
+          r(10,3,3,25,'#695447');r(13,4,14,10,'#9e4b4c');r(13,4,11,7,'#f47768');r(14,5,7,2,'#ffbea2');r(7,27,13,2,'#486a4a');
+        } else if(kind==='mine') {
+          r(14,2,4,28,'#47606b');r(2,14,28,4,'#47606b');r(6,6,20,20,'#47606b');round(7,7,18,18,'#6e8e97');r(10,9,6,4,'#c1d9cf');face(11,16);
+        } else if(kind==='crate') {
+          r(2,4,28,26,'#865637');r(4,5,24,22,'#d29b58');r(6,8,20,17,'#b77b46');r(7,9,18,3,'#e8b56b');r(7,16,18,2,'#e8b56b');r(4,5,3,22,'#f3c986');r(25,5,3,22,'#ad713f');r(5,5,22,3,'#ffe0a0');r(5,24,22,3,'#e4b06a');r(6,6,2,2,'#805b3d');r(24,25,2,2,'#805b3d');r(14,13,6,5,'#f1a13f');r(15,18,3,3,'#f1a13f');r(15,10,2,4,'#5f974f');r(17,10,4,2,'#9dc968');
+        } else if(kind==='hedge') {
+          r(1,5,30,27,'#376e4c');r(2,3,28,25,'#4b9550');r(5,1,22,26,'#75b44f');r(8,2,12,5,'#b9d663');r(4,8,8,5,'#a3ce5a');r(18,5,10,5,'#92c250');r(7,16,12,6,'#8fc352');r(21,16,8,6,'#447e45');r(4,24,11,4,'#467d43');r(21,11,3,3,'#d0e478');r(13,10,3,3,'#c0db69');r(15,25,8,3,'#64a34a');
+        } else if(kind==='barn') {
+          for(let i=0;i<6;i++)r(15-i*2,2+i*2,2+i*4,3,'#5c656c');r(6,14,23,17,'#9d4843');r(7,14,20,15,'#df775c');for(let i=9;i<27;i+=4)r(i,15,1,14,'#f59973');r(5,14,25,2,'#ffecbc');r(12,20,11,11,'#ffe8b4');r(14,21,7,10,'#975645');r(17,21,1,10,'#ffdb9e');r(14,23,7,1,'#ffdb9e');r(15,12,6,6,'#ffecbc');r(16,13,4,4,'#6aa7b5');
+        } else if(kind==='cookie') {
+          round(4,4,24,24,'#986334');round(5,4,22,21,'#e6ac57');r(8,6,16,13,'#f9ce7b');r(9,7,9,2,'#ffe6a3');for(const [x,y] of [[10,11],[21,10],[17,18],[8,21]]){r(x,y,3,3,'#8f5a41');r(x,y,2,1,'#bc8650');}
+        }
+        return a;
+      }
+      function sprite(kind) {return '<svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">'+pixels(kind).map(([x,y,w,h,c])=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+c+'"/>').join('')+'</svg>';}
+      function paint(kind,x,y,size) {const u=size/32;for(const [a,b,w,h,c] of pixels(kind)){ctx.fillStyle=c;ctx.fillRect(Math.round(x+a*u),Math.round(y+b*u),Math.ceil(w*u),Math.ceil(h*u));}}
+
       const GROW_BASE = 3000
       const SELL_BASE = 3
       const GOAL = 500
@@ -95,6 +177,8 @@
       function priceOf(base, lv, step) { return base + lv * step }
 
       function start() {
+        startAt = Date.now()
+        document.getElementById('garden-hint').textContent = '种子 1 金币 · 熟了点一下收获 · 空田时自动留 1 金币买种子'
         plots = Array.from({ length: 6 }, () => ({ state: 'empty', t: 0 }))
         coins = 2; earned = 0; speedLv = 0; priceLv = 0
         growMs = GROW_BASE; sellPrice = SELL_BASE
@@ -104,6 +188,7 @@
       }
 
       function plant(i) {
+        if (!running || over) return
         const p = plots[i]
         if (p.state !== 'empty' || coins < 1) return
         coins--
@@ -113,12 +198,14 @@
       }
 
       function harvest(i) {
+        if (!running || over) return
         const p = plots[i]
         if (p.state !== 'ripe') return
         p.state = 'empty'
         coins += sellPrice
         earned += sellPrice
-        if (earned >= GOAL) return win()
+        document.getElementById('garden-hint').textContent = '收获成功！+' + sellPrice + ' 金币，继续种下一颗吧'
+        if (earned >= GOAL) { render(); return win() }
         render()
       }
 
@@ -146,42 +233,46 @@
         earnedEl.textContent = earned
         barIn.style.width = Math.min(100, earned / GOAL * 100) + '%'
         const now = Date.now()
+        for (const p of plots) if (p.state === 'grow' && now - p.t >= growMs) p.state = 'ripe'
         farmEl.innerHTML = ''
         plots.forEach((p, i) => {
-          const el = document.createElement('div')
+          const el = document.createElement('button')
           if (p.state === 'empty') {
             el.className = 'plot empty'
-            el.innerHTML = '<span>🟫</span><span class="t">点击种菜</span>'
+            el.innerHTML = sprite('sprout') + '<span class="t">种子 −1</span>'
             el.onclick = () => plant(i)
           } else if (p.state === 'grow') {
             const left = Math.max(0, growMs - (now - p.t))
-            if (left === 0) { p.state = 'ripe'; return render() }
+
             el.className = 'plot'
-            el.innerHTML = '<span>🌱</span><span class="t">' + (left / 1000).toFixed(1) + 's</span>'
+            el.innerHTML = sprite('sprout') + '<span class="t">' + (left / 1000).toFixed(1) + 's</span>'
           } else {
             el.className = 'plot ripe'
-            el.innerHTML = '<span>🥕</span><span class="t">+' + sellPrice + ' 收获</span>'
+            el.innerHTML = sprite('carrot') + '<span class="t">+' + sellPrice + ' 收获</span>'
             el.onclick = () => harvest(i)
           }
+          el.setAttribute('aria-label', '菜地 ' + (i+1) + (p.state === 'empty' ? '，花 1 金币种菜' : p.state === 'ripe' ? '，点击收获' : '，生长中'))
           farmEl.appendChild(el)
         })
         const sp = priceOf(20, speedLv, 10), pr = priceOf(30, priceLv, 15)
         upSpeed.querySelector('small').textContent = sp + ' 金币（当前 ' + (growMs / 1000).toFixed(1) + 's）'
         upPrice.querySelector('small').textContent = pr + ' 金币（当前 ' + sellPrice + '）'
-        upSpeed.disabled = coins < sp
-        upPrice.disabled = coins < pr
+        const reserve = plots.some(p=>p.state !== 'empty') ? 0 : 1
+        upSpeed.disabled = coins < sp + reserve || growMs <= 600 || !running
+        upPrice.disabled = coins < pr + reserve || !running
+        if (growMs <= 600) upSpeed.querySelector('small').textContent = '已满级 · 0.6 秒成熟'
       }
 
       upSpeed.onclick = () => {
         const sp = priceOf(20, speedLv, 10)
-        if (coins < sp) return
+        if (!running || over || growMs <= 600 || coins < sp + (plots.some(p=>p.state !== 'empty') ? 0 : 1)) return
         coins -= sp; speedLv++
         growMs = Math.max(600, GROW_BASE - speedLv * 300)
         render()
       }
       upPrice.onclick = () => {
         const pr = priceOf(30, priceLv, 15)
-        if (coins < pr) return
+        if (!running || over || coins < pr + (plots.some(p=>p.state !== 'empty') ? 0 : 1)) return
         coins -= pr; priceLv++
         sellPrice = SELL_BASE + priceLv
         render()
@@ -193,7 +284,7 @@
       window.__hub = {
         get score() { return Math.floor(coins) },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       plots = Array.from({ length: 6 }, () => ({ state: 'empty', t: 0 }))
