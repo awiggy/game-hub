@@ -22,8 +22,12 @@
 - `scripts/check-final-ten-browser.cjs` 仅在测试中注入只读状态观察，用真实键鼠完成操作，发布源码不包含测试入口。十款交互通过，斗地主完整对局结束后重开通过。结果：[browser-final-ten.json](design/2026-10-17/browser-final-ten.json)。
 - 尺寸：900×720、320×568、390×600、768×430、844×390。开场与游戏中无横向/纵向溢出，屏幕控制区不覆盖游戏画布。真实手机触屏上下文逐款启动和操作，结果：[touch-final-ten.json](design/2026-10-17/touch-final-ten.json)。
 - 桌面与手机截图各十张，命名 `docs/design/2026-10-17/final10-<id>[-mobile].png`；已检查并修正按钮遮挡与文字换行。合集 `local-previews/pixel-final-ten-2026-10-17.html`。
-- `npm run build` 通过：107 款静态检查、106 款初始化冒烟（shellgame 为原有 mock 限制，已有真实浏览器证据）、全部历次玩法回归、目录与 6 个归档跳转校验通过。构建产物内本批 10 款正式 iframe 启动和重开通过；线上核验在发布后补记。
+- `npm run build` 通过：107 款静态检查、106 款初始化冒烟（shellgame 为原有 mock 限制，已有真实浏览器证据）、全部历次玩法回归、目录与 6 个归档跳转校验通过。构建产物内本批 10 款正式 iframe 启动和重开通过；线上十款启动与重开同样通过，全部 107 款游戏 HTML 的 SHA-256 与本地一致。
 
 ## 范围
 
 本轮完成视觉、操作适配及已发现的可玩性故障修复。保留原有对局、无尽玩法与丛林两关；没有增加全站关卡系统，也不代表对全部随机局面和长期难度曲线做了穷举平衡。
+
+## 发布
+
+代码提交 `73db38b` 已发布至 [正式网站](https://awiggy.github.io/game-hub/)，[GitHub Pages 工作流 38982152008](https://github.com/awiggy/game-hub/actions/runs/38982152008) 构建和部署均成功。全量线上源码校验与十款正式入口试玩记录见 [发布证据](deployment-final-ten-2026-10-17.json)。项目记忆、README 与统一进度清单均记录 107 款完成、0 款待改。
