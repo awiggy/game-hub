@@ -2,11 +2,18 @@
   "id": "snakesladders",
   "name": "蛇梯棋",
   "emoji": "🐍",
-  "categories": ["card", "casual"],
-  "tags": ["棋牌", "掷骰", "经典"],
-  "summary": "掷骰爬楼梯小心滑蛇梯，先到 100 格者胜，和 AI 对决运气与勇气！",
-  "description": "经典蛇梯棋。轮流掷骰前进，踩到梯子顺梯而上，踩到蛇头滑落蛇尾。你与 AI 轮流出手，率先到达或越过 100 格者获胜。",
-  "howToPlay": "点「掷骰子」前进；梯子向上、蛇向下；先到 100 者胜。",
+  "categories": [
+    "card",
+    "casual"
+  ],
+  "tags": [
+    "棋牌",
+    "掷骰",
+    "经典"
+  ],
+  "summary": "和小鸡一起走云梯棋盘，搭梯子、避开滑道，抢先抵达终点。",
+  "description": "小兔由你操作，小鸡自动掷骰。落在梯子起点向上爬，落在蛇头则滑落，先到第 100 格获胜。棋盘走向与角色位置一致。",
+  "howToPlay": "点掷骰子，等待小鸡走完后再掷；先到 100 格获胜。",
   "entry": "snakesladders/index.html",
   "platform": "浏览器",
   "playMode": "online",

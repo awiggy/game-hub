@@ -1,0 +1,786 @@
+{
+  "updatedAt": "2026-10-16",
+  "records": [
+    {
+      "id": "junglegun",
+      "name": "丛林突击",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "airhockey",
+      "name": "冰球对战",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "battleship",
+      "name": "海战棋",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "bingo",
+      "name": "宾果连",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "bomber",
+      "name": "炸弹超人",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "checkers",
+      "name": "跳棋对战",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "chess",
+      "name": "国际象棋",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "doudizhu",
+      "name": "欢乐斗地主",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "flagquiz",
+      "name": "国旗问答",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "goldminer",
+      "name": "黄金矿工",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "idiomchain",
+      "name": "成语接龙",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "knightstour",
+      "name": "骑士巡游",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "marblemaze",
+      "name": "迷宫滚珠",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "minipac",
+      "name": "吃豆小人",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "onestroke",
+      "name": "一笔画",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "picross",
+      "name": "数织拼图",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "pipeconnect",
+      "name": "接水管",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "ricochet",
+      "name": "弹射打靶",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "ropeswing",
+      "name": "荡绳飞跃",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "snakesladders",
+      "name": "蛇梯棋",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "tankbattle",
+      "name": "像素坦克",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "anagram",
+      "name": "拼词大师",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "ballsort",
+      "name": "彩球分装",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "bigfish",
+      "name": "大鱼吃小鱼",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "billiards",
+      "name": "桌球小将",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "connect4",
+      "name": "四子连线",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "cookieidler",
+      "name": "饼干工坊",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "golf",
+      "name": "迷你高尔夫",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "hangman",
+      "name": "猜单词",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "lianliankan",
+      "name": "连连看",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "moonlander",
+      "name": "登月着陆",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "pyramid",
+      "name": "金字塔纸牌",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "rhymtap",
+      "name": "节奏拍点",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "schulte",
+      "name": "舒尔特方格",
+      "status": "completed",
+      "batch": "three",
+      "verification": "docs/verification-three-2026-10-16.md"
+    },
+    {
+      "id": "shellgame",
+      "name": "三仙归洞",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "sniper",
+      "name": "狙击时刻",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "tightrope",
+      "name": "走钢丝",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "waterpour",
+      "name": "倒水谜题",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "wordle",
+      "name": "猜词五连",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "wordsearch",
+      "name": "单词搜索",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "balloonpop",
+      "name": "戳气球",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "blinkblink",
+      "name": "火眼金睛",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "bombdefuse",
+      "name": "拆弹专家",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "bowling",
+      "name": "保龄球之夜",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "colorfill",
+      "name": "填色拼图",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "darts",
+      "name": "飞镖高手",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "dicehill",
+      "name": "骰子爬塔",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "fishing",
+      "name": "休闲钓鱼",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "highjump",
+      "name": "跳高挑战",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "jumpjump",
+      "name": "跳一跳",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "lightbike",
+      "name": "光轨对决",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "mathrun",
+      "name": "算术冲刺",
+      "status": "completed",
+      "batch": "three",
+      "verification": "docs/verification-three-2026-10-16.md"
+    },
+    {
+      "id": "memorymatrix",
+      "name": "记忆矩阵",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "orbit",
+      "name": "星环躲避",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "rockclimb",
+      "name": "岩壁攀岩",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "rushhour",
+      "name": "汽车华容道",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "sushichef",
+      "name": "上菜快手",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "trafficrush",
+      "name": "峰值路口",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "typewriter",
+      "name": "打字达人",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "diceduel",
+      "name": "骰子对决",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "rps",
+      "name": "石头剪刀布",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "antcolony",
+      "name": "蚂蚁帝国",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "archery",
+      "name": "百步穿杨",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "asteroids",
+      "name": "星际小行星",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "basketball",
+      "name": "街头投篮",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "biggerorlower",
+      "name": "大小对决",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "blackjack",
+      "name": "21点",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "catcheggs",
+      "name": "接鸡蛋",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "crossy",
+      "name": "横穿车流",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "elevator",
+      "name": "电梯调度员",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "farmclicker",
+      "name": "摸鱼农场",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    },
+    {
+      "id": "flowfree",
+      "name": "流水连线",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "fruitcut",
+      "name": "切水果",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "guessnum",
+      "name": "猜数字 1A2B",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "hanoi",
+      "name": "汉诺塔",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "knifehit",
+      "name": "飞刀挑战",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "lightsout",
+      "name": "点灯谜题",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "match3",
+      "name": "甜蜜三消",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    },
+    {
+      "id": "maze",
+      "name": "迷宫探险",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "minisudoku",
+      "name": "六宫数独",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "ninjadash",
+      "name": "忍者酷跑",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "penalty",
+      "name": "点球大战",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "petfeed",
+      "name": "云养喵",
+      "status": "completed",
+      "batch": "ten",
+      "verification": "docs/verification-ten-2026-10-16.md"
+    },
+    {
+      "id": "pianotile",
+      "name": "琴键快按",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "reaction",
+      "name": "极速反应",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "reversi",
+      "name": "黑白棋",
+      "status": "completed",
+      "batch": "three",
+      "verification": "docs/verification-three-2026-10-16.md"
+    },
+    {
+      "id": "shielddef",
+      "name": "护盾守卫",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "shopkeeper",
+      "name": "街角小店",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "simon",
+      "name": "记忆色序",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "skiing",
+      "name": "高山滑雪",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "slidetile",
+      "name": "数字华容道",
+      "status": "completed",
+      "batch": "storybook-ten",
+      "verification": "docs/verification-storybook-ten-2026-10-16.md"
+    },
+    {
+      "id": "sokoban",
+      "name": "像素推箱子",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    },
+    {
+      "id": "spaceinvaders",
+      "name": "太空侵略者",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "stacker",
+      "name": "叠叠乐",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "tictactoe",
+      "name": "井字棋",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "towerdef",
+      "name": "像素塔防",
+      "status": "completed",
+      "batch": "next-ten",
+      "verification": "docs/verification-next-ten-2026-10-16.md"
+    },
+    {
+      "id": "twentyfour",
+      "name": "速算24点",
+      "status": "completed",
+      "batch": "festival-sixteen",
+      "verification": "docs/verification-festival-sixteen-2026-10-16.md"
+    },
+    {
+      "id": "whackmole",
+      "name": "打地鼠",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    },
+    {
+      "id": "2048",
+      "name": "数字合合乐 2048",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    },
+    {
+      "id": "breakout",
+      "name": "疯狂打砖块",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    },
+    {
+      "id": "flappy",
+      "name": "像素小鸟",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    },
+    {
+      "id": "gobang",
+      "name": "五子棋",
+      "status": "completed",
+      "batch": "workshop-ten",
+      "verification": "docs/verification-workshop-ten-2026-10-16.md"
+    },
+    {
+      "id": "memory",
+      "name": "记忆翻牌",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    },
+    {
+      "id": "minesweeper",
+      "name": "经典扫雷",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    },
+    {
+      "id": "planewar",
+      "name": "雷霆打飞机",
+      "status": "not_started",
+      "batch": null,
+      "verification": null
+    },
+    {
+      "id": "snake",
+      "name": "像素贪吃蛇",
+      "status": "completed",
+      "batch": "snake",
+      "verification": "docs/verification-snake-2026-10-16.md"
+    },
+    {
+      "id": "tetris",
+      "name": "俄罗斯方块",
+      "status": "completed",
+      "batch": "crafted-ten",
+      "verification": "docs/verification-crafted-ten-2026-10-16.md"
+    }
+  ],
+  "archived": [
+    {
+      "id": "racedodge",
+      "name": "极速避让",
+      "archive": "archive/retired-games/2026-10-16/racedodge"
+    },
+    {
+      "id": "tabletennis",
+      "name": "乒乓快打",
+      "archive": "archive/retired-games/2026-10-16/tabletennis"
+    },
+    {
+      "id": "digitspan",
+      "name": "数字记忆",
+      "archive": "archive/retired-games/2026-10-16/digitspan"
+    },
+    {
+      "id": "memorypath",
+      "name": "记忆路线",
+      "archive": "archive/retired-games/2026-10-16/memorypath"
+    },
+    {
+      "id": "numchain",
+      "name": "连数字走格",
+      "archive": "archive/retired-games/2026-10-16/numchain"
+    },
+    {
+      "id": "picrotate",
+      "name": "旋转拼图",
+      "archive": "archive/retired-games/2026-10-16/picrotate"
+    }
+  ]
+}

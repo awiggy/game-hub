@@ -29,17 +29,25 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
+
+/* Hand-authored pixel workshop edition. */
+:root{--ink:#77633c;--edge:#bca368;--paper:#fff8df;--blue:#77633c;--yellow:#77633c}body{height:auto;min-height:100dvh;padding:14px 10px;overflow:auto;background:#f4eccd;background-image:radial-gradient(#fff8 1px,transparent 1px);background-size:12px 12px;color:var(--ink);flex-direction:column;gap:8px;touch-action:manipulation}#wrap{position:relative;width:min(460px,94vw);display:flex;flex-direction:column;align-items:stretch;gap:10px;flex-shrink:0}.scene-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.scene-head small{font-size:9px;letter-spacing:2px;opacity:.7}.scene-head h2{font-size:22px;line-height:1.4;margin:3px 0;letter-spacing:.5px}.scene-head>.pixel-sprite{width:58px;height:58px;flex:none}#hud,#bar{position:static;width:100%;padding:3px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;color:var(--ink);font-size:11px}#hud b,#bar b{font-size:16px;color:var(--ink)}#board,#grid,canvas{width:min(100%,calc(100dvh - 225px));max-width:100%;max-height:none;align-self:center;height:auto;border:4px solid var(--edge);border-radius:9px;box-shadow:0 5px #0002;background:var(--paper);flex-shrink:0}#msg,#hint,#fleet,#cps{color:var(--ink);font-size:12px;text-align:center;line-height:1.7;min-height:0}.work-note{font-size:10px;line-height:1.7;text-align:center;opacity:.8}canvas{image-rendering:pixelated;touch-action:none}#overlay{position:fixed;inset:0;z-index:40;border-radius:0;background:color-mix(in srgb,#f4eccd 97%,transparent);color:var(--ink);padding:20px;gap:14px}#overlay::before{content:'';display:block;width:100px;height:100px;background:url("data:image/svg+xml,%3Csvg%20aria-hidden%3D%22true%22%20viewBox%3D%220%200%2032%2032%22%20class%3D%22pixel-sprite%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20x%3D%227%22%20y%3D%228%22%20width%3D%223%22%20height%3D%2210%22%20fill%3D%22%23aacac5%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2211%22%20width%3D%229%22%20height%3D%224%22%20fill%3D%22%23aacac5%22%2F%3E%3Crect%20x%3D%2221%22%20y%3D%226%22%20width%3D%223%22%20height%3D%2210%22%20fill%3D%22%23aacac5%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%229%22%20width%3D%229%22%20height%3D%224%22%20fill%3D%22%23aacac5%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%221%22%20height%3D%227%22%20fill%3D%22%23f4fff0%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2211%22%20width%3D%227%22%20height%3D%221%22%20fill%3D%22%23f4fff0%22%2F%3E%3Crect%20x%3D%2222%22%20y%3D%226%22%20width%3D%221%22%20height%3D%228%22%20fill%3D%22%23f4fff0%22%2F%3E%3Crect%20x%3D%2219%22%20y%3D%229%22%20width%3D%227%22%20height%3D%222%22%20fill%3D%22%23f4fff0%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2214%22%20width%3D%2216%22%20height%3D%2214%22%20fill%3D%22%237e5d3c%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2217%22%20width%3D%2222%22%20height%3D%228%22%20fill%3D%22%237e5d3c%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2214%22%20width%3D%2214%22%20height%3D%2212%22%20fill%3D%22%23f8c85a%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%2217%22%20width%3D%2220%22%20height%3D%226%22%20fill%3D%22%23f8c85a%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2214%22%20width%3D%223%22%20height%3D%2212%22%20fill%3D%22%23997146%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2214%22%20width%3D%223%22%20height%3D%2212%22%20fill%3D%22%23997146%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2216%22%20width%3D%222%22%20height%3D%223%22%20fill%3D%22%23403d3b%22%2F%3E%3Crect%20x%3D%2223%22%20y%3D%2221%22%20width%3D%224%22%20height%3D%222%22%20fill%3D%22%23f39170%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2219%22%20width%3D%224%22%20height%3D%223%22%20fill%3D%22%23665841%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2211%22%20width%3D%222%22%20height%3D%224%22%20fill%3D%22%23665841%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;image-rendering:pixelated}#overlay h1{font-size:25px;letter-spacing:1px;text-shadow:none}#overlay p{color:var(--ink);max-width:380px;line-height:1.9}#overlay p b{color:var(--ink)!important}#overlay button,#again,#bar button{color:var(--paper);background:var(--ink);border:2px solid var(--edge);box-shadow:0 3px #0002;border-radius:8px;padding:10px 20px}#overlay.hidden{display:none}button{font-family:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,[tabindex]:focus-visible{outline:3px solid #d88050;outline-offset:2px}.pixel-sprite{display:block;width:100%;height:100%;image-rendering:pixelated;pointer-events:none}button:disabled{cursor:default;opacity:.45}.tools{display:flex;justify-content:center;gap:8px}.tools button,#pads button{background:var(--paper);border:2px solid var(--edge);color:var(--ink);padding:8px 13px;border-radius:7px;box-shadow:0 3px #0001;font-weight:800}
+@media(max-width:480px){.scene-head h2{font-size:19px}.scene-head>.pixel-sprite{width:44px;height:44px}#wrap{gap:8px}#hud b{font-size:14px}#board,#grid,canvas{width:min(100%,calc(100dvh - 205px))}}
+@media(min-width:600px) and (max-height:550px){#wrap{width:min(800px,96vw);display:grid;grid-template-columns:220px auto;gap:8px 24px;justify-content:center;align-items:center}#wrap>:where(:not(#board):not(#grid):not(canvas)){grid-column:1}#board,#grid,canvas{grid-column:2;grid-row:1/6;width:calc(100dvh - 58px);max-height:calc(100dvh - 38px)}.scene-head h2{font-size:20px}#overlay{gap:8px}#overlay::before{width:65px;height:65px}#overlay h1{font-size:22px}#overlay p{font-size:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+#grid{gap:8px;padding:12px;background:repeating-linear-gradient(45deg,#f2d896 0 12px,#eed08b 12px 14px);border-color:#b89c58}.cell{position:relative;border:2px solid #bf9b50;border-radius:9px;background:#d7b86e;box-shadow:inset 2px 2px #f4dc99,inset -2px -3px #bc994f;min-width:0;padding:5px}.cell:before{content:'';position:absolute;inset:12%;border:2px solid #a98a4833;border-radius:25%}.cell .honey,.cell .petal{position:absolute;inset:7%;visibility:hidden}.cell.lit{background:#ffe88e;border-color:#bfa13f;box-shadow:inset 2px 2px #fff5bd,0 0 0 2px #fff0ba}.cell.lit .honey{visibility:visible}.cell.good{background:#c4dba0;border-color:#88a46a}.cell.good .petal{visibility:visible}.cell.bad{background:#e4a18b;border-color:#b6745d}.cell.bad:after{content:'×';font-size:30px;color:#fff6dc}.cell:not(.lit):not(.good) .honey{visibility:hidden}#msg{background:#fffae6;border-radius:6px;padding:5px}
+</style>
 </head>
 <body>
-  <div id="wrap">
+  <div id="wrap"><header class="scene-head"><div><small>HONEY MEADOW</small><h2>小蜜蜂的花田记忆</h2></div><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="7" y="8" width="3" height="10" fill="#aacac5"/><rect x="4" y="11" width="9" height="4" fill="#aacac5"/><rect x="21" y="6" width="3" height="10" fill="#aacac5"/><rect x="18" y="9" width="9" height="4" fill="#aacac5"/><rect x="8" y="8" width="1" height="7" fill="#f4fff0"/><rect x="5" y="11" width="7" height="1" fill="#f4fff0"/><rect x="22" y="6" width="1" height="8" fill="#f4fff0"/><rect x="19" y="9" width="7" height="2" fill="#f4fff0"/><rect x="9" y="14" width="16" height="14" fill="#7e5d3c"/><rect x="6" y="17" width="22" height="8" fill="#7e5d3c"/><rect x="10" y="14" width="14" height="12" fill="#f8c85a"/><rect x="7" y="17" width="20" height="6" fill="#f8c85a"/><rect x="12" y="14" width="3" height="12" fill="#997146"/><rect x="18" y="14" width="3" height="12" fill="#997146"/><rect x="24" y="16" width="2" height="3" fill="#403d3b"/><rect x="23" y="21" width="4" height="2" fill="#f39170"/><rect x="4" y="19" width="4" height="3" fill="#665841"/><rect x="24" y="11" width="2" height="4" fill="#665841"/></svg></header>
     <div id="hud">
       <span>关卡<b id="lv">1</b></span>
       <span>命<b id="lives">♥♥♥</b></span>
       <span>BEST<b id="best">0</b></span>
     </div>
     <div id="grid"></div>
-    <div id="msg">点击开始后记住闪亮的格子</div>
+    <p class="work-note">记住蜂蜜亮起的位置，熄灭后再点它们</p><div id="msg">点击开始后记住闪亮的格子</div>
   </div>
   <div id="overlay">
     <h1>🧊 记忆矩阵</h1>
@@ -48,6 +56,79 @@
   </div>
   <script>
     (() => {
+      function pxRects(kind) {
+        const a=[]; const r=(x,y,w,h,c)=>a.push([x,y,w,h,c]);
+        const face=(x,y)=>{r(x,y,2,3,'#332f36');r(x+8,y,2,3,'#332f36');r(x,y,1,1,'#fffdf0');r(x+8,y,1,1,'#fffdf0');r(x-2,y+4,3,2,'#f4998a');r(x+9,y+4,3,2,'#f4998a');r(x+4,y+4,2,1,'#8f4d48');};
+        const round=(x,y,w,h,c)=>{r(x+3,y,w-6,h,c);r(x,y+3,w,h-6,c)};
+        if(kind==='apple'||kind==='orange'||kind==='berry') {
+          const p=kind==='apple'?['#8e3540','#d84b4e','#ff765f','#ffbea0']:kind==='orange'?['#ae5c2c','#ef9c34','#ffc650','#ffed9a']:['#48447d','#6f6fc1','#9d9ce3','#d2d1ff'];
+          round(4,9,24,20,p[0]);round(6,10,20,17,p[1]);r(8,11,15,11,p[2]);r(8,13,4,5,p[3]);r(10,11,5,2,p[3]);r(13,6,3,6,'#72533e');r(16,4,9,4,'#3c7949');r(17,4,6,2,'#9bcd55');face(10,19);
+        } else if(kind==='carrot'||kind==='sprout') {
+          r(14,6,3,11,'#37774b');r(7,5,8,4,'#387d43');r(9,3,6,4,'#84bd50');r(17,4,8,4,'#3c8e46');r(18,2,6,3,'#b0d767');
+          if(kind==='carrot'){r(9,13,15,5,'#ad552b');r(10,18,12,5,'#ad552b');r(12,23,8,4,'#ad552b');r(14,27,4,3,'#ad552b');r(10,14,12,4,'#ffb04b');r(11,18,9,5,'#f88132');r(13,23,5,4,'#f88132');r(11,15,3,5,'#ffda75');r(18,19,3,1,'#ba5c32');r(13,24,3,1,'#ba5c32');}
+          else {r(5,23,22,4,'#654830');r(8,21,16,3,'#9d6c42');r(14,14,3,8,'#3c8747');}
+        } else if(kind==='flower') {
+          r(15,13,3,17,'#3c8b58');r(8,20,8,4,'#82be5f');r(18,23,8,4,'#58a657');
+          round(10,2,12,20,'#e5bc88');round(5,7,22,10,'#e5bc88');round(11,2,10,18,'#fffbea');round(5,8,22,8,'#fffbea');r(12,8,9,8,'#e9a82d');r(13,8,6,5,'#ffd95c');r(14,9,3,2,'#fff5ac');
+        } else if(kind==='mushroom') {
+          r(11,16,11,13,'#af784d');r(12,16,9,11,'#ffe6b2');r(12,18,3,6,'#fff6da');r(6,8,21,11,'#9c3d43');r(10,4,13,5,'#9c3d43');r(4,13,25,7,'#9c3d43');r(7,9,19,8,'#e97564');r(10,5,13,9,'#f69b7e');r(5,14,23,3,'#e97564');r(10,8,4,4,'#fff0cf');r(20,12,5,4,'#fff0cf');face(12,22);
+        } else if(kind==='mole'||kind==='goldmole'||kind==='bunny') {
+          const bunny=kind==='bunny',gold=kind==='goldmole'; const dark=bunny?'#8c7974':gold?'#9c6327':'#704c46'; const base=bunny?'#f9eacb':gold?'#efb648':'#b38360';const light=bunny?'#fffbed':gold?'#ffe08a':'#dbac7a';
+          if(bunny){r(8,1,6,12,dark);r(19,0,6,13,dark);r(9,2,4,11,light);r(20,1,4,12,light);r(10,4,2,7,'#e7a09b');r(21,3,2,8,'#e7a09b');}
+          else{round(4,5,8,9,dark);round(21,5,8,9,dark);r(6,7,4,5,'#e7a09b');r(23,7,4,5,'#e7a09b');}
+          round(4,11,25,20,dark);round(6,11,21,18,base);r(9,10,15,7,light);r(7,14,4,7,light);round(9,21,16,8,bunny?'#fffdf2':'#f8ddb0');face(11,16);r(14,24,6,2,'#8a534b');r(16,24,2,3,'#fff8e4');r(3,26,5,4,light);r(26,26,4,4,light);
+        } else if(kind==='chick') {
+          r(4,13,6,9,'#9a6129');r(7,8,18,18,'#9a6129');r(11,5,12,4,'#9a6129');r(8,10,17,14,'#ffca42');r(11,7,12,14,'#ffe777');r(12,8,9,6,'#fff2ac');r(6,16,10,7,'#f2a32d');r(6,16,8,3,'#ffda5b');r(19,10,6,8,'#fffbed');r(22,12,3,5,'#3f3831');r(22,12,1,1,'#fff');r(25,17,6,3,'#b9582c');r(25,17,5,1,'#ffad3b');r(19,20,4,2,'#f99059');r(11,26,3,3,'#c87c33');r(20,25,3,3,'#c87c33');r(11,3,3,4,'#c89c38');
+        } else if(kind==='grape') {
+          r(15,3,3,6,'#72513d');r(18,3,9,4,'#599657');
+          for(const [x,y] of [[7,8],[17,8],[5,15],[14,15],[22,15],[10,22],[18,22]]){round(x,y,8,8,'#624274');round(x+1,y,6,6,'#a27bd0');r(x+2,y+1,2,2,'#e4bcf4');}
+        } else if(kind==='melon') {
+          r(4,9,24,13,'#326d52');r(7,22,18,4,'#326d52');r(11,26,10,3,'#326d52');r(5,9,22,12,'#a6d46c');r(8,21,16,3,'#a6d46c');r(6,9,20,9,'#f9807c');r(9,18,14,3,'#f9807c');r(12,21,8,2,'#f9807c');r(7,10,18,2,'#ffb0a0');for(const [x,y] of [[10,14],[16,12],[21,15],[15,18]])r(x,y,1,2,'#673f48');
+        } else if(kind==='flag') {
+          r(10,3,3,25,'#695447');r(13,4,14,10,'#9e4b4c');r(13,4,11,7,'#f47768');r(14,5,7,2,'#ffbea2');r(7,27,13,2,'#486a4a');
+        } else if(kind==='mine') {
+          r(14,2,4,28,'#47606b');r(2,14,28,4,'#47606b');r(6,6,20,20,'#47606b');round(7,7,18,18,'#6e8e97');r(10,9,6,4,'#c1d9cf');face(11,16);
+        } else if(kind==='crate') {
+          r(2,4,28,26,'#865637');r(4,5,24,22,'#d29b58');r(6,8,20,17,'#b77b46');r(7,9,18,3,'#e8b56b');r(7,16,18,2,'#e8b56b');r(4,5,3,22,'#f3c986');r(25,5,3,22,'#ad713f');r(5,5,22,3,'#ffe0a0');r(5,24,22,3,'#e4b06a');r(6,6,2,2,'#805b3d');r(24,25,2,2,'#805b3d');r(14,13,6,5,'#f1a13f');r(15,18,3,3,'#f1a13f');r(15,10,2,4,'#5f974f');r(17,10,4,2,'#9dc968');
+        } else if(kind==='hedge') {
+          r(1,5,30,27,'#376e4c');r(2,3,28,25,'#4b9550');r(5,1,22,26,'#75b44f');r(8,2,12,5,'#b9d663');r(4,8,8,5,'#a3ce5a');r(18,5,10,5,'#92c250');r(7,16,12,6,'#8fc352');r(21,16,8,6,'#447e45');r(4,24,11,4,'#467d43');r(21,11,3,3,'#d0e478');r(13,10,3,3,'#c0db69');r(15,25,8,3,'#64a34a');
+        } else if(kind==='barn') {
+          for(let i=0;i<6;i++)r(15-i*2,2+i*2,2+i*4,3,'#5c656c');r(6,14,23,17,'#9d4843');r(7,14,20,15,'#df775c');for(let i=9;i<27;i+=4)r(i,15,1,14,'#f59973');r(5,14,25,2,'#ffecbc');r(12,20,11,11,'#ffe8b4');r(14,21,7,10,'#975645');r(17,21,1,10,'#ffdb9e');r(14,23,7,1,'#ffdb9e');r(15,12,6,6,'#ffecbc');r(16,13,4,4,'#6aa7b5');
+        } else if(kind==='cookie') {
+          round(4,4,24,24,'#986334');round(5,4,22,21,'#e6ac57');r(8,6,16,13,'#f9ce7b');r(9,7,9,2,'#ffe6a3');for(const [x,y] of [[10,11],[21,10],[17,18],[8,21]]){r(x,y,3,3,'#8f5a41');r(x,y,2,1,'#bc8650');}
+        }
+
+        if(kind.startsWith('fish')){
+          const p=kind==='fishgold'?['#a16036','#f6bb4e','#ffe690']:kind==='fishpink'?['#975270','#ed92aa','#ffc4bd']:['#426d8d','#74b9cf','#b5e6db'];
+          r(1,9,4,14,p[0]);r(5,12,4,8,p[0]);round(8,7,22,19,p[0]);round(9,8,20,16,p[1]);r(13,8,11,5,p[2]);r(17,4,7,4,p[1]);r(15,25,8,3,p[1]);r(2,11,3,10,p[1]);r(12,16,5,7,p[2]);r(23,11,5,7,'#fff9df');r(25,12,3,5,'#394b55');r(25,12,1,1,'#fff');r(25,21,4,2,'#ec8d84');r(29,18,3,2,p[0]);r(18,15,2,3,p[0]);
+        }
+        if(kind==='lantern'||kind==='lampoff'){
+          const on=kind==='lantern';r(11,1,10,2,'#617965');r(9,3,3,6,'#617965');r(20,3,3,6,'#617965');r(7,8,18,3,'#567862');r(5,11,22,15,'#567862');r(7,12,18,12,on?'#f9d67d':'#a3c2ba');r(9,13,3,7,on?'#fff4b9':'#c8ddd1');r(14,15,7,7,on?'#edae45':'#769f91');r(16,13,3,3,on?'#fff9d1':'#c8ddd1');r(7,26,18,3,'#567862');r(8,29,16,2,'#829d71');
+        }
+        if(kind==='yarn'){
+          round(4,7,24,22,'#9e6676');round(5,7,22,20,'#d894a1');for(let k=0;k<5;k++){r(7+k*3,9,2,16,'#efbec0');r(6,10+k*3,20,1,'#c77f90')}r(22,25,2,5,'#9e6676');r(23,28,7,2,'#9e6676');r(11,2,2,9,'#917c60');r(9,2,6,2,'#d4b68b');
+        }
+        if(kind==='jar'){
+          r(8,3,16,4,'#9b7664');r(8,3,16,2,'#e5c59b');r(6,8,20,21,'#7b9e98');r(7,8,18,19,'#cce5d6');r(9,10,3,13,'#fff7de');r(12,16,9,9,'#e4a17e');r(14,14,6,9,'#f9c690');r(14,16,2,2,'#fff0c2');r(8,27,16,2,'#a7c7b5');
+        }
+
+        if(kind==='bee'){round(4,8,9,10,'#aacac5');round(18,6,9,10,'#aacac5');round(5,8,7,7,'#f4fff0');round(19,6,7,8,'#f4fff0');round(6,14,22,14,'#7e5d3c');round(7,14,20,12,'#f8c85a');r(12,14,3,12,'#997146');r(18,14,3,12,'#997146');r(24,16,2,3,'#403d3b');r(23,21,4,2,'#f39170');r(4,19,4,3,'#665841');r(24,11,2,4,'#665841');}
+        if(kind==='horse'){r(9,2,5,8,'#765545');r(20,1,5,10,'#765545');round(7,7,20,20,'#765545');round(9,8,17,17,'#dba879');r(12,4,2,6,'#f1c59c');r(20,4,2,6,'#f1c59c');r(7,9,7,14,'#8a6050');r(13,9,10,6,'#f6d4aa');r(19,13,3,4,'#3f3937');round(16,20,13,9,'#b97d60');r(18,21,9,4,'#f4c19a');r(22,23,2,2,'#765545');r(10,25,9,6,'#dba879');}
+        if(kind==='mouse'){round(3,3,12,12,'#97817f');round(18,3,12,12,'#97817f');round(5,4,8,8,'#e3a6aa');round(20,4,8,8,'#e3a6aa');round(6,10,22,19,'#97817f');round(7,11,20,16,'#d3c6b4');r(10,11,14,5,'#f1e4cd');face(10,17);r(15,22,3,2,'#9b6e70');r(3,22,7,1,'#97817f');r(24,22,7,1,'#97817f');}
+        if(kind==='cheese'){r(4,11,24,18,'#be8737');r(8,7,15,5,'#be8737');r(5,12,22,14,'#f4bc4b');r(7,10,18,3,'#ffe595');r(7,13,18,3,'#ffd674');r(8,19,4,4,'#c88e3f');r(18,17,5,5,'#c88e3f');r(17,25,4,2,'#c88e3f');r(10,8,8,2,'#fff0af');}
+        if(kind==='oven'){r(3,5,26,26,'#826856');r(4,6,24,23,'#dccab0');r(5,7,22,4,'#f5ebcf');r(7,8,3,2,'#d68c60');r(22,8,3,2,'#d68c60');r(6,13,20,13,'#846b60');r(8,15,16,9,'#555e62');r(10,19,12,3,'#ecb665');r(9,15,2,6,'#acc5b9');r(9,27,14,2,'#967454');}
+        if(kind==='chef'){round(5,1,22,9,'#aaa38a');round(6,1,20,7,'#fff8df');r(9,7,15,5,'#fff8df');round(8,12,18,13,'#dfac84');r(10,12,14,7,'#ffdfb1');face(10,16);r(7,25,20,7,'#8aa78a');r(11,25,12,7,'#ffedc9');r(15,27,3,2,'#c58b63');}
+        if(kind==='ship'){r(5,20,24,5,'#6c7f86');r(8,25,18,4,'#6c7f86');r(6,20,22,3,'#f39b75');r(9,23,16,3,'#f7cb93');r(11,13,12,7,'#fff2d1');r(14,8,6,6,'#91bdbb');r(15,4,2,9,'#827759');r(17,4,8,5,'#e78973');r(13,15,3,3,'#78adbd');r(19,15,3,3,'#78adbd');r(4,29,23,2,'#a7e2dc');}
+        if(kind==='star'){r(14,2,4,27,'#b78a47');r(2,12,28,6,'#b78a47');r(6,7,20,17,'#b78a47');r(12,5,8,22,'#ffd97e');r(5,12,22,6,'#ffd97e');r(8,9,16,12,'#ffe9ab');r(13,8,4,6,'#fff6ce');face(10,15);}
+        if(kind==='shell'){r(5,12,22,13,'#9c7089');r(9,7,14,5,'#9c7089');r(11,5,10,3,'#9c7089');r(6,12,20,11,'#e1a6b8');r(10,8,12,16,'#f9c8c7');r(15,7,2,17,'#fff1d9');r(9,14,2,7,'#fff1d9');r(21,14,2,7,'#fff1d9');r(12,24,9,4,'#c78b9d');}
+        if(kind==='acorn'){round(8,11,17,19,'#96633e');round(9,12,15,15,'#d4a363');r(11,15,4,9,'#f6cc86');r(8,9,17,7,'#795d42');r(6,13,21,3,'#795d42');r(10,10,13,3,'#ae8550');r(16,5,3,6,'#795d42');r(18,3,6,3,'#85a05b');face(11,20);}
+        return a;
+      }
+      function pxSprite(kind) {return '<svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">'+pxRects(kind).map(([x,y,w,h,c])=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+c+'"/>').join('')+'</svg>';}
+      function pxPaint(kind,x,y,size) {const u=size/32;for(const [a,b,w,h,c] of pxRects(kind)){ctx.fillStyle=c;ctx.fillRect(Math.round(x+a*u),Math.round(y+b*u),Math.ceil(w*u),Math.ceil(h*u));}}
+
+
+
       const gridEl = document.getElementById('grid')
       const lvEl = document.getElementById('lv')
       const livesEl = document.getElementById('lives')
@@ -112,8 +193,10 @@
         gridEl.innerHTML = ''
         cellEls = []
         for (let i = 0; i < size * size; i++) {
-          const el = document.createElement('div')
+          const el = document.createElement('button')
           el.className = 'cell'
+          el.setAttribute('aria-label','花田第 '+(i+1)+' 格')
+          el.innerHTML='<span class="honey">'+pxSprite('bee')+'</span><span class="petal">'+pxSprite('flower')+'</span>'
           if (targets.has(i) && phase === 'show') el.classList.add('lit')
           el.onclick = () => pick(i)
           gridEl.appendChild(el)

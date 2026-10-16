@@ -2,11 +2,18 @@
   "id": "tictactoe",
   "name": "井字棋",
   "emoji": "⭕",
-  "categories": ["card", "strategy"],
-  "tags": ["棋牌", "对战", "经典"],
-  "summary": "三子连珠对弈完美 AI：它不会输，你能逼出多少连平？",
-  "description": "经典井字棋。你执 X 先手，AI 执 O 且使用 minimax 算法——理论上不可战胜，你的目标是每局都逼平。连胜次数（平局不断、输局清零）就是你的战绩。",
-  "howToPlay": "点击空格落子，三子连线即胜；连胜越多分越高。",
+  "categories": [
+    "card",
+    "strategy"
+  ],
+  "tags": [
+    "棋牌",
+    "对战",
+    "经典"
+  ],
+  "summary": "饼干与小花的野餐棋局，试试能否守住 AI 的进攻。",
+  "description": "在九宫格里用饼干与 AI 小花轮流落子，三枚连线获胜。AI 使用完整搜索；平局也记一次成功防守，输棋后防守连胜归零。",
+  "howToPlay": "点击空格落下饼干；横竖斜三枚连线获胜，平局计成功防守。",
   "entry": "tictactoe/index.html",
   "platform": "浏览器",
   "playMode": "online",

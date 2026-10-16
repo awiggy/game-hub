@@ -2,11 +2,18 @@
   "id": "cookieidler",
   "name": "饼干工坊",
   "emoji": "🍪",
-  "categories": ["casual", "simulation"],
-  "tags": ["挂机", "经营", "放置"],
-  "summary": "点饼干赚饼干，雇帮手自动生产，60 秒看你的饼干帝国滚多大！",
-  "description": "放置挂机玩法。点击大饼干手动生产，赚到的饼干可以雇三种帮手（学徒/烤箱/工厂）实现自动产出，产出互相滚雪球。60 秒结算总产量，看看你的经营效率。",
-  "howToPlay": "疯狂点大饼干攒饼干，买帮手实现自动产出。",
+  "categories": [
+    "casual",
+    "simulation"
+  ],
+  "tags": [
+    "挂机",
+    "经营",
+    "放置"
+  ],
+  "summary": "松鼠的黄油饼干屋，点烤饼干、请帮手，在一分钟内经营自己的小工坊。",
+  "description": "点击大饼干增加库存，花库存添置学徒、烤箱和小作坊获得自动产量。每局 60 秒，按累计产出结算；购买不会扣除总产出成绩。",
+  "howToPlay": "点大饼干生产，点帮手旁的「添置」升级；60 秒后按总产出结算。",
   "entry": "cookieidler/index.html",
   "platform": "浏览器",
   "playMode": "online",

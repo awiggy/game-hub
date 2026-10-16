@@ -8,12 +8,13 @@
     "check": "node scripts/check-games.js",
     "predev": "npm run registry",
     "dev": "vite",
-    "prebuild": "npm run registry && npm run check && npm run smoke && npm run test:gameplay",
+    "prebuild": "npm run registry && npm run progress && npm run check && npm run smoke && npm run test:gameplay",
     "build": "vite build",
     "preview": "vite preview",
     "smoke": "node scripts/run-game-smoke.js",
-    "test:gameplay": "node scripts/check-pixel-physics.cjs && node scripts/check-next-ten.cjs && node scripts/check-crafted-ten.cjs && node scripts/check-storybook-ten.cjs",
-    "postbuild": "node scripts/build-retired-redirects.js && node scripts/check-catalog.cjs"
+    "test:gameplay": "node scripts/check-pixel-physics.cjs && node scripts/check-next-ten.cjs && node scripts/check-crafted-ten.cjs && node scripts/check-storybook-ten.cjs && node scripts/check-workshop-ten.cjs && node scripts/check-festival-sixteen.cjs",
+    "postbuild": "node scripts/build-retired-redirects.js && node scripts/check-catalog.cjs",
+    "progress": "node scripts/build-redesign-status.js"
   },
   "dependencies": {
     "vue": "^3.5.13",

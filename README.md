@@ -24,12 +24,13 @@
 
 ## 开发
 
-2026-09-26 的门户视觉重构采用明亮彩色像素插画与杂志式排版，见 [设计与验收记录](docs/design/2026-09-26/implementation.md)。游戏内部仍保留原有界面；站点通过 main 分支的 GitHub Pages 工作流发布。
+2026-09-26 的门户视觉重构采用明亮彩色像素插画与杂志式排版，见 [设计与验收记录](docs/design/2026-09-26/implementation.md)。游戏内部持续进行卡通像素改造；站点通过 main 分支的 GitHub Pages 工作流发布。
 
 ```bash
 npm install
 npm run dev      # http://localhost:5173（启动前自动重建注册表）
 npm run check    # 检查每款游戏的文件、脚本语法、元数据与状态钩子
+npm run progress # 生成并核对已改/待改/归档清单
 npm run smoke    # 模拟 DOM / Canvas 检查游戏同步初始化错误
 npm run build    # registry → check → smoke → gameplay → 构建与目录检查；失败会阻止发布
 ```
@@ -37,7 +38,7 @@ npm run build    # registry → check → smoke → gameplay → 构建与目录
 ## 当前状态（2026-10-16 核对）
 
 - **线上首页、游戏库与注册表均为 107 款，覆盖 10 个分类**；数量来自 [自动生成的游戏注册表](src/data/games.json)，不计入 `archive/` 下架备份、`drafts/` 历史草稿或独立海报页面。
-- 累计 44 款完成卡通像素改造；本轮筛除 6 款重复或缺乏独立挑战的实现，原源码归档，旧链接转向保留游戏。见 [筛除清单与完整目录审查](docs/gameplay-audit-2026-10-16.md)。
+- 累计 70 款完成卡通像素改造，37 款待改，见 [统一进度清单](docs/redesign-progress.md)；此前筛除 6 款重复或缺乏独立挑战的实现，原源码归档，旧链接转向保留游戏。见 [筛除清单与完整目录审查](docs/gameplay-audit-2026-10-16.md)。
 - 正式构建按 `registry → check → smoke → gameplay → build → redirects/catalog-check` 执行。冒烟使用模拟 DOM / Canvas 检查初始化错误，不能代替真实浏览器的玩法与触屏验收。
 - 当前在线版本可游玩；AI 生成后端、用户登录、发布与评论仍未实现。
 - 历史开发与验收记录见 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)；此前记录中的数量是当时快照，不代表当前库存。

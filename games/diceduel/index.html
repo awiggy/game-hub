@@ -6,11 +6,19 @@
 <title>🎲 骰子对决 · GAME HUB</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#0f1118;color:#eef2ff}*{box-sizing:border-box}body{margin:0;padding:20px 14px;min-height:100dvh;display:grid;place-items:center}main{width:min(100%,580px)}header{display:flex;align-items:center;justify-content:space-between;gap:12px}h1{font-size:clamp(22px,5vw,30px);margin:0}h2{margin:0 0 12px}.eyebrow{font-size:11px;letter-spacing:3px;color:#9daaff;margin:0 0 8px}.muted{color:#aeb7cd;font-size:13px;line-height:1.7}.rule{margin:18px 0;padding:12px 14px;border-left:3px solid #ffd84d;background:#1b2030}.arena{position:relative;background:#161b28;border:2px solid #343e57;border-radius:18px;padding:22px 16px;min-height:292px}.round{text-align:center;font-size:12px;color:#aeb7cd;letter-spacing:2px}.players{display:grid;grid-template-columns:1fr 32px 1fr;gap:8px;align-items:center;text-align:center}.player{min-width:0}.name{font-size:13px;color:#b8c4dd}.symbol{font-size:64px;line-height:1.45;min-height:94px}.score{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums}.versus{color:#67738f;font-size:12px}.status{text-align:center;min-height:42px;font-size:14px;color:#ffd84d;margin:14px 0 0;line-height:1.5}.controls{display:flex;gap:10px;margin:16px 0}.controls button{flex:1;min-width:0}button{font:inherit;font-weight:700;color:#eef2ff;background:#2f55e4;border:2px solid #7b95ff;border-radius:10px;padding:13px 10px;cursor:pointer;touch-action:manipulation;min-height:48px;transition:background .15s}button:hover:not(:disabled){background:#4169fa}button:focus-visible,a:focus-visible{outline:3px solid #ffd84d;outline-offset:3px}button:disabled{opacity:.45;cursor:default}.ghost{background:#22293a;border-color:#3b4660;font-size:12px;padding:9px 12px}.overlay{position:absolute;inset:0;background:#121725f2;border-radius:16px;display:grid;place-items:center;text-align:center;padding:24px;z-index:1}.overlay[hidden]{display:none}.overlay p{max-width:350px}.overlay button{background:#ffd84d;color:#171c2a;border-color:#fff1a2;padding-inline:28px}.record{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#aeb7cd;margin:20px 0 12px}.history{margin:0;padding:0;list-style:none;min-height:100px;font-size:13px}.history li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #262d40;padding:8px 0;color:#bcc7de}.history b{color:#eff3ff}footer{font-size:11px;color:#77839c;margin-top:18px;text-align:center;line-height:1.6}footer a{color:#9eafff}kbd{font-family:inherit;font-size:10px;color:#ccd5ee} .rolling .symbol{animation:pulse .18s infinite alternate}@keyframes pulse{to{transform:translateY(-5px);opacity:.5}}@media(prefers-reduced-motion:reduce){.rolling .symbol{animation:none}}@media(max-width:360px){body{padding:12px 10px}.arena{padding:16px 10px}.symbol{font-size:52px}.controls{gap:6px}.controls button{font-size:13px;padding:12px 6px}}
+
+/* Hand-authored pixel workshop edition. */
+:root{--ink:#906d70;--edge:#c4a2a5;--paper:#fff2d8;--blue:#906d70;--yellow:#906d70}body{height:auto;min-height:100dvh;padding:14px 10px;overflow:auto;background:#f0e2db;background-image:radial-gradient(#fff8 1px,transparent 1px);background-size:12px 12px;color:var(--ink);flex-direction:column;gap:8px;touch-action:manipulation}#wrap{position:relative;width:min(460px,94vw);display:flex;flex-direction:column;align-items:stretch;gap:10px;flex-shrink:0}.scene-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.scene-head small{font-size:9px;letter-spacing:2px;opacity:.7}.scene-head h2{font-size:22px;line-height:1.4;margin:3px 0;letter-spacing:.5px}.scene-head>.pixel-sprite{width:58px;height:58px;flex:none}#hud,#bar{position:static;width:100%;padding:3px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;color:var(--ink);font-size:11px}#hud b,#bar b{font-size:16px;color:var(--ink)}#board,#grid,canvas{width:min(100%,calc(100dvh - 225px));max-width:100%;max-height:none;align-self:center;height:auto;border:4px solid var(--edge);border-radius:9px;box-shadow:0 5px #0002;background:var(--paper);flex-shrink:0}#msg,#hint,#fleet,#cps{color:var(--ink);font-size:12px;text-align:center;line-height:1.7;min-height:0}.work-note{font-size:10px;line-height:1.7;text-align:center;opacity:.8}canvas{image-rendering:pixelated;touch-action:none}#overlay{position:fixed;inset:0;z-index:40;border-radius:0;background:color-mix(in srgb,#f0e2db 97%,transparent);color:var(--ink);padding:20px;gap:14px}#overlay::before{content:'';display:block;width:100px;height:100px;background:url("data:image/svg+xml,%3Csvg%20aria-hidden%3D%22true%22%20viewBox%3D%220%200%2032%2032%22%20class%3D%22pixel-sprite%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20x%3D%2214%22%20y%3D%222%22%20width%3D%224%22%20height%3D%2227%22%20fill%3D%22%23b78a47%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%2212%22%20width%3D%2228%22%20height%3D%226%22%20fill%3D%22%23b78a47%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%227%22%20width%3D%2220%22%20height%3D%2217%22%20fill%3D%22%23b78a47%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%225%22%20width%3D%228%22%20height%3D%2222%22%20fill%3D%22%23ffd97e%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2212%22%20width%3D%2222%22%20height%3D%226%22%20fill%3D%22%23ffd97e%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%229%22%20width%3D%2216%22%20height%3D%2212%22%20fill%3D%22%23ffe9ab%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%228%22%20width%3D%224%22%20height%3D%226%22%20fill%3D%22%23fff6ce%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2215%22%20width%3D%222%22%20height%3D%223%22%20fill%3D%22%23332f36%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2215%22%20width%3D%222%22%20height%3D%223%22%20fill%3D%22%23332f36%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2215%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23fffdf0%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2215%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23fffdf0%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%2219%22%20width%3D%223%22%20height%3D%222%22%20fill%3D%22%23f4998a%22%2F%3E%3Crect%20x%3D%2219%22%20y%3D%2219%22%20width%3D%223%22%20height%3D%222%22%20fill%3D%22%23f4998a%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2219%22%20width%3D%222%22%20height%3D%221%22%20fill%3D%22%238f4d48%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;image-rendering:pixelated}#overlay h1{font-size:25px;letter-spacing:1px;text-shadow:none}#overlay p{color:var(--ink);max-width:380px;line-height:1.9}#overlay p b{color:var(--ink)!important}#overlay button,#again,#bar button{color:var(--paper);background:var(--ink);border:2px solid var(--edge);box-shadow:0 3px #0002;border-radius:8px;padding:10px 20px}#overlay.hidden{display:none}button{font-family:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,[tabindex]:focus-visible{outline:3px solid #d88050;outline-offset:2px}.pixel-sprite{display:block;width:100%;height:100%;image-rendering:pixelated;pointer-events:none}button:disabled{cursor:default;opacity:.45}.tools{display:flex;justify-content:center;gap:8px}.tools button,#pads button{background:var(--paper);border:2px solid var(--edge);color:var(--ink);padding:8px 13px;border-radius:7px;box-shadow:0 3px #0001;font-weight:800}
+@media(max-width:480px){.scene-head h2{font-size:19px}.scene-head>.pixel-sprite{width:44px;height:44px}#wrap{gap:8px}#hud b{font-size:14px}#board,#grid,canvas{width:min(100%,calc(100dvh - 205px))}}
+@media(min-width:600px) and (max-height:550px){#wrap{width:min(800px,96vw);display:grid;grid-template-columns:220px auto;gap:8px 24px;justify-content:center;align-items:center}#wrap>:where(:not(#board):not(#grid):not(canvas)){grid-column:1}#board,#grid,canvas{grid-column:2;grid-row:1/6;width:calc(100dvh - 58px);max-height:calc(100dvh - 38px)}.scene-head h2{font-size:20px}#overlay{gap:8px}#overlay::before{width:65px;height:65px}#overlay h1{font-size:22px}#overlay p{font-size:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+:root{color-scheme:light;background:#f0e8dc}body{display:flex;margin:0}#wrap{width:min(520px,94vw);gap:7px}.rule{margin:0;padding:6px 10px;border-left:3px solid var(--edge);background:var(--paper);font-size:11px;color:var(--ink)}.arena{background:repeating-linear-gradient(90deg,#ebcfac 0 30px,#e6c8a3 30px 33px);border:4px solid #c3a17c;border-radius:12px;padding:12px;min-height:0;box-shadow:0 4px #c8ac8c}.players{gap:6px}.player{background:#fff1d69c;border-radius:9px;padding:0 5px 5px}.name{color:var(--ink);font-size:11px;margin:6px 0}.symbol{width:84px;height:84px;min-height:0;margin:auto;font-size:0}.symbol svg{width:100%;height:100%}.score{font-size:23px;color:var(--ink)}.round{font-size:10px;color:var(--ink);margin-bottom:8px;letter-spacing:.5px}.status{font-size:11px;color:var(--ink);min-height:17px;margin:8px 0 0}.versus{color:#a78b6e}.controls{margin:2px 0;gap:8px}.controls button{background:var(--ink);border-color:var(--edge);padding:8px;min-height:36px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px}.controls svg{width:35px;height:35px}.controls kbd{color:#f5e1bb}.tools .ghost{padding:5px 12px;min-height:29px;font-size:10px}.record{font-size:10px;margin:2px 0;color:var(--ink)}.history{min-height:0;font-size:10px;max-height:110px;overflow:auto}.history li{padding:5px 8px;background:#fff3db;border-bottom:1px dashed #d9bd97;color:var(--ink)}.history b{color:var(--ink)}#wrap>p.muted{font-size:9px;line-height:1.4;margin:0}footer{font-size:9px;line-height:1.4;color:#95806c;margin:0}footer a{color:var(--ink)}#overlay{display:flex;flex-direction:column}#overlay[hidden]{display:none}#overlay .muted{color:var(--ink)}#overlay h2{font-size:24px}#overlay button{margin-top:12px}@media(max-width:360px){.symbol{width:65px;height:65px}.controls button{font-size:11px;gap:4px}.controls svg{width:27px;height:27px}}@media(min-width:600px) and (max-height:550px){#wrap{width:min(800px,96vw)}#wrap>.scene-head{grid-row:1}#wrap>.tools{grid-row:2}#wrap>.rule{grid-row:3}#wrap>.arena{grid-column:2;grid-row:1/4;width:350px}#wrap>.controls{grid-column:2;grid-row:4}#wrap>.record{grid-column:1;grid-row:4}#wrap>.history{grid-row:5}#wrap>p.muted{grid-column:2;grid-row:5}#wrap>footer{grid-column:1/-1;grid-row:6}.symbol{width:75px;height:75px}}
 </style>
 </head>
 <body>
-<main>
-<header><div><p class="eyebrow">GAME HUB / QUICK PLAY</p><h1>🎲 骰子对决</h1></div><button class="ghost" id="reset">重新开局</button></header>
+<div id="wrap"><header class="scene-head"><div><small>PICNIC DICE CLUB</small><h2>野餐桌上的骰子派对</h2></div><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="14" y="2" width="4" height="27" fill="#b78a47"/><rect x="2" y="12" width="28" height="6" fill="#b78a47"/><rect x="6" y="7" width="20" height="17" fill="#b78a47"/><rect x="12" y="5" width="8" height="22" fill="#ffd97e"/><rect x="5" y="12" width="22" height="6" fill="#ffd97e"/><rect x="8" y="9" width="16" height="12" fill="#ffe9ab"/><rect x="13" y="8" width="4" height="6" fill="#fff6ce"/><rect x="10" y="15" width="2" height="3" fill="#332f36"/><rect x="18" y="15" width="2" height="3" fill="#332f36"/><rect x="10" y="15" width="1" height="1" fill="#fffdf0"/><rect x="18" y="15" width="1" height="1" fill="#fffdf0"/><rect x="8" y="19" width="3" height="2" fill="#f4998a"/><rect x="19" y="19" width="3" height="2" fill="#f4998a"/><rect x="14" y="19" width="2" height="1" fill="#8f4d48"/></svg></header>
+<div class="tools"><button class="ghost" id="reset">重新开局</button></div>
 <p class="rule muted">双方各掷一颗骰子，比大小。平局不加分，先得 5 分获胜。</p>
 <section class="arena" aria-label="游戏区域">
 <div class="round" id="round">准备开始</div>
@@ -23,8 +31,85 @@
 <div class="record"><span id="record"></span><span>最近 4 回合</span></div>
 <ol class="history" id="history" aria-label="最近回合"><li>还没有回合记录</li></ol>
 <footer>玩法与代码参考：<a href="https://github.com/wanghao221/moyu/tree/15e88e245ddfbb4c7f0a9064202b5f50674296fb/游戏-52.骰子游戏" target="_blank" rel="noopener noreferrer">海拥 / moyu</a> · GAME HUB 适配版</footer>
-</main>
+</div>
 <script>
+    (() => {
+
+function pxDice(n){const dots={1:[[16,16]],2:[[9,9],[23,23]],3:[[9,9],[16,16],[23,23]],4:[[9,9],[23,9],[9,23],[23,23]],5:[[9,9],[23,9],[16,16],[9,23],[23,23]],6:[[9,8],[23,8],[9,16],[23,16],[9,24],[23,24]]};return '<svg class="pixel-sprite" aria-hidden="true" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><path d="M5 1H27V4H30V28H27V31H5V28H2V4H5Z" fill="#a57862"/><path d="M6 3H26V5H28V26H25V28H6V25H4V6H6Z" fill="#fff1d2"/><path d="M7 4H25V7H7Z" fill="#fffbed"/>'+((dots[n]||[[16,16]]).map(([x,y])=>'<rect x="'+(x-2)+'" y="'+(y-2)+'" width="5" height="5" fill="#b36f69"/><rect x="'+(x-1)+'" y="'+(y-2)+'" width="3" height="1" fill="#d7927c"/>').join(''))+'</svg>'}
+function pxHand(k){const bg=['#b9c8d1','#efd6a7','#efbcb6'][k],base='<svg class="pixel-sprite" aria-hidden="true" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">';const a=k===0?'<path d="M8 9H22V12H26V25H22V29H8V25H5V14H8Z" fill="#8b7771"/><path d="M9 10H21V13H24V24H20V26H9V23H7V15H9Z" fill="#f0c5a0"/><path d="M9 13H21V16H9ZM11 17H13V21H11ZM16 17H18V21H16Z" fill="#c18c73"/>':k===1?'<path d="M9 3H12V15H14V1H17V15H19V4H22V16H24V8H27V22H24V27H11V24H7V20H4V14H7V17H9Z" fill="#a48070"/><path d="M10 5H11V17H15V3H16V17H20V6H21V18H25V11H26V21H23V25H12V22H9V19H6V16H7V18H10Z" fill="#f4cfaa"/>':'<path d="M7 3H12V7H14V13H17V8H20V3H25V9H22V16H25V25H21V29H9V25H6V16H10V13H8Z" fill="#9b7a72"/><path d="M9 5H11V9H13V16H19V10H21V5H23V8H21V18H23V24H20V27H10V24H8V18H12V15H10Z" fill="#f5ceb0"/><path d="M12 19H20V21H12Z" fill="#c89880"/>';return base+'<path d="M5 1H27V4H30V28H27V31H5V28H2V4H5Z" fill="'+bg+'"/>'+a+'</svg>'}
+      function pxRects(kind) {
+        const a=[]; const r=(x,y,w,h,c)=>a.push([x,y,w,h,c]);
+        const face=(x,y)=>{r(x,y,2,3,'#332f36');r(x+8,y,2,3,'#332f36');r(x,y,1,1,'#fffdf0');r(x+8,y,1,1,'#fffdf0');r(x-2,y+4,3,2,'#f4998a');r(x+9,y+4,3,2,'#f4998a');r(x+4,y+4,2,1,'#8f4d48');};
+        const round=(x,y,w,h,c)=>{r(x+3,y,w-6,h,c);r(x,y+3,w,h-6,c)};
+        if(kind==='apple'||kind==='orange'||kind==='berry') {
+          const p=kind==='apple'?['#8e3540','#d84b4e','#ff765f','#ffbea0']:kind==='orange'?['#ae5c2c','#ef9c34','#ffc650','#ffed9a']:['#48447d','#6f6fc1','#9d9ce3','#d2d1ff'];
+          round(4,9,24,20,p[0]);round(6,10,20,17,p[1]);r(8,11,15,11,p[2]);r(8,13,4,5,p[3]);r(10,11,5,2,p[3]);r(13,6,3,6,'#72533e');r(16,4,9,4,'#3c7949');r(17,4,6,2,'#9bcd55');face(10,19);
+        } else if(kind==='carrot'||kind==='sprout') {
+          r(14,6,3,11,'#37774b');r(7,5,8,4,'#387d43');r(9,3,6,4,'#84bd50');r(17,4,8,4,'#3c8e46');r(18,2,6,3,'#b0d767');
+          if(kind==='carrot'){r(9,13,15,5,'#ad552b');r(10,18,12,5,'#ad552b');r(12,23,8,4,'#ad552b');r(14,27,4,3,'#ad552b');r(10,14,12,4,'#ffb04b');r(11,18,9,5,'#f88132');r(13,23,5,4,'#f88132');r(11,15,3,5,'#ffda75');r(18,19,3,1,'#ba5c32');r(13,24,3,1,'#ba5c32');}
+          else {r(5,23,22,4,'#654830');r(8,21,16,3,'#9d6c42');r(14,14,3,8,'#3c8747');}
+        } else if(kind==='flower') {
+          r(15,13,3,17,'#3c8b58');r(8,20,8,4,'#82be5f');r(18,23,8,4,'#58a657');
+          round(10,2,12,20,'#e5bc88');round(5,7,22,10,'#e5bc88');round(11,2,10,18,'#fffbea');round(5,8,22,8,'#fffbea');r(12,8,9,8,'#e9a82d');r(13,8,6,5,'#ffd95c');r(14,9,3,2,'#fff5ac');
+        } else if(kind==='mushroom') {
+          r(11,16,11,13,'#af784d');r(12,16,9,11,'#ffe6b2');r(12,18,3,6,'#fff6da');r(6,8,21,11,'#9c3d43');r(10,4,13,5,'#9c3d43');r(4,13,25,7,'#9c3d43');r(7,9,19,8,'#e97564');r(10,5,13,9,'#f69b7e');r(5,14,23,3,'#e97564');r(10,8,4,4,'#fff0cf');r(20,12,5,4,'#fff0cf');face(12,22);
+        } else if(kind==='mole'||kind==='goldmole'||kind==='bunny') {
+          const bunny=kind==='bunny',gold=kind==='goldmole'; const dark=bunny?'#8c7974':gold?'#9c6327':'#704c46'; const base=bunny?'#f9eacb':gold?'#efb648':'#b38360';const light=bunny?'#fffbed':gold?'#ffe08a':'#dbac7a';
+          if(bunny){r(8,1,6,12,dark);r(19,0,6,13,dark);r(9,2,4,11,light);r(20,1,4,12,light);r(10,4,2,7,'#e7a09b');r(21,3,2,8,'#e7a09b');}
+          else{round(4,5,8,9,dark);round(21,5,8,9,dark);r(6,7,4,5,'#e7a09b');r(23,7,4,5,'#e7a09b');}
+          round(4,11,25,20,dark);round(6,11,21,18,base);r(9,10,15,7,light);r(7,14,4,7,light);round(9,21,16,8,bunny?'#fffdf2':'#f8ddb0');face(11,16);r(14,24,6,2,'#8a534b');r(16,24,2,3,'#fff8e4');r(3,26,5,4,light);r(26,26,4,4,light);
+        } else if(kind==='chick') {
+          r(4,13,6,9,'#9a6129');r(7,8,18,18,'#9a6129');r(11,5,12,4,'#9a6129');r(8,10,17,14,'#ffca42');r(11,7,12,14,'#ffe777');r(12,8,9,6,'#fff2ac');r(6,16,10,7,'#f2a32d');r(6,16,8,3,'#ffda5b');r(19,10,6,8,'#fffbed');r(22,12,3,5,'#3f3831');r(22,12,1,1,'#fff');r(25,17,6,3,'#b9582c');r(25,17,5,1,'#ffad3b');r(19,20,4,2,'#f99059');r(11,26,3,3,'#c87c33');r(20,25,3,3,'#c87c33');r(11,3,3,4,'#c89c38');
+        } else if(kind==='grape') {
+          r(15,3,3,6,'#72513d');r(18,3,9,4,'#599657');
+          for(const [x,y] of [[7,8],[17,8],[5,15],[14,15],[22,15],[10,22],[18,22]]){round(x,y,8,8,'#624274');round(x+1,y,6,6,'#a27bd0');r(x+2,y+1,2,2,'#e4bcf4');}
+        } else if(kind==='melon') {
+          r(4,9,24,13,'#326d52');r(7,22,18,4,'#326d52');r(11,26,10,3,'#326d52');r(5,9,22,12,'#a6d46c');r(8,21,16,3,'#a6d46c');r(6,9,20,9,'#f9807c');r(9,18,14,3,'#f9807c');r(12,21,8,2,'#f9807c');r(7,10,18,2,'#ffb0a0');for(const [x,y] of [[10,14],[16,12],[21,15],[15,18]])r(x,y,1,2,'#673f48');
+        } else if(kind==='flag') {
+          r(10,3,3,25,'#695447');r(13,4,14,10,'#9e4b4c');r(13,4,11,7,'#f47768');r(14,5,7,2,'#ffbea2');r(7,27,13,2,'#486a4a');
+        } else if(kind==='mine') {
+          r(14,2,4,28,'#47606b');r(2,14,28,4,'#47606b');r(6,6,20,20,'#47606b');round(7,7,18,18,'#6e8e97');r(10,9,6,4,'#c1d9cf');face(11,16);
+        } else if(kind==='crate') {
+          r(2,4,28,26,'#865637');r(4,5,24,22,'#d29b58');r(6,8,20,17,'#b77b46');r(7,9,18,3,'#e8b56b');r(7,16,18,2,'#e8b56b');r(4,5,3,22,'#f3c986');r(25,5,3,22,'#ad713f');r(5,5,22,3,'#ffe0a0');r(5,24,22,3,'#e4b06a');r(6,6,2,2,'#805b3d');r(24,25,2,2,'#805b3d');r(14,13,6,5,'#f1a13f');r(15,18,3,3,'#f1a13f');r(15,10,2,4,'#5f974f');r(17,10,4,2,'#9dc968');
+        } else if(kind==='hedge') {
+          r(1,5,30,27,'#376e4c');r(2,3,28,25,'#4b9550');r(5,1,22,26,'#75b44f');r(8,2,12,5,'#b9d663');r(4,8,8,5,'#a3ce5a');r(18,5,10,5,'#92c250');r(7,16,12,6,'#8fc352');r(21,16,8,6,'#447e45');r(4,24,11,4,'#467d43');r(21,11,3,3,'#d0e478');r(13,10,3,3,'#c0db69');r(15,25,8,3,'#64a34a');
+        } else if(kind==='barn') {
+          for(let i=0;i<6;i++)r(15-i*2,2+i*2,2+i*4,3,'#5c656c');r(6,14,23,17,'#9d4843');r(7,14,20,15,'#df775c');for(let i=9;i<27;i+=4)r(i,15,1,14,'#f59973');r(5,14,25,2,'#ffecbc');r(12,20,11,11,'#ffe8b4');r(14,21,7,10,'#975645');r(17,21,1,10,'#ffdb9e');r(14,23,7,1,'#ffdb9e');r(15,12,6,6,'#ffecbc');r(16,13,4,4,'#6aa7b5');
+        } else if(kind==='cookie') {
+          round(4,4,24,24,'#986334');round(5,4,22,21,'#e6ac57');r(8,6,16,13,'#f9ce7b');r(9,7,9,2,'#ffe6a3');for(const [x,y] of [[10,11],[21,10],[17,18],[8,21]]){r(x,y,3,3,'#8f5a41');r(x,y,2,1,'#bc8650');}
+        }
+
+        if(kind.startsWith('fish')){
+          const p=kind==='fishgold'?['#a16036','#f6bb4e','#ffe690']:kind==='fishpink'?['#975270','#ed92aa','#ffc4bd']:['#426d8d','#74b9cf','#b5e6db'];
+          r(1,9,4,14,p[0]);r(5,12,4,8,p[0]);round(8,7,22,19,p[0]);round(9,8,20,16,p[1]);r(13,8,11,5,p[2]);r(17,4,7,4,p[1]);r(15,25,8,3,p[1]);r(2,11,3,10,p[1]);r(12,16,5,7,p[2]);r(23,11,5,7,'#fff9df');r(25,12,3,5,'#394b55');r(25,12,1,1,'#fff');r(25,21,4,2,'#ec8d84');r(29,18,3,2,p[0]);r(18,15,2,3,p[0]);
+        }
+        if(kind==='lantern'||kind==='lampoff'){
+          const on=kind==='lantern';r(11,1,10,2,'#617965');r(9,3,3,6,'#617965');r(20,3,3,6,'#617965');r(7,8,18,3,'#567862');r(5,11,22,15,'#567862');r(7,12,18,12,on?'#f9d67d':'#a3c2ba');r(9,13,3,7,on?'#fff4b9':'#c8ddd1');r(14,15,7,7,on?'#edae45':'#769f91');r(16,13,3,3,on?'#fff9d1':'#c8ddd1');r(7,26,18,3,'#567862');r(8,29,16,2,'#829d71');
+        }
+        if(kind==='yarn'){
+          round(4,7,24,22,'#9e6676');round(5,7,22,20,'#d894a1');for(let k=0;k<5;k++){r(7+k*3,9,2,16,'#efbec0');r(6,10+k*3,20,1,'#c77f90')}r(22,25,2,5,'#9e6676');r(23,28,7,2,'#9e6676');r(11,2,2,9,'#917c60');r(9,2,6,2,'#d4b68b');
+        }
+        if(kind==='jar'){
+          r(8,3,16,4,'#9b7664');r(8,3,16,2,'#e5c59b');r(6,8,20,21,'#7b9e98');r(7,8,18,19,'#cce5d6');r(9,10,3,13,'#fff7de');r(12,16,9,9,'#e4a17e');r(14,14,6,9,'#f9c690');r(14,16,2,2,'#fff0c2');r(8,27,16,2,'#a7c7b5');
+        }
+
+        if(kind==='bee'){round(4,8,9,10,'#aacac5');round(18,6,9,10,'#aacac5');round(5,8,7,7,'#f4fff0');round(19,6,7,8,'#f4fff0');round(6,14,22,14,'#7e5d3c');round(7,14,20,12,'#f8c85a');r(12,14,3,12,'#997146');r(18,14,3,12,'#997146');r(24,16,2,3,'#403d3b');r(23,21,4,2,'#f39170');r(4,19,4,3,'#665841');r(24,11,2,4,'#665841');}
+        if(kind==='horse'){r(9,2,5,8,'#765545');r(20,1,5,10,'#765545');round(7,7,20,20,'#765545');round(9,8,17,17,'#dba879');r(12,4,2,6,'#f1c59c');r(20,4,2,6,'#f1c59c');r(7,9,7,14,'#8a6050');r(13,9,10,6,'#f6d4aa');r(19,13,3,4,'#3f3937');round(16,20,13,9,'#b97d60');r(18,21,9,4,'#f4c19a');r(22,23,2,2,'#765545');r(10,25,9,6,'#dba879');}
+        if(kind==='mouse'){round(3,3,12,12,'#97817f');round(18,3,12,12,'#97817f');round(5,4,8,8,'#e3a6aa');round(20,4,8,8,'#e3a6aa');round(6,10,22,19,'#97817f');round(7,11,20,16,'#d3c6b4');r(10,11,14,5,'#f1e4cd');face(10,17);r(15,22,3,2,'#9b6e70');r(3,22,7,1,'#97817f');r(24,22,7,1,'#97817f');}
+        if(kind==='cheese'){r(4,11,24,18,'#be8737');r(8,7,15,5,'#be8737');r(5,12,22,14,'#f4bc4b');r(7,10,18,3,'#ffe595');r(7,13,18,3,'#ffd674');r(8,19,4,4,'#c88e3f');r(18,17,5,5,'#c88e3f');r(17,25,4,2,'#c88e3f');r(10,8,8,2,'#fff0af');}
+        if(kind==='oven'){r(3,5,26,26,'#826856');r(4,6,24,23,'#dccab0');r(5,7,22,4,'#f5ebcf');r(7,8,3,2,'#d68c60');r(22,8,3,2,'#d68c60');r(6,13,20,13,'#846b60');r(8,15,16,9,'#555e62');r(10,19,12,3,'#ecb665');r(9,15,2,6,'#acc5b9');r(9,27,14,2,'#967454');}
+        if(kind==='chef'){round(5,1,22,9,'#aaa38a');round(6,1,20,7,'#fff8df');r(9,7,15,5,'#fff8df');round(8,12,18,13,'#dfac84');r(10,12,14,7,'#ffdfb1');face(10,16);r(7,25,20,7,'#8aa78a');r(11,25,12,7,'#ffedc9');r(15,27,3,2,'#c58b63');}
+        if(kind==='ship'){r(5,20,24,5,'#6c7f86');r(8,25,18,4,'#6c7f86');r(6,20,22,3,'#f39b75');r(9,23,16,3,'#f7cb93');r(11,13,12,7,'#fff2d1');r(14,8,6,6,'#91bdbb');r(15,4,2,9,'#827759');r(17,4,8,5,'#e78973');r(13,15,3,3,'#78adbd');r(19,15,3,3,'#78adbd');r(4,29,23,2,'#a7e2dc');}
+        if(kind==='star'){r(14,2,4,27,'#b78a47');r(2,12,28,6,'#b78a47');r(6,7,20,17,'#b78a47');r(12,5,8,22,'#ffd97e');r(5,12,22,6,'#ffd97e');r(8,9,16,12,'#ffe9ab');r(13,8,4,6,'#fff6ce');face(10,15);}
+        if(kind==='shell'){r(5,12,22,13,'#9c7089');r(9,7,14,5,'#9c7089');r(11,5,10,3,'#9c7089');r(6,12,20,11,'#e1a6b8');r(10,8,12,16,'#f9c8c7');r(15,7,2,17,'#fff1d9');r(9,14,2,7,'#fff1d9');r(21,14,2,7,'#fff1d9');r(12,24,9,4,'#c78b9d');}
+        if(kind==='acorn'){round(8,11,17,19,'#96633e');round(9,12,15,15,'#d4a363');r(11,15,4,9,'#f6cc86');r(8,9,17,7,'#795d42');r(6,13,21,3,'#795d42');r(10,10,13,3,'#ae8550');r(16,5,3,6,'#795d42');r(18,3,6,3,'#85a05b');face(11,20);}
+        return a;
+      }
+      function pxSprite(kind) {return '<svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">'+pxRects(kind).map(([x,y,w,h,c])=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+c+'"/>').join('')+'</svg>';}
+      function pxPaint(kind,x,y,size) {const u=size/32;for(const [a,b,w,h,c] of pxRects(kind)){ctx.fillStyle=c;ctx.fillRect(Math.round(x+a*u),Math.round(y+b*u),Math.ceil(w*u),Math.ceil(h*u));}}
+
+
+
 // Reference: wanghao221/moyu @ 15e88e245ddfbb4c7f0a9064202b5f50674296fb
 // Adapted to a self-contained page with round locking, restart, keyboard input and __hub state.
 'use strict';
@@ -49,7 +134,7 @@ function reset() {
   clearTimeout(timer); timer = null;
   points = [0,0]; rounds = 0; started = true; over = false; busy = false;
   $('overlay').hidden = true;
-  $('symbol0').textContent = '?'; $('symbol1').textContent = '?';
+  $('symbol0').innerHTML=config.dice?pxDice(1):pxHand(0); $('symbol1').innerHTML=config.dice?pxDice(1):pxHand(2);
   $('status').textContent = config.ready;
   $('history').replaceChildren();
   render(); buttons[0].focus({ preventScroll:true });
@@ -61,13 +146,13 @@ function play(choice) {
   // Freeze both choices before the reveal; further clicks cannot change this round.
   const first = config.dice ? randomFace() : choice;
   const second = randomFace();
-  $('symbol0').textContent = config.dice ? '🎲' : faces[first];
-  $('symbol1').textContent = config.dice ? '🎲' : '…';
+  $('symbol0').innerHTML=config.dice?pxDice(1):pxHand(first);
+  $('symbol1').innerHTML=config.dice?pxDice(1):pxSprite('mole');
   $('status').textContent = config.dice ? '骰子转动中…' : '电脑正在出拳…';
   render();
   timer = setTimeout(() => {
     timer = null; busy = false; rounds++;
-    $('symbol0').textContent = faces[first]; $('symbol1').textContent = faces[second];
+    $('symbol0').innerHTML=config.dice?pxDice(first+1):pxHand(first); $('symbol1').innerHTML=config.dice?pxDice(second+1):pxHand(second);
     const winner = first === second ? -1 : config.dice ? (first > second ? 0 : 1) : ((first - second + 3) % 3 === 1 ? 0 : 1);
     if (winner >= 0) points[winner]++;
     const message = winner < 0 ? '平局，双方不加分' : config.labels[winner] + ' +1 分';
@@ -109,6 +194,7 @@ document.addEventListener('keydown', (event) => {
 });
 window.__hub = { get score(){ return points[0]; }, get over(){ return over; }, get started(){ return started; } };
 render();
+    })()
 </script>
 </body>
 </html>

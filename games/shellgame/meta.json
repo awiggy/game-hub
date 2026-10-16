@@ -2,11 +2,18 @@
   "id": "shellgame",
   "name": "三仙归洞",
   "emoji": "🥤",
-  "categories": ["casual", "puzzle"],
-  "tags": ["观察", "追踪", "休闲"],
-  "summary": "小球扣在杯下，三个杯子眼花缭乱地换位，你能盯住它在哪吗？",
-  "description": "经典三杯猜球游戏。小球扣在一只杯下，杯子进行多轮高速换位动画，结束后点击你认为藏着球的杯子。答对连对加分并加快换位速度，答错游戏结束。",
-  "howToPlay": "盯住藏球的杯子，换位结束后点击它。",
+  "categories": [
+    "casual",
+    "puzzle"
+  ],
+  "tags": [
+    "观察",
+    "追踪",
+    "休闲"
+  ],
+  "summary": "兔兔茶会的杯子戏法，盯住藏着蓝莓的那只茶杯。",
+  "description": "三只相同的粉色茶杯交换位置；先看蓝莓藏在哪里，等换杯结束后选出正确茶杯。连续成功后交换更快。",
+  "howToPlay": "看清蓝莓位置，等茶杯交换结束再点杯子；猜错会揭晓正确位置。",
   "entry": "shellgame/index.html",
   "platform": "浏览器",
   "playMode": "online",
