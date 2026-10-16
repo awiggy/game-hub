@@ -1,61 +1,18 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>算术冲刺</title>
-  <style>
-    :root { --blue:#2f55e4; --yellow:#ffd23f; }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html,body { height:100%; }
-    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
-      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
-    #wrap { width:min(92vw,420px); position:relative; display:flex; flex-direction:column; gap:14px; align-items:center; }
-    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
-    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
-    #q {
-      width:100%; text-align:center; font-size:44px; font-weight:900; letter-spacing:2px;
-      background:#1a1d29; border:3px solid #2a2e3d; border-radius:14px; padding:28px 0; font-variant-numeric:tabular-nums;
-    }
-    #track { width:100%; height:14px; background:#14161f; border:2px solid #2a2e3d; border-radius:999px; overflow:hidden; }
-    #tfill { height:100%; width:100%; background:var(--yellow); transition:width .1s linear; }
-    #opts { width:100%; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-    #opts button {
-      font-family:inherit; font-size:24px; font-weight:900; padding:20px 0;
-      color:#eef1f6; background:#1a1d29; border:2px solid #2a3350; border-radius:12px; cursor:pointer;
-    }
-    #opts button.ok { background:#22b573; border-color:#fff; }
-    #opts button.bad { background:#ff4d5e; border-color:#fff; }
-    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
-      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
-    #overlay.hidden { display:none; }
-    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
-    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
-    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
-      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
-  <div id="wrap">
-    <div id="hud">
-      <span>连对<b id="score">0</b></span>
-      <span>命<b id="lives">♥♥♥</b></span>
-      <span>BEST<b id="best">0</b></span>
-    </div>
-    <div id="q">7 + 5 = ?</div>
-    <div id="track"><div id="tfill"></div></div>
-    <div id="opts">
-      <button data-i="0"></button>
-      <button data-i="1"></button>
-      <button data-i="2"></button>
-    </div>
-  </div>
-  <div id="overlay">
-    <h1>➗ 算术冲刺</h1>
-    <p>5 秒内选出正确答案<br/>连对越多难度越高<br/>答错或超时 -1 命，共 3 命</p>
-    <button id="ov-btn">开始冲刺</button>
-  </div>
-  <script>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>算术冲刺</title><style>
+:root{color-scheme:light;--ink:#31523e;--muted:#7b8968;--paper:#fffbed;--edge:#497452;--accent:#ed8056;--floor:#eaf1d6}
+*{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;background:radial-gradient(ellipse at 15% 5%,#fff6d6,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}
+button{font:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #e8794d;outline-offset:2px}button:disabled{cursor:default}h1,h2,p{margin:0}.shell{width:min(800px,calc(100% - 28px));padding:12px 0}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.top small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin-top:3px}.tag{background:var(--paper);border:1px solid #c9d6b2;padding:7px 11px;font-size:10px;color:var(--muted)}.layout{display:flex;justify-content:center;align-items:center;gap:28px}#wrap{width:min(480px,calc(100svh - 164px));max-width:calc(100% - 198px);flex:none;position:relative}#hud{display:flex;gap:6px;justify-content:space-between;margin-bottom:10px;font-size:10px;color:var(--muted)}#hud>span{flex:1;background:var(--paper);border:1px solid #c7d4ac;box-shadow:0 3px 0 #d1ddba;padding:6px 9px;white-space:nowrap}#hud b{font:700 18px ui-monospace,monospace;color:var(--ink);margin-left:6px}#hud>span:first-child b{color:#d76c43}.side{width:170px;flex:none}.side svg{width:100%;height:110px;image-rendering:pixelated}.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.side h2{font-size:25px;line-height:1.45;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted)}.side .tips{border-top:1px solid #c8d4af;margin-top:19px;padding-top:12px;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}.foot span:first-child{min-width:0}#overlay{position:fixed;inset:0;display:grid;place-items:center;background:#eaf1d6d9;z-index:5;padding:16px}#overlay.hidden{display:none}.card{width:min(350px,100%);text-align:center;padding:21px 24px 24px;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e33}.card svg{width:150px;height:94px;display:block;margin:0 auto 8px;image-rendering:pixelated}.card small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.card h1{font-size:25px;letter-spacing:2px;margin:10px 0}.card p{font-size:12px;line-height:1.9;color:var(--muted);margin-bottom:19px}.card b{color:#cd693f}#ov-btn{background:var(--accent);color:#fffbed;border:2px solid #a95535;padding:11px 27px;font-weight:800;box-shadow:0 4px 0 #aa5335}#ov-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #aa5335}.pixel-frame{border:4px solid var(--edge);box-shadow:0 5px 0 #2d573f;padding:8px;background:#6aa183}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 8px}.layout{display:block}#wrap{width:min(100%,calc(100svh - 150px));max-width:100%;margin:auto}.side{display:none}#hud{gap:4px;margin-bottom:8px}#hud>span{padding:5px}#hud b{font-size:15px;margin-left:3px}.foot{font-size:8px;margin-top:12px;gap:8px}.card{padding:16px}.card svg{height:76px}.card h1{font-size:22px}.card p{margin-bottom:14px}}
+@media(max-height:480px) and (min-width:621px){.side svg{height:52px}.side .tips{display:none}.side h2{font-size:19px;margin:8px 0}.side .tips{margin-top:9px;padding-top:8px}.side p{font-size:10px}.card{padding:12px 18px}.card svg{height:60px}.card h1{margin:6px 0;font-size:22px}.card p{margin-bottom:12px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+ body{--floor:#e4f2e4;--ink:#315b5c;--edge:#4c8380}#wrap{width:min(460px,calc(100svh - 110px))}#hud b{font-size:16px}#lives{color:#e77966!important;font-size:14px!important;letter-spacing:2px}.math-scene{position:relative;background:repeating-linear-gradient(0deg,#a5daf000 0 14px,#b3e1ef44 14px 16px),#a5daf0;height:94px;border:3px solid #5d9495;border-bottom:0;overflow:hidden}.math-scene svg{position:absolute;bottom:0;left:0;width:140px;height:94px;transition:left .3s}.math-scene span{position:absolute;right:12px;top:14px;font:8px ui-monospace,monospace;color:#588588;letter-spacing:1px}#q{text-align:center;font:800 clamp(26px,5vw,40px) ui-monospace,monospace;background:#fffbed;border:3px solid #5d9495;padding:17px 4px;white-space:nowrap}#track{height:12px;margin:10px 0;background:#c3d9cc;border:2px solid #75a197;overflow:hidden}#tfill{height:100%;width:100%;background:#f1bd55;transition:width .1s linear}#opts{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}#opts button{position:relative;background:#fff1bc;color:#805e36;border:2px solid #c59e62;box-shadow:0 4px 0 #b48f5b,inset 0 3px #fffae5;font:800 25px ui-monospace,monospace;padding:16px 2px 22px}#opts button:nth-child(2){background:#d2ebbe;border-color:#8fb379;box-shadow:0 4px 0 #7e9c69,inset 0 3px #e8f6d8}#opts button:nth-child(3){background:#f6d0b8;border-color:#c49274;box-shadow:0 4px 0 #ae7f63,inset 0 3px #ffead8}#opts button::after{content:'键 ' attr(data-key);position:absolute;bottom:4px;left:0;right:0;font-size:9px;font-weight:400;color:#8a8970}#opts button.ok{background:#7cb786;border-color:#477953;color:white}#opts button.bad{background:#ef9984;border-color:#ac5e4d;color:#7c3931}#opts button:active{transform:translateY(2px)}@media(max-width:620px){#wrap{width:min(100%,380px)}.math-scene{height:76px}.math-scene svg{height:76px;width:114px}#q{font-size:29px;padding:14px 2px}#opts button{padding:12px 2px 22px;font-size:23px}#hud b{font-size:14px}}@media(max-height:430px){.math-scene{height:56px}.math-scene svg{height:56px;width:84px}#q{padding:9px 2px;font-size:27px}#opts button{padding:10px 2px 21px}#track{margin:8px 0}}
+@media(max-height:420px){.card{padding:12px 16px}.card svg{height:56px;margin-bottom:4px}.card h1{font-size:21px;margin:6px 0}.card p{font-size:11px;line-height:1.7;margin-bottom:11px}#ov-btn{padding:9px 22px}}
+</style></head><body>
+<main class="shell"><header class="top"><div><small>SUNNY MATH / 03</small><h1>算术冲刺</h1></div><span class="tag">小鸡答题站</span></header><div class="layout"><div id="wrap"><div id="hud"><span>答对<b id="score">0</b></span><span>爱心<b id="lives">♥♥♥</b></span><span>最佳<b id="best">0</b></span></div><div class="math-scene"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><rect x="0" y="65" width="120" height="15" fill="#9fc869"/><rect x="0" y="65" width="120" height="4" fill="#d2e494"/><path d="M8 65v-7h3v7m96 0v-9h3v9" stroke="#6e9f43" stroke-width="3"/><path d="M17 53h4v12h-4zM13 57h12v4H13zM96 48h4v12h-4zM92 52h12v4H92z" fill="#fffbed"/><path d="M17 57h4v4h-4zM96 52h4v4h-4z" fill="#f4bc4c"/><path d="M32 37h6V26h10v-6h22v6h10v12h7v17h-8v9H41v-7h-9z" fill="#b98032"/><path d="M35 39h6V29h10v-6h16v6h10v12h7v12h-8v8H44v-7h-9z" fill="#ffd865"/><path d="M40 39h12v5h6v9H43z" fill="#f4b547"/><path d="M63 31h10v15H63z" fill="#fff9dc"/><path d="M69 33h4v9h-4z" fill="#314b43"/><path d="M78 43h12v6H78zM48 64h5v5h-8v-3h3zM65 64h5v5h-8v-3h3z" fill="#e67c3c"/><path d="M10 17h8v-5h10v5h7v5H10zM87 12h7V7h10v5h8v5H87z" fill="#fffbed"/></svg><span>READY, LITTLE CHICK?</span></div><div id="q">7 + 5 = ?</div><div id="track" aria-label="剩余时间"><div id="tfill"></div></div><div id="opts"><button data-i="0">12</button><button data-i="1">13</button><button data-i="2">14</button></div></div><aside class="side"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><rect x="0" y="65" width="120" height="15" fill="#9fc869"/><rect x="0" y="65" width="120" height="4" fill="#d2e494"/><path d="M8 65v-7h3v7m96 0v-9h3v9" stroke="#6e9f43" stroke-width="3"/><path d="M17 53h4v12h-4zM13 57h12v4H13zM96 48h4v12h-4zM92 52h12v4H92z" fill="#fffbed"/><path d="M17 57h4v4h-4zM96 52h4v4h-4z" fill="#f4bc4c"/><path d="M32 37h6V26h10v-6h22v6h10v12h7v17h-8v9H41v-7h-9z" fill="#b98032"/><path d="M35 39h6V29h10v-6h16v6h10v12h7v12h-8v8H44v-7h-9z" fill="#ffd865"/><path d="M40 39h12v5h6v9H43z" fill="#f4b547"/><path d="M63 31h10v15H63z" fill="#fff9dc"/><path d="M69 33h4v9h-4z" fill="#314b43"/><path d="M78 43h12v6H78zM48 64h5v5h-8v-3h3zM65 64h5v5h-8v-3h3z" fill="#e67c3c"/><path d="M10 17h8v-5h10v5h7v5H10zM87 12h7V7h10v5h8v5H87z" fill="#fffbed"/></svg><small>TAKE A LITTLE PLAY BREAK.</small><h2>动动脑筋，<br>快乐向前跑。</h2><p>算出下一步，<br>陪小鸡跑过这片草地。</p><p class="tips">点击答案 / 按 1、2、3<br>答错或超时扣一颗心<br>答对越多，节奏越快</p></aside></div><footer class="foot"><span>点击答案，或按键盘 1 / 2 / 3</span><span>小脑袋，也有大能量。</span></footer></main><div id="overlay"><section class="card" aria-labelledby="ov-title"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><rect x="0" y="65" width="120" height="15" fill="#9fc869"/><rect x="0" y="65" width="120" height="4" fill="#d2e494"/><path d="M8 65v-7h3v7m96 0v-9h3v9" stroke="#6e9f43" stroke-width="3"/><path d="M17 53h4v12h-4zM13 57h12v4H13zM96 48h4v12h-4zM92 52h12v4H92z" fill="#fffbed"/><path d="M17 57h4v4h-4zM96 52h4v4h-4z" fill="#f4bc4c"/><path d="M32 37h6V26h10v-6h22v6h10v12h7v17h-8v9H41v-7h-9z" fill="#b98032"/><path d="M35 39h6V29h10v-6h16v6h10v12h7v12h-8v8H44v-7h-9z" fill="#ffd865"/><path d="M40 39h12v5h6v9H43z" fill="#f4b547"/><path d="M63 31h10v15H63z" fill="#fff9dc"/><path d="M69 33h4v9h-4z" fill="#314b43"/><path d="M78 43h12v6H78zM48 64h5v5h-8v-3h3zM65 64h5v5h-8v-3h3z" fill="#e67c3c"/><path d="M10 17h8v-5h10v5h7v5H10zM87 12h7V7h10v5h8v5H87z" fill="#fffbed"/></svg><small>SUNNY MATH / 03</small><h1 id="ov-title">算术冲刺</h1><p>每题三个答案，选对就向前！<br>起始每题 5 秒，共有 3 颗心。<br>答错或超时会失去一颗心。</p><button id="ov-btn">开始冲刺 →</button></section></div>
+<script>
     (() => {
       const qEl = document.getElementById('q')
       const tfill = document.getElementById('tfill')
@@ -67,7 +24,7 @@
       const ovBtn = document.getElementById('ov-btn')
 
       let answer, opts, score, lives, timeLeft, limit, running, over, lock
-      let best = Number(localStorage.getItem('mathrun-best') || 0)
+      let best = 0; try { best = Number(localStorage.getItem('mathrun-best')) || 0 } catch {}
       bestEl.textContent = best
 
       const rnd = (a, b) => a + ((Math.random() * (b - a + 1)) | 0)
@@ -87,15 +44,14 @@
         answer = q.res
         qEl.textContent = q.a + ' ' + q.op + ' ' + q.b + ' = ?'
         opts = [answer]
-        while (opts.length < 3) {
-          const delta = rnd(1, 6) * (Math.random() < 0.5 ? 1 : -1)
-          const v = answer + delta
-          if (v !== answer && v >= 0 && !opts.includes(v)) opts.push(v)
-        }
+        const offsets = [-6,-5,-4,-3,-2,-1,1,2,3,4,5,6]
+        while(opts.length < 3) opts.push(answer + offsets.splice(rnd(0, offsets.length - 1), 1)[0])
         opts.sort(() => Math.random() - 0.5)
-        optBtns.forEach((b, i) => { b.textContent = opts[i]; b.className = '' })
+        optBtns.forEach((b, i) => { b.textContent = opts[i]; b.className = ''; b.dataset.key = i + 1 })
         limit = Math.max(2800, 5000 - score * 60)
         timeLeft = limit
+        tfill.style.width = '100%'
+        document.querySelector('.math-scene svg').style.left = (Math.min(60,score*3))+'%'
         lock = false
       }
 
@@ -109,9 +65,9 @@
 
       function end() {
         running = false; over = true
-        if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('mathrun-best', best) }
+        if (score > best) { best = score; bestEl.textContent = best; (()=>{try{localStorage.setItem('mathrun-best', best)}catch{}})() }
         overlay.querySelector('h1').textContent = '🏁 冲刺结束'
-        overlay.querySelector('p').innerHTML = '连对 <b style="color:#ffd23f">' + score + '</b> 题 · 最佳 ' + best
+        overlay.querySelector('p').innerHTML = '答对 <b >' + score + '</b> 题 · 最佳 ' + best
         ovBtn.textContent = '再来一局'
         overlay.classList.remove('hidden')
       }
@@ -140,6 +96,7 @@
         })
       })
       window.addEventListener('keydown', (e) => {
+        if (e.repeat) return
         if (e.code === 'Space' && !running && !overlay.classList.contains('hidden')) { e.preventDefault(); start() }
         const k = ['Digit1', 'Digit2', 'Digit3'].indexOf(e.code)
         if (k >= 0 && running && !over) optBtns[k].click()
@@ -164,12 +121,11 @@
       window.__hub = {
         get score() { return score },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       answer = 12; opts = [12, 13, 14]; score = 0; lives = 3
       timeLeft = 5000; limit = 5000; running = false; over = false; lock = false
     })()
   </script>
-</body>
-</html>
+</body></html>

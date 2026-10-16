@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>宾果连</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>宾果连</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -33,9 +28,13 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#c57b3f;--ink:#345647;--muted:#71836b;--paper:#fffbed;--edge:#648d73;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;grid-template-columns:100%;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff1d4,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #da8054;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#b6e0e3;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{position:static;width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#59745f;font-size:12px;font-weight:500;text-align:center;line-height:1.6}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6ed;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;position:static;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#718068;margin:0 0 17px}#overlay b{color:#c57546}#overlay button,.action{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px;cursor:pointer}.action:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}.foot{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#call{font:800 22px ui-monospace,monospace;color:#ba7849;min-height:28px}#card{border:4px solid #78916b;border-radius:0;background:#a6bc8e;padding:7px;gap:4px;box-shadow:0 4px 0 #526e4d}.cell{border-radius:0;background:#fff1c7;color:#647553;border-bottom:3px solid #d7c58f;font:700 18px ui-monospace,monospace}.cell.mark{background:#8fb47e;color:#fff6d4;border-color:#689360}.cell.mark:after{content:'✦';font-size:10px;color:#f4d881;right:1px;top:0}.cell.mark:before{display:none}#airow{font-size:10px;text-align:center;color:#778669}#roll{border-radius:0;background:#e89a66;border:2px solid #ae7851;box-shadow:0 3px 0 #ae7851;padding:8px 26px;color:#fff7dd;font-size:13px}#wrap{width:min(390px,calc(100svh - 275px),calc(100% - 196px))}@media(max-width:620px){#wrap{width:min(100%,calc(100svh - 255px))}.cell{font-size:14px}#call{font-size:18px}}@media(max-height:430px){.foot{display:none}#wrap{display:grid;grid-template-columns:minmax(0,1fr)104px;gap:8px;width:min(420px,calc(100svh - 38px),calc(100% - 196px))}#hud{grid-column:1/-1;margin:0}#card{grid-column:1;grid-row:2/5;padding:4px;gap:3px}#call{grid-column:2;grid-row:2;font-size:15px;line-height:1.6;text-align:center}#airow{grid-column:2;grid-row:3;font-size:10px}#roll{grid-column:2;grid-row:4;padding:8px 5px;font-size:12px}.cell{font-size:13px}}@media(max-height:430px) and (max-width:620px){#wrap{width:100%}}</style></head><body><main class="shell"><header class="top"><div><small>PICNIC BINGO</small><h1>宾果连</h1></div><span class="tag">野餐宾果牌</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>我的连线<b id="p">0</b>/5</span>
@@ -44,15 +43,15 @@
     </div>
     <div id="call">点「报号」开始</div>
     <div id="card"></div>
-    <div id="airow">AI 的连线数会随报号增长，手快有手慢无！</div>
-    <button id="roll">📢 报号</button>
+    <div id="airow">同一组报号，比比谁的数字卡先连成 5 线。</div>
+    <button id="roll">报一个号码</button>
   </div>
-  <div id="overlay">
-    <h1>🎲 宾果连</h1>
-    <p>系统报号，卡片上相同数字自动划掉<br/>横竖斜先连成五线的获胜<br/>与 AI 竞速，看谁先喊 BINGO</p>
+
+  <aside class="side"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="20" y="8" width="4" height="4" fill="#55705c"/><rect x="24" y="8" width="4" height="4" fill="#55705c"/><rect x="28" y="8" width="4" height="4" fill="#55705c"/><rect x="32" y="8" width="4" height="4" fill="#55705c"/><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="44" y="8" width="4" height="4" fill="#55705c"/><rect x="48" y="8" width="4" height="4" fill="#55705c"/><rect x="52" y="8" width="4" height="4" fill="#55705c"/><rect x="56" y="8" width="4" height="4" fill="#55705c"/><rect x="60" y="8" width="4" height="4" fill="#55705c"/><rect x="20" y="12" width="4" height="4" fill="#55705c"/><rect x="24" y="12" width="4" height="4" fill="#fff6dc"/><rect x="28" y="12" width="4" height="4" fill="#fff6dc"/><rect x="32" y="12" width="4" height="4" fill="#fff6dc"/><rect x="36" y="12" width="4" height="4" fill="#fff6dc"/><rect x="40" y="12" width="4" height="4" fill="#fff6dc"/><rect x="44" y="12" width="4" height="4" fill="#fff6dc"/><rect x="48" y="12" width="4" height="4" fill="#fff6dc"/><rect x="52" y="12" width="4" height="4" fill="#fff6dc"/><rect x="56" y="12" width="4" height="4" fill="#fff6dc"/><rect x="60" y="12" width="4" height="4" fill="#55705c"/><rect x="20" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="16" width="4" height="4" fill="#fff6dc"/><rect x="28" y="16" width="4" height="4" fill="#efaa69"/><rect x="32" y="16" width="4" height="4" fill="#e78368"/><rect x="36" y="16" width="4" height="4" fill="#efaa69"/><rect x="40" y="16" width="4" height="4" fill="#e78368"/><rect x="44" y="16" width="4" height="4" fill="#efaa69"/><rect x="48" y="16" width="4" height="4" fill="#e78368"/><rect x="52" y="16" width="4" height="4" fill="#efaa69"/><rect x="56" y="16" width="4" height="4" fill="#fff6dc"/><rect x="60" y="16" width="4" height="4" fill="#55705c"/><rect x="20" y="20" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#fff6dc"/><rect x="28" y="20" width="4" height="4" fill="#fff6dc"/><rect x="32" y="20" width="4" height="4" fill="#fff6dc"/><rect x="36" y="20" width="4" height="4" fill="#fff6dc"/><rect x="40" y="20" width="4" height="4" fill="#fff6dc"/><rect x="44" y="20" width="4" height="4" fill="#fff6dc"/><rect x="48" y="20" width="4" height="4" fill="#fff6dc"/><rect x="52" y="20" width="4" height="4" fill="#fff6dc"/><rect x="56" y="20" width="4" height="4" fill="#fff6dc"/><rect x="60" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#fff6dc"/><rect x="28" y="24" width="4" height="4" fill="#efaa69"/><rect x="32" y="24" width="4" height="4" fill="#e78368"/><rect x="36" y="24" width="4" height="4" fill="#efaa69"/><rect x="40" y="24" width="4" height="4" fill="#e78368"/><rect x="44" y="24" width="4" height="4" fill="#efaa69"/><rect x="48" y="24" width="4" height="4" fill="#e78368"/><rect x="52" y="24" width="4" height="4" fill="#efaa69"/><rect x="56" y="24" width="4" height="4" fill="#fff6dc"/><rect x="60" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#fff6dc"/><rect x="28" y="28" width="4" height="4" fill="#fff6dc"/><rect x="32" y="28" width="4" height="4" fill="#fff6dc"/><rect x="36" y="28" width="4" height="4" fill="#fff6dc"/><rect x="40" y="28" width="4" height="4" fill="#fff6dc"/><rect x="44" y="28" width="4" height="4" fill="#fff6dc"/><rect x="48" y="28" width="4" height="4" fill="#fff6dc"/><rect x="52" y="28" width="4" height="4" fill="#fff6dc"/><rect x="56" y="28" width="4" height="4" fill="#fff6dc"/><rect x="60" y="28" width="4" height="4" fill="#55705c"/><rect x="20" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#fff6dc"/><rect x="28" y="32" width="4" height="4" fill="#efaa69"/><rect x="32" y="32" width="4" height="4" fill="#e78368"/><rect x="36" y="32" width="4" height="4" fill="#efaa69"/><rect x="40" y="32" width="4" height="4" fill="#e78368"/><rect x="44" y="32" width="4" height="4" fill="#efaa69"/><rect x="48" y="32" width="4" height="4" fill="#e78368"/><rect x="52" y="32" width="4" height="4" fill="#efaa69"/><rect x="56" y="32" width="4" height="4" fill="#fff6dc"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="20" y="36" width="4" height="4" fill="#55705c"/><rect x="24" y="36" width="4" height="4" fill="#fff6dc"/><rect x="28" y="36" width="4" height="4" fill="#fff6dc"/><rect x="32" y="36" width="4" height="4" fill="#fff6dc"/><rect x="36" y="36" width="4" height="4" fill="#fff6dc"/><rect x="40" y="36" width="4" height="4" fill="#fff6dc"/><rect x="44" y="36" width="4" height="4" fill="#fff6dc"/><rect x="48" y="36" width="4" height="4" fill="#fff6dc"/><rect x="52" y="36" width="4" height="4" fill="#fff6dc"/><rect x="56" y="36" width="4" height="4" fill="#fff6dc"/><rect x="60" y="36" width="4" height="4" fill="#55705c"/><rect x="20" y="40" width="4" height="4" fill="#55705c"/><rect x="24" y="40" width="4" height="4" fill="#55705c"/><rect x="28" y="40" width="4" height="4" fill="#55705c"/><rect x="32" y="40" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><rect x="52" y="40" width="4" height="4" fill="#55705c"/><rect x="56" y="40" width="4" height="4" fill="#55705c"/><rect x="60" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>野餐宾果牌</h2><p>一张数字卡，一场轻松的好运气。</p><p class="tips">点击报号自动标记 · 先连成 5 条线</p></aside></div><footer class="foot"><span>点击报号自动标记 · 先连成 5 条线</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="20" y="8" width="4" height="4" fill="#55705c"/><rect x="24" y="8" width="4" height="4" fill="#55705c"/><rect x="28" y="8" width="4" height="4" fill="#55705c"/><rect x="32" y="8" width="4" height="4" fill="#55705c"/><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="44" y="8" width="4" height="4" fill="#55705c"/><rect x="48" y="8" width="4" height="4" fill="#55705c"/><rect x="52" y="8" width="4" height="4" fill="#55705c"/><rect x="56" y="8" width="4" height="4" fill="#55705c"/><rect x="60" y="8" width="4" height="4" fill="#55705c"/><rect x="20" y="12" width="4" height="4" fill="#55705c"/><rect x="24" y="12" width="4" height="4" fill="#fff6dc"/><rect x="28" y="12" width="4" height="4" fill="#fff6dc"/><rect x="32" y="12" width="4" height="4" fill="#fff6dc"/><rect x="36" y="12" width="4" height="4" fill="#fff6dc"/><rect x="40" y="12" width="4" height="4" fill="#fff6dc"/><rect x="44" y="12" width="4" height="4" fill="#fff6dc"/><rect x="48" y="12" width="4" height="4" fill="#fff6dc"/><rect x="52" y="12" width="4" height="4" fill="#fff6dc"/><rect x="56" y="12" width="4" height="4" fill="#fff6dc"/><rect x="60" y="12" width="4" height="4" fill="#55705c"/><rect x="20" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="16" width="4" height="4" fill="#fff6dc"/><rect x="28" y="16" width="4" height="4" fill="#efaa69"/><rect x="32" y="16" width="4" height="4" fill="#e78368"/><rect x="36" y="16" width="4" height="4" fill="#efaa69"/><rect x="40" y="16" width="4" height="4" fill="#e78368"/><rect x="44" y="16" width="4" height="4" fill="#efaa69"/><rect x="48" y="16" width="4" height="4" fill="#e78368"/><rect x="52" y="16" width="4" height="4" fill="#efaa69"/><rect x="56" y="16" width="4" height="4" fill="#fff6dc"/><rect x="60" y="16" width="4" height="4" fill="#55705c"/><rect x="20" y="20" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#fff6dc"/><rect x="28" y="20" width="4" height="4" fill="#fff6dc"/><rect x="32" y="20" width="4" height="4" fill="#fff6dc"/><rect x="36" y="20" width="4" height="4" fill="#fff6dc"/><rect x="40" y="20" width="4" height="4" fill="#fff6dc"/><rect x="44" y="20" width="4" height="4" fill="#fff6dc"/><rect x="48" y="20" width="4" height="4" fill="#fff6dc"/><rect x="52" y="20" width="4" height="4" fill="#fff6dc"/><rect x="56" y="20" width="4" height="4" fill="#fff6dc"/><rect x="60" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#fff6dc"/><rect x="28" y="24" width="4" height="4" fill="#efaa69"/><rect x="32" y="24" width="4" height="4" fill="#e78368"/><rect x="36" y="24" width="4" height="4" fill="#efaa69"/><rect x="40" y="24" width="4" height="4" fill="#e78368"/><rect x="44" y="24" width="4" height="4" fill="#efaa69"/><rect x="48" y="24" width="4" height="4" fill="#e78368"/><rect x="52" y="24" width="4" height="4" fill="#efaa69"/><rect x="56" y="24" width="4" height="4" fill="#fff6dc"/><rect x="60" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#fff6dc"/><rect x="28" y="28" width="4" height="4" fill="#fff6dc"/><rect x="32" y="28" width="4" height="4" fill="#fff6dc"/><rect x="36" y="28" width="4" height="4" fill="#fff6dc"/><rect x="40" y="28" width="4" height="4" fill="#fff6dc"/><rect x="44" y="28" width="4" height="4" fill="#fff6dc"/><rect x="48" y="28" width="4" height="4" fill="#fff6dc"/><rect x="52" y="28" width="4" height="4" fill="#fff6dc"/><rect x="56" y="28" width="4" height="4" fill="#fff6dc"/><rect x="60" y="28" width="4" height="4" fill="#55705c"/><rect x="20" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#fff6dc"/><rect x="28" y="32" width="4" height="4" fill="#efaa69"/><rect x="32" y="32" width="4" height="4" fill="#e78368"/><rect x="36" y="32" width="4" height="4" fill="#efaa69"/><rect x="40" y="32" width="4" height="4" fill="#e78368"/><rect x="44" y="32" width="4" height="4" fill="#efaa69"/><rect x="48" y="32" width="4" height="4" fill="#e78368"/><rect x="52" y="32" width="4" height="4" fill="#efaa69"/><rect x="56" y="32" width="4" height="4" fill="#fff6dc"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="20" y="36" width="4" height="4" fill="#55705c"/><rect x="24" y="36" width="4" height="4" fill="#fff6dc"/><rect x="28" y="36" width="4" height="4" fill="#fff6dc"/><rect x="32" y="36" width="4" height="4" fill="#fff6dc"/><rect x="36" y="36" width="4" height="4" fill="#fff6dc"/><rect x="40" y="36" width="4" height="4" fill="#fff6dc"/><rect x="44" y="36" width="4" height="4" fill="#fff6dc"/><rect x="48" y="36" width="4" height="4" fill="#fff6dc"/><rect x="52" y="36" width="4" height="4" fill="#fff6dc"/><rect x="56" y="36" width="4" height="4" fill="#fff6dc"/><rect x="60" y="36" width="4" height="4" fill="#55705c"/><rect x="20" y="40" width="4" height="4" fill="#55705c"/><rect x="24" y="40" width="4" height="4" fill="#55705c"/><rect x="28" y="40" width="4" height="4" fill="#55705c"/><rect x="32" y="40" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><rect x="52" y="40" width="4" height="4" fill="#55705c"/><rect x="56" y="40" width="4" height="4" fill="#55705c"/><rect x="60" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg>
+    <h1>宾果连</h1>
+    <p>系统报号，卡片上相同数字自动划掉<br/>横竖斜先连成五线的获胜<br/>与 AI 同步标记，60 次后按连线数结算</p>
     <button id="ov-btn">开始游戏</button>
-  </div>
-  <script>
+  </section></div><script>
     (() => {
       const callEl = document.getElementById('call')
       const cardEl = document.getElementById('card')
@@ -64,7 +63,7 @@
       const ovBtn = document.getElementById('ov-btn')
 
       let card, marks, aiLines, called, calledSet, wins, running, over
-      let best = Number(localStorage.getItem('bingo-best') || 0)
+      let best=0;try{best=Number(localStorage.getItem('bingo-best'))||0}catch{}
       bestEl.textContent = best
 
       // 5 列范围：B1-15 I16-30 N31-45 G46-60 O61-75
@@ -94,7 +93,7 @@
         card.forEach((it, i) => {
           const el = document.createElement('div')
           el.className = 'cell' + (it.mark ? ' mark' : '')
-          el.dataset.n = it.n
+          el.dataset.n = it.n;el.style.gridRow=it.r+1;el.style.gridColumn=it.c+1
           el.textContent = it.n
           cardEl.appendChild(el)
           cellEls[i] = el
@@ -122,20 +121,21 @@
         running = false; over = true
         if (playerWin) {
           wins++
-          if (wins > best) { best = wins; bestEl.textContent = best; localStorage.setItem('bingo-best', best) }
+          if (wins > best) { best = wins; bestEl.textContent = best; (()=>{try{localStorage.setItem('bingo-best',best)}catch{}})() }
         }
         overlay.querySelector('h1').textContent = playerWin ? '🏆 BINGO！你赢了' : '🎲 AI 先连成了'
-        overlay.querySelector('p').innerHTML = '胜场 <b style="color:#ffd23f">' + wins + '</b> · 最佳 ' + best
+        overlay.querySelector('p').innerHTML = '胜场 <b >' + wins + '</b> · 最佳 ' + best
         ovBtn.textContent = '再来一局'
         overlay.classList.remove('hidden')
       }
 
       function roll() {
         if (!running || over) return
-        let n
-        do { n = 1 + ((Math.random() * 75) | 0) } while (called.has(n))
+        const remaining=Array.from({length:75},(_,i)=>i+1).filter(n=>!called.has(n))
+        if(!remaining.length)return
+        const n=remaining[Math.floor(Math.random()*remaining.length)]
         called.add(n)
-        callEl.textContent = '📣 ' + n
+        callEl.textContent = '本次号码 · ' + n
         // 我的卡片
         const mine = card.find((it) => it.n === n)
         if (mine) {
@@ -163,13 +163,11 @@
       window.__hub = {
         get score() { return wins },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       card = makeCard(); marks = new Set(); aiCard = makeCard(); aiMarks = new Set()
       called = new Set(); wins = 0; running = false; over = false
       render()
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>

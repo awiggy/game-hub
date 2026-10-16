@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>点球大战</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>点球大战</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -45,9 +40,13 @@
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700;
       padding:10px 32px; border-radius:8px; cursor:pointer;
     }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#c57b3f;--ink:#345647;--muted:#71836b;--paper:#fffbed;--edge:#648d73;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;grid-template-columns:100%;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff1d4,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #da8054;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#b6e0e3;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{position:static;width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#59745f;font-size:12px;font-weight:500;text-align:center;line-height:1.6}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6ed;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;position:static;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#718068;margin:0 0 17px}#overlay b{color:#c57546}#overlay button,.action{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px;cursor:pointer}.action:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}.foot{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#goal{border:4px solid #6d9875;border-radius:0;background:repeating-linear-gradient(90deg,#9cc58b 0 45px,#a7cd93 45px 90px);box-shadow:0 4px 0 #507256}#net{border:4px solid #fff6db;border-radius:0;background:repeating-linear-gradient(0deg,transparent 0 14px,#d7e7c28f 14px 16px),repeating-linear-gradient(90deg,#7aaa77 0 14px,#d7e7c28f 14px 16px);gap:1px}.cell{border:1px dashed #f6eed591;background:transparent;min-width:0;font-size:11px;color:#fff6db}.cell:hover,.cell:focus-visible{background:#fff7cb63}#gk{width:44px;height:54px;pointer-events:none;font-size:0;z-index:2}#gk svg{width:100%;height:100%;position:static}#ball{font-size:0;width:24px;height:24px;pointer-events:none;z-index:3}#ball svg{width:100%;height:100%;position:static}#dots span{width:24px;height:24px;border:2px solid #b6bd8e;background:#fff0c9;color:#638367;font-size:14px;text-align:center}#dots span[data-result="goal"]{background:#96bb83}#dots span[data-result="miss"]{background:#e9ac8a}#wrap{width:min(430px,calc((100svh - 240px)*1.6),calc(100% - 196px))}@media(max-width:620px){#wrap{width:min(100%,calc((100svh - 225px)*1.6))}}</style></head><body><main class="shell"><header class="top"><div><small>SUNNY KICK</small><h1>点球大战</h1></div><span class="tag">草地罚球赛</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>进球<b id="score">0</b></span>
@@ -56,18 +55,18 @@
     </div>
     <div id="goal">
       <div id="net"></div>
-      <div id="gk">🧍</div>
-      <div id="ball">⚽</div>
+      <div id="gk"><svg viewBox="0 0 32 40" shape-rendering="crispEdges" aria-hidden="true"><path d="M10 0h12v6H10z" fill="#648d75"/><path d="M10 6h12v10H10zM0 18h8v8H0zM24 18h8v8h-8z" fill="#ffe0a9"/><path d="M8 16h16v16H8zM2 17h8v5H2zM22 17h8v5h-8z" fill="#e29a61"/><path d="M10 32h5v8h-5zM18 32h5v8h-5zM12 9h2v3h-2zM18 9h2v3h-2z" fill="#536d5d"/></svg></div>
+      <div id="ball"><svg viewBox="20 8 48 36" shape-rendering="crispEdges" aria-hidden="true"><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="44" y="8" width="4" height="4" fill="#55705c"/><rect x="48" y="8" width="4" height="4" fill="#55705c"/><rect x="28" y="12" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#55705c"/><rect x="36" y="12" width="4" height="4" fill="#fff6dc"/><rect x="40" y="12" width="4" height="4" fill="#fff6dc"/><rect x="44" y="12" width="4" height="4" fill="#fff6dc"/><rect x="48" y="12" width="4" height="4" fill="#fff6dc"/><rect x="52" y="12" width="4" height="4" fill="#55705c"/><rect x="56" y="12" width="4" height="4" fill="#55705c"/><rect x="24" y="16" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#fff6dc"/><rect x="32" y="16" width="4" height="4" fill="#fff6dc"/><rect x="36" y="16" width="4" height="4" fill="#fff6dc"/><rect x="40" y="16" width="4" height="4" fill="#34534f"/><rect x="44" y="16" width="4" height="4" fill="#34534f"/><rect x="48" y="16" width="4" height="4" fill="#fff6dc"/><rect x="52" y="16" width="4" height="4" fill="#fff6dc"/><rect x="56" y="16" width="4" height="4" fill="#fff6dc"/><rect x="60" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#fff6dc"/><rect x="32" y="20" width="4" height="4" fill="#fff6dc"/><rect x="36" y="20" width="4" height="4" fill="#34534f"/><rect x="40" y="20" width="4" height="4" fill="#34534f"/><rect x="44" y="20" width="4" height="4" fill="#34534f"/><rect x="48" y="20" width="4" height="4" fill="#34534f"/><rect x="52" y="20" width="4" height="4" fill="#fff6dc"/><rect x="56" y="20" width="4" height="4" fill="#fff6dc"/><rect x="60" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#fff6dc"/><rect x="28" y="24" width="4" height="4" fill="#fff6dc"/><rect x="32" y="24" width="4" height="4" fill="#fff6dc"/><rect x="36" y="24" width="4" height="4" fill="#fff6dc"/><rect x="40" y="24" width="4" height="4" fill="#34534f"/><rect x="44" y="24" width="4" height="4" fill="#34534f"/><rect x="48" y="24" width="4" height="4" fill="#fff6dc"/><rect x="52" y="24" width="4" height="4" fill="#fff6dc"/><rect x="56" y="24" width="4" height="4" fill="#fff6dc"/><rect x="60" y="24" width="4" height="4" fill="#fff6dc"/><rect x="64" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#fff6dc"/><rect x="28" y="28" width="4" height="4" fill="#34534f"/><rect x="32" y="28" width="4" height="4" fill="#34534f"/><rect x="36" y="28" width="4" height="4" fill="#fff6dc"/><rect x="40" y="28" width="4" height="4" fill="#fff6dc"/><rect x="44" y="28" width="4" height="4" fill="#fff6dc"/><rect x="48" y="28" width="4" height="4" fill="#fff6dc"/><rect x="52" y="28" width="4" height="4" fill="#34534f"/><rect x="56" y="28" width="4" height="4" fill="#34534f"/><rect x="60" y="28" width="4" height="4" fill="#fff6dc"/><rect x="64" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#55705c"/><rect x="28" y="32" width="4" height="4" fill="#fff6dc"/><rect x="32" y="32" width="4" height="4" fill="#34534f"/><rect x="36" y="32" width="4" height="4" fill="#fff6dc"/><rect x="40" y="32" width="4" height="4" fill="#fff6dc"/><rect x="44" y="32" width="4" height="4" fill="#fff6dc"/><rect x="48" y="32" width="4" height="4" fill="#fff6dc"/><rect x="52" y="32" width="4" height="4" fill="#34534f"/><rect x="56" y="32" width="4" height="4" fill="#fff6dc"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#55705c"/><rect x="32" y="36" width="4" height="4" fill="#55705c"/><rect x="36" y="36" width="4" height="4" fill="#fff6dc"/><rect x="40" y="36" width="4" height="4" fill="#fff6dc"/><rect x="44" y="36" width="4" height="4" fill="#fff6dc"/><rect x="48" y="36" width="4" height="4" fill="#fff6dc"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="56" y="36" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg></div>
     </div>
     <div id="msg">点击九宫格选择射门角度</div>
     <div id="dots"></div>
   </div>
-  <div id="overlay">
-    <h1>⚽ 点球大战</h1>
+
+  <aside class="side"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="44" y="8" width="4" height="4" fill="#55705c"/><rect x="48" y="8" width="4" height="4" fill="#55705c"/><rect x="28" y="12" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#55705c"/><rect x="36" y="12" width="4" height="4" fill="#fff6dc"/><rect x="40" y="12" width="4" height="4" fill="#fff6dc"/><rect x="44" y="12" width="4" height="4" fill="#fff6dc"/><rect x="48" y="12" width="4" height="4" fill="#fff6dc"/><rect x="52" y="12" width="4" height="4" fill="#55705c"/><rect x="56" y="12" width="4" height="4" fill="#55705c"/><rect x="24" y="16" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#fff6dc"/><rect x="32" y="16" width="4" height="4" fill="#fff6dc"/><rect x="36" y="16" width="4" height="4" fill="#fff6dc"/><rect x="40" y="16" width="4" height="4" fill="#34534f"/><rect x="44" y="16" width="4" height="4" fill="#34534f"/><rect x="48" y="16" width="4" height="4" fill="#fff6dc"/><rect x="52" y="16" width="4" height="4" fill="#fff6dc"/><rect x="56" y="16" width="4" height="4" fill="#fff6dc"/><rect x="60" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#fff6dc"/><rect x="32" y="20" width="4" height="4" fill="#fff6dc"/><rect x="36" y="20" width="4" height="4" fill="#34534f"/><rect x="40" y="20" width="4" height="4" fill="#34534f"/><rect x="44" y="20" width="4" height="4" fill="#34534f"/><rect x="48" y="20" width="4" height="4" fill="#34534f"/><rect x="52" y="20" width="4" height="4" fill="#fff6dc"/><rect x="56" y="20" width="4" height="4" fill="#fff6dc"/><rect x="60" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#fff6dc"/><rect x="28" y="24" width="4" height="4" fill="#fff6dc"/><rect x="32" y="24" width="4" height="4" fill="#fff6dc"/><rect x="36" y="24" width="4" height="4" fill="#fff6dc"/><rect x="40" y="24" width="4" height="4" fill="#34534f"/><rect x="44" y="24" width="4" height="4" fill="#34534f"/><rect x="48" y="24" width="4" height="4" fill="#fff6dc"/><rect x="52" y="24" width="4" height="4" fill="#fff6dc"/><rect x="56" y="24" width="4" height="4" fill="#fff6dc"/><rect x="60" y="24" width="4" height="4" fill="#fff6dc"/><rect x="64" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#fff6dc"/><rect x="28" y="28" width="4" height="4" fill="#34534f"/><rect x="32" y="28" width="4" height="4" fill="#34534f"/><rect x="36" y="28" width="4" height="4" fill="#fff6dc"/><rect x="40" y="28" width="4" height="4" fill="#fff6dc"/><rect x="44" y="28" width="4" height="4" fill="#fff6dc"/><rect x="48" y="28" width="4" height="4" fill="#fff6dc"/><rect x="52" y="28" width="4" height="4" fill="#34534f"/><rect x="56" y="28" width="4" height="4" fill="#34534f"/><rect x="60" y="28" width="4" height="4" fill="#fff6dc"/><rect x="64" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#55705c"/><rect x="28" y="32" width="4" height="4" fill="#fff6dc"/><rect x="32" y="32" width="4" height="4" fill="#34534f"/><rect x="36" y="32" width="4" height="4" fill="#fff6dc"/><rect x="40" y="32" width="4" height="4" fill="#fff6dc"/><rect x="44" y="32" width="4" height="4" fill="#fff6dc"/><rect x="48" y="32" width="4" height="4" fill="#fff6dc"/><rect x="52" y="32" width="4" height="4" fill="#34534f"/><rect x="56" y="32" width="4" height="4" fill="#fff6dc"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#55705c"/><rect x="32" y="36" width="4" height="4" fill="#55705c"/><rect x="36" y="36" width="4" height="4" fill="#fff6dc"/><rect x="40" y="36" width="4" height="4" fill="#fff6dc"/><rect x="44" y="36" width="4" height="4" fill="#fff6dc"/><rect x="48" y="36" width="4" height="4" fill="#fff6dc"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="56" y="36" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>草地罚球赛</h2><p>深呼吸，把球送进球门。</p><p class="tips">点击九宫格射门 · 每轮 5 球</p></aside></div><footer class="foot"><span>点击九宫格射门 · 每轮 5 球</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="44" y="8" width="4" height="4" fill="#55705c"/><rect x="48" y="8" width="4" height="4" fill="#55705c"/><rect x="28" y="12" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#55705c"/><rect x="36" y="12" width="4" height="4" fill="#fff6dc"/><rect x="40" y="12" width="4" height="4" fill="#fff6dc"/><rect x="44" y="12" width="4" height="4" fill="#fff6dc"/><rect x="48" y="12" width="4" height="4" fill="#fff6dc"/><rect x="52" y="12" width="4" height="4" fill="#55705c"/><rect x="56" y="12" width="4" height="4" fill="#55705c"/><rect x="24" y="16" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#fff6dc"/><rect x="32" y="16" width="4" height="4" fill="#fff6dc"/><rect x="36" y="16" width="4" height="4" fill="#fff6dc"/><rect x="40" y="16" width="4" height="4" fill="#34534f"/><rect x="44" y="16" width="4" height="4" fill="#34534f"/><rect x="48" y="16" width="4" height="4" fill="#fff6dc"/><rect x="52" y="16" width="4" height="4" fill="#fff6dc"/><rect x="56" y="16" width="4" height="4" fill="#fff6dc"/><rect x="60" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#fff6dc"/><rect x="32" y="20" width="4" height="4" fill="#fff6dc"/><rect x="36" y="20" width="4" height="4" fill="#34534f"/><rect x="40" y="20" width="4" height="4" fill="#34534f"/><rect x="44" y="20" width="4" height="4" fill="#34534f"/><rect x="48" y="20" width="4" height="4" fill="#34534f"/><rect x="52" y="20" width="4" height="4" fill="#fff6dc"/><rect x="56" y="20" width="4" height="4" fill="#fff6dc"/><rect x="60" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#fff6dc"/><rect x="28" y="24" width="4" height="4" fill="#fff6dc"/><rect x="32" y="24" width="4" height="4" fill="#fff6dc"/><rect x="36" y="24" width="4" height="4" fill="#fff6dc"/><rect x="40" y="24" width="4" height="4" fill="#34534f"/><rect x="44" y="24" width="4" height="4" fill="#34534f"/><rect x="48" y="24" width="4" height="4" fill="#fff6dc"/><rect x="52" y="24" width="4" height="4" fill="#fff6dc"/><rect x="56" y="24" width="4" height="4" fill="#fff6dc"/><rect x="60" y="24" width="4" height="4" fill="#fff6dc"/><rect x="64" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#fff6dc"/><rect x="28" y="28" width="4" height="4" fill="#34534f"/><rect x="32" y="28" width="4" height="4" fill="#34534f"/><rect x="36" y="28" width="4" height="4" fill="#fff6dc"/><rect x="40" y="28" width="4" height="4" fill="#fff6dc"/><rect x="44" y="28" width="4" height="4" fill="#fff6dc"/><rect x="48" y="28" width="4" height="4" fill="#fff6dc"/><rect x="52" y="28" width="4" height="4" fill="#34534f"/><rect x="56" y="28" width="4" height="4" fill="#34534f"/><rect x="60" y="28" width="4" height="4" fill="#fff6dc"/><rect x="64" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#55705c"/><rect x="28" y="32" width="4" height="4" fill="#fff6dc"/><rect x="32" y="32" width="4" height="4" fill="#34534f"/><rect x="36" y="32" width="4" height="4" fill="#fff6dc"/><rect x="40" y="32" width="4" height="4" fill="#fff6dc"/><rect x="44" y="32" width="4" height="4" fill="#fff6dc"/><rect x="48" y="32" width="4" height="4" fill="#fff6dc"/><rect x="52" y="32" width="4" height="4" fill="#34534f"/><rect x="56" y="32" width="4" height="4" fill="#fff6dc"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#55705c"/><rect x="32" y="36" width="4" height="4" fill="#55705c"/><rect x="36" y="36" width="4" height="4" fill="#fff6dc"/><rect x="40" y="36" width="4" height="4" fill="#fff6dc"/><rect x="44" y="36" width="4" height="4" fill="#fff6dc"/><rect x="48" y="36" width="4" height="4" fill="#fff6dc"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="56" y="36" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg>
+    <h1>点球大战</h1>
     <p>点击九宫格任一格射门<br/>守门员随机扑救，进球越多他越准<br/>共 5 球，命中越多越好</p>
     <button id="ov-btn">走上点球点</button>
-  </div>
-  <script>
+  </section></div><script>
     (() => {
       const netEl = document.getElementById('net')
       const gkEl = document.getElementById('gk')
@@ -80,21 +79,22 @@
       const overlay = document.getElementById('overlay')
       const ovBtn = document.getElementById('ov-btn')
 
+      let results=[]
       let score, taken, level, running, over, busy
-      let best = Number(localStorage.getItem('penalty-best') || 0)
+      let best=0;try{best=Number(localStorage.getItem('penalty-best'))||0}catch{}
       bestEl.textContent = best
 
       const cells = []
       for (let i = 0; i < 9; i++) {
-        const c = document.createElement('div')
-        c.className = 'cell'
+        const c = document.createElement('button')
+        c.className = 'cell';c.setAttribute('aria-label','射门目标'+(i+1));c.textContent=i+1
         c.onclick = () => shoot(i)
         netEl.appendChild(c)
         cells.push(c)
       }
 
       function start() {
-        score = 0; taken = 0; level = 0
+        score = 0; taken = 0; level = 0;results=[];msgEl.textContent="点击九宫格选择射门角度"
         running = true; over = false; busy = false
         scoreEl.textContent = 0; leftEl.textContent = 5
         renderDots()
@@ -105,7 +105,7 @@
         dotsEl.innerHTML = ''
         for (let i = 0; i < 5; i++) {
           const d = document.createElement('span')
-          d.textContent = i < taken ? (i < score ? '⚽' : '❌') : '⬜'
+          d.textContent = i < taken ? (results[i] ? '✓' : '×') : '·';d.dataset.result=i<taken?(results[i]?'goal':'miss'):'pending'
           dotsEl.appendChild(d)
         }
       }
@@ -122,7 +122,7 @@
         setTimeout(() => {
           gkEl.style.left = (16 + (gkCell % 3) * 33) + '%'
           gkEl.style.bottom = (40 + (2 - ((gkCell / 3) | 0)) * 18) + '%'
-          gkEl.textContent = '🧤'
+          gkEl.dataset.pose = 'save'
         }, 120)
         setTimeout(() => {
           const miss = Math.random() < 0.05
@@ -136,19 +136,20 @@
             msgEl.textContent = saved ? '🧤 被扑出来了！' : '💨 打飞了！'
           }
           scoreEl.textContent = score
+          results.push(!miss&&!saved)
           taken++
           level = score
           leftEl.textContent = 5 - taken
           renderDots()
           setTimeout(() => {
             cells[i].style.background = ''
-            gkEl.style.left = '50%'; gkEl.style.bottom = '44px'; gkEl.textContent = '🧍'
+            gkEl.style.left = '50%'; gkEl.style.bottom = '44px'; gkEl.dataset.pose = 'ready'
             ballEl.style.left = '50%'; ballEl.style.bottom = '6px'
             if (taken >= 5) {
               running = false; over = true
-              if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('penalty-best', best) }
+              if (score > best) { best = score; bestEl.textContent = best; (()=>{try{localStorage.setItem('penalty-best',best)}catch{}})() }
               overlay.querySelector('h1').textContent = score >= 4 ? '🏆 神射手' : score >= 2 ? '👏 不俗发挥' : '😵 需要加练'
-              overlay.querySelector('p').innerHTML = '5 球命中 <b style="color:#ffd23f">' + score + '</b> 球 · 最佳 ' + best + '/5'
+              overlay.querySelector('p').innerHTML = '5 球命中 <b >' + score + '</b> 球 · 最佳 ' + best + '/5'
               ovBtn.textContent = '再来一轮'
               overlay.classList.remove('hidden')
             } else {
@@ -164,12 +165,10 @@
       window.__hub = {
         get score() { return score },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       score = 0; taken = 0; level = 0; running = false; over = false; busy = false
       renderDots()
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>

@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>休闲钓鱼</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>休闲钓鱼</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -31,9 +26,13 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#c57b3f;--ink:#345647;--muted:#71836b;--paper:#fffbed;--edge:#648d73;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;grid-template-columns:100%;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff1d4,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #da8054;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#b6e0e3;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{position:static;width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#59745f;font-size:12px;font-weight:500;text-align:center;line-height:1.6}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6ed;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;position:static;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#718068;margin:0 0 17px}#overlay b{color:#c57546}#overlay button,.action{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px;cursor:pointer}.action:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}.foot{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#pond{width:100%;height:150px;border:3px solid #6c9b87;border-radius:0;background:linear-gradient(#b6dfe4 0 35%,#8ac5cb 35% 100%);box-shadow:0 4px 0 #608a78}#pond:after{content:'';position:absolute;bottom:0;height:20px;width:100%;background:repeating-linear-gradient(90deg,#8eac73 0 30px,#a8c88c 30px 60px)}#pond .hint{top:72px;display:flex;justify-content:space-around}#pond .hint svg{position:static;width:65px;height:55px}#bobber{font-size:0;width:14px;height:24px;background:linear-gradient(#fff9dd 50%,#e68e70 50%);border:2px solid #5f8573;z-index:2}#bobber:before{content:'';position:absolute;bottom:22px;left:4px;height:70px;width:2px;background:#8ba297}#splash{background:#fff1c4;padding:5px 10px;color:#9c6a3e;z-index:3;top:36px;font-size:12px}#bar-zone{width:100%;height:120px;border:3px solid #6c9b87;border-radius:0;background:repeating-linear-gradient(#e4eaca 0 15px,#dce4c3 15px 30px);touch-action:none}#green{background:#95bf85;border-color:#62986e}#marker{background:#e89c62;border:2px solid #b37d4f;border-radius:0}#catch-bar{width:100%;border-radius:0;border-color:#94ac82;background:#d5dfbb}#catch-fill{background:#6ba58a}#reel-handle{width:100%;padding:8px 12px;font-size:13px;touch-action:none}#wrap{width:min(400px,calc(100% - 196px))}@media(max-width:620px){#wrap{width:min(100%,390px)}}@media(max-height:600px){#pond{height:112px}#bar-zone{height:85px}#wrap{gap:7px}#msg{font-size:11px}#hud{margin:0}}@media(max-height:430px){.foot{display:none}#pond{height:94px}#bar-zone{height:64px}#wrap{gap:5px}#reel-handle{padding:6px 10px;font-size:12px}#msg{font-size:10px;min-height:16px}#pond .hint{top:52px}#bobber{transform:translate(-50%,-16px)}}#pond .hint svg path{display:none}</style></head><body><main class="shell"><header class="top"><div><small>LITTLE LAKE</small><h1>休闲钓鱼</h1></div><span class="tag">晴日小鱼塘</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>渔获<b id="score">0</b></span>
@@ -41,8 +40,8 @@
       <span>BEST<b id="best">0</b></span>
     </div>
     <div id="pond">
-      <div class="hint">🐟🐟🐟🐟🐟🐟🐟🐟🐟</div>
-      <div id="bobber">🎣</div>
+      <div class="hint"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#55705c"/><rect x="36" y="12" width="4" height="4" fill="#efaa69"/><rect x="40" y="12" width="4" height="4" fill="#55705c"/><rect x="44" y="12" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#55705c"/><rect x="32" y="16" width="4" height="4" fill="#efaa69"/><rect x="36" y="16" width="4" height="4" fill="#efaa69"/><rect x="40" y="16" width="4" height="4" fill="#efaa69"/><rect x="44" y="16" width="4" height="4" fill="#efaa69"/><rect x="48" y="16" width="4" height="4" fill="#55705c"/><rect x="68" y="16" width="4" height="4" fill="#55705c"/><rect x="72" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#efaa69"/><rect x="32" y="20" width="4" height="4" fill="#efaa69"/><rect x="36" y="20" width="4" height="4" fill="#efaa69"/><rect x="40" y="20" width="4" height="4" fill="#efaa69"/><rect x="44" y="20" width="4" height="4" fill="#efaa69"/><rect x="48" y="20" width="4" height="4" fill="#efaa69"/><rect x="52" y="20" width="4" height="4" fill="#55705c"/><rect x="64" y="20" width="4" height="4" fill="#55705c"/><rect x="68" y="20" width="4" height="4" fill="#efaa69"/><rect x="72" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#efaa69"/><rect x="28" y="24" width="4" height="4" fill="#efaa69"/><rect x="32" y="24" width="4" height="4" fill="#ffdca3"/><rect x="36" y="24" width="4" height="4" fill="#efaa69"/><rect x="40" y="24" width="4" height="4" fill="#efaa69"/><rect x="44" y="24" width="4" height="4" fill="#efaa69"/><rect x="48" y="24" width="4" height="4" fill="#efaa69"/><rect x="52" y="24" width="4" height="4" fill="#efaa69"/><rect x="56" y="24" width="4" height="4" fill="#55705c"/><rect x="60" y="24" width="4" height="4" fill="#55705c"/><rect x="64" y="24" width="4" height="4" fill="#efaa69"/><rect x="68" y="24" width="4" height="4" fill="#efaa69"/><rect x="72" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#efaa69"/><rect x="28" y="28" width="4" height="4" fill="#ffdca3"/><rect x="32" y="28" width="4" height="4" fill="#34534f"/><rect x="36" y="28" width="4" height="4" fill="#efaa69"/><rect x="40" y="28" width="4" height="4" fill="#efaa69"/><rect x="44" y="28" width="4" height="4" fill="#efaa69"/><rect x="48" y="28" width="4" height="4" fill="#efaa69"/><rect x="52" y="28" width="4" height="4" fill="#efaa69"/><rect x="56" y="28" width="4" height="4" fill="#efaa69"/><rect x="60" y="28" width="4" height="4" fill="#efaa69"/><rect x="64" y="28" width="4" height="4" fill="#efaa69"/><rect x="68" y="28" width="4" height="4" fill="#efaa69"/><rect x="72" y="28" width="4" height="4" fill="#55705c"/><rect x="20" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#efaa69"/><rect x="28" y="32" width="4" height="4" fill="#efaa69"/><rect x="32" y="32" width="4" height="4" fill="#ffdca3"/><rect x="36" y="32" width="4" height="4" fill="#efaa69"/><rect x="40" y="32" width="4" height="4" fill="#efaa69"/><rect x="44" y="32" width="4" height="4" fill="#efaa69"/><rect x="48" y="32" width="4" height="4" fill="#efaa69"/><rect x="52" y="32" width="4" height="4" fill="#efaa69"/><rect x="56" y="32" width="4" height="4" fill="#55705c"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="64" y="32" width="4" height="4" fill="#efaa69"/><rect x="68" y="32" width="4" height="4" fill="#efaa69"/><rect x="72" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#efaa69"/><rect x="32" y="36" width="4" height="4" fill="#efaa69"/><rect x="36" y="36" width="4" height="4" fill="#efaa69"/><rect x="40" y="36" width="4" height="4" fill="#efaa69"/><rect x="44" y="36" width="4" height="4" fill="#efaa69"/><rect x="48" y="36" width="4" height="4" fill="#efaa69"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="64" y="36" width="4" height="4" fill="#55705c"/><rect x="68" y="36" width="4" height="4" fill="#efaa69"/><rect x="72" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="40" width="4" height="4" fill="#55705c"/><rect x="32" y="40" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><rect x="68" y="40" width="4" height="4" fill="#55705c"/><rect x="72" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#55705c"/><rect x="36" y="12" width="4" height="4" fill="#efaa69"/><rect x="40" y="12" width="4" height="4" fill="#55705c"/><rect x="44" y="12" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#55705c"/><rect x="32" y="16" width="4" height="4" fill="#efaa69"/><rect x="36" y="16" width="4" height="4" fill="#efaa69"/><rect x="40" y="16" width="4" height="4" fill="#efaa69"/><rect x="44" y="16" width="4" height="4" fill="#efaa69"/><rect x="48" y="16" width="4" height="4" fill="#55705c"/><rect x="68" y="16" width="4" height="4" fill="#55705c"/><rect x="72" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#efaa69"/><rect x="32" y="20" width="4" height="4" fill="#efaa69"/><rect x="36" y="20" width="4" height="4" fill="#efaa69"/><rect x="40" y="20" width="4" height="4" fill="#efaa69"/><rect x="44" y="20" width="4" height="4" fill="#efaa69"/><rect x="48" y="20" width="4" height="4" fill="#efaa69"/><rect x="52" y="20" width="4" height="4" fill="#55705c"/><rect x="64" y="20" width="4" height="4" fill="#55705c"/><rect x="68" y="20" width="4" height="4" fill="#efaa69"/><rect x="72" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#efaa69"/><rect x="28" y="24" width="4" height="4" fill="#efaa69"/><rect x="32" y="24" width="4" height="4" fill="#ffdca3"/><rect x="36" y="24" width="4" height="4" fill="#efaa69"/><rect x="40" y="24" width="4" height="4" fill="#efaa69"/><rect x="44" y="24" width="4" height="4" fill="#efaa69"/><rect x="48" y="24" width="4" height="4" fill="#efaa69"/><rect x="52" y="24" width="4" height="4" fill="#efaa69"/><rect x="56" y="24" width="4" height="4" fill="#55705c"/><rect x="60" y="24" width="4" height="4" fill="#55705c"/><rect x="64" y="24" width="4" height="4" fill="#efaa69"/><rect x="68" y="24" width="4" height="4" fill="#efaa69"/><rect x="72" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#efaa69"/><rect x="28" y="28" width="4" height="4" fill="#ffdca3"/><rect x="32" y="28" width="4" height="4" fill="#34534f"/><rect x="36" y="28" width="4" height="4" fill="#efaa69"/><rect x="40" y="28" width="4" height="4" fill="#efaa69"/><rect x="44" y="28" width="4" height="4" fill="#efaa69"/><rect x="48" y="28" width="4" height="4" fill="#efaa69"/><rect x="52" y="28" width="4" height="4" fill="#efaa69"/><rect x="56" y="28" width="4" height="4" fill="#efaa69"/><rect x="60" y="28" width="4" height="4" fill="#efaa69"/><rect x="64" y="28" width="4" height="4" fill="#efaa69"/><rect x="68" y="28" width="4" height="4" fill="#efaa69"/><rect x="72" y="28" width="4" height="4" fill="#55705c"/><rect x="20" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#efaa69"/><rect x="28" y="32" width="4" height="4" fill="#efaa69"/><rect x="32" y="32" width="4" height="4" fill="#ffdca3"/><rect x="36" y="32" width="4" height="4" fill="#efaa69"/><rect x="40" y="32" width="4" height="4" fill="#efaa69"/><rect x="44" y="32" width="4" height="4" fill="#efaa69"/><rect x="48" y="32" width="4" height="4" fill="#efaa69"/><rect x="52" y="32" width="4" height="4" fill="#efaa69"/><rect x="56" y="32" width="4" height="4" fill="#55705c"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="64" y="32" width="4" height="4" fill="#efaa69"/><rect x="68" y="32" width="4" height="4" fill="#efaa69"/><rect x="72" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#efaa69"/><rect x="32" y="36" width="4" height="4" fill="#efaa69"/><rect x="36" y="36" width="4" height="4" fill="#efaa69"/><rect x="40" y="36" width="4" height="4" fill="#efaa69"/><rect x="44" y="36" width="4" height="4" fill="#efaa69"/><rect x="48" y="36" width="4" height="4" fill="#efaa69"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="64" y="36" width="4" height="4" fill="#55705c"/><rect x="68" y="36" width="4" height="4" fill="#efaa69"/><rect x="72" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="40" width="4" height="4" fill="#55705c"/><rect x="32" y="40" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><rect x="68" y="40" width="4" height="4" fill="#55705c"/><rect x="72" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#55705c"/><rect x="36" y="12" width="4" height="4" fill="#efaa69"/><rect x="40" y="12" width="4" height="4" fill="#55705c"/><rect x="44" y="12" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#55705c"/><rect x="32" y="16" width="4" height="4" fill="#efaa69"/><rect x="36" y="16" width="4" height="4" fill="#efaa69"/><rect x="40" y="16" width="4" height="4" fill="#efaa69"/><rect x="44" y="16" width="4" height="4" fill="#efaa69"/><rect x="48" y="16" width="4" height="4" fill="#55705c"/><rect x="68" y="16" width="4" height="4" fill="#55705c"/><rect x="72" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#efaa69"/><rect x="32" y="20" width="4" height="4" fill="#efaa69"/><rect x="36" y="20" width="4" height="4" fill="#efaa69"/><rect x="40" y="20" width="4" height="4" fill="#efaa69"/><rect x="44" y="20" width="4" height="4" fill="#efaa69"/><rect x="48" y="20" width="4" height="4" fill="#efaa69"/><rect x="52" y="20" width="4" height="4" fill="#55705c"/><rect x="64" y="20" width="4" height="4" fill="#55705c"/><rect x="68" y="20" width="4" height="4" fill="#efaa69"/><rect x="72" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#efaa69"/><rect x="28" y="24" width="4" height="4" fill="#efaa69"/><rect x="32" y="24" width="4" height="4" fill="#ffdca3"/><rect x="36" y="24" width="4" height="4" fill="#efaa69"/><rect x="40" y="24" width="4" height="4" fill="#efaa69"/><rect x="44" y="24" width="4" height="4" fill="#efaa69"/><rect x="48" y="24" width="4" height="4" fill="#efaa69"/><rect x="52" y="24" width="4" height="4" fill="#efaa69"/><rect x="56" y="24" width="4" height="4" fill="#55705c"/><rect x="60" y="24" width="4" height="4" fill="#55705c"/><rect x="64" y="24" width="4" height="4" fill="#efaa69"/><rect x="68" y="24" width="4" height="4" fill="#efaa69"/><rect x="72" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#efaa69"/><rect x="28" y="28" width="4" height="4" fill="#ffdca3"/><rect x="32" y="28" width="4" height="4" fill="#34534f"/><rect x="36" y="28" width="4" height="4" fill="#efaa69"/><rect x="40" y="28" width="4" height="4" fill="#efaa69"/><rect x="44" y="28" width="4" height="4" fill="#efaa69"/><rect x="48" y="28" width="4" height="4" fill="#efaa69"/><rect x="52" y="28" width="4" height="4" fill="#efaa69"/><rect x="56" y="28" width="4" height="4" fill="#efaa69"/><rect x="60" y="28" width="4" height="4" fill="#efaa69"/><rect x="64" y="28" width="4" height="4" fill="#efaa69"/><rect x="68" y="28" width="4" height="4" fill="#efaa69"/><rect x="72" y="28" width="4" height="4" fill="#55705c"/><rect x="20" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#efaa69"/><rect x="28" y="32" width="4" height="4" fill="#efaa69"/><rect x="32" y="32" width="4" height="4" fill="#ffdca3"/><rect x="36" y="32" width="4" height="4" fill="#efaa69"/><rect x="40" y="32" width="4" height="4" fill="#efaa69"/><rect x="44" y="32" width="4" height="4" fill="#efaa69"/><rect x="48" y="32" width="4" height="4" fill="#efaa69"/><rect x="52" y="32" width="4" height="4" fill="#efaa69"/><rect x="56" y="32" width="4" height="4" fill="#55705c"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="64" y="32" width="4" height="4" fill="#efaa69"/><rect x="68" y="32" width="4" height="4" fill="#efaa69"/><rect x="72" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#efaa69"/><rect x="32" y="36" width="4" height="4" fill="#efaa69"/><rect x="36" y="36" width="4" height="4" fill="#efaa69"/><rect x="40" y="36" width="4" height="4" fill="#efaa69"/><rect x="44" y="36" width="4" height="4" fill="#efaa69"/><rect x="48" y="36" width="4" height="4" fill="#efaa69"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="64" y="36" width="4" height="4" fill="#55705c"/><rect x="68" y="36" width="4" height="4" fill="#efaa69"/><rect x="72" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="40" width="4" height="4" fill="#55705c"/><rect x="32" y="40" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><rect x="68" y="40" width="4" height="4" fill="#55705c"/><rect x="72" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg></div>
+      <div id="bobber"></div>
       <div id="splash">咬钩了！点击！</div>
     </div>
     <div id="bar-zone">
@@ -50,14 +49,14 @@
       <div id="marker"></div>
     </div>
     <div id="catch-bar"><div id="catch-fill"></div></div>
-    <div id="msg">点击抛竿，等鱼咬钩…</div>
+    <button id="reel-handle" class="action">等待咬钩…</button><div id="msg">点击抛竿，等鱼咬钩…</div>
   </div>
-  <div id="overlay">
-    <h1>🎣 休闲钓鱼</h1>
-    <p>抛竿后等浮漂下沉的瞬间点击<br/>拉扯时按住升起、松开下落<br/>让标记停在绿区充满进度即钓到</p>
+
+  <aside class="side"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#55705c"/><rect x="36" y="12" width="4" height="4" fill="#efaa69"/><rect x="40" y="12" width="4" height="4" fill="#55705c"/><rect x="44" y="12" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#55705c"/><rect x="32" y="16" width="4" height="4" fill="#efaa69"/><rect x="36" y="16" width="4" height="4" fill="#efaa69"/><rect x="40" y="16" width="4" height="4" fill="#efaa69"/><rect x="44" y="16" width="4" height="4" fill="#efaa69"/><rect x="48" y="16" width="4" height="4" fill="#55705c"/><rect x="68" y="16" width="4" height="4" fill="#55705c"/><rect x="72" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#efaa69"/><rect x="32" y="20" width="4" height="4" fill="#efaa69"/><rect x="36" y="20" width="4" height="4" fill="#efaa69"/><rect x="40" y="20" width="4" height="4" fill="#efaa69"/><rect x="44" y="20" width="4" height="4" fill="#efaa69"/><rect x="48" y="20" width="4" height="4" fill="#efaa69"/><rect x="52" y="20" width="4" height="4" fill="#55705c"/><rect x="64" y="20" width="4" height="4" fill="#55705c"/><rect x="68" y="20" width="4" height="4" fill="#efaa69"/><rect x="72" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#efaa69"/><rect x="28" y="24" width="4" height="4" fill="#efaa69"/><rect x="32" y="24" width="4" height="4" fill="#ffdca3"/><rect x="36" y="24" width="4" height="4" fill="#efaa69"/><rect x="40" y="24" width="4" height="4" fill="#efaa69"/><rect x="44" y="24" width="4" height="4" fill="#efaa69"/><rect x="48" y="24" width="4" height="4" fill="#efaa69"/><rect x="52" y="24" width="4" height="4" fill="#efaa69"/><rect x="56" y="24" width="4" height="4" fill="#55705c"/><rect x="60" y="24" width="4" height="4" fill="#55705c"/><rect x="64" y="24" width="4" height="4" fill="#efaa69"/><rect x="68" y="24" width="4" height="4" fill="#efaa69"/><rect x="72" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#efaa69"/><rect x="28" y="28" width="4" height="4" fill="#ffdca3"/><rect x="32" y="28" width="4" height="4" fill="#34534f"/><rect x="36" y="28" width="4" height="4" fill="#efaa69"/><rect x="40" y="28" width="4" height="4" fill="#efaa69"/><rect x="44" y="28" width="4" height="4" fill="#efaa69"/><rect x="48" y="28" width="4" height="4" fill="#efaa69"/><rect x="52" y="28" width="4" height="4" fill="#efaa69"/><rect x="56" y="28" width="4" height="4" fill="#efaa69"/><rect x="60" y="28" width="4" height="4" fill="#efaa69"/><rect x="64" y="28" width="4" height="4" fill="#efaa69"/><rect x="68" y="28" width="4" height="4" fill="#efaa69"/><rect x="72" y="28" width="4" height="4" fill="#55705c"/><rect x="20" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#efaa69"/><rect x="28" y="32" width="4" height="4" fill="#efaa69"/><rect x="32" y="32" width="4" height="4" fill="#ffdca3"/><rect x="36" y="32" width="4" height="4" fill="#efaa69"/><rect x="40" y="32" width="4" height="4" fill="#efaa69"/><rect x="44" y="32" width="4" height="4" fill="#efaa69"/><rect x="48" y="32" width="4" height="4" fill="#efaa69"/><rect x="52" y="32" width="4" height="4" fill="#efaa69"/><rect x="56" y="32" width="4" height="4" fill="#55705c"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="64" y="32" width="4" height="4" fill="#efaa69"/><rect x="68" y="32" width="4" height="4" fill="#efaa69"/><rect x="72" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#efaa69"/><rect x="32" y="36" width="4" height="4" fill="#efaa69"/><rect x="36" y="36" width="4" height="4" fill="#efaa69"/><rect x="40" y="36" width="4" height="4" fill="#efaa69"/><rect x="44" y="36" width="4" height="4" fill="#efaa69"/><rect x="48" y="36" width="4" height="4" fill="#efaa69"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="64" y="36" width="4" height="4" fill="#55705c"/><rect x="68" y="36" width="4" height="4" fill="#efaa69"/><rect x="72" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="40" width="4" height="4" fill="#55705c"/><rect x="32" y="40" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><rect x="68" y="40" width="4" height="4" fill="#55705c"/><rect x="72" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>晴日小鱼塘</h2><p>等一次咬钩，收获一份小惊喜。</p><p class="tips">咬钩时点击 · 按住上升，松开下降</p></aside></div><footer class="foot"><span>咬钩时点击 · 按住上升，松开下降</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#55705c"/><rect x="36" y="12" width="4" height="4" fill="#efaa69"/><rect x="40" y="12" width="4" height="4" fill="#55705c"/><rect x="44" y="12" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#55705c"/><rect x="32" y="16" width="4" height="4" fill="#efaa69"/><rect x="36" y="16" width="4" height="4" fill="#efaa69"/><rect x="40" y="16" width="4" height="4" fill="#efaa69"/><rect x="44" y="16" width="4" height="4" fill="#efaa69"/><rect x="48" y="16" width="4" height="4" fill="#55705c"/><rect x="68" y="16" width="4" height="4" fill="#55705c"/><rect x="72" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#efaa69"/><rect x="32" y="20" width="4" height="4" fill="#efaa69"/><rect x="36" y="20" width="4" height="4" fill="#efaa69"/><rect x="40" y="20" width="4" height="4" fill="#efaa69"/><rect x="44" y="20" width="4" height="4" fill="#efaa69"/><rect x="48" y="20" width="4" height="4" fill="#efaa69"/><rect x="52" y="20" width="4" height="4" fill="#55705c"/><rect x="64" y="20" width="4" height="4" fill="#55705c"/><rect x="68" y="20" width="4" height="4" fill="#efaa69"/><rect x="72" y="20" width="4" height="4" fill="#55705c"/><rect x="20" y="24" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#efaa69"/><rect x="28" y="24" width="4" height="4" fill="#efaa69"/><rect x="32" y="24" width="4" height="4" fill="#ffdca3"/><rect x="36" y="24" width="4" height="4" fill="#efaa69"/><rect x="40" y="24" width="4" height="4" fill="#efaa69"/><rect x="44" y="24" width="4" height="4" fill="#efaa69"/><rect x="48" y="24" width="4" height="4" fill="#efaa69"/><rect x="52" y="24" width="4" height="4" fill="#efaa69"/><rect x="56" y="24" width="4" height="4" fill="#55705c"/><rect x="60" y="24" width="4" height="4" fill="#55705c"/><rect x="64" y="24" width="4" height="4" fill="#efaa69"/><rect x="68" y="24" width="4" height="4" fill="#efaa69"/><rect x="72" y="24" width="4" height="4" fill="#55705c"/><rect x="20" y="28" width="4" height="4" fill="#55705c"/><rect x="24" y="28" width="4" height="4" fill="#efaa69"/><rect x="28" y="28" width="4" height="4" fill="#ffdca3"/><rect x="32" y="28" width="4" height="4" fill="#34534f"/><rect x="36" y="28" width="4" height="4" fill="#efaa69"/><rect x="40" y="28" width="4" height="4" fill="#efaa69"/><rect x="44" y="28" width="4" height="4" fill="#efaa69"/><rect x="48" y="28" width="4" height="4" fill="#efaa69"/><rect x="52" y="28" width="4" height="4" fill="#efaa69"/><rect x="56" y="28" width="4" height="4" fill="#efaa69"/><rect x="60" y="28" width="4" height="4" fill="#efaa69"/><rect x="64" y="28" width="4" height="4" fill="#efaa69"/><rect x="68" y="28" width="4" height="4" fill="#efaa69"/><rect x="72" y="28" width="4" height="4" fill="#55705c"/><rect x="20" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="32" width="4" height="4" fill="#efaa69"/><rect x="28" y="32" width="4" height="4" fill="#efaa69"/><rect x="32" y="32" width="4" height="4" fill="#ffdca3"/><rect x="36" y="32" width="4" height="4" fill="#efaa69"/><rect x="40" y="32" width="4" height="4" fill="#efaa69"/><rect x="44" y="32" width="4" height="4" fill="#efaa69"/><rect x="48" y="32" width="4" height="4" fill="#efaa69"/><rect x="52" y="32" width="4" height="4" fill="#efaa69"/><rect x="56" y="32" width="4" height="4" fill="#55705c"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><rect x="64" y="32" width="4" height="4" fill="#efaa69"/><rect x="68" y="32" width="4" height="4" fill="#efaa69"/><rect x="72" y="32" width="4" height="4" fill="#55705c"/><rect x="24" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#efaa69"/><rect x="32" y="36" width="4" height="4" fill="#efaa69"/><rect x="36" y="36" width="4" height="4" fill="#efaa69"/><rect x="40" y="36" width="4" height="4" fill="#efaa69"/><rect x="44" y="36" width="4" height="4" fill="#efaa69"/><rect x="48" y="36" width="4" height="4" fill="#efaa69"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="64" y="36" width="4" height="4" fill="#55705c"/><rect x="68" y="36" width="4" height="4" fill="#efaa69"/><rect x="72" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="40" width="4" height="4" fill="#55705c"/><rect x="32" y="40" width="4" height="4" fill="#55705c"/><rect x="36" y="40" width="4" height="4" fill="#55705c"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#55705c"/><rect x="48" y="40" width="4" height="4" fill="#55705c"/><rect x="68" y="40" width="4" height="4" fill="#55705c"/><rect x="72" y="40" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg>
+    <h1>休闲钓鱼</h1>
+    <p>自动抛竿，看到“咬钩了”点一下<br/>拉扯时按住升起、松开下落<br/>让标记停在绿区充满进度即钓到</p>
     <button id="ov-btn">开始钓鱼</button>
-  </div>
-  <script>
+  </section></div><script>
     (() => {
       const bobber = document.getElementById('bobber')
       const splashEl = document.getElementById('splash')
@@ -79,12 +78,13 @@
         { e: '🦈', v: 5, p: 0.05 },
       ]
 
+      let pending=null,biteTimer=null,reelFrames=0
       let phase, waitT, marker, markerV, greenPos, greenH, progress, fish, score, timeLeft, running, over, holding
-      let best = Number(localStorage.getItem('fishing-best') || 0)
+      let best=0;try{best=Number(localStorage.getItem('fishing-best'))||0}catch{}
       bestEl.textContent = best
 
       function start() {
-        score = 0; timeLeft = 60
+        clearTimeout(pending);clearTimeout(biteTimer);holding=false;score = 0; timeLeft = 60
         running = true; over = false
         scoreEl.textContent = 0; timeEl.textContent = '60s'
         overlay.classList.add('hidden')
@@ -92,7 +92,9 @@
       }
 
       function idle() {
+        if(!running||over)return
         phase = 'wait'
+        holding=false;document.getElementById('reel-handle').textContent='等待咬钩…'
         waitT = 60 + Math.random() * 180
         bobber.style.top = '70px'
         splashEl.style.opacity = 0
@@ -106,20 +108,23 @@
 
       function bite() {
         phase = 'bite'
+        document.getElementById('reel-handle').textContent='咬钩了！点一下'
         bobber.style.top = '86px'
         splashEl.style.opacity = 1
         msgEl.textContent = '快点击！'
-        setTimeout(() => { if (phase === 'bite') idle() }, 1100)
+        biteTimer=setTimeout(() => { if (running&&!over&&phase === 'bite') idle() }, 1500)
       }
 
       function reel() {
+        clearTimeout(biteTimer);reelFrames=0
         phase = 'reel'
+        document.getElementById('reel-handle').textContent='按住上升 · 松开下降'
         splashEl.style.opacity = 0
         zoneEl.style.opacity = 1
         markerEl.style.display = 'block'
-        marker = 50; markerV = 0.4; holding = false
-        greenH = 26 + Math.random() * 10
-        greenPos = Math.random() * (100 - greenH)
+        marker = 50; markerV = 0; holding = false;progress=20
+        greenH = 32 + Math.random() * 6
+        greenPos = 25 + Math.random() * 15
         greenEl.style.height = greenH + '%'
         greenEl.style.top = greenPos + '%'
         const roll = Math.random()
@@ -134,13 +139,13 @@
         score += fish.v
         scoreEl.textContent = score
         msgEl.textContent = '钓到 ' + fish.e + ' +' + fish.v + '！'
-        setTimeout(idle, 700)
+        pending=setTimeout(idle, 700)
       }
 
       function escaped() {
         phase = 'idle'
         msgEl.textContent = '😮‍💨 鱼跑了'
-        setTimeout(idle, 600)
+        pending=setTimeout(idle, 600)
       }
 
       function step() {
@@ -148,7 +153,8 @@
           waitT--
           if (waitT <= 0) bite()
         } else if (phase === 'reel') {
-          markerV += holding ? 0.9 : -0.9
+          reelFrames++
+          markerV += holding ? -0.9 : 0.9
           markerV = Math.max(-2.6, Math.min(2.6, markerV))
           marker += markerV
           if (marker < 0) { marker = 0; markerV = 0 }
@@ -159,7 +165,7 @@
           fillEl.style.width = progress + '%'
           markerEl.style.top = 'calc(' + marker + '% - 5px)'
           if (progress >= 100) caught()
-          else if (progress <= 0 && Math.random() < 0.01) escaped()
+          else if (progress <= 0 && reelFrames > 90) escaped()
         }
       }
 
@@ -168,13 +174,13 @@
           if (!overlay.classList.contains('hidden')) start()
           return
         }
-        if (phase === 'wait') idle()
+        if (phase === 'wait') return
         else if (phase === 'bite') reel()
         else if (phase === 'reel') holding = true
       }
       function unpress() { holding = false }
 
-      let lastT = 0
+      let lastT = 0,fishLag=0
       function loop(t) {
         requestAnimationFrame(loop)
         if (!lastT) lastT = t
@@ -185,32 +191,34 @@
           timeEl.textContent = Math.max(0, Math.ceil(timeLeft)) + 's'
           if (timeLeft <= 0) {
             running = false; over = true
-            if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('fishing-best', best) }
+            if (score > best) { best = score; bestEl.textContent = best; (()=>{try{localStorage.setItem('fishing-best',best)}catch{}})() }
             overlay.querySelector('h1').textContent = '🌙 收竿了'
-            overlay.querySelector('p').innerHTML = '渔获价值 <b style="color:#ffd23f">' + score + '</b> · 最佳 ' + best
+            overlay.querySelector('p').innerHTML = '渔获价值 <b >' + score + '</b> · 最佳 ' + best
             ovBtn.textContent = '再钓一场'
             overlay.classList.remove('hidden')
             return
           }
-          step()
+          fishLag+=dt;while(fishLag>=1000/60){step();fishLag-=1000/60}
         }
       }
 
-      window.addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); press() } })
+      window.addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); if(!e.repeat)press() } })
       window.addEventListener('keyup', (e) => { if (e.code === 'Space') unpress() })
       document.getElementById('pond').addEventListener('pointerdown', (e) => { e.preventDefault(); press() })
       zoneEl.addEventListener('pointerdown', (e) => { e.preventDefault(); press() })
       window.addEventListener('pointerup', unpress)
+      document.getElementById('reel-handle').addEventListener('pointerdown',e=>{e.preventDefault();press()})
+      window.addEventListener('pointercancel',unpress)
+      window.addEventListener('blur',unpress)
       ovBtn.addEventListener('click', start)
 
       window.__hub = {
         get score() { return score },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       phase = 'idle'; score = 0; timeLeft = 60; running = false; over = false
+      requestAnimationFrame(loop)
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>

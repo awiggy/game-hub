@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>走钢丝</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>走钢丝</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -22,9 +17,15 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#d88544;--ink:#345647;--muted:#7a8b6c;--paper:#fffbed;--edge:#598367;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff4d6,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #e98458;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#aadae1;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#69816b;font-size:12px;font-weight:500;text-align:center}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6dc;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#778467;margin:0 0 17px}#overlay b{color:#ce7646}#overlay button{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px}.act,#opts button,#nums button,#keys button{border-radius:0;box-shadow:0 3px 0 #b5bd94}.act:active,#opts button:active,#nums button:active,#keys button:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#wrap{width:min(480px,calc((100svh - 163px)*0.8571428571428571),calc(100% - 196px))}@media(max-width:620px){#wrap{width:min(100%,calc((100svh - 134px)*0.8571428571428571))}}body{grid-template-columns:100%;justify-content:stretch}
+@media(max-height:480px){.side p.tips{display:none}.side svg{height:48px}.side h2{font-size:18px}}
+@media(max-height:430px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.foot{margin-top:8px;font-size:8px}.side .tips{display:none}}</style></head><body><main class="shell"><header class="top"><div><small>SKY CIRCUS</small><h1>走钢丝</h1></div><span class="tag">云上杂技团</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>时长<b id="score">0s</b></span>
@@ -32,13 +33,13 @@
       <span>BEST<b id="best">0s</b></span>
     </div>
     <canvas id="cv" width="480" height="560"></canvas>
-    <div id="overlay">
-      <h1>🎪 走钢丝</h1>
-      <p>重心不断乱晃且越来越颠<br/>点左 / 右（或 ← →）纠正倾斜<br/>指针离开立柱即坠落，坚持就是一切</p>
-      <button id="ov-btn">登台表演</button>
-    </div>
+
   </div>
-  <script>
+  <aside class="side"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 65h120v15H0z" fill="#91b967"/><path d="M0 65h120v4H0z" fill="#cbe49c"/><path d="M18 12h84v5H18zM60 17v24" stroke="#956e43" stroke-width="3"/><path d="M53 34h14v14H53z" fill="#f7d58d"/><path d="M49 48h22v15H49z" fill="#e27e58"/><path d="M57 38h3v4h-3zM63 38h3v4h-3z" fill="#355849"/><path d="M10 56h4v12h-4zM6 60h12v4H6zM105 54h4v12h-4zM101 58h12v4h-12z" fill="#fffbed"/><path d="M10 60h4v4h-4zM105 58h4v4h-4z" fill="#efc55b"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>云上杂技团</h2><p>找好平衡，一小步也是进步。</p><p class="tips">点左右半屏 / 方向键纠正重心</p></aside></div><footer class="foot"><span>点左右半屏 / 方向键纠正重心</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 65h120v15H0z" fill="#91b967"/><path d="M0 65h120v4H0z" fill="#cbe49c"/><path d="M18 12h84v5H18zM60 17v24" stroke="#956e43" stroke-width="3"/><path d="M53 34h14v14H53z" fill="#f7d58d"/><path d="M49 48h22v15H49z" fill="#e27e58"/><path d="M57 38h3v4h-3zM63 38h3v4h-3z" fill="#355849"/><path d="M10 56h4v12h-4zM6 60h12v4H6zM105 54h4v12h-4zM101 58h12v4h-12z" fill="#fffbed"/><path d="M10 60h4v4h-4zM105 58h4v4h-4z" fill="#efc55b"/></svg>
+      <h1>走钢丝</h1>
+      <p>重心不断乱晃且越来越颠<br/>点左 / 右（或 ← →）纠正倾斜<br/>重心越过边界即结束，慢慢找到平衡</p>
+      <button id="ov-btn">登台表演</button>
+    </section></div><script>
     (() => {
       const cv = document.getElementById('cv')
       const ctx = cv.getContext('2d')
@@ -52,7 +53,7 @@
 
       // 状态先初始化
       let lean, leanV, seconds, dist, running, over, driftT, frame
-      let best = Number(localStorage.getItem('tightrope-best') || 0)
+      let best=0;try{best=Number(localStorage.getItem('tightrope-best'))||0}catch{}
       bestEl.textContent = best + 's'
 
       function start() {
@@ -66,16 +67,16 @@
       function end() {
         running = false; over = true
         const s = seconds.toFixed(1)
-        if (Number(s) > best) { best = Number(s); bestEl.textContent = best + 's'; localStorage.setItem('tightrope-best', best) }
+        if (Number(s) > best) { best = Number(s); bestEl.textContent = best + 's'; (()=>{try{localStorage.setItem('tightrope-best',best)}catch{}})() }
         overlay.querySelector('h1').textContent = '😱 坠落了'
-        overlay.querySelector('p').innerHTML = '坚持 <b style="color:#ffd23f">' + s + '</b> 秒 · 走了 ' + dist.toFixed(1) + 'm · 最佳 ' + best + 's'
+        overlay.querySelector('p').innerHTML = '坚持 <b >' + s + '</b> 秒 · 走了 ' + dist.toFixed(1) + 'm · 最佳 ' + best + 's'
         ovBtn.textContent = '再试一次'
         overlay.classList.remove('hidden')
       }
 
       function push(d) {
         if (!running || over) return
-        leanV -= d * 0.012
+        leanV += d * 0.012
       }
 
       function step() {
@@ -96,45 +97,17 @@
         if (Math.abs(lean) > 1) end()
       }
 
+
+      const PX_PALETTE={".":null,"o":"#76503b","c":"#eea751","h":"#ffd582","w":"#fff3d1","p":"#ee9c87","b":"#315144","g":"#79a452","y":"#f2c95b","r":"#e47652","a":"#82bdcc"}, PX_SPRITES={"cat":["..oo........oo..","..ocoo....ooco..","..occchooohcco..",".ochhhhhhhhhco..","ochhhhhhhhhhhco.","ochbbhhhhbbhhco.","ochbbhhhhbbhhco.","ochpphbbhpphhco.",".ochhhhhhhhco...","..occhhhhcco....","...ooooooo......"],"chicken":["......rr........",".....rrrr.......","....owwwwo......","...owwwwwbo.....","..owwwwwwbory...",".owwwwwwwwory...",".owwwhhhhwo.....","..owhhhwwo......","...oooooo.......","....r...r......."],"egg":[".....ooo........","....owwwo.......","...owwwwwo......","...owwwwwo......","..owwwwwwwo.....","..owwwwwwwo.....","..owwwwwwwo.....","...owwwwwo......","....ooooo......."],"bomb":[".......rr.......","......y.........",".....ooo........","...obbbbbo......","..obwwbbbbo.....","..obwbbbbbo.....","..obbbbbbbo.....","...obbbbbo......","....ooooo......."]};
+      function box(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),w,h)}
+      function sprite(name,x,y,s=2){for(const [j,row] of PX_SPRITES[name].entries())for(let i=0;i<row.length;i++){const c=PX_PALETTE[row[i]];if(c)box(x+i*s,y+j*s,s,s,c)}}
+      function cloud(x,y,s=1){box(x+8*s,y,32*s,8*s,'#fffbed');box(x,y+8*s,56*s,12*s,'#fffbed')}
+      function sky(){box(0,0,W,H,'#b0dce4');cloud(28,70,1.1);cloud(W-125,120,.8);cloud(W*.43,28,.6);for(let i=0;i<7;i++){box(i*96-20,H-130,65,130,'#bad5ac');box(i*96,H-150,28,30,'#bad5ac')}box(0,H-40,W,40,'#86b480');box(0,H-40,W,6,'#c4df99')}
+      function flower(x,y){box(x+4,y,4,12,'#fffbed');box(x,y+4,12,4,'#fffbed');box(x+4,y+4,4,4,'#e8b951')}
+      function kid(x,y,s=2){box(x+3*s,y,10*s,3*s,'#6b9162');box(x+2*s,y+3*s,12*s,9*s,'#ffdfaa');box(x+5*s,y+6*s,2*s,2*s,'#3d5647');box(x+10*s,y+6*s,2*s,2*s,'#3d5647');box(x+2*s,y+12*s,12*s,10*s,'#e88c5f');box(x+2*s,y+22*s,4*s,4*s,'#526f59');box(x+10*s,y+22*s,4*s,4*s,'#526f59')}
+
       function draw() {
-        ctx.fillStyle = '#14161f'
-        ctx.fillRect(0, 0, W, H)
-        // 天空
-        ctx.fillStyle = '#1a1d29'
-        ctx.fillRect(0, 0, W, 120)
-        // 钢丝
-        ctx.strokeStyle = '#3a4152'
-        ctx.lineWidth = 3
-        ctx.beginPath(); ctx.moveTo(0, WIRE_Y); ctx.lineTo(W, WIRE_Y); ctx.stroke()
-        // 立柱
-        ctx.fillStyle = '#2a2e3d'
-        ctx.fillRect(30, WIRE_Y, 8, H - WIRE_Y)
-        ctx.fillRect(W - 38, WIRE_Y, 8, H - WIRE_Y)
-        // 平衡杆 + 人
-        const cx = W / 2 + lean * 130
-        const tilt = lean * 0.6
-        ctx.save()
-        ctx.translate(cx, WIRE_Y - 26)
-        ctx.rotate(tilt)
-        ctx.fillStyle = '#5d84ff'
-        ctx.fillRect(-30, -4, 60, 6) // 平衡杆
-        ctx.font = '30px sans-serif'
-        ctx.fillText('🤹', -15, 26)
-        ctx.restore()
-        // 倾斜计
-        ctx.fillStyle = '#2a2e3d'
-        ctx.fillRect(W / 2 - 90, 50, 180, 12)
-        ctx.fillStyle = '#ffd23f'
-        const px2 = Math.max(-1, Math.min(1, lean))
-        ctx.fillRect(W / 2 - 6 + px2 * 84, 48, 12, 16)
-        ctx.fillStyle = '#8b93a7'
-        ctx.font = '700 12px sans-serif'
-        ctx.fillText('← 左', 40, 60)
-        ctx.fillText('右 →', W - 70, 60)
-        // 操作提示
-        ctx.fillStyle = '#8b93a7'
-        ctx.font = '700 12px sans-serif'
-        ctx.fillText('点左/右半屏 或 ← → 纠正重心', 14, H - 12)
+sky();box(0,H-110,W,70,'#9cc5b0');ctx.strokeStyle='#866e4d';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,WIRE_Y);ctx.lineTo(W,WIRE_Y);ctx.stroke();for(const x of [30,W-38]){box(x,WIRE_Y,9,H-WIRE_Y-40,'#b3895f');box(x-6,WIRE_Y-5,21,7,'#d5b582')}const cx=W/2+lean*130;ctx.save();ctx.translate(cx,WIRE_Y);ctx.rotate(lean*.6);kid(-16,-52,2);box(-58,-28,116,5,'#8e7052');box(-60,-30,10,9,'#ebbd6a');box(50,-30,10,9,'#ebbd6a');ctx.restore();box(W/2-94,46,188,20,'#658b79');box(W/2-90,50,180,12,'#d2e4ab');box(W/2-27,50,54,12,'#9fc48e');box(W/2-5+Math.max(-1,Math.min(1,lean))*84,45,10,22,'#e78a5d');ctx.fillStyle='#4d786a';ctx.font='bold 14px sans-serif';ctx.fillText('← 平衡 →',W/2-34,35);box(15,H-85,W/2-25,34,'#e9edc7');box(W/2+10,H-85,W/2-25,34,'#e9edc7');ctx.fillText('向左纠正',38,H-63);ctx.fillText('向右纠正',W/2+32,H-63);
       }
 
       function loop() {
@@ -152,17 +125,15 @@
         push((e.clientX - r.left) < r.width / 2 ? -1 : 1)
       })
       ovBtn.addEventListener('click', start)
-      loop()
+      requestAnimationFrame(loop)
 
       window.__hub = {
         get score() { return Math.floor(seconds * 10) },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       lean = 0; leanV = 0; seconds = 0; dist = 0
       driftT = 0; frame = 0; running = false; over = false
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>

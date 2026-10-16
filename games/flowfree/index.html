@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>流水连线</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>流水连线</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -24,33 +19,37 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#c57b3f;--ink:#345647;--muted:#71836b;--paper:#fffbed;--edge:#648d73;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;grid-template-columns:100%;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff1d4,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #da8054;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#b6e0e3;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{position:static;width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#59745f;font-size:12px;font-weight:500;text-align:center;line-height:1.6}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6ed;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;position:static;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#718068;margin:0 0 17px}#overlay b{color:#c57546}#overlay button,.action{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px;cursor:pointer}.action:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}.foot{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#board{width:100%;border:4px solid #70936d;border-radius:0;background-color:#e3ecc8;background-image:linear-gradient(#b8cc9d 1px,transparent 1px),linear-gradient(90deg,#b8cc9d 1px,transparent 1px);background-size:20% 20%;box-shadow:0 5px 0 #4e7558;overflow:hidden}#board svg{position:absolute}.cell-dot{border-radius:0!important;display:grid;place-items:center;color:#fffbed;font:800 12px ui-monospace,monospace;box-shadow:0 3px 0 #4d694c50;clip-path:polygon(25% 0,75% 0,75% 20%,100% 20%,100% 80%,75% 80%,75% 100%,25% 100%,25% 80%,0 80%,0 20%,25% 20%)}#reset-lines{font-size:11px;padding:6px 14px;background:#e4c28c;border-color:#ad9165;box-shadow:0 3px 0 #ad9165;color:#6a593e}#wrap{width:min(420px,calc(100svh - 225px),calc(100% - 196px))}@media(max-width:620px){#wrap{width:min(100%,calc(100svh - 205px))}}</style></head><body><main class="shell"><header class="top"><div><small>BLOOMING PATHS</small><h1>流水连线</h1></div><span class="tag">花园连连看</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>关卡<b id="lv">1/5</b></span>
       <span>颜色<b id="pairs">0/0</b></span>
       <span>BEST<b id="best">—</b></span>
     </div>
-    <div id="board"></div>
+    <div id="board"></div><button id="reset-lines" class="action">重画本关</button>
   </div>
-  <div id="overlay">
-    <h1>🔗 流水连线</h1>
+
+  <aside class="side"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="40" y="8" width="4" height="4" fill="#e78368"/><rect x="44" y="8" width="4" height="4" fill="#e78368"/><rect x="32" y="12" width="4" height="4" fill="#e78368"/><rect x="36" y="12" width="4" height="4" fill="#e78368"/><rect x="40" y="12" width="4" height="4" fill="#e78368"/><rect x="44" y="12" width="4" height="4" fill="#e78368"/><rect x="48" y="12" width="4" height="4" fill="#e78368"/><rect x="52" y="12" width="4" height="4" fill="#e78368"/><rect x="32" y="16" width="4" height="4" fill="#e78368"/><rect x="36" y="16" width="4" height="4" fill="#e78368"/><rect x="40" y="16" width="4" height="4" fill="#f3cb6c"/><rect x="44" y="16" width="4" height="4" fill="#f3cb6c"/><rect x="48" y="16" width="4" height="4" fill="#e78368"/><rect x="52" y="16" width="4" height="4" fill="#e78368"/><rect x="32" y="20" width="4" height="4" fill="#e78368"/><rect x="36" y="20" width="4" height="4" fill="#e78368"/><rect x="40" y="20" width="4" height="4" fill="#f3cb6c"/><rect x="44" y="20" width="4" height="4" fill="#f3cb6c"/><rect x="48" y="20" width="4" height="4" fill="#e78368"/><rect x="52" y="20" width="4" height="4" fill="#e78368"/><rect x="32" y="24" width="4" height="4" fill="#e78368"/><rect x="36" y="24" width="4" height="4" fill="#e78368"/><rect x="40" y="24" width="4" height="4" fill="#e78368"/><rect x="44" y="24" width="4" height="4" fill="#e78368"/><rect x="48" y="24" width="4" height="4" fill="#e78368"/><rect x="52" y="24" width="4" height="4" fill="#e78368"/><rect x="40" y="28" width="4" height="4" fill="#71a879"/><rect x="44" y="28" width="4" height="4" fill="#71a879"/><rect x="32" y="32" width="4" height="4" fill="#71a879"/><rect x="36" y="32" width="4" height="4" fill="#71a879"/><rect x="40" y="32" width="4" height="4" fill="#71a879"/><rect x="44" y="32" width="4" height="4" fill="#71a879"/><rect x="40" y="36" width="4" height="4" fill="#71a879"/><rect x="44" y="36" width="4" height="4" fill="#71a879"/><rect x="40" y="40" width="4" height="4" fill="#71a879"/><rect x="44" y="40" width="4" height="4" fill="#71a879"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>花园连连看</h2><p>牵起同色小花，让花园连起来。</p><p class="tips">拖动同色端点 · 不能交叉 · 可重新画线</p></aside></div><footer class="foot"><span>拖动同色端点 · 不能交叉 · 可重新画线</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="40" y="8" width="4" height="4" fill="#e78368"/><rect x="44" y="8" width="4" height="4" fill="#e78368"/><rect x="32" y="12" width="4" height="4" fill="#e78368"/><rect x="36" y="12" width="4" height="4" fill="#e78368"/><rect x="40" y="12" width="4" height="4" fill="#e78368"/><rect x="44" y="12" width="4" height="4" fill="#e78368"/><rect x="48" y="12" width="4" height="4" fill="#e78368"/><rect x="52" y="12" width="4" height="4" fill="#e78368"/><rect x="32" y="16" width="4" height="4" fill="#e78368"/><rect x="36" y="16" width="4" height="4" fill="#e78368"/><rect x="40" y="16" width="4" height="4" fill="#f3cb6c"/><rect x="44" y="16" width="4" height="4" fill="#f3cb6c"/><rect x="48" y="16" width="4" height="4" fill="#e78368"/><rect x="52" y="16" width="4" height="4" fill="#e78368"/><rect x="32" y="20" width="4" height="4" fill="#e78368"/><rect x="36" y="20" width="4" height="4" fill="#e78368"/><rect x="40" y="20" width="4" height="4" fill="#f3cb6c"/><rect x="44" y="20" width="4" height="4" fill="#f3cb6c"/><rect x="48" y="20" width="4" height="4" fill="#e78368"/><rect x="52" y="20" width="4" height="4" fill="#e78368"/><rect x="32" y="24" width="4" height="4" fill="#e78368"/><rect x="36" y="24" width="4" height="4" fill="#e78368"/><rect x="40" y="24" width="4" height="4" fill="#e78368"/><rect x="44" y="24" width="4" height="4" fill="#e78368"/><rect x="48" y="24" width="4" height="4" fill="#e78368"/><rect x="52" y="24" width="4" height="4" fill="#e78368"/><rect x="40" y="28" width="4" height="4" fill="#71a879"/><rect x="44" y="28" width="4" height="4" fill="#71a879"/><rect x="32" y="32" width="4" height="4" fill="#71a879"/><rect x="36" y="32" width="4" height="4" fill="#71a879"/><rect x="40" y="32" width="4" height="4" fill="#71a879"/><rect x="44" y="32" width="4" height="4" fill="#71a879"/><rect x="40" y="36" width="4" height="4" fill="#71a879"/><rect x="44" y="36" width="4" height="4" fill="#71a879"/><rect x="40" y="40" width="4" height="4" fill="#71a879"/><rect x="44" y="40" width="4" height="4" fill="#71a879"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg>
+    <h1>流水连线</h1>
     <p>按住端点拖到同色另一端<br/>路径不能交叉<br/>全部连通过关，共 5 关</p>
     <button id="ov-btn">开始游戏</button>
-  </div>
-  <script>
+  </section></div><script>
     (() => {
       const N = 5
-      const COLORS = ['#ff4d5e','#ffd23f','#2f55e4','#22b573','#8a5cf6']
+      const COLORS = ['#d77c63','#c4a347','#6cabc0','#79a578','#a090bd']
       // 每关端点对：[颜色下标, [r,c], [r,c]]
       const LEVELS = [
-        [[0,[0,0],[4,4]],[1,[0,4],[4,0]]],
+        [[0,[0,0],[0,4]],[1,[4,0],[4,4]]],
         [[0,[0,0],[0,4]],[1,[2,0],[2,4]],[2,[4,0],[4,4]]],
-        [[0,[0,0],[0,4]],[1,[2,0],[2,4]],[2,[4,0],[4,4]],[3,[1,2],[3,2]]],
+        [[0,[0,0],[2,1]],[1,[0,1],[0,4]],[2,[1,4],[4,3]],[3,[4,0],[3,3]]],
         [[0,[0,0],[4,0]],[1,[0,1],[4,1]],[2,[0,3],[4,3]],[3,[0,4],[4,4]],[4,[1,2],[3,2]]],
-        [[0,[0,0],[3,0]],[1,[1,1],[4,1]],[2,[0,3],[3,3]],[3,[1,4],[4,4]],[4,[1,2],[3,2]]],
+        [[0,[0,0],[0,2]],[1,[0,3],[2,3]],[2,[1,0],[3,0]],[3,[2,2],[4,4]],[4,[4,0],[4,3]]]
       ]
       const boardEl = document.getElementById('board')
       const lvEl = document.getElementById('lv')
@@ -59,12 +58,13 @@
       const overlay = document.getElementById('overlay')
       const ovBtn = document.getElementById('ov-btn')
 
+      let transitioning=false,advanceTimer=null
       let level, endpoints, paths, done, drag, running, over
-      let best = Number(localStorage.getItem('flowfree-best') || 0)
+      let best=0;try{best=Number(localStorage.getItem('flowfree-best'))||0}catch{}
       if (best) bestEl.textContent = best
 
       function load(n) {
-        level = n
+        clearTimeout(advanceTimer);transitioning=false;level = n
         endpoints = LEVELS[n]
         paths = endpoints.map(() => null)
         done = endpoints.map(() => false)
@@ -107,69 +107,50 @@
       }
 
       function beginDrag(e) {
-        if (!running || over) return
+        if (!running || over || transitioning) return
         const { r, c } = cellFromEvent(e)
+        boardEl.setPointerCapture(e.pointerId)
         endpoints.forEach((ep, i) => {
           for (const p of [ep[1], ep[2]]) {
-            if (p[0] === r && p[1] === c && !done[i]) { drag = i; paths[i] = [[r, c]]; render() }
+            if (p[0] === r && p[1] === c ) { drag = i; done[i]=false;paths[i] = [[r, c]]; render() }
           }
         })
       }
 
-      function extendDrag(e) {
-        if (drag === -1) return
-        const { r, c } = cellFromEvent(e)
-        const path = paths[drag]
-        const [lr, lc] = path[path.length - 1]
-        if (lr === r && lc === c) return
-        if (Math.abs(lr - r) + Math.abs(lc - c) !== 1) return
-        if (occupied(r, c, drag) || isEndpoint(r, c, drag)) {
-          // 到达同色另一端则完成
-          const ep = endpoints[drag]
-          for (const p of [ep[1], ep[2]]) {
-            if (p[0] === r && p[1] === c && !(path.length === 1 && r === path[0][0] && c === path[0][1])) {
-              path.push([r, c])
-              done[drag] = true
-              drag = -1
-              render()
-              checkWin()
-              return
-            }
-          }
-          return
-        }
-        // 回退一步
-        if (path.length > 1 && path[path.length - 2][0] === r && path[path.length - 2][1] === c) {
-          path.pop(); render(); return
-        }
-        // 不能经过自己路径已有格（除相邻端点）
-        if (path.some((q) => q[0] === r && q[1] === c)) return
-        path.push([r, c])
-        render()
+      function extendDrag(e){
+        if(drag===-1||!running||over||transitioning)return
+        const {r,c}=cellFromEvent(e),path=paths[drag],[lr,lc]=path[path.length-1]
+        if(Math.abs(lr-r)+Math.abs(lc-c)!==1||occupied(r,c,drag)||isEndpoint(r,c,drag))return
+        if(path.length>1&&path[path.length-2][0]===r&&path[path.length-2][1]===c){path.pop();render();return}
+        if(path.some(p=>p[0]===r&&p[1]===c))return
+        path.push([r,c])
+        const ep=endpoints[drag],first=path[0],target=ep[1][0]===first[0]&&ep[1][1]===first[1]?ep[2]:ep[1]
+        if(target[0]===r&&target[1]===c){done[drag]=true;drag=-1;render();checkWin()}else render()
       }
 
-      function endDrag() { drag = -1 }
+      function endDrag() { if(drag>=0&&!done[drag]){paths[drag]=null;render()}drag=-1 }
 
       function checkWin() {
         const connected = done.filter(Boolean).length
         pairsEl.textContent = connected + '/' + endpoints.length
         if (connected === endpoints.length) {
+          transitioning=true
           if (level === LEVELS.length - 1) {
             running = false; over = true
             const score = 500
-            if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('flowfree-best', best) }
+            if (score > best) { best = score; bestEl.textContent = best; (()=>{try{localStorage.setItem('flowfree-best',best)}catch{}})() }
             overlay.querySelector('h1').textContent = '🏆 全部通关'
             overlay.querySelector('p').innerHTML = '五关连线全部完成！'
             ovBtn.textContent = '再来一局'
             overlay.classList.remove('hidden')
           } else {
-            setTimeout(() => load(level + 1), 500)
+            advanceTimer=setTimeout(() => load(level + 1), 500)
           }
         }
       }
 
       function render() {
-        boardEl.innerHTML = '<svg></svg>'
+        boardEl.innerHTML = '<svg viewBox="0 0 100 100" preserveAspectRatio="none"></svg>'
         const svg = boardEl.querySelector('svg')
         const U = 100 / N
         paths.forEach((p, i) => {
@@ -192,7 +173,7 @@
             d.style.left = (c * U + U / 2) + '%'
             d.style.top = (r * U + U / 2) + '%'
             d.style.background = COLORS[i]
-            d.style.border = '2px solid #14161f'
+            d.style.border = '2px solid #fff0ce';d.textContent=i+1
             boardEl.appendChild(d)
           }
         })
@@ -203,18 +184,18 @@
       boardEl.addEventListener('pointerdown', beginDrag)
       boardEl.addEventListener('pointermove', extendDrag)
       window.addEventListener('pointerup', endDrag)
+      window.addEventListener('pointercancel',endDrag)
+      document.getElementById('reset-lines').addEventListener('click',()=>{if(running&&!over&&!transitioning)load(level)})
       ovBtn.addEventListener('click', start)
 
       window.__hub = {
         get score() { return done.filter(Boolean).length * 100 },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
-      running = false; over = false
+      level=0;drag=-1;running = false; over = false
       endpoints = LEVELS[0]; paths = [null, null]; done = [false, false]
       render()
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>

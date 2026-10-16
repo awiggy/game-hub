@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>冰球对战</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>冰球对战</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -23,22 +18,26 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#c57b3f;--ink:#345647;--muted:#71836b;--paper:#fffbed;--edge:#648d73;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;grid-template-columns:100%;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff1d4,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #da8054;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#b6e0e3;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{position:static;width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#59745f;font-size:12px;font-weight:500;text-align:center;line-height:1.6}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6ed;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;position:static;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#718068;margin:0 0 17px}#overlay b{color:#c57546}#overlay button,.action{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px;cursor:pointer}.action:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}.foot{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#wrap{width:min(400px,calc((100svh - 165px)*0.625),calc(100% - 196px))}@media(max-width:620px){#wrap{width:min(100%,calc((100svh - 150px)*0.625))}}</style></head><body><main class="shell"><header class="top"><div><small>FROSTY ARENA</small><h1>冰球对战</h1></div><span class="tag">薄荷冰球场</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span class="ai">AI <b id="as">0</b></span>
       <span class="me"><b id="ps">0</b> 我</span>
     </div>
     <canvas id="cv" width="400" height="640"></canvas>
-    <div id="overlay">
-      <h1>🏒 冰球对战</h1>
+
+  </div>
+  <aside class="side"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="32" y="8" width="4" height="4" fill="#55705c"/><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="44" y="8" width="4" height="4" fill="#55705c"/><rect x="48" y="8" width="4" height="4" fill="#55705c"/><rect x="52" y="8" width="4" height="4" fill="#55705c"/><rect x="56" y="8" width="4" height="4" fill="#55705c"/><rect x="60" y="8" width="4" height="4" fill="#55705c"/><rect x="28" y="12" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#83c4d4"/><rect x="36" y="12" width="4" height="4" fill="#83c4d4"/><rect x="40" y="12" width="4" height="4" fill="#83c4d4"/><rect x="44" y="12" width="4" height="4" fill="#83c4d4"/><rect x="48" y="12" width="4" height="4" fill="#83c4d4"/><rect x="52" y="12" width="4" height="4" fill="#83c4d4"/><rect x="56" y="12" width="4" height="4" fill="#83c4d4"/><rect x="60" y="12" width="4" height="4" fill="#83c4d4"/><rect x="64" y="12" width="4" height="4" fill="#55705c"/><rect x="24" y="16" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#83c4d4"/><rect x="32" y="16" width="4" height="4" fill="#83c4d4"/><rect x="36" y="16" width="4" height="4" fill="#83c4d4"/><rect x="40" y="16" width="4" height="4" fill="#ffdca3"/><rect x="44" y="16" width="4" height="4" fill="#ffdca3"/><rect x="48" y="16" width="4" height="4" fill="#83c4d4"/><rect x="52" y="16" width="4" height="4" fill="#83c4d4"/><rect x="56" y="16" width="4" height="4" fill="#83c4d4"/><rect x="60" y="16" width="4" height="4" fill="#83c4d4"/><rect x="64" y="16" width="4" height="4" fill="#83c4d4"/><rect x="68" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#83c4d4"/><rect x="32" y="20" width="4" height="4" fill="#83c4d4"/><rect x="36" y="20" width="4" height="4" fill="#83c4d4"/><rect x="40" y="20" width="4" height="4" fill="#ffdca3"/><rect x="44" y="20" width="4" height="4" fill="#ffdca3"/><rect x="48" y="20" width="4" height="4" fill="#83c4d4"/><rect x="52" y="20" width="4" height="4" fill="#83c4d4"/><rect x="56" y="20" width="4" height="4" fill="#83c4d4"/><rect x="60" y="20" width="4" height="4" fill="#83c4d4"/><rect x="64" y="20" width="4" height="4" fill="#83c4d4"/><rect x="68" y="20" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#55705c"/><rect x="28" y="24" width="4" height="4" fill="#83c4d4"/><rect x="32" y="24" width="4" height="4" fill="#83c4d4"/><rect x="36" y="24" width="4" height="4" fill="#83c4d4"/><rect x="40" y="24" width="4" height="4" fill="#83c4d4"/><rect x="44" y="24" width="4" height="4" fill="#83c4d4"/><rect x="48" y="24" width="4" height="4" fill="#83c4d4"/><rect x="52" y="24" width="4" height="4" fill="#83c4d4"/><rect x="56" y="24" width="4" height="4" fill="#83c4d4"/><rect x="60" y="24" width="4" height="4" fill="#83c4d4"/><rect x="64" y="24" width="4" height="4" fill="#83c4d4"/><rect x="68" y="24" width="4" height="4" fill="#55705c"/><rect x="28" y="28" width="4" height="4" fill="#55705c"/><rect x="32" y="28" width="4" height="4" fill="#83c4d4"/><rect x="36" y="28" width="4" height="4" fill="#83c4d4"/><rect x="40" y="28" width="4" height="4" fill="#83c4d4"/><rect x="44" y="28" width="4" height="4" fill="#83c4d4"/><rect x="48" y="28" width="4" height="4" fill="#83c4d4"/><rect x="52" y="28" width="4" height="4" fill="#83c4d4"/><rect x="56" y="28" width="4" height="4" fill="#83c4d4"/><rect x="60" y="28" width="4" height="4" fill="#83c4d4"/><rect x="64" y="28" width="4" height="4" fill="#55705c"/><rect x="32" y="32" width="4" height="4" fill="#55705c"/><rect x="36" y="32" width="4" height="4" fill="#55705c"/><rect x="40" y="32" width="4" height="4" fill="#55705c"/><rect x="44" y="32" width="4" height="4" fill="#55705c"/><rect x="48" y="32" width="4" height="4" fill="#55705c"/><rect x="52" y="32" width="4" height="4" fill="#55705c"/><rect x="56" y="32" width="4" height="4" fill="#55705c"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>薄荷冰球场</h2><p>小小冰场，来一场轻快对决。</p><p class="tips">拖动下方球拍 · 攻进上方球门 · 先得 5 分</p></aside></div><footer class="foot"><span>拖动下方球拍 · 攻进上方球门 · 先得 5 分</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="32" y="8" width="4" height="4" fill="#55705c"/><rect x="36" y="8" width="4" height="4" fill="#55705c"/><rect x="40" y="8" width="4" height="4" fill="#55705c"/><rect x="44" y="8" width="4" height="4" fill="#55705c"/><rect x="48" y="8" width="4" height="4" fill="#55705c"/><rect x="52" y="8" width="4" height="4" fill="#55705c"/><rect x="56" y="8" width="4" height="4" fill="#55705c"/><rect x="60" y="8" width="4" height="4" fill="#55705c"/><rect x="28" y="12" width="4" height="4" fill="#55705c"/><rect x="32" y="12" width="4" height="4" fill="#83c4d4"/><rect x="36" y="12" width="4" height="4" fill="#83c4d4"/><rect x="40" y="12" width="4" height="4" fill="#83c4d4"/><rect x="44" y="12" width="4" height="4" fill="#83c4d4"/><rect x="48" y="12" width="4" height="4" fill="#83c4d4"/><rect x="52" y="12" width="4" height="4" fill="#83c4d4"/><rect x="56" y="12" width="4" height="4" fill="#83c4d4"/><rect x="60" y="12" width="4" height="4" fill="#83c4d4"/><rect x="64" y="12" width="4" height="4" fill="#55705c"/><rect x="24" y="16" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#83c4d4"/><rect x="32" y="16" width="4" height="4" fill="#83c4d4"/><rect x="36" y="16" width="4" height="4" fill="#83c4d4"/><rect x="40" y="16" width="4" height="4" fill="#ffdca3"/><rect x="44" y="16" width="4" height="4" fill="#ffdca3"/><rect x="48" y="16" width="4" height="4" fill="#83c4d4"/><rect x="52" y="16" width="4" height="4" fill="#83c4d4"/><rect x="56" y="16" width="4" height="4" fill="#83c4d4"/><rect x="60" y="16" width="4" height="4" fill="#83c4d4"/><rect x="64" y="16" width="4" height="4" fill="#83c4d4"/><rect x="68" y="16" width="4" height="4" fill="#55705c"/><rect x="24" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#83c4d4"/><rect x="32" y="20" width="4" height="4" fill="#83c4d4"/><rect x="36" y="20" width="4" height="4" fill="#83c4d4"/><rect x="40" y="20" width="4" height="4" fill="#ffdca3"/><rect x="44" y="20" width="4" height="4" fill="#ffdca3"/><rect x="48" y="20" width="4" height="4" fill="#83c4d4"/><rect x="52" y="20" width="4" height="4" fill="#83c4d4"/><rect x="56" y="20" width="4" height="4" fill="#83c4d4"/><rect x="60" y="20" width="4" height="4" fill="#83c4d4"/><rect x="64" y="20" width="4" height="4" fill="#83c4d4"/><rect x="68" y="20" width="4" height="4" fill="#55705c"/><rect x="24" y="24" width="4" height="4" fill="#55705c"/><rect x="28" y="24" width="4" height="4" fill="#83c4d4"/><rect x="32" y="24" width="4" height="4" fill="#83c4d4"/><rect x="36" y="24" width="4" height="4" fill="#83c4d4"/><rect x="40" y="24" width="4" height="4" fill="#83c4d4"/><rect x="44" y="24" width="4" height="4" fill="#83c4d4"/><rect x="48" y="24" width="4" height="4" fill="#83c4d4"/><rect x="52" y="24" width="4" height="4" fill="#83c4d4"/><rect x="56" y="24" width="4" height="4" fill="#83c4d4"/><rect x="60" y="24" width="4" height="4" fill="#83c4d4"/><rect x="64" y="24" width="4" height="4" fill="#83c4d4"/><rect x="68" y="24" width="4" height="4" fill="#55705c"/><rect x="28" y="28" width="4" height="4" fill="#55705c"/><rect x="32" y="28" width="4" height="4" fill="#83c4d4"/><rect x="36" y="28" width="4" height="4" fill="#83c4d4"/><rect x="40" y="28" width="4" height="4" fill="#83c4d4"/><rect x="44" y="28" width="4" height="4" fill="#83c4d4"/><rect x="48" y="28" width="4" height="4" fill="#83c4d4"/><rect x="52" y="28" width="4" height="4" fill="#83c4d4"/><rect x="56" y="28" width="4" height="4" fill="#83c4d4"/><rect x="60" y="28" width="4" height="4" fill="#83c4d4"/><rect x="64" y="28" width="4" height="4" fill="#55705c"/><rect x="32" y="32" width="4" height="4" fill="#55705c"/><rect x="36" y="32" width="4" height="4" fill="#55705c"/><rect x="40" y="32" width="4" height="4" fill="#55705c"/><rect x="44" y="32" width="4" height="4" fill="#55705c"/><rect x="48" y="32" width="4" height="4" fill="#55705c"/><rect x="52" y="32" width="4" height="4" fill="#55705c"/><rect x="56" y="32" width="4" height="4" fill="#55705c"/><rect x="60" y="32" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg>
+      <h1>冰球对战</h1>
       <p>移动鼠标 / 手指控制下方球拍<br/>冰球高速滑行、四壁反弹<br/>先攻进对方球门 5 次获胜</p>
       <button id="ov-btn">开始比赛</button>
-    </div>
-  </div>
-  <script>
+    </section></div><script>
     (() => {
       const cv = document.getElementById('cv')
       const ctx = cv.getContext('2d')
@@ -72,7 +71,7 @@
       function end(playerWin) {
         running = false; over = true
         overlay.querySelector('h1').textContent = playerWin ? '🏆 你赢了' : '😡 AI 获胜'
-        overlay.querySelector('p').innerHTML = '比分 <b style="color:#ffd23f">' + ps + '</b> : ' + as
+        overlay.querySelector('p').innerHTML = '比分 <b >' + ps + '</b> : ' + as
         ovBtn.textContent = '再来一局'
         overlay.classList.remove('hidden')
       }
@@ -98,14 +97,14 @@
         // 进球检测（上下开口）
         const inGoalX = puck.x > W / 2 - GW / 2 && puck.x < W / 2 + GW / 2
         if (puck.y < PU && inGoalX) {
-          as++; asEl.textContent = as
-          if (as >= 5) return end(false)
-          return serve(1)
-        }
-        if (puck.y > H - PU && inGoalX) {
           ps++; psEl.textContent = ps
           if (ps >= 5) return end(true)
           return serve(0)
+        }
+        if (puck.y > H - PU && inGoalX) {
+          as++; asEl.textContent = as
+          if (as >= 5) return end(false)
+          return serve(1)
         }
         // 顶底（非球门区）
         if (puck.y < PU) { puck.y = PU; puck.vy = Math.abs(puck.vy) }
@@ -129,43 +128,30 @@
         if (sp > 14) { puck.vx *= 14 / sp; puck.vy *= 14 / sp }
       }
 
-      function draw() {
-        ctx.fillStyle = '#14161f'
-        ctx.fillRect(0, 0, W, H)
-        ctx.strokeStyle = '#2a3350'
-        ctx.lineWidth = 2
-        ctx.beginPath(); ctx.arc(W / 2, H / 2, 50, 0, Math.PI * 2); ctx.stroke()
-        ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke()
-        // 球门
-        ctx.fillStyle = 'rgba(255,77,94,0.35)'
-        ctx.fillRect(W / 2 - GW / 2, 0, GW, 8)
-        ctx.fillStyle = 'rgba(93,132,255,0.35)'
-        ctx.fillRect(W / 2 - GW / 2, H - 8, GW, 8)
-        // 球拍
-        ctx.fillStyle = '#5d84ff'
-        ctx.beginPath(); ctx.arc(px.x, px.y, PR, 0, Math.PI * 2); ctx.fill()
-        ctx.fillStyle = '#ff4d5e'
-        ctx.beginPath(); ctx.arc(ai.x, ai.y, PR, 0, Math.PI * 2); ctx.fill()
-        // 冰球
-        ctx.fillStyle = '#ffd23f'
-        ctx.beginPath(); ctx.arc(puck.x, puck.y, PU, 0, Math.PI * 2); ctx.fill()
-      }
 
-      function loop() {
-        requestAnimationFrame(loop)
-        if (running && !over) step()
-        draw()
-      }
+      function box(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),w,h)}
+      function cloud(x,y){box(x+8,y,32,8,'#fffbed');box(x,y+8,56,12,'#fffbed')}
+      function sky(){box(0,0,cv.width,cv.height,'#b0dce4');cloud(28,55);cloud(cv.width-90,110);for(let i=0;i<8;i++){box(i*80,cv.height-90,65,90,'#c2d9a5');box(i*80+15,cv.height-106,35,16,'#c2d9a5')}box(0,cv.height-20,cv.width,20,'#8db685')}
+      function disc(x,y,r,c){for(let yy=-r;yy<r;yy+=3){const xx=Math.floor(Math.sqrt(Math.max(0,r*r-yy*yy))/3)*3;box(x-xx,y+yy,xx*2,3,c)}}
+      function kid(x,y){box(x+6,y,20,6,'#6b9162');box(x+4,y+6,24,18,'#ffdfaa');box(x+10,y+12,4,4,'#3d5647');box(x+20,y+12,4,4,'#3d5647');box(x+4,y+24,24,20,'#e88c5f');box(x+4,y+44,8,8,'#526f59');box(x+20,y+44,8,8,'#526f59')}
+      function pine(x,y){box(x-4,y+12,8,16,'#95744b');box(x-12,y-22,24,10,'#86bda5');box(x-20,y-12,40,10,'#6ca08c');box(x-26,y-2,52,15,'#538574');box(x-10,y-22,16,5,'#f0fbef');box(x-18,y-12,26,5,'#f0fbef');box(x-24,y-2,34,5,'#f0fbef')}
+
+      function draw(){box(0,0,W,H,'#d9eeea');for(let y=0;y<H;y+=40)for(let x=0;x<W;x+=40)box(x,y,40,40,(x+y)%80?'#d5e9e7':'#e5f2e8');box(7,12,W-14,H-24,'#def2ec');ctx.strokeStyle='#8ebbb4';ctx.lineWidth=3;ctx.beginPath();ctx.arc(W/2,H/2,50,0,Math.PI*2);ctx.stroke();for(let x=10;x<W;x+=18)box(x,H/2,10,3,'#8ebbb4');box(W/2-GW/2,0,GW,13,'#d8836d');box(W/2-GW/2,H-13,GW,13,'#5a9caf');disc(px.x,px.y,PR+3,'#477b80');disc(px.x,px.y-2,PR,'#7bb9c7');disc(px.x-4,px.y-6,12,'#b5e0df');disc(ai.x,ai.y,PR+3,'#a6664d');disc(ai.x,ai.y-2,PR,'#e39a79');disc(ai.x-4,ai.y-6,12,'#f3c8a0');disc(puck.x,puck.y,PU+2,'#405e57');disc(puck.x,puck.y-2,PU-1,'#f4d37f');ctx.font='bold 13px sans-serif';ctx.fillStyle='#6c9990';ctx.fillText('对手球门',W/2-26,36);ctx.fillText('你的球门',W/2-26,H-25);}
+
+      let lastTick=null,lag=0
+      function loop(t){requestAnimationFrame(loop);if(lastTick===null)lastTick=t;lag+=Math.min(100,Math.max(0,t-lastTick));lastTick=t;while(lag>=1000/60){if(running&&!over)step();lag-=1000/60}draw()}
 
       function toX(e) {
         const r = cv.getBoundingClientRect()
         return (e.clientX - r.left) * (W / r.width)
       }
-      cv.addEventListener('pointermove', (e) => {
+      function movePaddle(e) {
         if (!running || over) return
-        px.x = Math.max(PR, Math.min(W - PR, toX(e.clientX)))
+        px.x = Math.max(PR, Math.min(W - PR, toX(e)))
         px.y = Math.max(H / 2 + 30, Math.min(H - PR, (e.clientY - cv.getBoundingClientRect().top) * (H / cv.getBoundingClientRect().height)))
-      })
+      }
+      cv.addEventListener('pointermove', movePaddle)
+      cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);movePaddle(e)})
       cv.addEventListener('touchmove', (e) => {
         if (!running || over) return
         const r = cv.getBoundingClientRect()
@@ -178,7 +164,7 @@
       window.__hub = {
         get score() { return ps },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       px = { x: W / 2, y: H - 80 }
@@ -186,6 +172,4 @@
       ps = 0; as = 0; serving = 0; running = false; over = false
       ai.x = W / 2; ai.y = 70
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>

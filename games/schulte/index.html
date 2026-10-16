@@ -1,48 +1,18 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>舒尔特方格</title>
-  <style>
-    :root { --blue:#2f55e4; --yellow:#ffd23f; }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html,body { height:100%; }
-    body { background:#0f1118; color:#eef1f6; font-family:system-ui,-apple-system,'PingFang SC',sans-serif;
-      display:flex; align-items:center; justify-content:center; touch-action:manipulation; overflow:hidden; }
-    #wrap { width:min(92vw,440px); position:relative; display:flex; flex-direction:column; gap:12px; align-items:center; }
-    #hud { width:100%; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#8b93a7; }
-    #hud b { color:var(--yellow); font-size:16px; margin-left:4px; }
-    #grid { width:100%; aspect-ratio:1; display:grid; grid-template-columns:repeat(5,1fr);
-      grid-template-rows:repeat(5,1fr); gap:6px; background:#1a1d29; border:3px solid #2a2e3d; border-radius:12px; padding:8px; }
-    .cell { display:grid; place-items:center; font-size:26px; font-weight:900; background:#14161f;
-      border-radius:8px; cursor:pointer; user-select:none; color:#c9d4f5; }
-    .cell.next { color:var(--yellow); }
-    .cell.hit { background:#122a1c; color:#22b573; cursor:default; }
-    #overlay { position:fixed; inset:0; background:rgba(15,17,24,.9); z-index:5;
-      display:flex; flex-direction:column; gap:16px; align-items:center; justify-content:center; text-align:center; padding:20px; }
-    #overlay.hidden { display:none; }
-    #overlay h1 { font-size:26px; letter-spacing:4px; text-shadow:3px 3px 0 var(--blue); }
-    #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
-    #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
-      box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
-  <div id="wrap">
-    <div id="hud">
-      <span>下一个<b id="next">1</b></span>
-      <span>用时<b id="time">0.0s</b></span>
-      <span>BEST<b id="best">—</b></span>
-    </div>
-    <div id="grid"></div>
-  </div>
-  <div id="overlay">
-    <h1>🔢 舒尔特方格</h1>
-    <p>从 1 开始按顺序点到 25<br/>注意力测试金标准<br/>越快分越高，最快纪录本地保存</p>
-    <button id="ov-btn">开始测试</button>
-  </div>
-  <script>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>舒尔特方格</title><style>
+:root{color-scheme:light;--ink:#31523e;--muted:#7b8968;--paper:#fffbed;--edge:#497452;--accent:#ed8056;--floor:#eaf1d6}
+*{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;background:radial-gradient(ellipse at 15% 5%,#fff6d6,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}
+button{font:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #e8794d;outline-offset:2px}button:disabled{cursor:default}h1,h2,p{margin:0}.shell{width:min(800px,calc(100% - 28px));padding:12px 0}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.top small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin-top:3px}.tag{background:var(--paper);border:1px solid #c9d6b2;padding:7px 11px;font-size:10px;color:var(--muted)}.layout{display:flex;justify-content:center;align-items:center;gap:28px}#wrap{width:min(480px,calc(100svh - 164px));max-width:calc(100% - 198px);flex:none;position:relative}#hud{display:flex;gap:6px;justify-content:space-between;margin-bottom:10px;font-size:10px;color:var(--muted)}#hud>span{flex:1;background:var(--paper);border:1px solid #c7d4ac;box-shadow:0 3px 0 #d1ddba;padding:6px 9px;white-space:nowrap}#hud b{font:700 18px ui-monospace,monospace;color:var(--ink);margin-left:6px}#hud>span:first-child b{color:#d76c43}.side{width:170px;flex:none}.side svg{width:100%;height:110px;image-rendering:pixelated}.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.side h2{font-size:25px;line-height:1.45;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted)}.side .tips{border-top:1px solid #c8d4af;margin-top:19px;padding-top:12px;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}.foot span:first-child{min-width:0}#overlay{position:fixed;inset:0;display:grid;place-items:center;background:#eaf1d6d9;z-index:5;padding:16px}#overlay.hidden{display:none}.card{width:min(350px,100%);text-align:center;padding:21px 24px 24px;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e33}.card svg{width:150px;height:94px;display:block;margin:0 auto 8px;image-rendering:pixelated}.card small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.card h1{font-size:25px;letter-spacing:2px;margin:10px 0}.card p{font-size:12px;line-height:1.9;color:var(--muted);margin-bottom:19px}.card b{color:#cd693f}#ov-btn{background:var(--accent);color:#fffbed;border:2px solid #a95535;padding:11px 27px;font-weight:800;box-shadow:0 4px 0 #aa5335}#ov-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #aa5335}.pixel-frame{border:4px solid var(--edge);box-shadow:0 5px 0 #2d573f;padding:8px;background:#6aa183}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 8px}.layout{display:block}#wrap{width:min(100%,calc(100svh - 150px));max-width:100%;margin:auto}.side{display:none}#hud{gap:4px;margin-bottom:8px}#hud>span{padding:5px}#hud b{font-size:15px;margin-left:3px}.foot{font-size:8px;margin-top:12px;gap:8px}.card{padding:16px}.card svg{height:76px}.card h1{font-size:22px}.card p{margin-bottom:14px}}
+@media(max-height:480px) and (min-width:621px){.side svg{height:52px}.side .tips{display:none}.side h2{font-size:19px;margin:8px 0}.side .tips{margin-top:9px;padding-top:8px}.side p{font-size:10px}.card{padding:12px 18px}.card svg{height:60px}.card h1{margin:6px 0;font-size:22px}.card p{margin-bottom:12px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+ #grid{aspect-ratio:1;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:6px;background:repeating-conic-gradient(#72a989 0 25%,#7cb28d 0 50%) 0/32px 32px}.cell{position:relative;display:grid;place-items:center;min-width:0;padding:0;font:800 clamp(15px,4vw,27px) ui-monospace,monospace;color:#795637;background:#fff0bd;border:2px solid #c7a573;box-shadow:inset 0 3px #fffae6,inset 0 -4px #e9cf91;user-select:none}.cell.next{background:#ffd579;border-color:#b97b42;color:#6c4f32}.cell.hit{border-color:transparent;background:#76ad88;box-shadow:none;color:transparent}.cell.hit::after{content:'';position:absolute;width:10px;height:10px;background:#efbf48;box-shadow:0 -9px #fffbed,0 9px #fffbed,-9px 0 #fffbed,9px 0 #fffbed}.cell.miss{animation:nudge .22s 2}.cell:active:not(.hit){transform:translateY(2px)}@keyframes nudge{50%{transform:translateX(3px);background:#efac87}}@media(max-width:620px){#grid{gap:4px;padding:6px}.cell{border-width:1px}.cell.hit::after{width:6px;height:6px;box-shadow:0 -6px #fffbed,0 6px #fffbed,-6px 0 #fffbed,6px 0 #fffbed}}
+@media(max-height:420px){.card{padding:12px 16px}.card svg{height:56px;margin-bottom:4px}.card h1{font-size:21px;margin:6px 0}.card p{font-size:11px;line-height:1.7;margin-bottom:11px}#ov-btn{padding:9px 22px}}
+</style></head><body>
+<main class="shell"><header class="top"><div><small>NUMBER GARDEN / 02</small><h1>舒尔特方格</h1></div><span class="tag">专注力小花园</span></header><div class="layout"><div id="wrap"><div id="hud"><span>下一个<b id="next">1</b></span><span>用时<b id="time">0.0s</b></span><span>最快<b id="best">—</b></span></div><div id="grid" class="pixel-frame" aria-label="数字花园"></div></div><aside class="side"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><rect x="0" y="65" width="120" height="15" fill="#9fc869"/><rect x="0" y="65" width="120" height="4" fill="#d2e494"/><path d="M8 65v-7h3v7m96 0v-9h3v9" stroke="#6e9f43" stroke-width="3"/><path d="M17 53h4v12h-4zM13 57h12v4H13zM96 48h4v12h-4zM92 52h12v4H92z" fill="#fffbed"/><path d="M17 57h4v4h-4zM96 52h4v4h-4z" fill="#f4bc4c"/><path d="M39 32V9h7v20h6V4h8v29h9v9h8v17h-7v7H35v-7h-7V42h11" fill="#9d7050"/><path d="M41 31V11h3v22h10V6h4v27h9v11h8v13h-7v7H37v-7h-7V44h11" fill="#fff5ce"/><path d="M42 14h2v13h-2zM55 9h2v19h-2zM37 50h7v4h-7zM64 50h7v4h-7z" fill="#efa78b"/><path d="M43 41h4v7h-4zM61 41h4v7h-4z" fill="#3b5545"/><path d="M52 49h5v4h-5z" fill="#d88372"/><path d="M82 48h12v7h-3v6h-3v7h-3v-7h-3z" fill="#f48a44"/><path d="M86 41h3v8h-3zM91 40h3v7h-3z" fill="#6da24b"/></svg><small>TAKE A LITTLE PLAY BREAK.</small><h2>找一个数字，<br>开一朵小花。</h2><p>从 1 找到 25，<br>让注意力在花园里散步。</p><p class="tips">按顺序点选数字<br>点错不扣分 · 用时越短越好</p></aside></div><footer class="foot"><span>按顺序找到 1 → 25</span><span>慢慢找，也会越来越快。</span></footer></main><div id="overlay"><section class="card" aria-labelledby="ov-title"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><rect x="0" y="65" width="120" height="15" fill="#9fc869"/><rect x="0" y="65" width="120" height="4" fill="#d2e494"/><path d="M8 65v-7h3v7m96 0v-9h3v9" stroke="#6e9f43" stroke-width="3"/><path d="M17 53h4v12h-4zM13 57h12v4H13zM96 48h4v12h-4zM92 52h12v4H92z" fill="#fffbed"/><path d="M17 57h4v4h-4zM96 52h4v4h-4z" fill="#f4bc4c"/><path d="M39 32V9h7v20h6V4h8v29h9v9h8v17h-7v7H35v-7h-7V42h11" fill="#9d7050"/><path d="M41 31V11h3v22h10V6h4v27h9v11h8v13h-7v7H37v-7h-7V44h11" fill="#fff5ce"/><path d="M42 14h2v13h-2zM55 9h2v19h-2zM37 50h7v4h-7zM64 50h7v4h-7z" fill="#efa78b"/><path d="M43 41h4v7h-4zM61 41h4v7h-4z" fill="#3b5545"/><path d="M52 49h5v4h-5z" fill="#d88372"/><path d="M82 48h12v7h-3v6h-3v7h-3v-7h-3z" fill="#f48a44"/><path d="M86 41h3v8h-3zM91 40h3v7h-3z" fill="#6da24b"/></svg><small>NUMBER GARDEN / 02</small><h1 id="ov-title">舒尔特方格</h1><p>按顺序点完 1 → 25。<br>找到的数字会变成花朵，<br>看看你能多快种满这座花园。</p><button id="ov-btn">开始找数字 →</button></section></div>
+<script>
     (() => {
       const N = 5
       const nextEl = document.getElementById('next')
@@ -53,13 +23,15 @@
       const ovBtn = document.getElementById('ov-btn')
 
       let nums, target, t0, elapsed, running, over, timer
-      let best = Number(localStorage.getItem('schulte-best') || 0)
+      let best = 0; try { best = Number(localStorage.getItem('schulte-best')) || 0 } catch {}
       if (best) bestEl.textContent = (best / 1000).toFixed(1) + 's'
 
       function start() {
         nums = Array.from({ length: 25 }, (_, i) => i + 1).sort(() => Math.random() - 0.5)
         target = 1
+        t0 = performance.now()
         elapsed = 0
+        timeEl.textContent = '0.0s'
         running = true; over = false
         nextEl.textContent = 1
         overlay.classList.add('hidden')
@@ -76,13 +48,15 @@
       function end() {
         running = false; over = true
         clearInterval(timer)
+        elapsed = performance.now() - t0
+        timeEl.textContent = (elapsed / 1000).toFixed(1) + 's'
         const ms = Math.round(elapsed)
         const score = Math.max(0, 2500 - (ms / 10 | 0))
         const isBest = !best || ms < best
-        if (isBest) { best = ms; bestEl.textContent = (best / 1000).toFixed(1) + 's'; localStorage.setItem('schulte-best', best) }
+        if (isBest) { best = ms; bestEl.textContent = (best / 1000).toFixed(1) + 's'; (()=>{try{localStorage.setItem('schulte-best', best)}catch{}})() }
         overlay.querySelector('h1').textContent = '🏁 测试完成'
         overlay.querySelector('p').innerHTML =
-          '用时 <b style="color:#ffd23f">' + (ms / 1000).toFixed(2) + '</b> 秒 · 得分 ' + score +
+          '用时 <b >' + (ms / 1000).toFixed(2) + '</b> 秒 · 得分 ' + score +
           (isBest ? ' · 新纪录！' : '（最快 ' + (best / 1000).toFixed(1) + 's）')
         ovBtn.textContent = '再来一次'
         overlay.classList.remove('hidden')
@@ -91,9 +65,11 @@
       function render() {
         gridEl.innerHTML = ''
         nums.forEach((v) => {
-          const el = document.createElement('div')
+          const el = document.createElement('button')
           el.className = 'cell' + (v === target ? ' next' : v < target ? ' hit' : '')
           el.textContent = v
+          el.setAttribute('aria-label', String(v))
+          el.disabled = v < target
           el.onclick = () => {
             if (!running || over) return
             if (v === target) {
@@ -101,7 +77,7 @@
               nextEl.textContent = target <= 25 ? target : '✓'
               render()
               if (target > 25) end()
-            }
+            } else { el.classList.remove('miss'); void el.offsetWidth; el.classList.add('miss') }
           }
           gridEl.appendChild(el)
         })
@@ -112,11 +88,10 @@
       window.__hub = {
         get score() { return Math.max(0, 2500 - ((elapsed / 10) | 0)) },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
-      nums = []; target = 1; elapsed = 0; running = false; over = false
+      nums = Array.from({length:25},(_,i)=>i+1); target = 1; elapsed = 0; running = false; over = false; render()
     })()
   </script>
-</body>
-</html>
+</body></html>

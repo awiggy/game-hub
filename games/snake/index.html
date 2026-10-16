@@ -2,242 +2,314 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>像素贪吃蛇</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>像素贪吃蛇 · 苹果花园</title>
   <style>
-    :root { --blue: #2f55e4; --blue-light: #5d84ff; --yellow: #ffd23f; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      background: #0f1118; color: #eef1f6;
-      font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      display: flex; align-items: center; justify-content: center;
-      touch-action: none; overflow: hidden;
-    }
-    #wrap { position: relative; }
-    #hud {
-      position: absolute; top: -36px; left: 0; right: 0;
-      display: flex; justify-content: space-between;
-      font-size: 13px; font-weight: 700; color: #8b93a7; letter-spacing: 1px;
-    }
-    #hud b { color: var(--yellow); font-size: 18px; margin-left: 6px; }
-    canvas {
-      display: block; border: 3px solid #2a2e3d; border-radius: 10px;
-      background: #14161f; max-width: 92vw; max-height: 80vh;
-    }
-    #overlay {
-      position: absolute; inset: 0; border-radius: 10px;
-      background: rgba(15, 17, 24, 0.85);
-      display: flex; flex-direction: column; gap: 16px;
-      align-items: center; justify-content: center; text-align: center; padding: 20px;
-    }
+    :root { color-scheme: light; font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; color: #254d3b; background: #eaf3d8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100svh; display: grid; place-items: center; background: radial-gradient(ellipse at 15% 10%, #fff7d8, transparent 60%), repeating-linear-gradient(0deg, #ffffff12 0 2px, transparent 2px 6px), #eaf3d8; }
+    button { font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    button:focus-visible { outline: 3px solid #e96a3f; outline-offset: 4px; }
+    button:disabled { cursor: default; opacity: .45; }
+    .shell { width: min(820px, calc(100% - 32px)); padding: 14px 0; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .brand small { font: 9px ui-monospace, monospace; letter-spacing: 2px; color: #648361; }
+    .brand h1 { margin: 3px 0 0; font-size: 23px; font-weight: 900; letter-spacing: 2px; }
+    .scores { display: flex; gap: 8px; }
+    .score-box { min-width: 78px; padding: 7px 12px; border: 1px solid #cbd6ae; background: #fffbed; box-shadow: 0 3px 0 #d6dfbb; }
+    .score-box span { display: block; font-size: 10px; color: #7b896a; }
+    .score-box b { font: 700 24px ui-monospace, monospace; color: #34614a; }
+    .score-box:first-child b { color: #d55f3d; }
+    .play-area { display: flex; align-items: center; justify-content: center; gap: 26px; }
+    .board { position: relative; width: min(calc(100svh - 128px), 528px); max-width: calc(100% - 192px); flex: none; aspect-ratio: 1; box-shadow: 0 7px 0 #336549, 0 12px 24px #476f3720; border: 4px solid #285b43; background: #297a64; }
+    #cv { display: block; width: 100%; height: 100%; image-rendering: pixelated; touch-action: none; }
+    .sidebar { width: 166px; flex: none; }
+    .chapter { font: 10px ui-monospace, monospace; color: #819367; letter-spacing: 2px; }
+    .sidebar h2 { font-size: 25px; margin: 9px 0; line-height: 1.4; letter-spacing: 1px; }
+    .intro { margin: 0 0 19px; font-size: 12px; color: #718367; line-height: 1.9; }
+    .rule { border-top: 1px solid #c4d2aa; padding-top: 14px; font-size: 11px; color: #718367; line-height: 1.9; }
+    .pad { display: grid; grid-template-columns: repeat(3, 44px); gap: 5px; justify-content: center; margin: 18px 0; }
+    .pad button { height: 40px; border: 2px solid #9bb581; color: #356249; background: #fffbea; box-shadow: 0 3px 0 #b6c69b; font-size: 19px; font-weight: 900; }
+    .pad button:active, .action:active { transform: translateY(2px); box-shadow: none; }
+    .pad button:first-child { grid-column: 2; }
+    .pad button:nth-child(2) { grid-column: 1; }
+    .action { width: 100%; border: 2px solid #376449; background: #477b52; color: #fffbe5; padding: 10px 8px; font-size: 13px; font-weight: 800; box-shadow: 0 3px 0 #294e3a; }
+    .footer { margin-top: 13px; display: flex; justify-content: space-between; font-size: 9px; color: #8a9976; letter-spacing: 1px; }
+    #overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 18px; background: #123b342e; }
     #overlay.hidden { display: none; }
-    #overlay h1 { font-size: 26px; letter-spacing: 4px; text-shadow: 3px 3px 0 var(--blue); }
-    #overlay p { color: #8b93a7; font-size: 13px; line-height: 1.9; }
-    #overlay button {
-      background: var(--blue); color: #fff; font-family: inherit;
-      border: 2px solid #fff; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
-      font-size: 16px; font-weight: 700; padding: 10px 32px; border-radius: 8px; cursor: pointer;
+    .card { width: 282px; max-width: 100%; padding: 24px 18px 20px; background: #fffbed; border: 3px solid #345f40; box-shadow: 5px 5px 0 #254d3b60; text-align: center; }
+    .card small { color: #8c9a64; letter-spacing: 3px; font: 10px ui-monospace, monospace; }
+    .card h2 { font-size: 26px; margin: 10px 0; letter-spacing: 2px; }
+    .card p { font-size: 12px; color: #738164; line-height: 1.9; margin: 0 0 19px; white-space: pre-line; }
+    #ov-btn { border: 2px solid #a4462e; background: #ef7950; color: #fffbea; padding: 11px 25px; box-shadow: 0 4px 0 #b45033; font-weight: 800; }
+    #ov-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #b45033; }
+    #overlay[data-state="ready"] { align-items: flex-end; background: transparent; padding-bottom: 28px; }
+    #overlay[data-state="ready"] .card { padding: 16px; }
+    @media (max-width: 620px) {
+      .shell { width: calc(100% - 24px); padding: 10px 0; }
+      .topbar { margin-bottom: 9px; }
+      .brand small { font-size: 8px; letter-spacing: 1px; }
+      .brand h1 { font-size: 18px; letter-spacing: 1px; }
+      .score-box { min-width: 54px; padding: 4px 8px; }
+      .score-box b { font-size: 20px; }
+      .scores { gap: 5px; }
+      .play-area { flex-direction: column; gap: 13px; }
+      .board { width: min(calc(100svh - 160px), 528px, 100%); max-width: 100%; }
+      .sidebar { width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; }
+      .chapter, .sidebar h2, .intro, .rule { display: none; }
+      .pad { display: flex; gap: 5px; margin: 0; }
+      .pad button { width: 40px; height: 38px; }
+      .action { width: 66px; padding: 9px 0; font-size: 12px; }
+      .footer { margin-top: 10px; font-size: 8px; letter-spacing: 0; }
+      .card { width: 238px; padding: 16px; }
+      .card h2 { font-size: 22px; margin: 7px 0; }
+      .card p { margin-bottom: 12px; font-size: 11px; }
+      #overlay[data-state="ready"] { padding: 10px; }
+      #overlay[data-state="ready"] .card { padding: 10px; }
+      #overlay[data-state="ready"] .card h2 { font-size: 18px; margin: 4px 0; }
+      #overlay[data-state="ready"] .card p { font-size: 10px; line-height: 1.6; margin-bottom: 8px; }
+      #overlay[data-state="ready"] .card small { display: none; }
+      #ov-btn { padding: 8px 20px; }
     }
-    #overlay button:active { transform: translate(2px, 2px); box-shadow: none; }
+    @media (max-height: 540px) and (min-width: 621px) {
+      .sidebar h2 { font-size: 20px; }
+      .intro, .rule { display: none; }
+      .pad { margin: 10px 0; }
+      .card { padding: 12px; }
+      .card small { display: none; }
+      .card h2 { font-size: 20px; margin: 4px; }
+      .card p { font-size: 11px; margin-bottom: 8px; }
+      #overlay[data-state="ready"] { padding: 10px; }
+      #overlay[data-state="ready"] .card { padding: 10px; }
+      #ov-btn { padding: 7px 20px; }
+    }
   </style>
 </head>
 <body>
-  <div id="wrap">
-    <div id="hud">
-      <span>SCORE<b id="score">0</b></span>
-      <span>BEST<b id="best">0</b></span>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><small>APPLE GARDEN / 01</small><h1>像素贪吃蛇</h1></div>
+      <div class="scores"><div class="score-box"><span>本局得分</span><b id="score">0</b></div><div class="score-box"><span>最高纪录</span><b id="best">0</b></div></div>
+    </header>
+    <div class="play-area">
+      <div class="board">
+        <canvas id="cv" width="528" height="528" aria-label="苹果花园贪吃蛇棋盘"></canvas>
+        <div id="overlay" data-state="ready">
+          <section class="card" aria-labelledby="ov-title">
+            <small>A LITTLE GARDEN BREAK</small>
+            <h2 id="ov-title">来花园吃颗苹果。</h2>
+            <p id="ov-text">吃到苹果 +10 分，慢慢长成大蛇。<br />别撞到围边，也别咬到自己。</p>
+            <button id="ov-btn">开始散步 →</button>
+          </section>
+        </div>
+      </div>
+      <aside class="sidebar">
+        <span class="chapter">FRESH AIR, FRESH APPLES.</span>
+        <h2>吃颗苹果，<br />快乐长一点。</h2>
+        <p class="intro">沿着花园慢慢走，<br />下一颗苹果就在前面。</p>
+        <button id="pause" class="action" disabled>暂停</button>
+        <div class="pad" role="group" aria-label="方向控制">
+          <button data-dir="0,-1" aria-label="向上">↑</button><button data-dir="-1,0" aria-label="向左">←</button><button data-dir="0,1" aria-label="向下">↓</button><button data-dir="1,0" aria-label="向右">→</button>
+        </div>
+        <div class="rule">方向键 / WASD 转向<br />空格暂停 · 手机滑动或点按<br />每颗苹果 +10 分</div>
+      </aside>
     </div>
-    <canvas id="cv" width="480" height="480"></canvas>
-    <div id="overlay">
-      <h1 id="ov-title">像素贪吃蛇</h1>
-      <p id="ov-text">方向键 / WASD 转向 · 空格暂停<br />手机端滑动屏幕转向</p>
-      <button id="ov-btn">开始游戏</button>
-    </div>
-  </div>
-
+    <footer class="footer"><span id="status" role="status">花园已准备好，等你出发。</span><span>慢慢玩，也很好。</span></footer>
+  </main>
   <script>
     (() => {
-      const cv = document.getElementById('cv')
-      const ctx = cv.getContext('2d')
-      const N = 24
-      const CELL = cv.width / N
-      const scoreEl = document.getElementById('score')
-      const bestEl = document.getElementById('best')
-      const overlay = document.getElementById('overlay')
-      const ovTitle = document.getElementById('ov-title')
-      const ovText = document.getElementById('ov-text')
-      const ovBtn = document.getElementById('ov-btn')
-
-      let snake, dir, pendingDir, food, score, speed, dead, paused
-      let best = Number(localStorage.getItem('snake-best') || 0)
-      let acc = 0, last = 0
+      const cv = document.getElementById('cv'), ctx = cv.getContext('2d')
+      const N = 24, CELL = 20, EDGE = 24
+      const el = id => document.getElementById(id)
+      const scoreEl = el('score'), bestEl = el('best'), overlay = el('overlay')
+      const ovTitle = el('ov-title'), ovText = el('ov-text'), ovBtn = el('ov-btn'), pauseBtn = el('pause'), statusEl = el('status')
+      let snake, dir, turns, food, score, speed, state = 'ready', acc = 0, last = 0, particles = []
+      let best = 0
+      try { best = Math.max(0, Number(localStorage.getItem('snake-best')) || 0) } catch {}
       bestEl.textContent = best
+      ctx.imageSmoothingEnabled = false
+      const rect = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(Math.round(x), Math.round(y), w, h) }
 
-      function reset() {
-        snake = [{ x: 12, y: 12 }, { x: 11, y: 12 }, { x: 10, y: 12 }]
-        dir = { x: 1, y: 0 }
-        pendingDir = null
-        score = 0
-        speed = 140
-        dead = false
-        paused = false
-        scoreEl.textContent = 0
-        placeFood()
+      // All art is drawn on an integer pixel grid; the game stays a single offline-capable file.
+      function leaf(x, y, s = 1) {
+        ctx.save(); ctx.translate(x, y); ctx.scale(s, s)
+        rect(4, 0, 12, 4, '#245c3b'); rect(0, 4, 22, 12, '#245c3b'); rect(4, 16, 14, 4, '#245c3b')
+        rect(3, 4, 15, 9, '#609f38'); rect(6, 2, 8, 5, '#91be43'); rect(2, 7, 6, 5, '#b5cf51'); rect(9, 11, 10, 4, '#398643')
+        ctx.restore()
       }
-
-      function placeFood() {
-        do {
-          food = { x: (Math.random() * N) | 0, y: (Math.random() * N) | 0 }
-        } while (snake.some((s) => s.x === food.x && s.y === food.y))
+      function flower(x, y) {
+        rect(x + 5, y + 10, 3, 11, '#3f8851'); rect(x + 8, y + 16, 5, 3, '#8bb94b')
+        rect(x + 3, y, 7, 14, '#fffbed'); rect(x, y + 4, 14, 6, '#fffbed'); rect(x + 4, y + 5, 6, 5, '#f8c44f')
       }
-
-      function step() {
-        if (pendingDir) {
-          const nd = pendingDir
-          if (nd.x !== -dir.x || nd.y !== -dir.y) dir = nd
-          pendingDir = null
+      function ground() {
+        rect(0, 0, 528, 528, '#28725b')
+        for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+          rect(EDGE + x * CELL, EDGE + y * CELL, CELL, CELL, (x + y) % 2 ? '#49a995' : '#51b39f')
+          if ((x * 19 + y * 31) % 73 === 0) { rect(EDGE + x * CELL + 4, EDGE + y * CELL + 13, 2, 3, '#71bea1'); rect(EDGE + x * CELL + 8, EDGE + y * CELL + 11, 2, 5, '#71bea1') }
         }
-        const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y }
-
-        if (head.x < 0 || head.x >= N || head.y < 0 || head.y >= N ||
-            snake.some((s) => s.x === head.x && s.y === head.y)) {
-          return gameOver()
+        rect(21, 21, 486, 3, '#1f6958'); rect(21, 24, 3, 480, '#1f6958'); rect(24, 504, 483, 3, '#90caa0'); rect(504, 24, 3, 480, '#90caa0')
+        // Plants stay outside the playable cells so the wall remains unambiguous.
+        for (let i = 0; i < 22; i++) {
+          leaf(i * 25 - 7, -5 + (i%3)*2, 1.1); leaf(i * 25 + 2, 509 + (i%2)*3, 1.1)
+          if (i > 0 && i < 21) { leaf(-8 + i%3, i * 25, 1.1); leaf(512, i * 25 - 6, 1.1) }
         }
-
-        snake.unshift(head)
-        if (head.x === food.x && head.y === food.y) {
-          score += 10
-          scoreEl.textContent = score
-          if (score > best) {
-            best = score
-            bestEl.textContent = best
-            localStorage.setItem('snake-best', best)
-          }
-          speed = Math.max(70, speed - 3)
-          placeFood()
+        ;[[-9,-8],[501,-8],[-9,508],[501,508]].forEach(([x,y])=>leaf(x,y,1.6));
+        [[46,2],[153,508],[346,1],[460,510],[3,126],[510,340]].forEach(([x,y]) => flower(x,y))
+      }
+      function apple(x, y, scale = 1) {
+        ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale)
+        rect(8, 1, 3, 5, '#754733'); rect(11, 0, 6, 3, '#306b36'); rect(11, 1, 4, 2, '#98c953')
+        rect(4, 5, 12, 2, '#843e31'); rect(2, 7, 16, 9, '#843e31'); rect(4, 16, 12, 3, '#843e31')
+        rect(4, 7, 12, 9, '#ed5943'); rect(6, 6, 3, 2, '#ff7b50'); rect(3, 9, 3, 5, '#ff8959')
+        rect(6, 8, 3, 3, '#fff3b4'); rect(12, 13, 4, 3, '#c54236'); rect(6, 16, 7, 1, '#ff9360')
+        ctx.restore()
+      }
+      function segment(x, y, head, direction, index = 0) {
+        ctx.save(); ctx.translate(x + 10, y + 10)
+        if (head) ctx.rotate(Math.atan2(direction.y, direction.x))
+        ctx.translate(-10, -10)
+        rect(5, 0, 10, 20, '#285a39'); rect(2, 2, 16, 16, '#285a39'); rect(0, 5, 20, 10, '#285a39')
+        rect(5, 2, 10, 16, head ? '#b5db46' : '#9acb38'); rect(2, 5, 16, 10, head ? '#b5db46' : '#9acb38')
+        rect(5, 3, 8, 3, '#d8ee78'); rect(3, 6, 4, 6, '#c0e45b'); rect(5, 15, 11, 2, '#579a37')
+        if (head) {
+          rect(10, 1, 7, 7, '#fcffe0'); rect(10, 12, 7, 7, '#fcffe0')
+          rect(14, 3, 3, 5, '#273d32'); rect(14, 12, 3, 5, '#273d32')
+          rect(13, 2, 2, 2, '#ffffff'); rect(13, 12, 2, 2, '#ffffff')
+          rect(18, 9, 4, 2, '#e56961'); rect(21, 10, 2, 2, '#e56961')
+        } else { rect(10, 7, 5, 4, index % 2 ? '#78b93b' : '#bde258') }
+        ctx.restore()
+      }
+      function drawSnake(body, direction) {
+        // Paint the silhouette first, then a continuous green body over its joints.
+        for (const s of body) {
+          const x=EDGE+s.x*CELL,y=EDGE+s.y*CELL
+          rect(x+5,y,10,20,'#285a39'); rect(x+2,y+2,16,16,'#285a39'); rect(x,y+5,20,10,'#285a39')
+        }
+        for (let i = body.length - 1; i > 0; i--) {
+          const a = body[i], b = body[i - 1]
+          rect(Math.min(a.x,b.x)*CELL+EDGE+3, Math.min(a.y,b.y)*CELL+EDGE+3, Math.abs(a.x-b.x)*CELL+14, Math.abs(a.y-b.y)*CELL+14, '#285a39')
+        }
+        for (const s of body) {
+          const x=EDGE+s.x*CELL,y=EDGE+s.y*CELL
+          rect(x+5,y+2,10,16,'#9acb38'); rect(x+2,y+5,16,10,'#9acb38')
+        }
+        for (let i = body.length - 1; i > 0; i--) {
+          const a=body[i],b=body[i-1]
+          rect(Math.min(a.x,b.x)*CELL+EDGE+5, Math.min(a.y,b.y)*CELL+EDGE+5, Math.abs(a.x-b.x)*CELL+10, Math.abs(a.y-b.y)*CELL+10, '#9acb38')
+        }
+        for (let i=1; i<body.length; i++) {
+          const x=EDGE+body[i].x*CELL,y=EDGE+body[i].y*CELL
+          rect(x+5,y+3,7,3,'#d8ee78'); rect(x+3,y+6,4,5,'#bde258'); rect(x+9,y+14,5,2,'#75ae37')
+        }
+        segment(EDGE+body[0].x*CELL,EDGE+body[0].y*CELL,true,direction)
+      }
+      function draw() {
+        ground()
+        if (state === 'ready') {
+          ctx.save(); ctx.translate(94, 0); ctx.scale(2.2, 2.2)
+          drawSnake([{x:3,y:0},{x:2,y:0},{x:1,y:0},{x:0,y:0},{x:0,y:1},{x:1,y:1},{x:2,y:1},{x:2,y:2},{x:1,y:2},{x:0,y:2}], {x:1,y:0})
+          apple(144, 46, 1.5); ctx.restore()
         } else {
-          snake.pop()
+          if (food) apple(EDGE + food.x*CELL, EDGE + food.y*CELL)
+          drawSnake(snake, dir)
+          for (const p of particles) rect(p.x, p.y, 4, 4, p.color)
         }
       }
-
-      function gameOver() {
-        dead = true
-        ovTitle.textContent = '游戏结束'
-        ovText.innerHTML = '本局得分 <b style="color:#ffd23f">' + score + '</b> · 最高分 ' + best + '<br />按 空格 或点击按钮重新开始'
-        ovBtn.textContent = '再来一局'
+      function reset() {
+        snake = [{x:12,y:12},{x:11,y:12},{x:10,y:12}]
+        dir = {x:1,y:0}; turns = []; score = 0; speed = 140; acc = 0; last = 0; particles = []
+        scoreEl.textContent = 0; placeFood()
+      }
+      function placeFood() {
+        const free = []
+        const occupied = new Set(snake.map(s => s.y*N+s.x))
+        for (let i = 0; i < N*N; i++) if (!occupied.has(i)) free.push(i)
+        if (!free.length) { food = null; finish(true); return }
+        const cell = free[Math.floor(Math.random()*free.length)]
+        food = {x:cell%N, y:Math.floor(cell/N)}
+      }
+      function showCard(title, text, button) {
+        overlay.dataset.state = state; ovTitle.textContent = title; ovText.textContent = text; ovBtn.textContent = button
         overlay.classList.remove('hidden')
       }
-
-      function draw() {
-        ctx.fillStyle = '#14161f'
-        ctx.fillRect(0, 0, cv.width, cv.height)
-
-        ctx.strokeStyle = 'rgba(255,255,255,0.04)'
-        ctx.lineWidth = 1
-        for (let i = 1; i < N; i++) {
-          ctx.beginPath(); ctx.moveTo(i * CELL, 0); ctx.lineTo(i * CELL, cv.height); ctx.stroke()
-          ctx.beginPath(); ctx.moveTo(0, i * CELL); ctx.lineTo(cv.width, i * CELL); ctx.stroke()
-        }
-
-        // 食物：金色发光圆
-        ctx.save()
-        ctx.shadowColor = '#ffd23f'
-        ctx.shadowBlur = 14
-        ctx.fillStyle = '#ffd23f'
-        ctx.beginPath()
-        ctx.arc((food.x + 0.5) * CELL, (food.y + 0.5) * CELL, CELL * 0.34, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.restore()
-
-        // 蛇：头亮尾深
-        for (let i = snake.length - 1; i >= 0; i--) {
-          const s = snake[i]
-          ctx.fillStyle = i === 0 ? '#5d84ff' : '#2f55e4'
-          const pad = i === 0 ? 1.5 : 2.5
-          ctx.beginPath()
-          ctx.roundRect(s.x * CELL + pad, s.y * CELL + pad, CELL - pad * 2, CELL - pad * 2, 4)
-          ctx.fill()
-        }
-
-        // 蛇眼睛
-        const h = snake[0]
-        ctx.fillStyle = '#fff'
-        const ex = (h.x + 0.5) * CELL + dir.x * CELL * 0.18
-        const ey = (h.y + 0.5) * CELL + dir.y * CELL * 0.18
-        const off = CELL * 0.16
-        ctx.beginPath(); ctx.arc(ex - (dir.y ? off : 0), ey - (dir.x ? off : 0), 2, 0, Math.PI * 2); ctx.fill()
-        ctx.beginPath(); ctx.arc(ex + (dir.y ? off : 0), ey + (dir.x ? off : 0), 2, 0, Math.PI * 2); ctx.fill()
-      }
-
-      function loop(t) {
-        requestAnimationFrame(loop)
-        if (!last) last = t
-        const dt = t - last
-        last = t
-        if (dead || paused) { draw(); return }
-        acc += dt
-        if (acc >= speed) {
-          acc = 0
-          step()
-        }
-        draw()
-      }
-
       function startGame() {
-        reset()
-        overlay.classList.add('hidden')
+        reset(); state = 'playing'; overlay.classList.add('hidden'); pauseBtn.disabled = false; pauseBtn.textContent = '暂停'
+        statusEl.textContent = '收集红苹果 · 小心围边'; draw()
       }
-
-      ovBtn.addEventListener('click', startGame)
-
-      function queueDir(x, y) {
-        pendingDir = { x, y }
+      function pause() {
+        if (state !== 'playing') return
+        state = 'paused'; acc = 0; pauseBtn.textContent = '继续'
+        showCard('在树荫下歇一会。', '花园会等你，准备好了再出发。', '继续散步 →')
+        statusEl.textContent = '已暂停 · 空格或按钮继续'; draw()
       }
-
-      const keyMap = {
-        ArrowUp: [0, -1], KeyW: [0, -1],
-        ArrowDown: [0, 1], KeyS: [0, 1],
-        ArrowLeft: [-1, 0], KeyA: [-1, 0],
-        ArrowRight: [1, 0], KeyD: [1, 0],
+      function resume() {
+        if (state !== 'paused') return
+        state = 'playing'; acc = 0; last = 0; pauseBtn.textContent = '暂停'; overlay.classList.add('hidden')
+        statusEl.textContent = '收集红苹果 · 小心围边'
       }
-
-      window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space') {
-          e.preventDefault()
-          if (dead) { startGame(); return }
-          if (!overlay.classList.contains('hidden')) { startGame(); return }
-          paused = !paused
-          return
+      function finish(won = false) {
+        state = won ? 'won' : 'over'; pauseBtn.disabled = true; particles = []
+        showCard(won ? '整个花园都是你！' : '这趟散步，收获满满。', `收集 ${score/10} 颗苹果 · 得分 ${score}\n最高纪录 ${best} · 再来一次吧！`, '再来一局 →')
+        statusEl.textContent = won ? '花园满员，恭喜通关！' : '散步结束 · 空格重新出发'
+      }
+      function step() {
+        if (turns.length) dir = turns.shift()
+        const head = {x:snake[0].x+dir.x, y:snake[0].y+dir.y}
+        const eating = food && head.x === food.x && head.y === food.y
+        // The tail vacates its cell on non-eating moves.
+        const body = eating ? snake : snake.slice(0,-1)
+        if (head.x<0 || head.x>=N || head.y<0 || head.y>=N || body.some(s=>s.x===head.x && s.y===head.y)) { finish(); return }
+        snake.unshift(head)
+        if (eating) {
+          score += 10; scoreEl.textContent = score
+          if (score > best) { best = score; bestEl.textContent = best; try { localStorage.setItem('snake-best', String(best)) } catch {} }
+          for (let i=0; i<8; i++) particles.push({x:EDGE+(head.x+.5)*CELL, y:EDGE+(head.y+.5)*CELL, vx:Math.cos(i*Math.PI/4)*.07, vy:Math.sin(i*Math.PI/4)*.07, life:320, color:i%2?'#fff0a0':'#ffb46e'})
+          speed = Math.max(70, speed-3); placeFood()
+          if (state === 'playing') statusEl.textContent = `好吃！已经收集 ${score/10} 颗苹果。`
+        } else snake.pop()
+      }
+      function queueDir(x,y) {
+        if (state !== 'playing' || turns.length >= 2) return
+        const previous = turns.length ? turns[turns.length-1] : dir
+        if ((x === -previous.x && y === -previous.y) || (x === previous.x && y === previous.y)) return
+        turns.push({x,y})
+      }
+      function loop(t) {
+        const dt = last ? Math.min(t-last, 180) : 0; last = t
+        if (state === 'playing') {
+          acc += dt
+          while (acc >= speed && state === 'playing') { acc -= speed; step() }
+          particles = particles.filter(p => { p.life -= dt; p.x += p.vx*dt; p.y += p.vy*dt; return p.life>0 })
+          draw()
         }
-        const d = keyMap[e.code]
-        if (d) {
-          e.preventDefault()
-          queueDir(d[0], d[1])
+        requestAnimationFrame(loop)
+      }
+      ovBtn.addEventListener('click', () => state === 'paused' ? resume() : startGame())
+      pauseBtn.addEventListener('click', () => state === 'paused' ? resume() : pause())
+      document.querySelectorAll('[data-dir]').forEach(button => button.addEventListener('click', () => { const [x,y] = button.dataset.dir.split(',').map(Number); queueDir(x,y) }))
+      const keys = {ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}
+      window.addEventListener('keydown', e => {
+        if (keys[e.code]) { e.preventDefault(); if (!e.repeat) queueDir(...keys[e.code]); return }
+        if (e.code === 'Space') {
+          e.preventDefault(); if (e.repeat) return
+          if (state === 'playing') pause(); else if (state === 'paused') resume(); else startGame()
         }
       })
-
-      // 触屏滑动
-      let tx = 0, ty = 0
-      window.addEventListener('touchstart', (e) => {
-        tx = e.touches[0].clientX; ty = e.touches[0].clientY
-      }, { passive: true })
-      window.addEventListener('touchend', (e) => {
-        const dx = e.changedTouches[0].clientX - tx
-        const dy = e.changedTouches[0].clientY - ty
-        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return
-        if (Math.abs(dx) > Math.abs(dy)) queueDir(dx > 0 ? 1 : -1, 0)
-        else queueDir(0, dy > 0 ? 1 : -1)
-      }, { passive: true })
-
-      window.__hub = {
-        get score() { return score },
-        get over() { return dead },
-        get started() { return overlay.classList.contains('hidden') },
-      }
-
-      reset()
-      requestAnimationFrame(loop)
+      let touch = null
+      cv.addEventListener('pointerdown', e => { touch = {x:e.clientX,y:e.clientY,id:e.pointerId}; cv.setPointerCapture(e.pointerId) })
+      cv.addEventListener('pointermove', e => {
+        if (!touch || touch.id !== e.pointerId) return
+        const dx = e.clientX-touch.x, dy = e.clientY-touch.y
+        if (Math.max(Math.abs(dx),Math.abs(dy)) < 16) return
+        if (Math.abs(dx)>Math.abs(dy)) queueDir(dx>0?1:-1,0); else queueDir(0,dy>0?1:-1)
+        touch = {x:e.clientX,y:e.clientY,id:e.pointerId}
+      })
+      cv.addEventListener('pointerup', () => { touch = null })
+      cv.addEventListener('pointercancel', () => { touch = null })
+      window.addEventListener('blur', pause)
+      document.addEventListener('visibilitychange', () => { if (document.hidden) pause() })
+      window.__hub = { get score(){return score}, get over(){return state==='over'||state==='won'}, get started(){return state!=='ready'}, get paused(){return state==='paused'} }
+      reset(); draw(); requestAnimationFrame(loop)
     })()
   </script>
 </body>

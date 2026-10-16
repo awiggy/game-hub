@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>六宫数独</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>六宫数独</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -39,9 +34,15 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#d88544;--ink:#345647;--muted:#7a8b6c;--paper:#fffbed;--edge:#598367;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff4d6,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #e98458;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#aadae1;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#69816b;font-size:12px;font-weight:500;text-align:center}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6dc;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#778467;margin:0 0 17px}#overlay b{color:#ce7646}#overlay button{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px}.act,#opts button,#nums button,#keys button{border-radius:0;box-shadow:0 3px 0 #b5bd94}.act:active,#opts button:active,#nums button:active,#keys button:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#wrap{width:min(430px,calc(100% - 196px))}#hud{width:100%;flex-wrap:wrap}#hud>span{font-size:9px;padding:5px}#hud b{font-size:13px}#board{width:min(100%,calc(100svh - 220px));margin:auto;border-radius:0;background:#9eb697;border:4px solid #6d8c68;padding:4px;gap:3px}.cell{padding:0;border:0;border-radius:0;background:#fff2c7;color:#4d745d;font:700 clamp(13px,3vw,23px) ui-monospace,monospace}.cell.given{background:#e8e5be;color:#8a8c6a}.cell.user{color:#397b69}.cell.sel{outline:3px solid #e7a74e;outline-offset:-3px;background:#ffe09b}.cell.bad{color:#b83b39;background:#f6c1a5}.cell.bt{border-top:3px solid #6d8c68}.cell.bl{border-left:3px solid #6d8c68}#nums{width:100%;gap:6px}#nums button{height:36px;color:#5c7954;background:#dce9bd;border:2px solid #a3b68a}#nums button:not(:disabled):active{background:#f6d28a}@media(max-width:620px){#wrap{width:min(100%,360px)}#board{width:min(100%,calc(100svh - 190px))}#nums button{height:32px}}body{grid-template-columns:100%;justify-content:stretch}
+@media(max-height:480px){.side p.tips{display:none}.side svg{height:48px}.side h2{font-size:18px}}
+@media(max-height:430px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.foot{margin-top:8px;font-size:8px}.side .tips{display:none}}@media(max-height:430px){#board{width:min(100%,calc(100svh - 226px))}#nums button{height:30px}#wrap{gap:6px}}</style></head><body><main class="shell"><header class="top"><div><small>NUMBER COTTAGE</small><h1>六宫数独</h1></div><span class="tag">数字小屋</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>关卡<b id="lv">1/3</b></span>
@@ -52,12 +53,12 @@
     <div id="board"></div>
     <div id="nums"></div>
   </div>
-  <div id="overlay">
-    <h1>🔢 六宫数独</h1>
+
+  <aside class="side"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 65h120v15H0z" fill="#91b967"/><path d="M0 65h120v4H0z" fill="#cbe49c"/><path d="M22 18h76v42H22z" fill="#5e9478"/><rect x="26" y="22" width="20" height="34" fill="#fff1bf"/><text x="36" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">1</text><rect x="50" y="22" width="20" height="34" fill="#f8d57d"/><text x="60" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">2</text><rect x="74" y="22" width="20" height="34" fill="#c3e2a2"/><text x="84" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">3</text><path d="M10 56h4v12h-4zM6 60h12v4H6zM105 54h4v12h-4zM101 58h12v4h-12z" fill="#fffbed"/><path d="M10 60h4v4h-4zM105 58h4v4h-4z" fill="#efc55b"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>数字小屋</h2><p>把每个数字放进合适的小屋。</p><p class="tips">每行 / 列 / 2×3 宫，1–6 不重复</p></aside></div><footer class="foot"><span>每行 / 列 / 2×3 宫，1–6 不重复</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 65h120v15H0z" fill="#91b967"/><path d="M0 65h120v4H0z" fill="#cbe49c"/><path d="M22 18h76v42H22z" fill="#5e9478"/><rect x="26" y="22" width="20" height="34" fill="#fff1bf"/><text x="36" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">1</text><rect x="50" y="22" width="20" height="34" fill="#f8d57d"/><text x="60" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">2</text><rect x="74" y="22" width="20" height="34" fill="#c3e2a2"/><text x="84" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">3</text><path d="M10 56h4v12h-4zM6 60h12v4H6zM105 54h4v12h-4zM101 58h12v4h-12z" fill="#fffbed"/><path d="M10 60h4v4h-4zM105 58h4v4h-4z" fill="#efc55b"/></svg>
+    <h1>六宫数独</h1>
     <p>每行 / 列 / 宫（2×3）数字 1-6 不重复<br/>点空格再点数字填入，冲突标红<br/>三关挖空递增，越快分越高</p>
     <button id="ov-btn">开始游戏</button>
-  </div>
-  <script>
+  </section></div><script>
     (() => {
       const N = 6
       const SOLVE = [
@@ -75,8 +76,8 @@
       const overlay = document.getElementById('overlay')
       const ovBtn = document.getElementById('ov-btn')
 
-      let grid, given, level, sel, seconds, totalSec, timer, running, over
-      let best = Number(localStorage.getItem('minisudoku-best') || 0)
+      let grid, given, level, sel, seconds, totalSec, timer, running, over, transitioning=false
+      let best=0;try{best=Number(localStorage.getItem('minisudoku-best'))||0}catch{}
       if (best) bestEl.textContent = best
 
       for (let n = 1; n <= 6; n++) {
@@ -87,6 +88,7 @@
       }
 
       function load(n) {
+        transitioning=false
         level = n
         grid = SOLVE.map((row) => [...row])
         const holes = new Set()
@@ -99,7 +101,7 @@
       }
 
       function start() {
-        totalSec = 0; seconds = 0
+        totalSec = 0; seconds = 0; timeEl.textContent="0s"
         running = true; over = false
         clearInterval(timer)
         timer = setInterval(() => {
@@ -131,7 +133,7 @@
       }
 
       function fill(n) {
-        if (!running || over || sel === -1 || given[sel]) return
+        if (!running || over || transitioning || sel === -1 || given[sel]) return
         const r = (sel / 6) | 0, c = sel % 6
         grid[r][c] = grid[r][c] === n ? 0 : n
         render()
@@ -139,13 +141,14 @@
       }
 
       function win() {
+        transitioning=true
         if (level === HOLES.length - 1) {
           running = false; over = true
           clearInterval(timer)
           const score = Math.max(200, 1500 - totalSec)
-          if (score > best) { best = score; bestEl.textContent = best; localStorage.setItem('minisudoku-best', best) }
+          if (score > best) { best = score; bestEl.textContent = best; (()=>{try{localStorage.setItem('minisudoku-best',best)}catch{}})() }
           overlay.querySelector('h1').textContent = '🏆 全部完成'
-          overlay.querySelector('p').innerHTML = '用时 ' + totalSec + ' 秒 · 得分 <b style="color:#ffd23f">' + score + '</b>'
+          overlay.querySelector('p').innerHTML = '用时 ' + totalSec + ' 秒 · 得分 <b >' + score + '</b>'
           ovBtn.textContent = '再来一局'
           overlay.classList.remove('hidden')
         } else {
@@ -158,8 +161,9 @@
         let left = 0
         for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
           const i = r * 6 + c
-          const el = document.createElement('div')
+          const el = document.createElement('button')
           el.className = 'cell'
+          el.setAttribute('aria-label', (r+1)+'行'+(c+1)+'列')
           if (r % 2 === 0 && r > 0) el.classList.add('bt')
           if (c % 3 === 0 && c > 0) el.classList.add('bl')
           if (i === sel) el.classList.add('sel')
@@ -179,7 +183,7 @@
       window.__hub = {
         get score() { return Math.max(200, 1500 - totalSec) },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       grid = SOLVE.map((row) => [...row])
@@ -187,6 +191,4 @@
       level = 0; sel = -1; seconds = 0; totalSec = 0; running = false; over = false
       render()
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>

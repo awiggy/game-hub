@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>猜词五连</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>猜词五连</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -41,9 +36,16 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#d88544;--ink:#345647;--muted:#7a8b6c;--paper:#fffbed;--edge:#598367;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff4d6,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #e98458;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#aadae1;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#69816b;font-size:12px;font-weight:500;text-align:center}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6dc;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#778467;margin:0 0 17px}#overlay b{color:#ce7646}#overlay button{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px}.act,#opts button,#nums button,#keys button{border-radius:0;box-shadow:0 3px 0 #b5bd94}.act:active,#opts button:active,#nums button:active,#keys button:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#wrap{width:min(460px,calc(100% - 196px));gap:7px}#board{gap:4px}.row{gap:4px}.tile{width:clamp(24px,calc((100svh - 250px)/6),45px);height:clamp(24px,calc((100svh - 250px)/6),45px);border:2px solid #b9c39b;border-radius:0;background:#fff2cb;font:700 23px ui-monospace,monospace;color:#4e745a}.tile.g{background:#83b28b;border-color:#618c6d;color:#fffbed}.tile.y{background:#e8c76e;border-color:#c8a652;color:#6b592e}.tile.b{background:#c4c8b6;border-color:#a5af9b;color:#fffbed}#keys{grid-template-columns:repeat(10,1fr);gap:4px}#keys button{padding:0;height:33px;font-size:12px;background:#e1e8c8;border:1px solid #aaba8e;color:#527455}#keys button.enter{grid-column:span 2;background:#edb67c;color:#705334;border-color:#c59c68}#keys button.del{grid-column:span 2}#keys button.g{background:#83b28b;color:#fffbed}#keys button.y{background:#e8c76e}#keys button.b{background:#bdc6b0;opacity:1}#msg{min-height:18px;font-size:10px}@media(max-width:620px){#wrap{width:min(100%,380px)}.tile{font-size:19px}#keys button{height:30px;font-size:11px}}body{grid-template-columns:100%;justify-content:stretch}
+@media(max-height:480px){.side p.tips{display:none}.side svg{height:48px}.side h2{font-size:18px}}
+#keys button.enter{grid-column:span 1;font-size:10px}#keys button.del{grid-column:span 1}.tile{width:clamp(20px,calc((100svh - 265px)/6),45px);height:clamp(20px,calc((100svh - 265px)/6),45px)}@media(max-height:480px){#keys button{height:27px}.tile{font-size:18px}#wrap{gap:5px}}
+@media(max-height:430px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.foot{margin-top:8px;font-size:8px}.side .tips{display:none}}.tile{width:clamp(20px,calc((100svh - 300px)/6),45px);height:clamp(20px,calc((100svh - 300px)/6),45px)}@media(max-height:430px){#keys button{height:24px}#wrap{gap:4px}#hud{margin-bottom:3px}#hud>span{padding:4px}}</style></head><body><main class="shell"><header class="top"><div><small>LETTER GARDEN</small><h1>猜词五连</h1></div><span class="tag">字母花园</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>解开<b id="score">0</b>词</span>
@@ -53,12 +55,12 @@
     <div id="msg">输入 5 字母单词并提交</div>
     <div id="keys"></div>
   </div>
-  <div id="overlay">
-    <h1>🟩 猜词五连</h1>
+
+  <aside class="side"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 65h120v15H0z" fill="#91b967"/><path d="M0 65h120v4H0z" fill="#cbe49c"/><path d="M22 18h76v42H22z" fill="#5e9478"/><rect x="26" y="22" width="20" height="34" fill="#fff1bf"/><text x="36" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">A</text><rect x="50" y="22" width="20" height="34" fill="#f8d57d"/><text x="60" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">B</text><rect x="74" y="22" width="20" height="34" fill="#c3e2a2"/><text x="84" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">C</text><path d="M10 56h4v12h-4zM6 60h12v4H6zM105 54h4v12h-4zM101 58h12v4h-12z" fill="#fffbed"/><path d="M10 60h4v4h-4zM105 58h4v4h-4z" fill="#efc55b"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>字母花园</h2><p>让字母开花，让线索说话。</p><p class="tips">绿：位置对 · 黄：位置错 · 灰：没有</p></aside></div><footer class="foot"><span>绿：位置对 · 黄：位置错 · 灰：没有</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 65h120v15H0z" fill="#91b967"/><path d="M0 65h120v4H0z" fill="#cbe49c"/><path d="M22 18h76v42H22z" fill="#5e9478"/><rect x="26" y="22" width="20" height="34" fill="#fff1bf"/><text x="36" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">A</text><rect x="50" y="22" width="20" height="34" fill="#f8d57d"/><text x="60" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">B</text><rect x="74" y="22" width="20" height="34" fill="#c3e2a2"/><text x="84" y="45" text-anchor="middle" font-family="monospace" font-size="20" fill="#5b704e">C</text><path d="M10 56h4v12h-4zM6 60h12v4H6zM105 54h4v12h-4zM101 58h12v4h-12z" fill="#fffbed"/><path d="M10 60h4v4h-4zM105 58h4v4h-4z" fill="#efc55b"/></svg>
+    <h1>猜词五连</h1>
     <p>六次机会猜 5 字母单词<br/>绿=位置对 · 黄=有此字母 · 灰=没有<br/>解开越多分越高</p>
     <button id="ov-btn">开始猜词</button>
-  </div>
-  <script>
+  </section></div><script>
     (() => {
       const WORDS = ['apple', 'beach', 'brain', 'candy', 'dream', 'eagle', 'flame', 'ghost', 'heart', 'ivory',
         'joker', 'koala', 'lemon', 'medal', 'noble', 'ocean', 'piano', 'quilt', 'raven', 'solar',
@@ -71,8 +73,8 @@
       const overlay = document.getElementById('overlay')
       const ovBtn = document.getElementById('ov-btn')
 
-      let answer, rows, cur, rowIdx, solved, running, over
-      let best = Number(localStorage.getItem('wordle-best') || 0)
+      let answer, rows, cur, rowIdx, solved, running, over, locked=false
+      let best=0;try{best=Number(localStorage.getItem('wordle-best'))||0}catch{}
       bestEl.textContent = best
 
       const keyBtns = {}
@@ -112,6 +114,7 @@
       }
 
       function newWord() {
+        locked=false
         answer = WORDS[(Math.random() * WORDS.length) | 0]
         rows = Array.from({ length: 6 }, () => Array(5).fill(''))
         cur = 0; rowIdx = 0
@@ -125,17 +128,17 @@
         if (win) {
           solved++
           scoreEl.textContent = solved
-          if (solved > best) { best = solved; bestEl.textContent = best; localStorage.setItem('wordle-best', best) }
+          if (solved > best) { best = solved; bestEl.textContent = best; (()=>{try{localStorage.setItem('wordle-best',best)}catch{}})() }
         }
         overlay.querySelector('h1').textContent = win ? '🎉 猜中了' : '😵 机会用完'
         overlay.querySelector('p').innerHTML =
-          '答案 <b style="color:#ffd23f">' + answer.toUpperCase() + '</b> · 解开 ' + solved + ' 词 · 最佳 ' + best
-        ovBtn.textContent = '再来一局'
+          '答案 <b >' + answer.toUpperCase() + '</b> · 解开 ' + solved + ' 词 · 最佳 ' + best
+        ovBtn.textContent = win ? '下一词 →' : '再来一局'
         overlay.classList.remove('hidden')
       }
 
       function key(ch) {
-        if (!running || over) return
+        if (!running || over || locked) return
         if (ch === '⌫') {
           if (cur > 0) { cur--; rows[rowIdx][cur] = '' }
         } else if (ch === '⏎') {
@@ -156,7 +159,7 @@
         const result = Array(5).fill('b')
         const pool = answer.split('')
         for (let i = 0; i < 5; i++) {
-          if (guess[i] === answer[i]) { result[i] = 'g'; pool[pool.indexOf(guess[i])] = null }
+          if (guess[i] === answer[i]) { result[i] = 'g'; pool[i] = null }
         }
         for (let i = 0; i < 5; i++) {
           if (result[i] === 'g') continue
@@ -175,7 +178,8 @@
           if (nw > cur2) { b.classList.remove('g', 'y', 'b'); b.classList.add(result[i]) }
         }
         if (guess === answer) {
-          msgEl.textContent = '🎉 猜中！'
+          locked=true
+          msgEl.textContent = '猜中！小花开了。'
           setTimeout(() => end(true), 800)
           return
         }
@@ -188,20 +192,18 @@
       window.addEventListener('keydown', (e) => {
         const ch = e.key.toLowerCase()
         if (ch === 'enter' || ch === ' ') { e.preventDefault(); key('⏎'); return }
-        if (ch === 'backspace') { key('⌫'); return }
+        if (ch === 'backspace') { e.preventDefault(); key('⌫'); return }
         if (/^[a-z]$/.test(ch)) key(ch)
       })
-      ovBtn.addEventListener('click', start)
+      ovBtn.addEventListener('click',()=>{if(over&&locked){running=true;over=false;overlay.classList.add('hidden');newWord()}else start()})
 
       window.__hub = {
         get score() { return solved },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       answer = 'apple'; rows = Array.from({ length: 6 }, () => Array(5).fill(''))
       cur = 0; rowIdx = 0; solved = 0; running = false; over = false
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>

@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>荡绳飞跃</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>荡绳飞跃</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -22,173 +17,207 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#d88544;--ink:#345647;--muted:#7a8b6c;--paper:#fffbed;--edge:#598367;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff4d6,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #e98458;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#aadae1;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#69816b;font-size:12px;font-weight:500;text-align:center}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6dc;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#778467;margin:0 0 17px}#overlay b{color:#ce7646}#overlay button{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px}.act,#opts button,#nums button,#keys button{border-radius:0;box-shadow:0 3px 0 #b5bd94}.act:active,#opts button:active,#nums button:active,#keys button:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#wrap{width:min(520px,calc((100svh - 163px)*0.9285714285714286),calc(100% - 196px))}@media(max-width:620px){#wrap{width:min(100%,calc((100svh - 134px)*0.9285714285714286))}}body{grid-template-columns:100%;justify-content:stretch}
+@media(max-height:480px){.side p.tips{display:none}.side svg{height:48px}.side h2{font-size:18px}}
+@media(max-height:430px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.foot{margin-top:8px;font-size:8px}.side .tips{display:none}}
+.controls{margin-top:12px;text-align:center}#launch{width:100%;min-height:42px;border:2px solid #a87943;background:#f1d7a1;color:#624b30;font-weight:800;font-size:15px;box-shadow:0 3px 0 #a87943;cursor:pointer}#launch[data-ready="true"]{background:#318160;border-color:#235e47;box-shadow:0 3px 0 #235e47;color:#fffbed}#launch:active{transform:translateY(2px)}#launch:disabled{cursor:default;background:#e4e6d2;border-color:#9aa98a;color:#60765b;box-shadow:0 3px 0 #9aa98a}#hint{font-size:11px;line-height:1.5;min-height:33px;margin-top:9px;color:#526e58}#wrap{width:min(520px,calc((100svh - 260px)*0.92857),calc(100% - 196px))}.shell{margin:auto}@media(max-width:620px){#wrap{width:min(100%,calc((100svh - 228px)*0.92857))}}@media(max-height:480px){.shell{padding:8px 0;width:calc(100% - 24px)}#wrap{width:min(calc((100svh - 200px)*0.92857),calc(100% - 160px))}.layout{align-items:center}.foot{display:none}.controls{margin-top:8px}#launch{min-height:36px;font-size:13px}#hint{font-size:10px}}@media(max-height:480px) and (max-width:620px){#wrap{width:min(100%,calc((100svh - 200px)*0.92857))}}
+</style></head><body><main class="shell"><header class="top"><div><small>FOREST SWING</small><h1>荡绳飞跃</h1></div><span class="tag">森林飞跃</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>平台<b id="score">0</b></span>
       <span>BEST<b id="best">0</b></span>
     </div>
-    <canvas id="cv" width="520" height="560"></canvas>
-    <div id="overlay">
-      <h1>🕸️ 荡绳飞跃</h1>
-      <p>角色抓绳摆动（自动）<br/>摆到高处松手飞向下一平台<br/>掉下悬崖即结束</p>
-      <button id="ov-btn">开始飞跃</button>
-    </div>
-  </div>
-  <script>
-    (() => {
-      const cv = document.getElementById('cv')
-      const ctx = cv.getContext('2d')
-      const W = cv.width, H = cv.height
-      const GROUND = H - 40
-      const scoreEl = document.getElementById('score')
-      const bestEl = document.getElementById('best')
-      const overlay = document.getElementById('overlay')
-      const ovBtn = document.getElementById('ov-btn')
+    <canvas id="cv" width="520" height="560"></canvas><div class="controls"><button id="launch" type="button" disabled>等绿灯再放手</button><p id="hint" role="status" aria-live="polite">等落点变绿，再按一次松手</p></div>
 
-      // 世界随角色前移滚动
-      let plats, idx, wx, phase, ang, angDir, vx, vy, guy, running, over, frame
-      let best = Number(localStorage.getItem('ropeswing-best') || 0)
+  </div>
+  <aside class="side"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 65h120v15H0z" fill="#91b967"/><path d="M0 65h120v4H0z" fill="#cbe49c"/><path d="M18 12h84v5H18zM60 17v24" stroke="#956e43" stroke-width="3"/><path d="M53 34h14v14H53z" fill="#f7d58d"/><path d="M49 48h22v15H49z" fill="#e27e58"/><path d="M57 38h3v4h-3zM63 38h3v4h-3z" fill="#355849"/><path d="M10 56h4v12h-4zM6 60h12v4H6zM105 54h4v12h-4zM101 58h12v4h-12z" fill="#fffbed"/><path d="M10 60h4v4h-4zM105 58h4v4h-4z" fill="#efc55b"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>森林飞跃</h2><p>虚线告诉你会落在哪。<br>绿色：现在松手就能落上岛！</p><p class="tips">等落点变绿 → 按一次松手 → 自动落地</p></aside></div><footer class="foot"><span>等落点变绿 → 按一次松手 → 自动落地</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 120 80" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 65h120v15H0z" fill="#91b967"/><path d="M0 65h120v4H0z" fill="#cbe49c"/><path d="M18 12h84v5H18zM60 17v24" stroke="#956e43" stroke-width="3"/><path d="M53 34h14v14H53z" fill="#f7d58d"/><path d="M49 48h22v15H49z" fill="#e27e58"/><path d="M57 38h3v4h-3zM63 38h3v4h-3z" fill="#355849"/><path d="M10 56h4v12h-4zM6 60h12v4H6zM105 54h4v12h-4zM101 58h12v4h-12z" fill="#fffbed"/><path d="M10 60h4v4h-4zM105 58h4v4h-4z" fill="#efc55b"/></svg>
+      <h1>荡绳飞跃</h1>
+      <p>① 小人会自动荡起来，不用连按<br/>② 等落点和按钮变绿，按一次松手<br/>③ 自动落地，掉落也能重试当前小岛</p>
+      <button id="ov-btn">开始飞跃</button>
+    </section></div><script>
+    (() => {
+      const cv = document.getElementById('cv'), ctx = cv.getContext('2d')
+      const W = cv.width, H = cv.height, GROUND = H - 40
+      const scoreEl = document.getElementById('score'), bestEl = document.getElementById('best')
+      const overlay = document.getElementById('overlay'), ovBtn = document.getElementById('ov-btn')
+      const launchBtn = document.getElementById('launch'), hintEl = document.getElementById('hint')
+      const ROPE = 170, PIVOT_Y = 30, HAND_TO_FEET = 40
+      const ANGLE_STEP = 0.022, SPEED = ROPE * ANGLE_STEP, GRAVITY = 0.3
+      let plats = [{x: 0, w: 160, y: 0}], idx = 0, wx = 0, phase = 'swing'
+      let ang = -0.35, angDir = 1, vx = 0, vy = 0, guy = {x: 0, y: 0}
+      let running = false, over = false, frame = 0, transition = 0, from = null, miss = ''
+      let lastTime = null, accumulated = 0, paused = false
+      let best = 0
+      try { best = Number(localStorage.getItem('ropeswing-best')) || 0 } catch {}
       bestEl.textContent = best
 
-      const ROPE = 170
-
-      function newPlat(dist) {
-        const last = plats[plats.length - 1]
-        return { x: last.x + dist, w: 90 + Math.random() * 50, y: 0 }
+      function newPlat() {
+        const last = plats[plats.length - 1], beginner = plats.length < 4
+        return {x: last.x + (beginner ? 235 : 235 + Math.random() * 35), w: beginner ? 165 : 145 + Math.random() * 20, y: 0}
       }
-
+      function swingPosition() {
+        return {x: plats[idx].x + plats[idx].w / 2 + Math.sin(ang) * ROPE,
+          y: PIVOT_Y + Math.cos(ang) * ROPE + HAND_TO_FEET}
+      }
+      function prepareSwing() {
+        phase = 'swing'; ang = -0.35; angDir = 1; vx = 0; vy = 0
+        guy = swingPosition()
+      }
       function start() {
-        plats = [{ x: 0, w: 130 }]
-        for (let i = 0; i < 6; i++) plats.push(newPlat(230 + Math.random() * 90))
-        idx = 0; wx = 0
-        phase = 'swing'
-        ang = -0.9; angDir = 1
-        vx = 0; vy = 0
-        guy = { x: 0, y: GROUND - 20 }
-        running = true; over = false; frame = 0
-        scoreEl.textContent = 0
-        overlay.classList.add('hidden')
+        plats = [{x: 0, w: 160, y: 0}]
+        for (let i = 0; i < 6; i++) plats.push(newPlat())
+        idx = 0; wx = 0; frame = 0; scoreEl.textContent = 0
+        resumeIsland()
       }
-
+      function resumeIsland() {
+        prepareSwing(); wx = Math.max(0, plats[idx].x - 35)
+        running = true; over = false; paused = false; miss = ''
+        lastTime = null; accumulated = 0
+        overlay.classList.add('hidden'); updateGuide()
+      }
+      function velocity() {
+        return {x: Math.cos(ang) * SPEED * angDir, y: -Math.sin(ang) * SPEED * angDir}
+      }
+      // Prediction and flight share the same discrete integration and landing predicate.
+      function advance(point, speed) {
+        speed.y += GRAVITY; point.x += speed.x; point.y += speed.y
+      }
+      function onIsland(x, p) { return x >= p.x + 4 && x <= p.x + p.w - 4 }
+      function predict() {
+        const point = {...guy}, speed = velocity(), dots = [], p = plats[idx + 1]
+        for (let i = 0; i < 180; i++) {
+          advance(point, speed)
+          if (i % 4 === 0) dots.push({...point})
+          if (point.y >= GROUND && speed.y > 0) break
+        }
+        return {x: point.x, safe: !!p && onIsland(point.x, p), dots}
+      }
+      function guideMessage(prediction) {
+        if (prediction.safe) return '落点在小岛上 · 点击按钮 / 画面 / 空格'
+        if (angDir < 0) return '正在往回荡 · 等下一次向右摆动'
+        return prediction.x < plats[idx + 1].x ? '还不够远 · 再等一会儿，等落点变绿' : '会飞过头 · 等下一次向右摆动'
+      }
+      function setText(el, text) { if (el.textContent !== text) el.textContent = text }
+      function updateGuide() {
+        launchBtn.disabled = !running || paused || phase !== 'swing'
+        launchBtn.dataset.ready = 'false'
+        if (!running && !over) { setText(launchBtn, '等绿灯再放手'); setText(hintEl, '等落点变绿，再按一次松手'); return }
+        if (paused) { setText(launchBtn, '已暂停'); setText(hintEl, '回到游戏后继续'); return }
+        if (phase === 'swing') {
+          const prediction = predict()
+          launchBtn.dataset.ready = String(prediction.safe)
+          setText(launchBtn, prediction.safe ? '现在放手！' : '等绿灯再放手')
+          setText(hintEl, guideMessage(prediction))
+        } else if (phase === 'fly') {
+          setText(launchBtn, '飞行中…'); setText(hintEl, '已经松手啦，不用再按 · 自动落地')
+        } else {
+          setText(launchBtn, '成功！准备下一跳'); setText(hintEl, '抓好下一根绳子，继续等绿灯')
+        }
+      }
       function end() {
         running = false; over = true
-        if (idx > best) { best = idx; bestEl.textContent = best; localStorage.setItem('ropeswing-best', best) }
-        overlay.querySelector('h1').textContent = '😱 掉下去了'
-        overlay.querySelector('p').innerHTML = '飞跃 <b style="color:#ffd23f">' + idx + '</b> 个平台 · 最佳 ' + best
-        ovBtn.textContent = '再来一局'
-        overlay.classList.remove('hidden')
+        overlay.querySelector('h1').textContent = '差一点，再试一次'
+        overlay.querySelector('p').textContent = miss + ' 已到达的 ' + idx + ' 座小岛会保留。等落点和按钮变绿，再按一次松手。'
+        ovBtn.textContent = '重试这座岛'
+        overlay.classList.remove('hidden'); updateGuide()
       }
-
       function release() {
-        if (!running || over || phase !== 'swing') return
-        // 切向速度 = 角速度 × 绳长
-        const spd = 7.2
-        vx = Math.cos(ang) * spd * angDir
-        vy = Math.sin(ang) * spd
-        // 向上分量补偿：让摆动高处释放有较大上升
-        vy -= Math.abs(ang) * 3.4
-        phase = 'fly'
-        guy.x += Math.cos(ang) * 8 * angDir
+        if (!running || paused || over || phase !== 'swing') return
+        const prediction = predict(), p = plats[idx + 1], speed = velocity()
+        miss = prediction.x < p.x + 4 ? '松手太早或正在往回荡，没飞到小岛。' : '松手太晚，飞过了小岛。'
+        vx = speed.x; vy = speed.y; phase = 'fly'; updateGuide()
       }
-
       function step() {
+        if (!running || paused || over) return
         frame++
         if (phase === 'swing') {
-          ang += angDir * 0.032
-          if (ang > 0.95) { ang = 0.95; angDir = -1 }
-          if (ang < -0.95) { ang = -0.95; angDir = 1 }
+          ang += angDir * ANGLE_STEP
+          if (ang >= 0.95) { ang = 0.95; angDir = -1 }
+          if (ang <= -0.35) { ang = -0.35; angDir = 1 }
+          guy = swingPosition()
         } else if (phase === 'fly') {
-          vy += 0.3
-          wx += vx
-          guy.x += vx
-          guy.y += vy
+          const speed = {x: vx, y: vy}; advance(guy, speed); vy = speed.y
           const p = plats[idx + 1]
-          if (p && guy.y >= GROUND - p.y && vy > 0) {
-            // 落点判定
-            const worldX = guy.x
-            if (worldX > p.x + 8 && worldX < p.x + p.w - 8) {
-              idx++
-              scoreEl.textContent = idx
-              guy.y = GROUND - 20
-              plats.push(newPlat(230 + Math.random() * 90))
-              phase = 'swing'
-              ang = -0.6; angDir = 1
-            } else return end()
+          if (guy.y >= GROUND && vy > 0) {
+            if (!onIsland(guy.x, p)) return end()
+            idx++; scoreEl.textContent = idx; guy.y = GROUND
+            if (idx > best) {
+              best = idx; bestEl.textContent = best
+              try { localStorage.setItem('ropeswing-best', best) } catch {}
+            }
+            plats.push(newPlat()); phase = 'land'; transition = 0; from = {...guy}
           }
-          if (guy.y > H + 30) return end()
+        } else if (phase === 'land') {
+          if (++transition >= 30) { phase = 'lift'; transition = 0; ang = -0.35; angDir = 1 }
+        } else if (phase === 'lift') {
+          const t = Math.min(++transition / 40, 1), ease = t * t * (3 - 2 * t), to = swingPosition()
+          guy = {x: from.x + (to.x - from.x) * ease, y: from.y + (to.y - from.y) * ease}
+          if (t === 1) prepareSwing()
         }
+        const camera = Math.max(0, plats[idx].x - 35)
+        wx += (camera - wx) * 0.12
+        updateGuide()
       }
 
+      function box(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),w,h)}
+      function cloud(x,y,s=1){box(x+8*s,y,32*s,8*s,'#fffbed');box(x,y+8*s,56*s,12*s,'#fffbed')}
+      function sky(){box(0,0,W,H,'#b0dce4');cloud(28,70,1.1);cloud(W-125,120,.8);cloud(W*.43,28,.6);for(let i=0;i<7;i++){box(i*96-20,H-130,65,130,'#bad5ac');box(i*96,H-150,28,30,'#bad5ac')}}
+      function flower(x,y){box(x+4,y,4,12,'#fffbed');box(x,y+4,12,4,'#fffbed');box(x+4,y+4,4,4,'#e8b951')}
+      function kid(x,y,s=2){box(x+3*s,y,10*s,3*s,'#6b9162');box(x+2*s,y+3*s,12*s,9*s,'#ffdfaa');box(x+5*s,y+6*s,2*s,2*s,'#3d5647');box(x+10*s,y+6*s,2*s,2*s,'#3d5647');box(x+2*s,y+12*s,12*s,10*s,'#e88c5f');box(x+2*s,y+22*s,4*s,4*s,'#526f59');box(x+10*s,y+22*s,4*s,4*s,'#526f59')}
       function draw() {
-        ctx.fillStyle = '#14161f'
-        ctx.fillRect(0, 0, W, H)
-        // 悬崖底
-        ctx.fillStyle = '#10121a'
-        ctx.fillRect(0, GROUND + 24, W, H - GROUND)
-        // 平台（世界坐标 → 屏幕）
-        const anchorX = plats[idx].x + plats[idx].w / 2
-        for (const p of plats) {
-          const sx = p.x - wx
-          if (sx + p.w < -50 || sx > W + 50) continue
-          ctx.fillStyle = '#2f55e4'
-          ctx.beginPath(); ctx.roundRect(sx, GROUND - p.y, p.w, 26, 6); ctx.fill()
+        sky(); box(0,GROUND,W,H-GROUND,'#6aacc0'); box(0,GROUND+10,W,4,'#99d1d5')
+        const prediction = phase === 'swing' && running ? predict() : null
+        for (let i = Math.max(0, idx - 1); i < plats.length; i++) {
+          const p = plats[i], x = p.x - wx
+          if (x + p.w < 0 || x > W) continue
+          box(x,GROUND,p.w,40,'#a47850'); box(x,GROUND,p.w,9,'#7eb567'); box(x+4,GROUND+9,p.w-8,4,'#c5dc90')
+          for(let j=8;j<p.w-8;j+=24)box(x+j,GROUND+22,9,6,'#c69c65')
+          flower(x+p.w-22,GROUND-12)
+          if (i === idx + 1) {
+            box(x,GROUND-4,p.w,4,prediction && prediction.safe ? '#238460' : '#fff3b7')
+            ctx.fillStyle = '#345647'; ctx.font = 'bold 14px sans-serif'; ctx.fillText('第 ' + (idx + 1) + ' 座小岛', x+15,GROUND-25)
+          }
         }
-        // 绳 + 角色在摆动相位
-        if (phase === 'swing') {
-          const ax = anchorX - wx + 0, ay = 30
-          const gx = ax + Math.sin(ang) * ROPE
-          const gy = ay + Math.cos(ang) * ROPE
-          ctx.strokeStyle = '#8b93a7'
-          ctx.lineWidth = 2
-          ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(gx, gy); ctx.stroke()
-          ctx.font = '30px sans-serif'
-          ctx.fillText('🧗', gx - 14, gy + 10)
-        } else {
-          ctx.font = '30px sans-serif'
-          ctx.fillText('🧗', guy.x - wx - 14, guy.y)
+        if (prediction) {
+          const color = prediction.safe ? '#21845f' : '#c77550'
+          for (const dot of prediction.dots) if (dot.y < GROUND) box(dot.x-wx-2,dot.y-2,4,4,color)
+          const x = prediction.x - wx
+          box(x-9,GROUND-7,18,5,color); box(x-3,GROUND-13,6,6,color)
         }
-        // 下一平台标记
-        const next = plats[idx + 1]
-        if (next) {
-          const sx = next.x - wx + next.w / 2
-          ctx.fillStyle = '#ffd23f'
-          ctx.font = '700 12px sans-serif'
-          ctx.fillText('↓ 目标', sx - 18, GROUND - next.y - 34)
+        const ax = plats[idx].x + plats[idx].w / 2 - wx, gx = guy.x - wx, gy = guy.y
+        if (phase === 'swing' || phase === 'lift') {
+          ctx.strokeStyle = '#8d7751'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(ax,PIVOT_Y); ctx.lineTo(gx,gy-HAND_TO_FEET); ctx.stroke()
+          box(ax-22,15,44,10,'#769b59'); box(gx-20,gy-HAND_TO_FEET,40,5,'#ffdfaa')
         }
+        kid(gx-16,gy-52,2)
       }
-
-      function loop() {
+      function loop(time) {
         requestAnimationFrame(loop)
-        if (running && !over) step()
+        if (lastTime === null) lastTime = time
+        accumulated += Math.min(Math.max(time - lastTime, 0), 100); lastTime = time
+        while (accumulated >= 1000 / 60) { step(); accumulated -= 1000 / 60 }
         draw()
       }
-
-      window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space') {
-          e.preventDefault()
-          if (!running && !overlay.classList.contains('hidden')) start()
-          else release()
-        }
+      function setPaused(value) { paused = value; lastTime = null; accumulated = 0; updateGuide() }
+      window.addEventListener('blur', () => setPaused(true))
+      window.addEventListener('focus', () => setPaused(false))
+      window.addEventListener('keydown', e => {
+        if (e.code !== 'Space') return
+        e.preventDefault(); if (e.repeat) return
+        if (!running) { if (over) resumeIsland(); else start() } else release()
       })
-      cv.addEventListener('pointerdown', (e) => { e.preventDefault(); release() })
-      ovBtn.addEventListener('click', start)
+      cv.addEventListener('pointerdown', e => { e.preventDefault(); release() })
+      launchBtn.addEventListener('click', release)
+      ovBtn.addEventListener('click', () => { if (over) resumeIsland(); else start() })
+      window.__hub = {get score(){return idx}, get over(){return over}, get started(){return running || over}}
+      guy = swingPosition()
       requestAnimationFrame(loop)
-
-      window.__hub = {
-        get score() { return idx },
-        get over() { return over },
-        get started() { return running },
-      }
-
-      plats = [{ x: 0, w: 130 }]
-      idx = 0; wx = 0; phase = 'swing'
-      ang = -0.9; angDir = 1; vx = 0; vy = 0
-      guy = { x: 0, y: GROUND - 20 }
-      running = false; over = false; frame = 0
     })()
-  </script>
-</body>
-</html>
+
+</script></body></html>

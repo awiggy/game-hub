@@ -8,10 +8,11 @@
     "check": "node scripts/check-games.js",
     "predev": "npm run registry",
     "dev": "vite",
-    "prebuild": "npm run registry && npm run check && npm run smoke",
+    "prebuild": "npm run registry && npm run check && npm run smoke && npm run test:gameplay",
     "build": "vite build",
     "preview": "vite preview",
-    "smoke": "node scripts/run-game-smoke.js"
+    "smoke": "node scripts/run-game-smoke.js",
+    "test:gameplay": "node scripts/check-pixel-physics.cjs && node scripts/check-next-ten.cjs"
   },
   "dependencies": {
     "vue": "^3.5.13",

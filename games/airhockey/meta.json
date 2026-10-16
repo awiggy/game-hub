@@ -2,11 +2,18 @@
   "id": "airhockey",
   "name": "冰球对战",
   "emoji": "🏒",
-  "categories": ["sports", "arcade"],
-  "tags": ["体育", "对战", "反应"],
+  "categories": [
+    "sports",
+    "arcade"
+  ],
+  "tags": [
+    "体育",
+    "对战",
+    "反应"
+  ],
   "summary": "桌面上疾驰的冰球：移动球拍攻防兼备，先攻进对方球门 5 次获胜！",
-  "description": "冰球桌对战。你的球拍在下半场跟随指针移动，AI 把守上半场；冰球高速滑行并全桌反弹，撞入对方球门得 1 分。先得 5 分者获胜。",
-  "howToPlay": "移动鼠标 / 手指控制球拍；把冰球打进对方球门。",
+  "description": "明亮卡通像素风的薄荷冰球场。冰球桌对战。你的球拍在下半场跟随指针移动，AI 把守上半场；冰球高速滑行并全桌反弹，撞入对方球门得 1 分。先得 5 分者获胜。",
+  "howToPlay": "拖动下方球拍 · 攻进上方球门 · 先得 5 分。",
   "entry": "airhockey/index.html",
   "platform": "浏览器",
   "playMode": "online",

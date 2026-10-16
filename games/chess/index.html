@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>国际象棋</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>国际象棋</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -35,9 +30,13 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#c57b3f;--ink:#345647;--muted:#71836b;--paper:#fffbed;--edge:#648d73;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;grid-template-columns:100%;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff1d4,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #da8054;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#b6e0e3;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{position:static;width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#59745f;font-size:12px;font-weight:500;text-align:center;line-height:1.6}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6ed;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;position:static;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#718068;margin:0 0 17px}#overlay b{color:#c57546}#overlay button,.action{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px;cursor:pointer}.action:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}.foot{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#board{border:4px solid #6b8a63;border-radius:0;box-shadow:0 5px 0 #49684e}.sq{border:0;border-radius:0;padding:0;min-width:0;background:none;cursor:pointer}.sq.light{background:#f1e7bd}.sq.dark{background:#a6c496}.sq.sel{background:#f5d883;box-shadow:inset 0 0 0 3px #bb8c45}.sq.can:after{width:22%;border-radius:0;background:#5b9c6d;box-shadow:0 0 0 3px #d8e5b780}.sq.cap:after{border-radius:0;border:3px solid #d77c55}.sq.check{background:#e7a17d}.sq svg{width:83%;height:83%;position:static;image-rendering:pixelated;pointer-events:none}.sq:focus-visible{z-index:3}#wrap{width:min(440px,calc(100svh - 195px),calc(100% - 196px))}@media(max-width:620px){#wrap{width:min(100%,calc(100svh - 180px))}#hud{font-size:9px}#msg{font-size:10px}}</style></head><body><main class="shell"><header class="top"><div><small>WOODLAND CHESS</small><h1>国际象棋</h1></div><span class="tag">森林棋社</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>你(白) <b id="me">0</b> 胜</span>
@@ -47,13 +46,15 @@
     <div id="board"></div>
     <div id="msg">点击白子选中，再点目标格</div>
   </div>
-  <div id="overlay">
-    <h1>♞ 国际象棋</h1>
-    <p>你执白先行，全棋种移动 + 王车易位<br/>升变自动升后 · AI 三步深搜索<br/>将死黑王获胜</p>
+
+  <aside class="side"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="40" y="8" width="4" height="4" fill="#fff6dc"/><rect x="44" y="8" width="4" height="4" fill="#fff6dc"/><rect x="32" y="12" width="4" height="4" fill="#fff6dc"/><rect x="36" y="12" width="4" height="4" fill="#fff6dc"/><rect x="40" y="12" width="4" height="4" fill="#fff6dc"/><rect x="44" y="12" width="4" height="4" fill="#fff6dc"/><rect x="48" y="12" width="4" height="4" fill="#fff6dc"/><rect x="52" y="12" width="4" height="4" fill="#fff6dc"/><rect x="40" y="16" width="4" height="4" fill="#fff6dc"/><rect x="44" y="16" width="4" height="4" fill="#fff6dc"/><rect x="36" y="20" width="4" height="4" fill="#fff6dc"/><rect x="40" y="20" width="4" height="4" fill="#fff6dc"/><rect x="44" y="20" width="4" height="4" fill="#fff6dc"/><rect x="48" y="20" width="4" height="4" fill="#fff6dc"/><rect x="32" y="24" width="4" height="4" fill="#fff6dc"/><rect x="36" y="24" width="4" height="4" fill="#fff6dc"/><rect x="40" y="24" width="4" height="4" fill="#fff6dc"/><rect x="44" y="24" width="4" height="4" fill="#fff6dc"/><rect x="48" y="24" width="4" height="4" fill="#fff6dc"/><rect x="52" y="24" width="4" height="4" fill="#fff6dc"/><rect x="36" y="28" width="4" height="4" fill="#fff6dc"/><rect x="40" y="28" width="4" height="4" fill="#fff6dc"/><rect x="44" y="28" width="4" height="4" fill="#fff6dc"/><rect x="48" y="28" width="4" height="4" fill="#fff6dc"/><rect x="36" y="32" width="4" height="4" fill="#fff6dc"/><rect x="40" y="32" width="4" height="4" fill="#fff6dc"/><rect x="44" y="32" width="4" height="4" fill="#fff6dc"/><rect x="48" y="32" width="4" height="4" fill="#fff6dc"/><rect x="32" y="36" width="4" height="4" fill="#fff6dc"/><rect x="36" y="36" width="4" height="4" fill="#fff6dc"/><rect x="40" y="36" width="4" height="4" fill="#fff6dc"/><rect x="44" y="36" width="4" height="4" fill="#fff6dc"/><rect x="48" y="36" width="4" height="4" fill="#fff6dc"/><rect x="52" y="36" width="4" height="4" fill="#fff6dc"/><rect x="28" y="40" width="4" height="4" fill="#fff6dc"/><rect x="32" y="40" width="4" height="4" fill="#fff6dc"/><rect x="36" y="40" width="4" height="4" fill="#fff6dc"/><rect x="40" y="40" width="4" height="4" fill="#fff6dc"/><rect x="44" y="40" width="4" height="4" fill="#fff6dc"/><rect x="48" y="40" width="4" height="4" fill="#fff6dc"/><rect x="52" y="40" width="4" height="4" fill="#fff6dc"/><rect x="56" y="40" width="4" height="4" fill="#fff6dc"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>森林棋社</h2><p>一方小棋盘，慢慢想下一步。</p><p class="tips">你执白先行 · 选中棋子后看绿色落点</p></aside></div><footer class="foot"><span>你执白先行 · 选中棋子后看绿色落点</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="40" y="8" width="4" height="4" fill="#fff6dc"/><rect x="44" y="8" width="4" height="4" fill="#fff6dc"/><rect x="32" y="12" width="4" height="4" fill="#fff6dc"/><rect x="36" y="12" width="4" height="4" fill="#fff6dc"/><rect x="40" y="12" width="4" height="4" fill="#fff6dc"/><rect x="44" y="12" width="4" height="4" fill="#fff6dc"/><rect x="48" y="12" width="4" height="4" fill="#fff6dc"/><rect x="52" y="12" width="4" height="4" fill="#fff6dc"/><rect x="40" y="16" width="4" height="4" fill="#fff6dc"/><rect x="44" y="16" width="4" height="4" fill="#fff6dc"/><rect x="36" y="20" width="4" height="4" fill="#fff6dc"/><rect x="40" y="20" width="4" height="4" fill="#fff6dc"/><rect x="44" y="20" width="4" height="4" fill="#fff6dc"/><rect x="48" y="20" width="4" height="4" fill="#fff6dc"/><rect x="32" y="24" width="4" height="4" fill="#fff6dc"/><rect x="36" y="24" width="4" height="4" fill="#fff6dc"/><rect x="40" y="24" width="4" height="4" fill="#fff6dc"/><rect x="44" y="24" width="4" height="4" fill="#fff6dc"/><rect x="48" y="24" width="4" height="4" fill="#fff6dc"/><rect x="52" y="24" width="4" height="4" fill="#fff6dc"/><rect x="36" y="28" width="4" height="4" fill="#fff6dc"/><rect x="40" y="28" width="4" height="4" fill="#fff6dc"/><rect x="44" y="28" width="4" height="4" fill="#fff6dc"/><rect x="48" y="28" width="4" height="4" fill="#fff6dc"/><rect x="36" y="32" width="4" height="4" fill="#fff6dc"/><rect x="40" y="32" width="4" height="4" fill="#fff6dc"/><rect x="44" y="32" width="4" height="4" fill="#fff6dc"/><rect x="48" y="32" width="4" height="4" fill="#fff6dc"/><rect x="32" y="36" width="4" height="4" fill="#fff6dc"/><rect x="36" y="36" width="4" height="4" fill="#fff6dc"/><rect x="40" y="36" width="4" height="4" fill="#fff6dc"/><rect x="44" y="36" width="4" height="4" fill="#fff6dc"/><rect x="48" y="36" width="4" height="4" fill="#fff6dc"/><rect x="52" y="36" width="4" height="4" fill="#fff6dc"/><rect x="28" y="40" width="4" height="4" fill="#fff6dc"/><rect x="32" y="40" width="4" height="4" fill="#fff6dc"/><rect x="36" y="40" width="4" height="4" fill="#fff6dc"/><rect x="40" y="40" width="4" height="4" fill="#fff6dc"/><rect x="44" y="40" width="4" height="4" fill="#fff6dc"/><rect x="48" y="40" width="4" height="4" fill="#fff6dc"/><rect x="52" y="40" width="4" height="4" fill="#fff6dc"/><rect x="56" y="40" width="4" height="4" fill="#fff6dc"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg>
+    <h1>国际象棋</h1>
+    <p>你执白先行，点击棋子看绿色落点<br/>支持王车易位，兵到底自动升后<br/>将死黑王获胜 · 暂不含吃过路兵</p>
     <button id="ov-btn">开始对局</button>
-  </div>
-  <script>
+  </section></div><script>
     (() => {
+      const PIECE_SHAPES={"k":"M7 1h2v2h2v2H9v2H7V5H5V3h2zM5 7h6v3h-1v3h3v2H3v-2h3v-3H5z","q":"M2 2h2v3h3V1h2v4h3V2h2v5h-2l-2 6h3v2H3v-2h3L4 7H2z","r":"M3 2h2v3h2V2h2v3h2V2h2v6h-2v5h2v2H3v-2h2V8H3z","b":"M7 1h2v2h2v2H9v3h3v2h-2v3h3v2H3v-2h3v-3H4V7h2V4H7z","n":"M5 2h6v2h2v5h-2v4h2v2H3v-2h3V9H2V6h2V4h1z","p":"M6 2h4v2h2v4h-2v2H9v3h4v2H3v-2h4v-3H6V8H4V4h2z"}
+      function pieceArt(type){const light=type[0]==='w',fill=light?'#fff1c9':'#527969',edge=light?'#9d8055':'#345749';return '<svg viewBox="0 0 16 17" shape-rendering="crispEdges" aria-hidden="true"><path d="'+PIECE_SHAPES[type[1]]+'" fill="'+fill+'" stroke="'+edge+'" stroke-width=".7"/><path d="M4 14h8v1H4z" fill="'+(light?'#dfbd7d':'#82ac8e')+'"/></svg>'}
       const N = 8
       const GLYPH = {
         wk: '♔', wq: '♕', wr: '♖', wb: '♗', wn: '♘', wp: '♙',
@@ -68,12 +69,13 @@
       const ovBtn = document.getElementById('ov-btn')
 
       // 棋盘：64 数组，null 或 {t:'wp', moved:bool}
+      let aiTimer=null
       let bd, turn, sel, castled, over, wins, running, thinking
-      let best = Number(localStorage.getItem('chess-best') || 0)
+      let best=0;try{best=Number(localStorage.getItem('chess-best'))||0}catch{}
       bestEl.textContent = best
       const cellEls = []
       for (let i = 0; i < 64; i++) {
-        const el = document.createElement('div')
+        const el = document.createElement('button')
         el.className = 'sq ' + (((i / 8) | 0) + i) % 2 === 0 ? 'sq light' : 'sq dark'
         el.onclick = () => click(i)
         boardEl.appendChild(el)
@@ -95,7 +97,7 @@
       }
 
       function start() {
-        startBoard()
+        clearTimeout(aiTimer);startBoard()
         turn = 'w'; sel = -1; castled = castled || 0
         over = false; running = true; thinking = false
         meEl.textContent = wins
@@ -306,28 +308,24 @@
         }
         if (!any) {
           running = false; over = true
-          const playerWin = color === 'b' // 黑被将死 → 白胜
+          const playerWin = inCheck && color === 'b' // 黑被将死 → 白胜
           if (playerWin) {
             wins = (wins || 0) + 1
             meEl.textContent = wins
-            if (wins > best) { best = wins; bestEl.textContent = best; localStorage.setItem('chess-best', best) }
+            if (wins > best) { best = wins; bestEl.textContent = best; (()=>{try{localStorage.setItem('chess-best',best)}catch{}})() }
           }
           overlay.querySelector('h1').textContent = inCheck ? (playerWin ? '🏆 将死，你赢了' : '😵 你被将死') : '🤝 逼和（和棋）'
-          overlay.querySelector('p').innerHTML = '胜场 <b style="color:#ffd23f">' + wins + '</b> · 最佳 ' + best
+          overlay.querySelector('p').innerHTML = '胜场 <b >' + wins + '</b> · 最佳 ' + best
           ovBtn.textContent = '再来一局'
           overlay.classList.remove('hidden')
           return
         }
         turnEl.textContent = color === 'w' ? '白方回合' + (inCheck ? ' · 将军！' : '') : '黑方回合' + (inCheck ? ' · 将军！' : '')
-        if (color === 'b') {
-          turn = 'w'
-          msgEl.textContent = inCheck ? '黑王被将军，但脱险了' : '轮到你'
-          render()
-        }
+        msgEl.textContent=color==='w'?(inCheck?'白王被将军，请先解围':'轮到你，点击白子'): '黑方正在思考…'
       }
 
       function doMove(from, to) {
-        bd = applyMove(bd, from, to)
+        bd = applyMove(bd, from, to);sel=-1
         turn = turn === 'w' ? 'b' : 'w'
         afterMove()
       }
@@ -348,7 +346,7 @@
           turn = 'b'
           msgEl.textContent = 'AI 思考中…'
           render()
-          setTimeout(() => { thinking = false; aiMove() }, 300)
+          aiTimer=setTimeout(() => { if(running&&!over&&turn==='b'){thinking=false;aiMove()} }, 300)
         } else {
           if (p && p.t[0] === 'w') { sel = i; render() }
           else { sel = -1; msgEl.textContent = '不能走这一步'; render() }
@@ -370,7 +368,7 @@
           }
           el.className = cls
           el.style.position = 'relative'
-          el.textContent = bd[i] ? GLYPH[bd[i].t] : ''
+          el.innerHTML = bd[i] ? pieceArt(bd[i].t) : '';el.setAttribute('aria-label',String.fromCharCode(97+i%8)+(8-(i/8|0))+(bd[i]?' '+(bd[i].t[0]==='w'?'白':'黑')+({k:'王',q:'后',r:'车',b:'象',n:'马',p:'兵'})[bd[i].t[1]]:' 空格'))
           el.style.color = bd[i] && bd[i].t[0] === 'w' ? '#fff' : '#14161f'
           el.style.textShadow = bd[i] && bd[i].t[0] === 'w' ? '0 1px 2px rgba(0,0,0,.8)' : 'none'
         }
@@ -381,7 +379,7 @@
       window.__hub = {
         get score() { return wins || 0 },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       startBoard()
@@ -389,6 +387,4 @@
       running = false; thinking = false
       render()
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>

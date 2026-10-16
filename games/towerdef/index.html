@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>像素塔防</title>
-  <style>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>像素塔防</title><style>
     :root { --blue:#2f55e4; --yellow:#ffd23f; }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { height:100%; }
@@ -25,9 +20,13 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
-  </style>
-</head>
-<body>
+
+:root{color-scheme:light;--blue:#5a9678;--yellow:#c57b3f;--ink:#345647;--muted:#71836b;--paper:#fffbed;--edge:#648d73;--floor:#edf2da}
+*{box-sizing:border-box}html,body{height:auto;min-height:100%}body{margin:0;min-height:100svh;overflow:auto;display:grid;grid-template-columns:100%;place-items:center;background:radial-gradient(ellipse at 12% 10%,#fff1d4,transparent 70%),var(--floor);color:var(--ink);font-family:system-ui,-apple-system,'PingFang SC',sans-serif;touch-action:manipulation}button{font:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #da8054;outline-offset:2px}.shell{width:min(850px,calc(100% - 28px));padding:12px 0;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.top small,.side small{font:9px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}.top h1{font-size:22px;letter-spacing:2px;margin:3px 0 0}.tag{font-size:10px;padding:7px 10px;border:1px solid #c6d5b4;background:var(--paper);white-space:nowrap}.layout{display:flex;align-items:center;justify-content:center;gap:26px}#wrap{position:relative;width:min(440px,calc(100% - 196px));max-width:none;gap:10px;flex:none}#hud{position:static;width:100%;display:flex;gap:5px;justify-content:space-between;font-size:10px;color:var(--muted);margin:0 0 9px}#hud>span{flex:1;white-space:nowrap;padding:6px;background:var(--paper);border:1px solid #c6d5b4;box-shadow:0 2px 0 #d7dfbc}#hud b{font:700 16px ui-monospace,monospace;color:#b76c40;margin-left:4px}canvas{display:block;width:100%;height:auto;max-width:100%;max-height:none;image-rendering:pixelated;border:4px solid var(--edge);border-radius:0;background:#b6e0e3;box-shadow:0 5px 0 #365a43;touch-action:none}.side{width:170px;flex:none}.side svg{position:static;width:100%;height:110px;image-rendering:pixelated}.side h2{font-size:24px;line-height:1.5;margin:10px 0}.side p{font-size:12px;line-height:1.9;color:var(--muted);margin:8px 0}.side .tips{padding-top:12px;margin-top:18px;border-top:1px solid #cad6b7;font-size:11px}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:9px;color:var(--muted)}#msg{color:#59745f;font-size:12px;font-weight:500;text-align:center;line-height:1.6}#overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:16px;background:#eaf1d6ed;border-radius:0;gap:0}#overlay.hidden{display:none}.intro-card{width:min(360px,100%);padding:20px;text-align:center;border:3px solid var(--edge);background:var(--paper);box-shadow:6px 6px 0 #31523e30}.intro-card svg{display:block;position:static;width:140px;height:86px;margin:0 auto 6px;image-rendering:pixelated}#overlay h1{font-size:24px;letter-spacing:2px;text-shadow:none;margin:8px 0}#overlay p{font-size:12px;line-height:1.9;color:#718068;margin:0 0 17px}#overlay b{color:#c57546}#overlay button,.action{background:#e98255;color:#fffbed;border:2px solid #a55d3c;border-radius:0;box-shadow:0 4px 0 #a65c3b;font-weight:800;font-size:15px;padding:10px 24px;cursor:pointer}.action:active{transform:translateY(2px)}
+@media(max-width:620px){.shell{width:calc(100% - 24px);padding:10px 0}.top{margin-bottom:9px}.top h1{font-size:18px}.top small{font-size:8px;letter-spacing:1px}.tag{font-size:9px;padding:5px 7px}.layout{display:block}.side{display:none}#wrap{margin:auto;width:min(100%,400px)}#hud{gap:4px}#hud>span{padding:5px 4px}#hud b{font-size:14px;margin-left:3px}.foot{font-size:8px;gap:8px;margin-top:12px}.foot span:last-child{display:none}#overlay h1{font-size:21px}.intro-card{padding:14px}.intro-card svg{height:66px}#overlay p{font-size:11px}}
+@media(max-height:480px){.shell{padding:8px 0}.top{margin-bottom:8px}.top h1{font-size:18px}.side svg{height:55px}.side h2{font-size:20px}.side .tips{display:none}.intro-card{padding:12px 16px}.intro-card svg{height:48px}#overlay h1{font-size:21px;margin:6px 0}#overlay p{font-size:11px;margin-bottom:12px}#overlay button{padding:8px 20px}.foot{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#wrap{width:min(480px,calc((100svh - 245px)*1),calc(100% - 196px))}@media(max-width:620px){#wrap{width:min(100%,calc((100svh - 230px)*1))}}#hud{flex-wrap:wrap}#hud>span{padding:4px;font-size:9px}#hud b{font-size:13px}#bar{width:100%}#next{background:#e7aa6b;color:#665039;border:2px solid #a98050;border-radius:0;box-shadow:0 3px 0 #a98050;font-size:12px;padding:8px}#build-msg{font-size:10px;min-height:16px;color:#627855;text-align:center}@media(max-height:430px){.foot{display:none}#wrap{gap:5px}#hud{margin-bottom:4px}#build-msg{font-size:9px}#next{font-size:11px;padding:6px}#wrap{width:min(480px,calc(100svh - 220px),calc(100% - 196px))}}@media(max-height:430px) and (max-width:620px){#wrap{width:min(100%,calc(100svh - 205px))}}</style></head><body><main class="shell"><header class="top"><div><small>MEADOW KEEP</small><h1>像素塔防</h1></div><span class="tag">草地守卫队</span></header><div class="layout">
   <div id="wrap">
     <div id="hud">
       <span>金币<b id="gold">120</b></span>
@@ -37,14 +36,14 @@
       <span>BEST<b id="best">0</b></span>
     </div>
     <canvas id="cv" width="480" height="480"></canvas>
-    <div id="bar"><button id="next">⚔ 召唤第 1 波（5s）</button></div>
+    <div id="build-msg" role="status">先建两座塔，再召唤小怪</div><div id="bar"><button id="next">召唤第 1 波</button></div>
   </div>
-  <div id="overlay">
-    <h1>🗼 像素塔防</h1>
-    <p>点击路径旁空地建炮塔（50 金币）<br/>击杀得金币，敌人到终点扣命<br/>波与波之间抓紧布防</p>
+
+  <aside class="side"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="24" y="8" width="4" height="4" fill="#55705c"/><rect x="28" y="8" width="4" height="4" fill="#55705c"/><rect x="32" y="8" width="4" height="4" fill="#55705c"/><rect x="44" y="8" width="4" height="4" fill="#55705c"/><rect x="48" y="8" width="4" height="4" fill="#55705c"/><rect x="52" y="8" width="4" height="4" fill="#55705c"/><rect x="64" y="8" width="4" height="4" fill="#55705c"/><rect x="68" y="8" width="4" height="4" fill="#55705c"/><rect x="72" y="8" width="4" height="4" fill="#55705c"/><rect x="24" y="12" width="4" height="4" fill="#55705c"/><rect x="28" y="12" width="4" height="4" fill="#fff6dc"/><rect x="32" y="12" width="4" height="4" fill="#fff6dc"/><rect x="36" y="12" width="4" height="4" fill="#55705c"/><rect x="40" y="12" width="4" height="4" fill="#55705c"/><rect x="44" y="12" width="4" height="4" fill="#fff6dc"/><rect x="48" y="12" width="4" height="4" fill="#fff6dc"/><rect x="52" y="12" width="4" height="4" fill="#55705c"/><rect x="56" y="12" width="4" height="4" fill="#55705c"/><rect x="60" y="12" width="4" height="4" fill="#fff6dc"/><rect x="64" y="12" width="4" height="4" fill="#fff6dc"/><rect x="68" y="12" width="4" height="4" fill="#fff6dc"/><rect x="72" y="12" width="4" height="4" fill="#55705c"/><rect x="24" y="16" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#fff6dc"/><rect x="32" y="16" width="4" height="4" fill="#fff6dc"/><rect x="36" y="16" width="4" height="4" fill="#fff6dc"/><rect x="40" y="16" width="4" height="4" fill="#fff6dc"/><rect x="44" y="16" width="4" height="4" fill="#fff6dc"/><rect x="48" y="16" width="4" height="4" fill="#fff6dc"/><rect x="52" y="16" width="4" height="4" fill="#fff6dc"/><rect x="56" y="16" width="4" height="4" fill="#fff6dc"/><rect x="60" y="16" width="4" height="4" fill="#fff6dc"/><rect x="64" y="16" width="4" height="4" fill="#fff6dc"/><rect x="68" y="16" width="4" height="4" fill="#fff6dc"/><rect x="72" y="16" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#55705c"/><rect x="32" y="20" width="4" height="4" fill="#fff6dc"/><rect x="36" y="20" width="4" height="4" fill="#fff6dc"/><rect x="40" y="20" width="4" height="4" fill="#fff6dc"/><rect x="44" y="20" width="4" height="4" fill="#fff6dc"/><rect x="48" y="20" width="4" height="4" fill="#fff6dc"/><rect x="52" y="20" width="4" height="4" fill="#fff6dc"/><rect x="56" y="20" width="4" height="4" fill="#fff6dc"/><rect x="60" y="20" width="4" height="4" fill="#fff6dc"/><rect x="64" y="20" width="4" height="4" fill="#fff6dc"/><rect x="68" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="24" width="4" height="4" fill="#55705c"/><rect x="32" y="24" width="4" height="4" fill="#fff6dc"/><rect x="36" y="24" width="4" height="4" fill="#fff6dc"/><rect x="40" y="24" width="4" height="4" fill="#fff6dc"/><rect x="44" y="24" width="4" height="4" fill="#34534f"/><rect x="48" y="24" width="4" height="4" fill="#34534f"/><rect x="52" y="24" width="4" height="4" fill="#fff6dc"/><rect x="56" y="24" width="4" height="4" fill="#fff6dc"/><rect x="60" y="24" width="4" height="4" fill="#fff6dc"/><rect x="64" y="24" width="4" height="4" fill="#fff6dc"/><rect x="68" y="24" width="4" height="4" fill="#55705c"/><rect x="28" y="28" width="4" height="4" fill="#55705c"/><rect x="32" y="28" width="4" height="4" fill="#fff6dc"/><rect x="36" y="28" width="4" height="4" fill="#fff6dc"/><rect x="40" y="28" width="4" height="4" fill="#fff6dc"/><rect x="44" y="28" width="4" height="4" fill="#34534f"/><rect x="48" y="28" width="4" height="4" fill="#34534f"/><rect x="52" y="28" width="4" height="4" fill="#fff6dc"/><rect x="56" y="28" width="4" height="4" fill="#fff6dc"/><rect x="60" y="28" width="4" height="4" fill="#fff6dc"/><rect x="64" y="28" width="4" height="4" fill="#fff6dc"/><rect x="68" y="28" width="4" height="4" fill="#55705c"/><rect x="28" y="32" width="4" height="4" fill="#55705c"/><rect x="32" y="32" width="4" height="4" fill="#fff6dc"/><rect x="36" y="32" width="4" height="4" fill="#fff6dc"/><rect x="40" y="32" width="4" height="4" fill="#fff6dc"/><rect x="44" y="32" width="4" height="4" fill="#fff6dc"/><rect x="48" y="32" width="4" height="4" fill="#fff6dc"/><rect x="52" y="32" width="4" height="4" fill="#fff6dc"/><rect x="56" y="32" width="4" height="4" fill="#fff6dc"/><rect x="60" y="32" width="4" height="4" fill="#fff6dc"/><rect x="64" y="32" width="4" height="4" fill="#fff6dc"/><rect x="68" y="32" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#55705c"/><rect x="32" y="36" width="4" height="4" fill="#fff6dc"/><rect x="36" y="36" width="4" height="4" fill="#fff6dc"/><rect x="40" y="36" width="4" height="4" fill="#55705c"/><rect x="44" y="36" width="4" height="4" fill="#34534f"/><rect x="48" y="36" width="4" height="4" fill="#34534f"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="56" y="36" width="4" height="4" fill="#fff6dc"/><rect x="60" y="36" width="4" height="4" fill="#fff6dc"/><rect x="64" y="36" width="4" height="4" fill="#fff6dc"/><rect x="68" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="40" width="4" height="4" fill="#55705c"/><rect x="32" y="40" width="4" height="4" fill="#fff6dc"/><rect x="36" y="40" width="4" height="4" fill="#fff6dc"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#34534f"/><rect x="48" y="40" width="4" height="4" fill="#34534f"/><rect x="52" y="40" width="4" height="4" fill="#55705c"/><rect x="56" y="40" width="4" height="4" fill="#fff6dc"/><rect x="60" y="40" width="4" height="4" fill="#fff6dc"/><rect x="64" y="40" width="4" height="4" fill="#fff6dc"/><rect x="68" y="40" width="4" height="4" fill="#55705c"/><rect x="28" y="44" width="4" height="4" fill="#55705c"/><rect x="32" y="44" width="4" height="4" fill="#55705c"/><rect x="36" y="44" width="4" height="4" fill="#55705c"/><rect x="40" y="44" width="4" height="4" fill="#55705c"/><rect x="44" y="44" width="4" height="4" fill="#55705c"/><rect x="48" y="44" width="4" height="4" fill="#55705c"/><rect x="52" y="44" width="4" height="4" fill="#55705c"/><rect x="56" y="44" width="4" height="4" fill="#55705c"/><rect x="60" y="44" width="4" height="4" fill="#55705c"/><rect x="64" y="44" width="4" height="4" fill="#55705c"/><rect x="68" y="44" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg><small>A LITTLE PIXEL BREAK.</small><h2>草地守卫队</h2><p>建好小炮台，守住森林的家。</p><p class="tips">点草地建塔：50 金币 · 准备好再召唤</p></aside></div><footer class="foot"><span>点草地建塔：50 金币 · 准备好再召唤</span><span>慢慢玩，也很好。</span></footer></main><div id="overlay"><section class="intro-card"><svg viewBox="0 0 100 74" shape-rendering="crispEdges" aria-hidden="true"><rect x="24" y="8" width="4" height="4" fill="#55705c"/><rect x="28" y="8" width="4" height="4" fill="#55705c"/><rect x="32" y="8" width="4" height="4" fill="#55705c"/><rect x="44" y="8" width="4" height="4" fill="#55705c"/><rect x="48" y="8" width="4" height="4" fill="#55705c"/><rect x="52" y="8" width="4" height="4" fill="#55705c"/><rect x="64" y="8" width="4" height="4" fill="#55705c"/><rect x="68" y="8" width="4" height="4" fill="#55705c"/><rect x="72" y="8" width="4" height="4" fill="#55705c"/><rect x="24" y="12" width="4" height="4" fill="#55705c"/><rect x="28" y="12" width="4" height="4" fill="#fff6dc"/><rect x="32" y="12" width="4" height="4" fill="#fff6dc"/><rect x="36" y="12" width="4" height="4" fill="#55705c"/><rect x="40" y="12" width="4" height="4" fill="#55705c"/><rect x="44" y="12" width="4" height="4" fill="#fff6dc"/><rect x="48" y="12" width="4" height="4" fill="#fff6dc"/><rect x="52" y="12" width="4" height="4" fill="#55705c"/><rect x="56" y="12" width="4" height="4" fill="#55705c"/><rect x="60" y="12" width="4" height="4" fill="#fff6dc"/><rect x="64" y="12" width="4" height="4" fill="#fff6dc"/><rect x="68" y="12" width="4" height="4" fill="#fff6dc"/><rect x="72" y="12" width="4" height="4" fill="#55705c"/><rect x="24" y="16" width="4" height="4" fill="#55705c"/><rect x="28" y="16" width="4" height="4" fill="#fff6dc"/><rect x="32" y="16" width="4" height="4" fill="#fff6dc"/><rect x="36" y="16" width="4" height="4" fill="#fff6dc"/><rect x="40" y="16" width="4" height="4" fill="#fff6dc"/><rect x="44" y="16" width="4" height="4" fill="#fff6dc"/><rect x="48" y="16" width="4" height="4" fill="#fff6dc"/><rect x="52" y="16" width="4" height="4" fill="#fff6dc"/><rect x="56" y="16" width="4" height="4" fill="#fff6dc"/><rect x="60" y="16" width="4" height="4" fill="#fff6dc"/><rect x="64" y="16" width="4" height="4" fill="#fff6dc"/><rect x="68" y="16" width="4" height="4" fill="#fff6dc"/><rect x="72" y="16" width="4" height="4" fill="#55705c"/><rect x="28" y="20" width="4" height="4" fill="#55705c"/><rect x="32" y="20" width="4" height="4" fill="#fff6dc"/><rect x="36" y="20" width="4" height="4" fill="#fff6dc"/><rect x="40" y="20" width="4" height="4" fill="#fff6dc"/><rect x="44" y="20" width="4" height="4" fill="#fff6dc"/><rect x="48" y="20" width="4" height="4" fill="#fff6dc"/><rect x="52" y="20" width="4" height="4" fill="#fff6dc"/><rect x="56" y="20" width="4" height="4" fill="#fff6dc"/><rect x="60" y="20" width="4" height="4" fill="#fff6dc"/><rect x="64" y="20" width="4" height="4" fill="#fff6dc"/><rect x="68" y="20" width="4" height="4" fill="#55705c"/><rect x="28" y="24" width="4" height="4" fill="#55705c"/><rect x="32" y="24" width="4" height="4" fill="#fff6dc"/><rect x="36" y="24" width="4" height="4" fill="#fff6dc"/><rect x="40" y="24" width="4" height="4" fill="#fff6dc"/><rect x="44" y="24" width="4" height="4" fill="#34534f"/><rect x="48" y="24" width="4" height="4" fill="#34534f"/><rect x="52" y="24" width="4" height="4" fill="#fff6dc"/><rect x="56" y="24" width="4" height="4" fill="#fff6dc"/><rect x="60" y="24" width="4" height="4" fill="#fff6dc"/><rect x="64" y="24" width="4" height="4" fill="#fff6dc"/><rect x="68" y="24" width="4" height="4" fill="#55705c"/><rect x="28" y="28" width="4" height="4" fill="#55705c"/><rect x="32" y="28" width="4" height="4" fill="#fff6dc"/><rect x="36" y="28" width="4" height="4" fill="#fff6dc"/><rect x="40" y="28" width="4" height="4" fill="#fff6dc"/><rect x="44" y="28" width="4" height="4" fill="#34534f"/><rect x="48" y="28" width="4" height="4" fill="#34534f"/><rect x="52" y="28" width="4" height="4" fill="#fff6dc"/><rect x="56" y="28" width="4" height="4" fill="#fff6dc"/><rect x="60" y="28" width="4" height="4" fill="#fff6dc"/><rect x="64" y="28" width="4" height="4" fill="#fff6dc"/><rect x="68" y="28" width="4" height="4" fill="#55705c"/><rect x="28" y="32" width="4" height="4" fill="#55705c"/><rect x="32" y="32" width="4" height="4" fill="#fff6dc"/><rect x="36" y="32" width="4" height="4" fill="#fff6dc"/><rect x="40" y="32" width="4" height="4" fill="#fff6dc"/><rect x="44" y="32" width="4" height="4" fill="#fff6dc"/><rect x="48" y="32" width="4" height="4" fill="#fff6dc"/><rect x="52" y="32" width="4" height="4" fill="#fff6dc"/><rect x="56" y="32" width="4" height="4" fill="#fff6dc"/><rect x="60" y="32" width="4" height="4" fill="#fff6dc"/><rect x="64" y="32" width="4" height="4" fill="#fff6dc"/><rect x="68" y="32" width="4" height="4" fill="#55705c"/><rect x="28" y="36" width="4" height="4" fill="#55705c"/><rect x="32" y="36" width="4" height="4" fill="#fff6dc"/><rect x="36" y="36" width="4" height="4" fill="#fff6dc"/><rect x="40" y="36" width="4" height="4" fill="#55705c"/><rect x="44" y="36" width="4" height="4" fill="#34534f"/><rect x="48" y="36" width="4" height="4" fill="#34534f"/><rect x="52" y="36" width="4" height="4" fill="#55705c"/><rect x="56" y="36" width="4" height="4" fill="#fff6dc"/><rect x="60" y="36" width="4" height="4" fill="#fff6dc"/><rect x="64" y="36" width="4" height="4" fill="#fff6dc"/><rect x="68" y="36" width="4" height="4" fill="#55705c"/><rect x="28" y="40" width="4" height="4" fill="#55705c"/><rect x="32" y="40" width="4" height="4" fill="#fff6dc"/><rect x="36" y="40" width="4" height="4" fill="#fff6dc"/><rect x="40" y="40" width="4" height="4" fill="#55705c"/><rect x="44" y="40" width="4" height="4" fill="#34534f"/><rect x="48" y="40" width="4" height="4" fill="#34534f"/><rect x="52" y="40" width="4" height="4" fill="#55705c"/><rect x="56" y="40" width="4" height="4" fill="#fff6dc"/><rect x="60" y="40" width="4" height="4" fill="#fff6dc"/><rect x="64" y="40" width="4" height="4" fill="#fff6dc"/><rect x="68" y="40" width="4" height="4" fill="#55705c"/><rect x="28" y="44" width="4" height="4" fill="#55705c"/><rect x="32" y="44" width="4" height="4" fill="#55705c"/><rect x="36" y="44" width="4" height="4" fill="#55705c"/><rect x="40" y="44" width="4" height="4" fill="#55705c"/><rect x="44" y="44" width="4" height="4" fill="#55705c"/><rect x="48" y="44" width="4" height="4" fill="#55705c"/><rect x="52" y="44" width="4" height="4" fill="#55705c"/><rect x="56" y="44" width="4" height="4" fill="#55705c"/><rect x="60" y="44" width="4" height="4" fill="#55705c"/><rect x="64" y="44" width="4" height="4" fill="#55705c"/><rect x="68" y="44" width="4" height="4" fill="#55705c"/><path d="M12 64h76v5H12z" fill="#c2d9a5"/></svg>
+    <h1>像素塔防</h1>
+    <p>点击路径旁空地建炮塔（50 金币）<br/>击杀得金币，敌人到终点扣命<br/>每波结束后自由布防，再手动召唤</p>
     <button id="ov-btn">开始守城</button>
-  </div>
-  <script>
+  </section></div><script>
     (() => {
       const CELL = 40
       const COLS = 12, ROWS = 12
@@ -75,7 +74,7 @@
       const ovBtn = document.getElementById('ov-btn')
 
       let towers, enemies, bullets, gold, wave, lives, kills, running, over, spawnQueue, autoNext, frame
-      let best = Number(localStorage.getItem('towerdef-best') || 0)
+      let best=0;try{best=Number(localStorage.getItem('towerdef-best'))||0}catch{}
       bestEl.textContent = best
 
       function pathPos(t) {
@@ -92,20 +91,21 @@
         running = true; over = false
         goldEl.textContent = gold; waveEl.textContent = 0
         livesEl.textContent = '♥×10'; killsEl.textContent = 0
-        nextBtn.disabled = false
+        nextBtn.disabled = false;nextBtn.textContent='召唤第 '+(wave+1)+' 波'
         overlay.classList.add('hidden')
       }
 
       function end() {
         running = false; over = true
-        if (kills > best) { best = kills; bestEl.textContent = best; localStorage.setItem('towerdef-best', best) }
+        if (kills > best) { best = kills; bestEl.textContent = best; (()=>{try{localStorage.setItem('towerdef-best',best)}catch{}})() }
         overlay.querySelector('h1').textContent = '💥 城池失守'
-        overlay.querySelector('p').innerHTML = '守到第 ' + wave + ' 波 · 击杀 <b style="color:#ffd23f">' + kills + '</b> · 最佳 ' + best
+        overlay.querySelector('p').innerHTML = '守到第 ' + wave + ' 波 · 击杀 <b >' + kills + '</b> · 最佳 ' + best
         ovBtn.textContent = '再来一局'
         overlay.classList.remove('hidden')
       }
 
       function nextWave() {
+        if(!running||over||spawnQueue>0||enemies.length)return
         wave++
         waveEl.textContent = wave
         spawnQueue = 4 + wave * 2
@@ -119,23 +119,19 @@
         const c = Math.floor((e.clientX - r.left) / r.width * COLS)
         const rw = Math.floor((e.clientY - r.top) / r.height * ROWS)
         if (rw < 0 || rw >= ROWS || c < 0 || c >= COLS) return
-        if (onPath.has(rw + ',' + c)) return
+        if (onPath.has(rw + ',' + c)) { document.getElementById('build-msg').textContent='道路留给小怪，请选旁边的草地'; return }
         if (towers.some((t) => t.r === rw && t.c === c)) return
-        if (gold < 50) return
+        if (gold < 50) { document.getElementById('build-msg').textContent='还差一些金币，击败小怪就能获得'; return }
         gold -= 50
         goldEl.textContent = gold
-        towers.push({ r: rw, c, cd: 0 })
+        towers.push({ r: rw, c, cd: 0 });document.getElementById('build-msg').textContent='炮塔就位！可继续建塔或召唤下一波'
       })
 
       nextBtn.addEventListener('click', () => { if (running && !over && spawnQueue === 0) nextWave() })
 
       function step() {
         frame++
-        if (spawnQueue === 0) {
-          if (autoNext === 300) nextBtn.textContent = '⚔ 召唤第 ' + (wave + 1) + ' 波（' + Math.ceil(autoNext / 60) + 's）'
-          autoNext--
-          if (autoNext <= 0) nextWave()
-        } else if (frame % 50 === 0) {
+        if (spawnQueue > 0 && frame % 50 === 0) {
           spawnQueue--
           const hp = 20 + wave * 12
           enemies.push({ t: 0, hp, max: hp, v: 0.006 + wave * 0.0008 })
@@ -188,64 +184,34 @@
         }
         if (spawnQueue === 0 && !enemies.length && nextBtn.disabled) {
           autoNext = 300
-          nextBtn.disabled = false
+          nextBtn.disabled = false;nextBtn.textContent='召唤第 '+(wave+1)+' 波'
         }
       }
 
-      function draw() {
-        ctx.fillStyle = '#14161f'
-        ctx.fillRect(0, 0, cv.width, cv.height)
-        ctx.fillStyle = '#1a1d29'
-        for (let r = 0; r < ROWS; r++)
-          for (let c = 0; c < COLS; c++)
-            ctx.fillRect(c * CELL + 1, r * CELL + 1, CELL - 2, CELL - 2)
-        ctx.strokeStyle = '#3a4152'
-        ctx.lineWidth = CELL - 10
-        ctx.lineJoin = 'round'
-        ctx.beginPath()
-        PATH.forEach((pt, i) => {
-          const x = pt[1] * CELL + CELL / 2, y = pt[0] * CELL + CELL / 2
-          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
-        })
-        ctx.stroke()
-        ctx.font = '22px sans-serif'
-        ctx.fillText('🏰', END[1] * CELL + 6, END[0] * CELL + 30)
-        for (const t of towers) {
-          ctx.font = '20px sans-serif'
-          ctx.fillText('🔫', t.c * CELL + 8, t.r * CELL + 28)
-        }
-        for (const en of enemies) {
-          const p = pathPos(en.t)
-          ctx.font = '18px sans-serif'
-          ctx.fillText('👹', p.x - 9, p.y + 6)
-          ctx.fillStyle = '#3a1d24'
-          ctx.fillRect(p.x - 12, p.y - 18, 24, 4)
-          ctx.fillStyle = '#ff4d5e'
-          ctx.fillRect(p.x - 12, p.y - 18, 24 * en.hp / en.max, 4)
-        }
-        ctx.fillStyle = '#ffd23f'
-        for (const b of bullets) ctx.fillRect(b.x - 2, b.y - 2, 4, 4)
-      }
 
-      function loop() {
-        requestAnimationFrame(loop)
-        if (running && !over) step()
-        draw()
-      }
+      function box(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),w,h)}
+      function cloud(x,y){box(x+8,y,32,8,'#fffbed');box(x,y+8,56,12,'#fffbed')}
+      function sky(){box(0,0,cv.width,cv.height,'#b0dce4');cloud(28,55);cloud(cv.width-90,110);for(let i=0;i<8;i++){box(i*80,cv.height-90,65,90,'#c2d9a5');box(i*80+15,cv.height-106,35,16,'#c2d9a5')}box(0,cv.height-20,cv.width,20,'#8db685')}
+      function disc(x,y,r,c){for(let yy=-r;yy<r;yy+=3){const xx=Math.floor(Math.sqrt(Math.max(0,r*r-yy*yy))/3)*3;box(x-xx,y+yy,xx*2,3,c)}}
+      function kid(x,y){box(x+6,y,20,6,'#6b9162');box(x+4,y+6,24,18,'#ffdfaa');box(x+10,y+12,4,4,'#3d5647');box(x+20,y+12,4,4,'#3d5647');box(x+4,y+24,24,20,'#e88c5f');box(x+4,y+44,8,8,'#526f59');box(x+20,y+44,8,8,'#526f59')}
+      function pine(x,y){box(x-4,y+12,8,16,'#95744b');box(x-12,y-22,24,10,'#86bda5');box(x-20,y-12,40,10,'#6ca08c');box(x-26,y-2,52,15,'#538574');box(x-10,y-22,16,5,'#f0fbef');box(x-18,y-12,26,5,'#f0fbef');box(x-24,y-2,34,5,'#f0fbef')}
+
+      function draw(){for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){const x=c*CELL,y=r*CELL;box(x,y,CELL,CELL,(r+c)%2?'#b4ce92':'#bdd79c');if(onPath.has(r+','+c)){box(x,y,CELL,CELL,'#e6ce9b');box(x+4,y+12,12,4,'#d6b981');box(x+22,y+28,10,4,'#d6b981')}else{box(x+8,y+8,3,7,'#a1bf7d');box(x+5,y+11,9,3,'#a1bf7d')}}const ex=END[1]*CELL,ey=END[0]*CELL;box(ex+4,ey+6,32,32,'#f5e2b3');box(ex+2,ey+3,8,12,'#da9c7c');box(ex+16,ey+3,8,12,'#da9c7c');box(ex+30,ey+3,8,12,'#da9c7c');box(ex+15,ey+24,11,14,'#8c7956');for(const t of towers){const x=t.c*CELL,y=t.r*CELL;box(x+5,y+26,30,9,'#8b7958');box(x+9,y+12,22,18,'#6d9b88');box(x+12,y+14,16,5,'#a7cbb0');box(x+17,y+2,7,18,'#4a786a')}for(const en of enemies){const p=pathPos(en.t);box(p.x-12,p.y-8,24,21,'#db9976');box(p.x-8,p.y-13,16,6,'#e9b18a');box(p.x-8,p.y-3,5,5,'#fff0d3');box(p.x+3,p.y-3,5,5,'#fff0d3');box(p.x-6,p.y-2,2,3,'#495c4e');box(p.x+5,p.y-2,2,3,'#495c4e');box(p.x-12,p.y-20,24,4,'#bba27b');box(p.x-12,p.y-20,24*en.hp/en.max,4,'#689970')}for(const b of bullets){box(b.x-3,b.y-3,6,6,'#fff4c4');box(b.x-1,b.y-1,3,3,'#d69a58')}}
+
+      let lastTick=null,lag=0
+      function loop(t){requestAnimationFrame(loop);if(lastTick===null)lastTick=t;lag+=Math.min(100,Math.max(0,t-lastTick));lastTick=t;while(lag>=1000/60){if(running&&!over)step();lag-=1000/60}draw()}
 
       ovBtn.addEventListener('click', start)
 
       window.__hub = {
         get score() { return kills },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
 
       towers = []; enemies = []; bullets = []
       gold = 120; wave = 0; lives = 10; kills = 0
       spawnQueue = 0; autoNext = 300; frame = 0; running = false; over = false
-      loop()
+      requestAnimationFrame(loop)
     })()
-  </script>
-</body>
-</html>
+  </script></body></html>
