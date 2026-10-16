@@ -1,6 +1,15 @@
 # 项目记忆
 
-更新日期：2026-10-16（累计 70 款卡通像素改造，正式目录 107 款；本次 26 款已统一发布并核验）
+更新日期：2026-10-17（累计 97 款卡通像素改造，正式目录 107 款；本次 27 款完成，统一发布核验中）
+
+## 二十七款精细改造（2026-10-17）
+
+- 用户要求再改 27 款，保持精细卡通像素风格，并统一同步网站。按现有台账选择待改款，未将已改游戏重复计数。
+- 本次：checkers、goldminer、marblemaze、ricochet、golf、moonlander、rhymtap、sniper、bombdefuse、bowling、darts、highjump、jumpjump、orbit、rockclimb、sushichef、trafficrush、typewriter、antcolony、basketball、elevator、knifehit、pianotile、reaction、shielddef、shopkeeper、spaceinvaders。累计 97 款已改、10 款待改，另 6 款归档；正式目录仍为 107 款。统一清单 docs/redesign-progress.md、机器台账 docs/redesign-status.json 已更新。
+- 延续像素角色和主题化物件，分别绘制森林棋盘、木纹球道、彩线维修箱、寿司食堂、旅馆电梯、邮件信笺、野餐蚂蚁、花园球场、月球驿站、荷塘与星空军团等场景。游戏名与入口保留，开场说明和详情说明同步。
+- 修复保龄球错位碰撞、跳高未过杆也计分、迷宫第三关断路、投篮部分位置不可进球、琴键重开空盘、跳跳镜头和落点、陨石中心异常、旧回调/高刷新率/触控边界。月球新增左右微调，攀岩降低开局操作压力。验收详见 docs/verification-twentyseven-2026-10-17.md。
+- 27 组实际脚本回归加入构建前检查。27 款真实浏览器核心操作、五种视口与独立手机触摸检查通过；54 张实机图保存 docs/design/2026-10-17/。本次不是全站关卡设计，现有规则与测试边界写在验收报告。
+- 发布状态：整批完成，正在统一构建与部署，完成后追加实际部署及线上核验结果。
 
 ## 两轮共二十六款改造与统一台账（2026-10-16）
 

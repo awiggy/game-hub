@@ -12,7 +12,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "smoke": "node scripts/run-game-smoke.js",
-    "test:gameplay": "node scripts/check-pixel-physics.cjs && node scripts/check-next-ten.cjs && node scripts/check-crafted-ten.cjs && node scripts/check-storybook-ten.cjs && node scripts/check-workshop-ten.cjs && node scripts/check-festival-sixteen.cjs",
+    "test:gameplay": "node scripts/check-pixel-physics.cjs && node scripts/check-next-ten.cjs && node scripts/check-crafted-ten.cjs && node scripts/check-storybook-ten.cjs && node scripts/check-workshop-ten.cjs && node scripts/check-festival-sixteen.cjs && node scripts/check-storybook-twentyseven.cjs",
     "postbuild": "node scripts/build-retired-redirects.js && node scripts/check-catalog.cjs",
     "progress": "node scripts/build-redesign-status.js"
   },

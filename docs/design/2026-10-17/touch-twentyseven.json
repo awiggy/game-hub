@@ -1,0 +1,32 @@
+{
+  "checks": [
+    "checkers",
+    "goldminer",
+    "marblemaze",
+    "ricochet",
+    "golf",
+    "moonlander",
+    "rhymtap",
+    "sniper",
+    "bombdefuse",
+    "bowling",
+    "darts",
+    "highjump",
+    "jumpjump",
+    "orbit",
+    "rockclimb",
+    "sushichef",
+    "trafficrush",
+    "typewriter",
+    "antcolony",
+    "basketball",
+    "elevator",
+    "knifehit",
+    "pianotile",
+    "reaction",
+    "shielddef",
+    "shopkeeper",
+    "spaceinvaders"
+  ],
+  "errors": []
+}

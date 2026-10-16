@@ -2,11 +2,18 @@
   "id": "pianotile",
   "name": "琴键快按",
   "emoji": "🎹",
-  "categories": ["arcade", "casual"],
-  "tags": ["街机", "反应", "音乐"],
-  "summary": "黑块滚落别错过：四列键盘 D F J K 或点击，手速与节奏的双重考验！",
-  "description": "钢琴块玩法。黑块沿四列轨道滚落，每行恰好一个；点击对应列或按 D/F/J/K 消除，速度随分数递增。点到白列或黑块触底都算失败。",
-  "howToPlay": "点击黑块所在列，或按 D F J K；黑块触底即失败。",
+  "categories": [
+    "arcade",
+    "casual"
+  ],
+  "tags": [
+    "街机",
+    "反应",
+    "音乐"
+  ],
+  "summary": "花朵、浆果和小兔落在四季琴键上，按对节奏收集连击。",
+  "description": "花朵、浆果和小兔落在四季琴键上，按对节奏收集连击。 点击彩色图案块所在列，或按 D / F / J / K。图案进入琴键下方区域后即可点击；点空列、过早点或漏掉触底的图案都会结束。",
+  "howToPlay": "点击彩色图案块所在列，或按 D / F / J / K。图案进入琴键下方区域后即可点击；点空列、过早点或漏掉触底的图案都会结束。",
   "entry": "pianotile/index.html",
   "platform": "浏览器",
   "playMode": "online",

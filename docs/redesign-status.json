@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-16",
+  "updatedAt": "2026-10-17",
   "records": [
     {
       "id": "junglegun",
@@ -39,9 +39,9 @@
     {
       "id": "checkers",
       "name": "跳棋对战",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "chess",
@@ -67,9 +67,9 @@
     {
       "id": "goldminer",
       "name": "黄金矿工",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "idiomchain",
@@ -88,9 +88,9 @@
     {
       "id": "marblemaze",
       "name": "迷宫滚珠",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "minipac",
@@ -123,9 +123,9 @@
     {
       "id": "ricochet",
       "name": "弹射打靶",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "ropeswing",
@@ -193,9 +193,9 @@
     {
       "id": "golf",
       "name": "迷你高尔夫",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "hangman",
@@ -214,9 +214,9 @@
     {
       "id": "moonlander",
       "name": "登月着陆",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "pyramid",
@@ -228,9 +228,9 @@
     {
       "id": "rhymtap",
       "name": "节奏拍点",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "schulte",
@@ -249,9 +249,9 @@
     {
       "id": "sniper",
       "name": "狙击时刻",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "tightrope",
@@ -298,16 +298,16 @@
     {
       "id": "bombdefuse",
       "name": "拆弹专家",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "bowling",
       "name": "保龄球之夜",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "colorfill",
@@ -319,9 +319,9 @@
     {
       "id": "darts",
       "name": "飞镖高手",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "dicehill",
@@ -340,16 +340,16 @@
     {
       "id": "highjump",
       "name": "跳高挑战",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "jumpjump",
       "name": "跳一跳",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "lightbike",
@@ -375,16 +375,16 @@
     {
       "id": "orbit",
       "name": "星环躲避",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "rockclimb",
       "name": "岩壁攀岩",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "rushhour",
@@ -396,23 +396,23 @@
     {
       "id": "sushichef",
       "name": "上菜快手",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "trafficrush",
       "name": "峰值路口",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "typewriter",
       "name": "打字达人",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "diceduel",
@@ -431,9 +431,9 @@
     {
       "id": "antcolony",
       "name": "蚂蚁帝国",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "archery",
@@ -452,9 +452,9 @@
     {
       "id": "basketball",
       "name": "街头投篮",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "biggerorlower",
@@ -487,9 +487,9 @@
     {
       "id": "elevator",
       "name": "电梯调度员",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "farmclicker",
@@ -529,9 +529,9 @@
     {
       "id": "knifehit",
       "name": "飞刀挑战",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "lightsout",
@@ -585,16 +585,16 @@
     {
       "id": "pianotile",
       "name": "琴键快按",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "reaction",
       "name": "极速反应",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "reversi",
@@ -606,16 +606,16 @@
     {
       "id": "shielddef",
       "name": "护盾守卫",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "shopkeeper",
       "name": "街角小店",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "simon",
@@ -648,9 +648,9 @@
     {
       "id": "spaceinvaders",
       "name": "太空侵略者",
-      "status": "not_started",
-      "batch": null,
-      "verification": null
+      "status": "completed",
+      "batch": "storybook-twentyseven",
+      "verification": "docs/verification-twentyseven-2026-10-17.md"
     },
     {
       "id": "stacker",
