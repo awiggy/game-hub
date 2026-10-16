@@ -1,0 +1,329 @@
+{
+  "date": "2026-10-16",
+  "commit": "9c48783523635756cd682e2481fba555d878928d",
+  "workflow": "https://github.com/awiggy/game-hub/actions/runs/38926134567",
+  "build": "success",
+  "deploy": "success",
+  "activeGames": 107,
+  "redesignedGames": 70,
+  "pendingGames": 37,
+  "archivedGames": 6,
+  "sourceHashVerification": {
+    "commit": "9c48783",
+    "count": 70,
+    "results": [
+      {
+        "id": "bingo",
+        "sha256": "3790a7e42862b83e9531f91c120724d696fc606ac06934e08a5439bb745383e0"
+      },
+      {
+        "id": "flagquiz",
+        "sha256": "8f7754915b6883c230b2ada8d501c743b3497b5a56f3909cdf5985e3ae604de8"
+      },
+      {
+        "id": "airhockey",
+        "sha256": "30eba449fd0edf4f9c459386a5389961452dfbf420d9cca4f46d700092576409"
+      },
+      {
+        "id": "chess",
+        "sha256": "ea0aae0197bf13013807842ec631d7b8468282b5ddc6e4c19ffcf15111eeff78"
+      },
+      {
+        "id": "battleship",
+        "sha256": "9490822c3f4b201de70b334784cb296b0a129b2db55fec9aae3463b82feebc96"
+      },
+      {
+        "id": "idiomchain",
+        "sha256": "81b8490516870da4fa9a270f97662ad226e3f7d573d646b33d2bd08abd26215d"
+      },
+      {
+        "id": "onestroke",
+        "sha256": "1c62e895a98c40cd7b63d86b2b39559d39312c662a229026a911b6001806f65c"
+      },
+      {
+        "id": "pipeconnect",
+        "sha256": "825cc2faac935754dc7804fcc2ee62a9c9cca70df5e3e11197a32b840cf5d374"
+      },
+      {
+        "id": "ropeswing",
+        "sha256": "ab339dd7d55ab043a88bcf964ac643bc51b70416485899deaeab6c99f86a07e1"
+      },
+      {
+        "id": "knightstour",
+        "sha256": "725d2427e264c5be1c74c06912e81cd0564fd616f707c1c01540a1729ad54f64"
+      },
+      {
+        "id": "snakesladders",
+        "sha256": "bc899357f7884936c165ac580d1e7b47dd0e4cccbc2f4dca37336cd401a26a3c"
+      },
+      {
+        "id": "picross",
+        "sha256": "069cba7da4f04cf495629cbb3255ad083733643ef39b9372f63cff342992196f"
+      },
+      {
+        "id": "anagram",
+        "sha256": "53c1f393e094b616dd6462cb2826b87e54554f9cee5147fd23304f4e0afabeef"
+      },
+      {
+        "id": "connect4",
+        "sha256": "e9b1f3ecc617b1a23a7646a52c7e612e703bfe336bab54577dd04d0c8ebafb07"
+      },
+      {
+        "id": "ballsort",
+        "sha256": "6d0837046b0df28ceb7b21a08da70595b339c037389d69edfd869fb0c755a508"
+      },
+      {
+        "id": "bigfish",
+        "sha256": "aea67231fbde6788be636b7785f46b24ebb679818f39a7e9718d91ff72294856"
+      },
+      {
+        "id": "hangman",
+        "sha256": "576fde2abadca2428d4661fbc445fc30a116aa02849d78aa7221b12dad31605d"
+      },
+      {
+        "id": "cookieidler",
+        "sha256": "ed6fd254d04ba539239fda2507955c11c4b300e8b6b98c562b398abdc369465e"
+      },
+      {
+        "id": "lianliankan",
+        "sha256": "cc7117d78a874991d90e0ed5525e4bbbb88a764faf948288980cdd0327c2ac4e"
+      },
+      {
+        "id": "pyramid",
+        "sha256": "77bf98ca51ed8abb529ff72b74d57dc37f10d1cee09c203e92f932ff59e69769"
+      },
+      {
+        "id": "schulte",
+        "sha256": "fbd98c95c1a8e6649ceea44e078704b65f615f5d32a7bf3e2ce7a89baed8ee30"
+      },
+      {
+        "id": "shellgame",
+        "sha256": "5dbb475cba1b5ca109dd04ad1409df6f462f65c77b0dc6ce8f897dc28e3a56da"
+      },
+      {
+        "id": "tightrope",
+        "sha256": "5abc03239182d1ab29e6a7603fc3ad9b5fa97316734b99e233bf9d68a51a98c5"
+      },
+      {
+        "id": "waterpour",
+        "sha256": "0822c633bf8c551cf9f1a7c9344ef38c41760571349bd65393d1ce05ddc0f203"
+      },
+      {
+        "id": "wordle",
+        "sha256": "947abf2a873da83a42d4907a65cfaa13ef2b0ce9acc1bc596d269767515c42e0"
+      },
+      {
+        "id": "wordsearch",
+        "sha256": "1dc65405b6c09d76be0c1478e47e76599d53539f980c54bafa5422aa8db1fded"
+      },
+      {
+        "id": "balloonpop",
+        "sha256": "b4f5c9910263fb8f03c69b7f386ef6f87cb169c39df2d3eca473f4ba4856316d"
+      },
+      {
+        "id": "blinkblink",
+        "sha256": "a14ac4095f7b5a5c5a21c667dbdd52dcd606be563d1cf85e18073c2d623d258c"
+      },
+      {
+        "id": "colorfill",
+        "sha256": "73f039611f1e0086d2508b0344047481cc82d3d0b22be1275d3f157463753990"
+      },
+      {
+        "id": "dicehill",
+        "sha256": "65c7bb256caebd0f6a4b6512c837504aff074ebac1abb5b514c686488fba8678"
+      },
+      {
+        "id": "mathrun",
+        "sha256": "8850d273da94405f754ef31264521c94c40c0843a37f2db0c1dfa5f7f59e796f"
+      },
+      {
+        "id": "fishing",
+        "sha256": "4dfacc6a64dac923ec8ed417596914265b7cb7215040f10d7848f03f1d2aefb7"
+      },
+      {
+        "id": "memorymatrix",
+        "sha256": "57eea24fa7d95394f3c78682c6700a10cea75e2caa034079cd4c89941345bd2c"
+      },
+      {
+        "id": "rushhour",
+        "sha256": "1062b2f315391c33abc4d70d10b304ad02aa30092e98964814c72ef3e4d0b60f"
+      },
+      {
+        "id": "diceduel",
+        "sha256": "cb206451eead6cb54cf5d43f0eb7feb2d8ca676769fb2e9b723bc72105de4122"
+      },
+      {
+        "id": "rps",
+        "sha256": "19424640f4604f38289feb82e02e41f393b77896f8034c85f99f0a6453b5fa5d"
+      },
+      {
+        "id": "archery",
+        "sha256": "010ce297123fafa39388b5ec6674ba34cfe73062c49fdd16bb9ccb285047e8de"
+      },
+      {
+        "id": "biggerorlower",
+        "sha256": "b5b1d49dd601bcf645ef7b138a3b8f021cadce0601f299af4f58ca4c71b1a828"
+      },
+      {
+        "id": "blackjack",
+        "sha256": "d7bffce9bac8233ee49d6e57f2f6cd40bf7b1fa1f925a21979b2673a99b540f1"
+      },
+      {
+        "id": "farmclicker",
+        "sha256": "12f74a1f3407d239d83c81c5b2c70c05b35efb632913a10afb33ae39afb4fbec"
+      },
+      {
+        "id": "crossy",
+        "sha256": "afb00a2d58006f0d70bf7e75c94faf5ebfc93518c809c95bf28a4518f946e0b6"
+      },
+      {
+        "id": "catcheggs",
+        "sha256": "8bf7022e6ef3fcb9b86334cb567b0fb338feab5a7485c27fd3ee8b03f06b251e"
+      },
+      {
+        "id": "flowfree",
+        "sha256": "9e289f22d433c38b64cc070d3d75a5676970b5e1d74ece0636aaa2f609289fd9"
+      },
+      {
+        "id": "guessnum",
+        "sha256": "b7b50ed81dbd4eaa7b81ee0b42ad75beabd950b5cd47a48b44cc096eaa08cfb3"
+      },
+      {
+        "id": "fruitcut",
+        "sha256": "033aee4cc860ee44785d125bc62af5b248b0c9c44bac100ac285d0c797307758"
+      },
+      {
+        "id": "lightsout",
+        "sha256": "fd0ce4a4fca1227f036402cc449aeef64c7decefdd2e65a2b334858e4ca04241"
+      },
+      {
+        "id": "hanoi",
+        "sha256": "663fe0cc76d7f53aec5aded7b104db282f19df786520a1446f026b9e2baa081d"
+      },
+      {
+        "id": "match3",
+        "sha256": "f928ddc09e4ebac8fa42b467bb48b9cec6ea2cd3eb09c607e260dba43a37de71"
+      },
+      {
+        "id": "maze",
+        "sha256": "fc8003da964d228d975f94a6a49a491e7f3e57878302f44aa46e3f109bc2956c"
+      },
+      {
+        "id": "reversi",
+        "sha256": "2740a4b7f17d9328b051b34e89cb5565106e0bf9b4a45ddca61b73f4c6128649"
+      },
+      {
+        "id": "minisudoku",
+        "sha256": "c8f72bb3fc63100392437f5903b9c73facd3dbb625ed431a379e447dcc5c5b83"
+      },
+      {
+        "id": "penalty",
+        "sha256": "f436ca8a3629fa8e3aca845e7d031954bc42072bf029a4cbfd05b08f5a452162"
+      },
+      {
+        "id": "petfeed",
+        "sha256": "66c1f289f87690328dfa2356a4c1681ac82ce047a1ac3ca8cd806157edd10d9a"
+      },
+      {
+        "id": "simon",
+        "sha256": "c40794724276532de086109df3ff93a4369903b5ba7d131d223eba9031873790"
+      },
+      {
+        "id": "skiing",
+        "sha256": "c59ce93f86ef0552ceccfa435c974642beca1f5a9369704a7c48828fdb3ed98c"
+      },
+      {
+        "id": "stacker",
+        "sha256": "fdbdbd4888729c6a13e4900e2e27bd900556083e7ab657c9f1d039f8e5bf904b"
+      },
+      {
+        "id": "sokoban",
+        "sha256": "8f0c110a015476b02df0631476a4ca649e0d9d468eca36a279b70685637e10d5"
+      },
+      {
+        "id": "slidetile",
+        "sha256": "5e298f966de5f48c56fa9ca3c67e4870b43449fde9dcaecd2394084c6caedac7"
+      },
+      {
+        "id": "tictactoe",
+        "sha256": "4f13ff4c1c11cd07b9cd3b838daa2bb0d780d3e45c0f776ae9cb19073a3d045d"
+      },
+      {
+        "id": "towerdef",
+        "sha256": "8622d47a7eae3df3cdede9d009709e2e3dcd7196c6da232387b9469b99e1b1f7"
+      },
+      {
+        "id": "twentyfour",
+        "sha256": "0ec036235fc2f4c21d89f4c539322e63854c8a1b47f608ed6569d2bf30794e5a"
+      },
+      {
+        "id": "whackmole",
+        "sha256": "937b469875b8dc61aed3dd7310bcc479472b3a10df1386cd020917833fb92642"
+      },
+      {
+        "id": "2048",
+        "sha256": "caf3869239372738100c94aeab7aebb54d9a23fd0dbc95fd229ff8d7f5d3f80f"
+      },
+      {
+        "id": "breakout",
+        "sha256": "ea9c12685f1577eb9f752a4bf05ceb49c9a6df94c9f34984db858afab8251e40"
+      },
+      {
+        "id": "flappy",
+        "sha256": "71911c0714ef89e3da54d56b46451c3101e8190b79fdec5885a88802752f4e65"
+      },
+      {
+        "id": "gobang",
+        "sha256": "35d13961a926eaa3d9a8c0146f76f0fb688e0a6679c175b11e3ef954c7df246f"
+      },
+      {
+        "id": "memory",
+        "sha256": "ed231d07b610c65ab43049c803b5542f2a7398977277d0b3cd6c028f0275c837"
+      },
+      {
+        "id": "snake",
+        "sha256": "3d51f499f8ddac7e662455a3f630eb12ea33cd4d8751a1c7d88890707a49fdf0"
+      },
+      {
+        "id": "minesweeper",
+        "sha256": "2a68b7e0e910b63ebc5c884a6b452a1c6ee6970be62add2630ebcbceeca96989"
+      },
+      {
+        "id": "tetris",
+        "sha256": "f428dd8fe80ad7b72b0d8b042ad802ec5469031346889bbb55af9d582edeb384"
+      }
+    ]
+  },
+  "portalLaunchAndRestart": {
+    "base": "https://awiggy.github.io/game-hub/",
+    "ids": [
+      "cookieidler",
+      "memorymatrix",
+      "colorfill",
+      "connect4",
+      "gobang",
+      "battleship",
+      "maze",
+      "rushhour",
+      "knightstour",
+      "onestroke",
+      "tictactoe",
+      "simon",
+      "shellgame",
+      "blinkblink",
+      "guessnum",
+      "hangman",
+      "anagram",
+      "wordsearch",
+      "twentyfour",
+      "idiomchain",
+      "blackjack",
+      "pyramid",
+      "snakesladders",
+      "dicehill",
+      "diceduel",
+      "rps"
+    ],
+    "errors": []
+  }
+}

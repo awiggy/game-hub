@@ -1,6 +1,6 @@
 # 项目记忆
 
-更新日期：2026-10-16（累计 70 款卡通像素改造，正式目录 107 款；本次 26 款待统一发布）
+更新日期：2026-10-16（累计 70 款卡通像素改造，正式目录 107 款；本次 26 款已统一发布并核验）
 
 ## 两轮共二十六款改造与统一台账（2026-10-16）
 
@@ -9,7 +9,7 @@
 - 统一台账为 docs/redesign-status.json，可读清单为 docs/redesign-progress.md；每条记录含名称、状态、批次、验收报告。npm run progress 生成并校验目录覆盖、重复标识和报告存在性，已加入构建前检查。
 - 延续自绘卡通像素角色、木材/布料/纸张材质、专门场景及实际操作反馈。没有新增关卡项目，修复现有谜题的不可解布局及回合/结算错误；井字棋的平局算成功防守。完整范围及测试限制见 docs/verification-workshop-ten-2026-10-16.md 与 docs/verification-festival-sixteen-2026-10-16.md。
 - 新增实际脚本回归 check-workshop-ten.cjs、check-festival-sixteen.cjs，加入发布前自动检查。26 款逐一浏览器操作、电脑/手机/两种横屏验收，截图 workshop-* / festival-*，试玩页 local-previews/pixel-twentysix-2026-10-16.html。
-- 发布进展将在完成 GitHub Pages 部署及线上核验后追加。
+- 已以 9c48783 一起推送 main，GitHub Pages 工作流 38926134567 构建与部署成功。线上全部 70 款已改游戏 HTML 与本地 SHA-256 一致；本次 26 款正式网站详情页启动、重开均通过，目录仍为 107 款。发布核验数据在 docs/deployment-twentysix-2026-10-16.json。
 
 ## 再十款精细改造与重复玩法筛选（2026-10-16）
 

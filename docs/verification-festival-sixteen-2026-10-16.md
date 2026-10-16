@@ -54,3 +54,7 @@
 `npm run build` 通过：107 款静态校验、106 款模拟初始化（茶杯游戏因静态 DOM 依赖由真实浏览器覆盖）、全部旧批次和两批新回归、生产构建、107 款目录与 6 个旧链接跳转检查均通过。正式构建内 26 款详情页的启动与重开均通过。
 
 浏览器脚本保存在 `scripts/check-workshop-browser.cjs` 和 `scripts/check-festival-browser.cjs`。启动本地站点后，可设置 `PLAYWRIGHT_MODULE`、`CHROMIUM_PATH` 与 `GAME_HUB_URL` 执行；脚本只在测试响应中插入只读状态观察器，不修改实际游戏源码。
+
+## 正式发布核验
+
+2026-10-16，两批以 `9c48783` 统一发布。[GitHub Pages 工作流 38926134567](https://github.com/awiggy/game-hub/actions/runs/38926134567) 构建与部署成功。全部 70 款已改游戏的线上 HTML 哈希与本地一致，本次 26 款正式网站详情页启动及重开通过；线上游戏库仍为 107 款。核验数据见 [发布记录](deployment-twentysix-2026-10-16.json)。
