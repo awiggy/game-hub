@@ -2,11 +2,18 @@
   "id": "picross",
   "name": "数织拼图",
   "emoji": "🟦",
-  "categories": ["puzzle", "strategy"],
-  "tags": ["数织", "逻辑", "像素"],
+  "categories": [
+    "puzzle",
+    "strategy"
+  ],
+  "tags": [
+    "数织",
+    "逻辑",
+    "像素"
+  ],
   "summary": "按行列数字提示涂满方格，还原隐藏的像素画，逻辑推理的乐趣！",
-  "description": "数织（Nonogram）玩法。行列旁的数字表示该行/列中连续涂黑格的长度序列，据此推理涂满格子。填满且完全符合提示即过关，共三关 5×5 图案。",
-  "howToPlay": "点击格子涂黑（再点清除）；使每行列的连续黑格序列与数字提示一致。",
+  "description": "兔兔的刺绣工坊。根据行列数字推理连续针脚长度，点击格子绣上交叉针脚，再点可清除。三幅图案全部完成后结算，涂错次数跨关累计。",
+  "howToPlay": "点击格子绣上针脚，再点清除；行列数字表示连续针脚长度，各段之间至少留一格。",
   "entry": "picross/index.html",
   "platform": "浏览器",
   "playMode": "online",

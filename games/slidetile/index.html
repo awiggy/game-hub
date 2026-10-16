@@ -30,15 +30,33 @@
     #overlay p { color:#8b93a7; font-size:13px; line-height:1.9; }
     #overlay button { background:var(--blue); color:#fff; font-family:inherit; border:2px solid #fff;
       box-shadow:4px 4px 0 rgba(0,0,0,.6); font-size:16px; font-weight:700; padding:10px 32px; border-radius:8px; cursor:pointer; }
+
+/* Storybook pixel edition: authored game pieces and material-rich playfields. */
+:root{--paper:#fff7df;--ink:#5e7058;--edge:#97ad81;--accent:#5e7058;--blue:#5e7058;--yellow:#c48a37}
+body{background:#e9eee2;color:var(--ink);background-image:radial-gradient(#fff9 1px,transparent 1px);background-size:14px 14px;height:auto;min-height:100%;overflow:auto;padding:16px 12px;flex-direction:column;gap:8px}
+#wrap{width:min(430px,94vw);max-width:100%;display:flex;flex-direction:column;gap:10px;position:relative;align-items:stretch;flex-shrink:0}
+.scene-head{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%}.scene-head small{font-size:10px;letter-spacing:1.5px;color:var(--edge)}.scene-head h2{font-size:22px;line-height:1.4;letter-spacing:1px;margin:3px 0}.scene-head svg{width:55px;height:55px;flex:none}.pixel-sprite{width:100%;height:100%;display:block;image-rendering:pixelated;pointer-events:none}
+#hud{position:static;width:100%;font-size:11px;color:var(--ink);padding:5px;gap:8px;flex-wrap:wrap;align-items:center}#hud b{color:var(--ink);font-size:17px}
+#board,canvas{border:4px solid var(--edge);border-radius:9px;box-shadow:0 5px color-mix(in srgb,var(--edge),transparent 55%);background:var(--paper)}#board{width:100%;max-width:100%;flex-shrink:0}
+canvas{display:block;image-rendering:pixelated;width:100%;height:auto;max-width:100%;max-height:none;touch-action:none}
+#overlay{position:fixed;inset:0;z-index:40;border-radius:0;background:color-mix(in srgb,var(--paper) 97%,transparent);color:var(--ink);gap:13px;padding:20px}#overlay::before{content:'';width:90px;height:90px;image-rendering:pixelated;background:url("data:image/svg+xml,%3Csvg%20aria-hidden%3D%22true%22%20viewBox%3D%220%200%2032%2032%22%20class%3D%22pixel-sprite%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20x%3D%228%22%20y%3D%221%22%20width%3D%226%22%20height%3D%2212%22%20fill%3D%22%238c7974%22%2F%3E%3Crect%20x%3D%2219%22%20y%3D%220%22%20width%3D%226%22%20height%3D%2213%22%20fill%3D%22%238c7974%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%222%22%20width%3D%224%22%20height%3D%2211%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%221%22%20width%3D%224%22%20height%3D%2212%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%224%22%20width%3D%222%22%20height%3D%227%22%20fill%3D%22%23e7a09b%22%2F%3E%3Crect%20x%3D%2221%22%20y%3D%223%22%20width%3D%222%22%20height%3D%228%22%20fill%3D%22%23e7a09b%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%2211%22%20width%3D%2219%22%20height%3D%2220%22%20fill%3D%22%238c7974%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2214%22%20width%3D%2225%22%20height%3D%2214%22%20fill%3D%22%238c7974%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2211%22%20width%3D%2215%22%20height%3D%2218%22%20fill%3D%22%23f9eacb%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2214%22%20width%3D%2221%22%20height%3D%2212%22%20fill%3D%22%23f9eacb%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2210%22%20width%3D%2215%22%20height%3D%227%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%2214%22%20width%3D%224%22%20height%3D%227%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2221%22%20width%3D%2210%22%20height%3D%228%22%20fill%3D%22%23fffdf2%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2224%22%20width%3D%2216%22%20height%3D%222%22%20fill%3D%22%23fffdf2%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2216%22%20width%3D%222%22%20height%3D%223%22%20fill%3D%22%23332f36%22%2F%3E%3Crect%20x%3D%2219%22%20y%3D%2216%22%20width%3D%222%22%20height%3D%223%22%20fill%3D%22%23332f36%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2216%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23fffdf0%22%2F%3E%3Crect%20x%3D%2219%22%20y%3D%2216%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23fffdf0%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2220%22%20width%3D%223%22%20height%3D%222%22%20fill%3D%22%23f4998a%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2220%22%20width%3D%223%22%20height%3D%222%22%20fill%3D%22%23f4998a%22%2F%3E%3Crect%20x%3D%2215%22%20y%3D%2220%22%20width%3D%222%22%20height%3D%221%22%20fill%3D%22%238f4d48%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2224%22%20width%3D%226%22%20height%3D%222%22%20fill%3D%22%238a534b%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2224%22%20width%3D%222%22%20height%3D%223%22%20fill%3D%22%23fff8e4%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2226%22%20width%3D%225%22%20height%3D%224%22%20fill%3D%22%23fffbed%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2226%22%20width%3D%224%22%20height%3D%224%22%20fill%3D%22%23fffbed%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat}#overlay h1{font-size:25px;text-shadow:none;letter-spacing:1px}#overlay p{font-size:13px;color:var(--ink);line-height:1.9;max-width:360px}#overlay p b{color:var(--ink)!important}#overlay.hidden{display:none}#overlay button,.story-controls button,#shuffle{font:700 13px system-ui;color:var(--paper);background:var(--ink);border:2px solid var(--edge);border-radius:7px;box-shadow:0 3px #0002;padding:10px 18px;cursor:pointer}
+button{font-family:inherit;touch-action:manipulation}button:focus-visible{outline:3px solid #cb875d;outline-offset:2px}.story-note{font-size:11px;line-height:1.8;text-align:center;width:100%;margin:2px 0;color:var(--ink)}.story-controls{display:flex;gap:8px;justify-content:center}.story-controls button{padding:8px 12px}.story-controls button:disabled{opacity:.5}.scene-strip{position:relative;height:72px;overflow:hidden;border:3px solid var(--edge);border-bottom:0;background:linear-gradient(#b4dfda 0 65%,#abc979 65%);border-radius:8px 8px 0 0;margin-bottom:-10px}.scene-strip svg{position:absolute;bottom:0;width:65px;height:65px}.scene-strip svg:nth-child(1){left:5%}.scene-strip svg:nth-child(2){left:43%}.scene-strip svg:nth-child(3){right:3%}
+@media(max-width:480px){body{padding:12px 10px}.scene-head h2{font-size:19px}.scene-head svg{width:44px;height:44px}.scene-head small{letter-spacing:1px}#wrap{gap:8px}#hud b{font-size:15px}.story-note{font-size:10px}.scene-strip{height:56px}}
+@media(min-width:600px) and (max-height:550px){#wrap{width:min(750px,96vw);display:grid;grid-template-columns:220px auto;gap:10px 25px;align-items:center;justify-content:center}.scene-head{grid-column:1;align-self:end}#hud{grid-column:1;justify-content:flex-start;align-self:start}.story-note,.story-controls,#bar{grid-column:1}.scene-strip{display:none}#board,canvas{grid-column:2;grid-row:1/6;width:min(370px,calc(100dvh - 42px));height:auto;max-height:calc(100dvh - 42px)}.scene-head h2{font-size:21px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+#board{background:repeating-linear-gradient(0deg,#ab8b67 0 22px,#b99873 22px 25px);border-color:#927553}.slot{background:#937653;box-shadow:inset 2px 3px #7f6449;border-radius:5px}.tile{border:2px solid #c4986a;border-radius:5px;background:#ffedbd;color:#755c40;box-shadow:inset 3px 3px #fff9,inset -3px -3px #c7a16933,0 3px #765d41;font-size:clamp(20px,6vmin,31px)}.tile:nth-of-type(3n){background:#e0edbb}.tile:nth-of-type(3n+1){background:#f9d9a4}.tile::before{content:'WOODLAND';position:absolute;left:7px;right:7px;top:6px;font:6px system-ui;letter-spacing:1px;border-bottom:1px dashed #b3a27a;padding-bottom:2px;text-align:center}.tile::after{content:'';position:absolute;width:3px;height:6px;left:-2px;top:65%;background:#a78762;box-shadow:0 0 0 1px #b29776}.scene-strip{background:linear-gradient(#c7e0d3 65%,#a8c283 65%)}@media(max-width:400px){.tile::before{font-size:5px;letter-spacing:0}}
   </style>
 </head>
 <body>
   <div id="wrap">
+    <header class="scene-head"><div><small>WOODLAND TICKETS</small><h2>森林车票拼图</h2></div><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="8" y="1" width="6" height="12" fill="#8c7974"/><rect x="19" y="0" width="6" height="13" fill="#8c7974"/><rect x="9" y="2" width="4" height="11" fill="#fffbed"/><rect x="20" y="1" width="4" height="12" fill="#fffbed"/><rect x="10" y="4" width="2" height="7" fill="#e7a09b"/><rect x="21" y="3" width="2" height="8" fill="#e7a09b"/><rect x="7" y="11" width="19" height="20" fill="#8c7974"/><rect x="4" y="14" width="25" height="14" fill="#8c7974"/><rect x="9" y="11" width="15" height="18" fill="#f9eacb"/><rect x="6" y="14" width="21" height="12" fill="#f9eacb"/><rect x="9" y="10" width="15" height="7" fill="#fffbed"/><rect x="7" y="14" width="4" height="7" fill="#fffbed"/><rect x="12" y="21" width="10" height="8" fill="#fffdf2"/><rect x="9" y="24" width="16" height="2" fill="#fffdf2"/><rect x="11" y="16" width="2" height="3" fill="#332f36"/><rect x="19" y="16" width="2" height="3" fill="#332f36"/><rect x="11" y="16" width="1" height="1" fill="#fffdf0"/><rect x="19" y="16" width="1" height="1" fill="#fffdf0"/><rect x="9" y="20" width="3" height="2" fill="#f4998a"/><rect x="20" y="20" width="3" height="2" fill="#f4998a"/><rect x="15" y="20" width="2" height="1" fill="#8f4d48"/><rect x="14" y="24" width="6" height="2" fill="#8a534b"/><rect x="16" y="24" width="2" height="3" fill="#fff8e4"/><rect x="3" y="26" width="5" height="4" fill="#fffbed"/><rect x="26" y="26" width="4" height="4" fill="#fffbed"/></svg></header>
     <div id="hud">
       <span>步数<b id="moves">0</b></span>
       <span>用时<b id="time">0s</b></span>
       <span>BEST<b id="best">—</b></span>
     </div>
+    <div class="scene-strip" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="1" y="5" width="30" height="27" fill="#376e4c"/><rect x="2" y="3" width="28" height="25" fill="#4b9550"/><rect x="5" y="1" width="22" height="26" fill="#75b44f"/><rect x="8" y="2" width="12" height="5" fill="#b9d663"/><rect x="4" y="8" width="8" height="5" fill="#a3ce5a"/><rect x="18" y="5" width="10" height="5" fill="#92c250"/><rect x="7" y="16" width="12" height="6" fill="#8fc352"/><rect x="21" y="16" width="8" height="6" fill="#447e45"/><rect x="4" y="24" width="11" height="4" fill="#467d43"/><rect x="21" y="11" width="3" height="3" fill="#d0e478"/><rect x="13" y="10" width="3" height="3" fill="#c0db69"/><rect x="15" y="25" width="8" height="3" fill="#64a34a"/></svg><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="8" y="1" width="6" height="12" fill="#8c7974"/><rect x="19" y="0" width="6" height="13" fill="#8c7974"/><rect x="9" y="2" width="4" height="11" fill="#fffbed"/><rect x="20" y="1" width="4" height="12" fill="#fffbed"/><rect x="10" y="4" width="2" height="7" fill="#e7a09b"/><rect x="21" y="3" width="2" height="8" fill="#e7a09b"/><rect x="7" y="11" width="19" height="20" fill="#8c7974"/><rect x="4" y="14" width="25" height="14" fill="#8c7974"/><rect x="9" y="11" width="15" height="18" fill="#f9eacb"/><rect x="6" y="14" width="21" height="12" fill="#f9eacb"/><rect x="9" y="10" width="15" height="7" fill="#fffbed"/><rect x="7" y="14" width="4" height="7" fill="#fffbed"/><rect x="12" y="21" width="10" height="8" fill="#fffdf2"/><rect x="9" y="24" width="16" height="2" fill="#fffdf2"/><rect x="11" y="16" width="2" height="3" fill="#332f36"/><rect x="19" y="16" width="2" height="3" fill="#332f36"/><rect x="11" y="16" width="1" height="1" fill="#fffdf0"/><rect x="19" y="16" width="1" height="1" fill="#fffdf0"/><rect x="9" y="20" width="3" height="2" fill="#f4998a"/><rect x="20" y="20" width="3" height="2" fill="#f4998a"/><rect x="15" y="20" width="2" height="1" fill="#8f4d48"/><rect x="14" y="24" width="6" height="2" fill="#8a534b"/><rect x="16" y="24" width="2" height="3" fill="#fff8e4"/><rect x="3" y="26" width="5" height="4" fill="#fffbed"/><rect x="26" y="26" width="4" height="4" fill="#fffbed"/></svg><svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="15" y="2" width="2" height="3" fill="#5c656c"/><rect x="13" y="4" width="6" height="3" fill="#5c656c"/><rect x="11" y="6" width="10" height="3" fill="#5c656c"/><rect x="9" y="8" width="14" height="3" fill="#5c656c"/><rect x="7" y="10" width="18" height="3" fill="#5c656c"/><rect x="5" y="12" width="22" height="3" fill="#5c656c"/><rect x="6" y="14" width="23" height="17" fill="#9d4843"/><rect x="7" y="14" width="20" height="15" fill="#df775c"/><rect x="9" y="15" width="1" height="14" fill="#f59973"/><rect x="13" y="15" width="1" height="14" fill="#f59973"/><rect x="17" y="15" width="1" height="14" fill="#f59973"/><rect x="21" y="15" width="1" height="14" fill="#f59973"/><rect x="25" y="15" width="1" height="14" fill="#f59973"/><rect x="5" y="14" width="25" height="2" fill="#ffecbc"/><rect x="12" y="20" width="11" height="11" fill="#ffe8b4"/><rect x="14" y="21" width="7" height="10" fill="#975645"/><rect x="17" y="21" width="1" height="10" fill="#ffdb9e"/><rect x="14" y="23" width="7" height="1" fill="#ffdb9e"/><rect x="15" y="12" width="6" height="6" fill="#ffecbc"/><rect x="16" y="13" width="4" height="4" fill="#6aa7b5"/></svg></div>
     <div id="board">
       <div id="overlay">
         <h1>🔢 数字华容道</h1>
@@ -46,9 +64,71 @@
         <button id="ov-btn">开始游戏</button>
       </div>
     </div>
+    <p class="story-note">把 1–15 车票排回顺序，最后一格留空 · 点击相邻票移动</p>
   </div>
   <script>
     (() => {
+      function pxRects(kind) {
+        const a=[]; const r=(x,y,w,h,c)=>a.push([x,y,w,h,c]);
+        const face=(x,y)=>{r(x,y,2,3,'#332f36');r(x+8,y,2,3,'#332f36');r(x,y,1,1,'#fffdf0');r(x+8,y,1,1,'#fffdf0');r(x-2,y+4,3,2,'#f4998a');r(x+9,y+4,3,2,'#f4998a');r(x+4,y+4,2,1,'#8f4d48');};
+        const round=(x,y,w,h,c)=>{r(x+3,y,w-6,h,c);r(x,y+3,w,h-6,c)};
+        if(kind==='apple'||kind==='orange'||kind==='berry') {
+          const p=kind==='apple'?['#8e3540','#d84b4e','#ff765f','#ffbea0']:kind==='orange'?['#ae5c2c','#ef9c34','#ffc650','#ffed9a']:['#48447d','#6f6fc1','#9d9ce3','#d2d1ff'];
+          round(4,9,24,20,p[0]);round(6,10,20,17,p[1]);r(8,11,15,11,p[2]);r(8,13,4,5,p[3]);r(10,11,5,2,p[3]);r(13,6,3,6,'#72533e');r(16,4,9,4,'#3c7949');r(17,4,6,2,'#9bcd55');face(10,19);
+        } else if(kind==='carrot'||kind==='sprout') {
+          r(14,6,3,11,'#37774b');r(7,5,8,4,'#387d43');r(9,3,6,4,'#84bd50');r(17,4,8,4,'#3c8e46');r(18,2,6,3,'#b0d767');
+          if(kind==='carrot'){r(9,13,15,5,'#ad552b');r(10,18,12,5,'#ad552b');r(12,23,8,4,'#ad552b');r(14,27,4,3,'#ad552b');r(10,14,12,4,'#ffb04b');r(11,18,9,5,'#f88132');r(13,23,5,4,'#f88132');r(11,15,3,5,'#ffda75');r(18,19,3,1,'#ba5c32');r(13,24,3,1,'#ba5c32');}
+          else {r(5,23,22,4,'#654830');r(8,21,16,3,'#9d6c42');r(14,14,3,8,'#3c8747');}
+        } else if(kind==='flower') {
+          r(15,13,3,17,'#3c8b58');r(8,20,8,4,'#82be5f');r(18,23,8,4,'#58a657');
+          round(10,2,12,20,'#e5bc88');round(5,7,22,10,'#e5bc88');round(11,2,10,18,'#fffbea');round(5,8,22,8,'#fffbea');r(12,8,9,8,'#e9a82d');r(13,8,6,5,'#ffd95c');r(14,9,3,2,'#fff5ac');
+        } else if(kind==='mushroom') {
+          r(11,16,11,13,'#af784d');r(12,16,9,11,'#ffe6b2');r(12,18,3,6,'#fff6da');r(6,8,21,11,'#9c3d43');r(10,4,13,5,'#9c3d43');r(4,13,25,7,'#9c3d43');r(7,9,19,8,'#e97564');r(10,5,13,9,'#f69b7e');r(5,14,23,3,'#e97564');r(10,8,4,4,'#fff0cf');r(20,12,5,4,'#fff0cf');face(12,22);
+        } else if(kind==='mole'||kind==='goldmole'||kind==='bunny') {
+          const bunny=kind==='bunny',gold=kind==='goldmole'; const dark=bunny?'#8c7974':gold?'#9c6327':'#704c46'; const base=bunny?'#f9eacb':gold?'#efb648':'#b38360';const light=bunny?'#fffbed':gold?'#ffe08a':'#dbac7a';
+          if(bunny){r(8,1,6,12,dark);r(19,0,6,13,dark);r(9,2,4,11,light);r(20,1,4,12,light);r(10,4,2,7,'#e7a09b');r(21,3,2,8,'#e7a09b');}
+          else{round(4,5,8,9,dark);round(21,5,8,9,dark);r(6,7,4,5,'#e7a09b');r(23,7,4,5,'#e7a09b');}
+          round(4,11,25,20,dark);round(6,11,21,18,base);r(9,10,15,7,light);r(7,14,4,7,light);round(9,21,16,8,bunny?'#fffdf2':'#f8ddb0');face(11,16);r(14,24,6,2,'#8a534b');r(16,24,2,3,'#fff8e4');r(3,26,5,4,light);r(26,26,4,4,light);
+        } else if(kind==='chick') {
+          r(4,13,6,9,'#9a6129');r(7,8,18,18,'#9a6129');r(11,5,12,4,'#9a6129');r(8,10,17,14,'#ffca42');r(11,7,12,14,'#ffe777');r(12,8,9,6,'#fff2ac');r(6,16,10,7,'#f2a32d');r(6,16,8,3,'#ffda5b');r(19,10,6,8,'#fffbed');r(22,12,3,5,'#3f3831');r(22,12,1,1,'#fff');r(25,17,6,3,'#b9582c');r(25,17,5,1,'#ffad3b');r(19,20,4,2,'#f99059');r(11,26,3,3,'#c87c33');r(20,25,3,3,'#c87c33');r(11,3,3,4,'#c89c38');
+        } else if(kind==='grape') {
+          r(15,3,3,6,'#72513d');r(18,3,9,4,'#599657');
+          for(const [x,y] of [[7,8],[17,8],[5,15],[14,15],[22,15],[10,22],[18,22]]){round(x,y,8,8,'#624274');round(x+1,y,6,6,'#a27bd0');r(x+2,y+1,2,2,'#e4bcf4');}
+        } else if(kind==='melon') {
+          r(4,9,24,13,'#326d52');r(7,22,18,4,'#326d52');r(11,26,10,3,'#326d52');r(5,9,22,12,'#a6d46c');r(8,21,16,3,'#a6d46c');r(6,9,20,9,'#f9807c');r(9,18,14,3,'#f9807c');r(12,21,8,2,'#f9807c');r(7,10,18,2,'#ffb0a0');for(const [x,y] of [[10,14],[16,12],[21,15],[15,18]])r(x,y,1,2,'#673f48');
+        } else if(kind==='flag') {
+          r(10,3,3,25,'#695447');r(13,4,14,10,'#9e4b4c');r(13,4,11,7,'#f47768');r(14,5,7,2,'#ffbea2');r(7,27,13,2,'#486a4a');
+        } else if(kind==='mine') {
+          r(14,2,4,28,'#47606b');r(2,14,28,4,'#47606b');r(6,6,20,20,'#47606b');round(7,7,18,18,'#6e8e97');r(10,9,6,4,'#c1d9cf');face(11,16);
+        } else if(kind==='crate') {
+          r(2,4,28,26,'#865637');r(4,5,24,22,'#d29b58');r(6,8,20,17,'#b77b46');r(7,9,18,3,'#e8b56b');r(7,16,18,2,'#e8b56b');r(4,5,3,22,'#f3c986');r(25,5,3,22,'#ad713f');r(5,5,22,3,'#ffe0a0');r(5,24,22,3,'#e4b06a');r(6,6,2,2,'#805b3d');r(24,25,2,2,'#805b3d');r(14,13,6,5,'#f1a13f');r(15,18,3,3,'#f1a13f');r(15,10,2,4,'#5f974f');r(17,10,4,2,'#9dc968');
+        } else if(kind==='hedge') {
+          r(1,5,30,27,'#376e4c');r(2,3,28,25,'#4b9550');r(5,1,22,26,'#75b44f');r(8,2,12,5,'#b9d663');r(4,8,8,5,'#a3ce5a');r(18,5,10,5,'#92c250');r(7,16,12,6,'#8fc352');r(21,16,8,6,'#447e45');r(4,24,11,4,'#467d43');r(21,11,3,3,'#d0e478');r(13,10,3,3,'#c0db69');r(15,25,8,3,'#64a34a');
+        } else if(kind==='barn') {
+          for(let i=0;i<6;i++)r(15-i*2,2+i*2,2+i*4,3,'#5c656c');r(6,14,23,17,'#9d4843');r(7,14,20,15,'#df775c');for(let i=9;i<27;i+=4)r(i,15,1,14,'#f59973');r(5,14,25,2,'#ffecbc');r(12,20,11,11,'#ffe8b4');r(14,21,7,10,'#975645');r(17,21,1,10,'#ffdb9e');r(14,23,7,1,'#ffdb9e');r(15,12,6,6,'#ffecbc');r(16,13,4,4,'#6aa7b5');
+        } else if(kind==='cookie') {
+          round(4,4,24,24,'#986334');round(5,4,22,21,'#e6ac57');r(8,6,16,13,'#f9ce7b');r(9,7,9,2,'#ffe6a3');for(const [x,y] of [[10,11],[21,10],[17,18],[8,21]]){r(x,y,3,3,'#8f5a41');r(x,y,2,1,'#bc8650');}
+        }
+
+        if(kind.startsWith('fish')){
+          const p=kind==='fishgold'?['#a16036','#f6bb4e','#ffe690']:kind==='fishpink'?['#975270','#ed92aa','#ffc4bd']:['#426d8d','#74b9cf','#b5e6db'];
+          r(1,9,4,14,p[0]);r(5,12,4,8,p[0]);round(8,7,22,19,p[0]);round(9,8,20,16,p[1]);r(13,8,11,5,p[2]);r(17,4,7,4,p[1]);r(15,25,8,3,p[1]);r(2,11,3,10,p[1]);r(12,16,5,7,p[2]);r(23,11,5,7,'#fff9df');r(25,12,3,5,'#394b55');r(25,12,1,1,'#fff');r(25,21,4,2,'#ec8d84');r(29,18,3,2,p[0]);r(18,15,2,3,p[0]);
+        }
+        if(kind==='lantern'||kind==='lampoff'){
+          const on=kind==='lantern';r(11,1,10,2,'#617965');r(9,3,3,6,'#617965');r(20,3,3,6,'#617965');r(7,8,18,3,'#567862');r(5,11,22,15,'#567862');r(7,12,18,12,on?'#f9d67d':'#a3c2ba');r(9,13,3,7,on?'#fff4b9':'#c8ddd1');r(14,15,7,7,on?'#edae45':'#769f91');r(16,13,3,3,on?'#fff9d1':'#c8ddd1');r(7,26,18,3,'#567862');r(8,29,16,2,'#829d71');
+        }
+        if(kind==='yarn'){
+          round(4,7,24,22,'#9e6676');round(5,7,22,20,'#d894a1');for(let k=0;k<5;k++){r(7+k*3,9,2,16,'#efbec0');r(6,10+k*3,20,1,'#c77f90')}r(22,25,2,5,'#9e6676');r(23,28,7,2,'#9e6676');r(11,2,2,9,'#917c60');r(9,2,6,2,'#d4b68b');
+        }
+        if(kind==='jar'){
+          r(8,3,16,4,'#9b7664');r(8,3,16,2,'#e5c59b');r(6,8,20,21,'#7b9e98');r(7,8,18,19,'#cce5d6');r(9,10,3,13,'#fff7de');r(12,16,9,9,'#e4a17e');r(14,14,6,9,'#f9c690');r(14,16,2,2,'#fff0c2');r(8,27,16,2,'#a7c7b5');
+        }
+        return a;
+      }
+      function pxSprite(kind) {return '<svg aria-hidden="true" viewBox="0 0 32 32" class="pixel-sprite" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">'+pxRects(kind).map(([x,y,w,h,c])=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+c+'"/>').join('')+'</svg>';}
+      function pxPaint(kind,x,y,size) {const u=size/32;for(const [a,b,w,h,c] of pxRects(kind)){ctx.fillStyle=c;ctx.fillRect(Math.round(x+a*u),Math.round(y+b*u),Math.ceil(w*u),Math.ceil(h*u));}}
+
+
       const board = document.getElementById('board')
       const overlay = document.getElementById('overlay')
       const ovBtn = document.getElementById('ov-btn')
@@ -83,9 +163,10 @@
         for (let i = 0; i < 16; i++) {
           const v = grid[i]
           if (!v) continue
-          const t = document.createElement('div')
+          const t = document.createElement('button')
           t.className = 'tile'
           t.textContent = v
+          t.setAttribute('aria-label','移动车票 '+v)
           t.dataset.v = v
           place(t, i)
           board.insertBefore(t, overlay)
@@ -190,7 +271,7 @@
       window.__hub = {
         get score() { return score },
         get over() { return over },
-        get started() { return running },
+        get started() { return running || over },
       }
     })()
   </script>
